@@ -6,17 +6,47 @@ import (
 )
 
 IoTSiteWise :: {
+	AccessPolicy :: {
+		Type:       "AWS::IoTSiteWise::AccessPolicy"
+		Properties: close({
+			AccessPolicyIdentity: close({
+				IamRole?: close({
+					arn?: (strings.MinRunes(1) & strings.MaxRunes(1600) & (=~#".*"#)) | fn.Fn
+				}) | fn.If
+				IamUser?: close({
+					arn?: (strings.MinRunes(1) & strings.MaxRunes(1600) & (=~#".*"#)) | fn.Fn
+				}) | fn.If
+				User?: close({
+					id?: (=~#"\S+"#) | fn.Fn
+				}) | fn.If
+			}) | fn.If
+			AccessPolicyPermission: string | fn.Fn
+			AccessPolicyResource:   close({
+				Portal?: close({
+					id?: (=~#"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"#) | fn.Fn
+				}) | fn.If
+				Project?: close({
+					id?: (=~#"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"#) | fn.Fn
+				}) | fn.If
+			}) | fn.If
+		})
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	Asset :: {
 		Type:       "AWS::IoTSiteWise::Asset"
 		Properties: close({
 			AssetHierarchies?: [...close({
-				ChildAssetId: (=~#"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"#) | fn.Fn
+				ChildAssetId: string | fn.Fn
 				LogicalId:    (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
 			})] | fn.If
-			AssetModelId:     (=~#"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"#) | fn.Fn
-			AssetName:        (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+			AssetModelId:     string | fn.Fn
+			AssetName:        string | fn.Fn
 			AssetProperties?: [...close({
-				Alias?:             (strings.MinRunes(1) & strings.MaxRunes(1000) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+				Alias?:             string | fn.Fn
 				LogicalId:          (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
 				NotificationState?: ("ENABLED" | "DISABLED") | fn.Fn
 			})] | fn.If
@@ -39,15 +69,15 @@ IoTSiteWise :: {
 					DataType:      ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT") | fn.Fn
 					DataTypeSpec?: ("AWS/ALARM_STATE") | fn.Fn
 					LogicalId:     (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
-					Name:          (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+					Name:          string | fn.Fn
 					Type:          close({
 						Attribute?: close({
-							DefaultValue?: (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+							DefaultValue?: string | fn.Fn
 						}) | fn.If
 						Metric?: close({
-							Expression: (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^[a-z0-9._+\-*%/^, ()]+$"#)) | fn.Fn
+							Expression: string | fn.Fn
 							Variables:  [...close({
-								Name:  (strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-z][a-z0-9_]*$"#)) | fn.Fn
+								Name:  string | fn.Fn
 								Value: close({
 									HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
 									PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
@@ -60,9 +90,9 @@ IoTSiteWise :: {
 							}) | fn.If
 						}) | fn.If
 						Transform?: close({
-							Expression: (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^[a-z0-9._+\-*%/^, ()]+$"#)) | fn.Fn
+							Expression: string | fn.Fn
 							Variables:  [...close({
-								Name:  (strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-z][a-z0-9_]*$"#)) | fn.Fn
+								Name:  string | fn.Fn
 								Value: close({
 									HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
 									PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
@@ -71,32 +101,32 @@ IoTSiteWise :: {
 						}) | fn.If
 						TypeName: ("Measurement" | "Attribute" | "Transform" | "Metric") | fn.Fn
 					}) | fn.If
-					Unit?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+					Unit?: string | fn.Fn
 				})] | fn.If
-				Description?: (strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
-				Name:         (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
-				Type:         (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+				Description?: string | fn.Fn
+				Name:         string | fn.Fn
+				Type:         string | fn.Fn
 			})] | fn.If
-			AssetModelDescription?: (strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+			AssetModelDescription?: string | fn.Fn
 			AssetModelHierarchies?: [...close({
-				ChildAssetModelId: (=~#"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"#) | fn.Fn
+				ChildAssetModelId: string | fn.Fn
 				LogicalId:         (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
-				Name:              (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+				Name:              string | fn.Fn
 			})] | fn.If
-			AssetModelName:        (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+			AssetModelName:        string | fn.Fn
 			AssetModelProperties?: [...close({
 				DataType:      ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT") | fn.Fn
 				DataTypeSpec?: ("AWS/ALARM_STATE") | fn.Fn
 				LogicalId:     (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
-				Name:          (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+				Name:          string | fn.Fn
 				Type:          close({
 					Attribute?: close({
-						DefaultValue?: (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+						DefaultValue?: string | fn.Fn
 					}) | fn.If
 					Metric?: close({
-						Expression: (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^[a-z0-9._+\-*%/^, ()]+$"#)) | fn.Fn
+						Expression: string | fn.Fn
 						Variables:  [...close({
-							Name:  (strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-z][a-z0-9_]*$"#)) | fn.Fn
+							Name:  string | fn.Fn
 							Value: close({
 								HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
 								PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
@@ -109,9 +139,9 @@ IoTSiteWise :: {
 						}) | fn.If
 					}) | fn.If
 					Transform?: close({
-						Expression: (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^[a-z0-9._+\-*%/^, ()]+$"#)) | fn.Fn
+						Expression: string | fn.Fn
 						Variables:  [...close({
-							Name:  (strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-z][a-z0-9_]*$"#)) | fn.Fn
+							Name:  string | fn.Fn
 							Value: close({
 								HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
 								PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
@@ -120,9 +150,27 @@ IoTSiteWise :: {
 					}) | fn.If
 					TypeName: ("Measurement" | "Attribute" | "Transform" | "Metric") | fn.Fn
 				}) | fn.If
-				Unit?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+				Unit?: string | fn.Fn
 			})] | fn.If
 			Tags?: [...close({
+				Key:   string | fn.Fn
+				Value: string | fn.Fn
+			})] | fn.If
+		})
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	Dashboard :: {
+		Type:       "AWS::IoTSiteWise::Dashboard"
+		Properties: close({
+			DashboardDefinition:  (=~#".+"#) | fn.Fn
+			DashboardDescription: (strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+			DashboardName:        (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+			ProjectId?:           (strings.MinRunes(36) & strings.MaxRunes(36) & (=~#"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"#)) | fn.Fn
+			Tags?:                [...close({
 				Key:   string | fn.Fn
 				Value: string | fn.Fn
 			})] | fn.If
@@ -147,6 +195,42 @@ IoTSiteWise :: {
 				}) | fn.If
 			}) | fn.If
 			Tags?: [...close({
+				Key:   string | fn.Fn
+				Value: string | fn.Fn
+			})] | fn.If
+		})
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	Portal :: {
+		Type:       "AWS::IoTSiteWise::Portal"
+		Properties: close({
+			PortalAuthMode?:    string | fn.Fn
+			PortalContactEmail: (strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[^@]+@[^@]+"#)) | fn.Fn
+			PortalDescription?: (strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+			PortalName:         (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+			RoleArn:            (strings.MinRunes(1) & strings.MaxRunes(1600) & (=~#".*"#)) | fn.Fn
+			Tags?:              [...close({
+				Key:   string | fn.Fn
+				Value: string | fn.Fn
+			})] | fn.If
+		})
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	Project :: {
+		Type:       "AWS::IoTSiteWise::Project"
+		Properties: close({
+			PortalId:            (strings.MinRunes(36) & strings.MaxRunes(36) & (=~#"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"#)) | fn.Fn
+			ProjectDescription?: (strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+			ProjectName:         (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.Fn
+			Tags?:               [...close({
 				Key:   string | fn.Fn
 				Value: string | fn.Fn
 			})] | fn.If

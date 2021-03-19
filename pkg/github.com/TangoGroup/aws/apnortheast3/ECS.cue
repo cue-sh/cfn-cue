@@ -1,15 +1,62 @@
 package apnortheast3
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 ECS :: {
+	CapacityProvider :: {
+		Type:       "AWS::ECS::CapacityProvider"
+		Properties: close({
+			AutoScalingGroupProvider: close({
+				AutoScalingGroupArn: string | fn.Fn
+				ManagedScaling?:     close({
+					MaximumScalingStepSize?: int | fn.Fn
+					MinimumScalingStepSize?: int | fn.Fn
+					Status?:                 ("DISABLED" | "ENABLED") | fn.Fn
+					TargetCapacity?:         int | fn.Fn
+				}) | fn.If
+				ManagedTerminationProtection?: ("DISABLED" | "ENABLED") | fn.Fn
+			}) | fn.If
+			Name?: string | fn.Fn
+			Tags?: [...close({
+				Key:   string | fn.Fn
+				Value: string | fn.Fn
+			})] | fn.If
+		})
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	Cluster :: {
 		Type:       "AWS::ECS::Cluster"
 		Properties: close({
-			ClusterName?:     string | fn.Fn
-			ClusterSettings?: [...close({
-				Name:  string | fn.Fn
-				Value: string | fn.Fn
+			CapacityProviders?: [...(string | fn.Fn)] | (string | fn.Fn)
+			ClusterName?:       string | fn.Fn
+			ClusterSettings?:   [...close({
+				Name?:  string | fn.Fn
+				Value?: string | fn.Fn
+			})] | fn.If
+			Configuration?: close({
+				ExecuteCommandConfiguration?: close({
+					KmsKeyId?:         string | fn.Fn
+					LogConfiguration?: close({
+						CloudWatchEncryptionEnabled?: bool | fn.Fn
+						CloudWatchLogGroupName?:      string | fn.Fn
+						S3BucketName?:                string | fn.Fn
+						S3EncryptionEnabled?:         bool | fn.Fn
+						S3KeyPrefix?:                 string | fn.Fn
+					}) | fn.If
+					Logging?: string | fn.Fn
+				}) | fn.If
+			}) | fn.If
+			DefaultCapacityProviderStrategy?: [...close({
+				Base?:             int | fn.Fn
+				CapacityProvider?: string | fn.Fn
+				Weight?:           int | fn.Fn
 			})] | fn.If
 			Tags?: [...close({
 				Key:   string | fn.Fn
@@ -22,46 +69,87 @@ ECS :: {
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	ClusterCapacityProviderAssociations :: {
+		Type:       "AWS::ECS::ClusterCapacityProviderAssociations"
+		Properties: close({
+			CapacityProviders:               [...(string | fn.Fn)] | (string | fn.Fn)
+			Cluster:                         (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.Fn
+			DefaultCapacityProviderStrategy: [...close({
+				Base?:            int | fn.Fn
+				CapacityProvider: string | fn.Fn
+				Weight?:          int | fn.Fn
+			})] | fn.If
+		})
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	PrimaryTaskSet :: {
+		Type:       "AWS::ECS::PrimaryTaskSet"
+		Properties: close({
+			Cluster:   string | fn.Fn
+			Service:   string | fn.Fn
+			TaskSetId: string | fn.Fn
+		})
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	Service :: {
 		Type:       "AWS::ECS::Service"
 		Properties: close({
+			CapacityProviderStrategy?: [...close({
+				Base?:             int | fn.Fn
+				CapacityProvider?: string | fn.Fn
+				Weight?:           int | fn.Fn
+			})] | fn.If
 			Cluster?:                 string | fn.Fn
 			DeploymentConfiguration?: close({
+				DeploymentCircuitBreaker?: close({
+					Enable:   bool | fn.Fn
+					Rollback: bool | fn.Fn
+				}) | fn.If
 				MaximumPercent?:        int | fn.Fn
 				MinimumHealthyPercent?: int | fn.Fn
 			}) | fn.If
 			DeploymentController?: close({
-				Type?: string | fn.Fn
+				Type?: ("CODE_DEPLOY" | "ECS" | "EXTERNAL") | fn.Fn
 			}) | fn.If
 			DesiredCount?:                  int | fn.Fn
 			EnableECSManagedTags?:          bool | fn.Fn
+			EnableExecuteCommand?:          bool | fn.Fn
 			HealthCheckGracePeriodSeconds?: int | fn.Fn
 			LaunchType?:                    ("EC2" | "FARGATE") | fn.Fn
 			LoadBalancers?:                 [...close({
 				ContainerName?:    string | fn.Fn
-				ContainerPort:     int | fn.Fn
+				ContainerPort?:    int | fn.Fn
 				LoadBalancerName?: string | fn.Fn
 				TargetGroupArn?:   string | fn.Fn
 			})] | fn.If
 			NetworkConfiguration?: close({
 				AwsvpcConfiguration?: close({
-					AssignPublicIp?: string | fn.Fn
+					AssignPublicIp?: ("DISABLED" | "ENABLED") | fn.Fn
 					SecurityGroups?: [...(string | fn.Fn)] | (string | fn.Fn)
-					Subnets:         [...(string | fn.Fn)] | (string | fn.Fn)
+					Subnets?:        [...(string | fn.Fn)] | (string | fn.Fn)
 				}) | fn.If
 			}) | fn.If
 			PlacementConstraints?: [...close({
 				Expression?: string | fn.Fn
-				Type:        string | fn.Fn
+				Type:        ("distinctInstance" | "memberOf") | fn.Fn
 			})] | fn.If
 			PlacementStrategies?: [...close({
 				Field?: string | fn.Fn
-				Type:   string | fn.Fn
+				Type:   ("binpack" | "random" | "spread") | fn.Fn
 			})] | fn.If
 			PlatformVersion?:    string | fn.Fn
-			PropagateTags?:      string | fn.Fn
+			PropagateTags?:      ("SERVICE" | "TASK_DEFINITION") | fn.Fn
 			Role?:               string | fn.Fn
 			SchedulingStrategy?: ("DAEMON" | "REPLICA") | fn.Fn
+			ServiceArn?:         string | fn.Fn
 			ServiceName?:        string | fn.Fn
 			ServiceRegistries?:  [...close({
 				ContainerName?: string | fn.Fn
@@ -88,8 +176,8 @@ ECS :: {
 				Command?:   [...(string | fn.Fn)] | (string | fn.Fn)
 				Cpu?:       int | fn.Fn
 				DependsOn?: [...close({
-					Condition:     string | fn.Fn
-					ContainerName: string | fn.Fn
+					Condition?:     string | fn.Fn
+					ContainerName?: string | fn.Fn
 				})] | fn.If
 				DisableNetworking?: bool | fn.Fn
 				DnsSearchDomains?:  [...(string | fn.Fn)] | (string | fn.Fn)
@@ -103,19 +191,23 @@ ECS :: {
 					Name?:  string | fn.Fn
 					Value?: string | fn.Fn
 				})] | fn.If
+				EnvironmentFiles?: [...close({
+					Type?:  string | fn.Fn
+					Value?: string | fn.Fn
+				})] | fn.If
 				Essential?:  bool | fn.Fn
 				ExtraHosts?: [...close({
-					Hostname:  string | fn.Fn
-					IpAddress: string | fn.Fn
+					Hostname?:  string | fn.Fn
+					IpAddress?: string | fn.Fn
 				})] | fn.If
 				FirelensConfiguration?: close({
 					Options?: {
 						[string]: string | fn.Fn
 					} | fn.If
-					Type: string | fn.Fn
+					Type?: string | fn.Fn
 				}) | fn.If
 				HealthCheck?: close({
-					Command:      [...(string | fn.Fn)] | (string | fn.Fn)
+					Command?:     [...(string | fn.Fn)] | (string | fn.Fn)
 					Interval?:    int | fn.Fn
 					Retries?:     int | fn.Fn
 					StartPeriod?: int | fn.Fn
@@ -132,7 +224,7 @@ ECS :: {
 					}) | fn.If
 					Devices?: [...close({
 						ContainerPath?: string | fn.Fn
-						HostPath:       string | fn.Fn
+						HostPath?:      string | fn.Fn
 						Permissions?:   [...(string | fn.Fn)] | (string | fn.Fn)
 					})] | fn.If
 					InitProcessEnabled?: bool | fn.Fn
@@ -185,8 +277,8 @@ ECS :: {
 				StartTimeout?:   int | fn.Fn
 				StopTimeout?:    int | fn.Fn
 				SystemControls?: [...close({
-					Namespace: string | fn.Fn
-					Value:     string | fn.Fn
+					Namespace?: string | fn.Fn
+					Value?:     string | fn.Fn
 				})] | fn.If
 				Ulimits?: [...close({
 					HardLimit: int | fn.Fn
@@ -241,11 +333,59 @@ ECS :: {
 					} | fn.If
 					Scope?: string | fn.Fn
 				}) | fn.If
+				EFSVolumeConfiguration?: close({
+					AuthorizationConfig?: {
+						[string]: _
+					} | fn.Fn
+					FilesystemId:           string | fn.Fn
+					RootDirectory?:         string | fn.Fn
+					TransitEncryption?:     ("ENABLED" | "DISABLED") | fn.Fn
+					TransitEncryptionPort?: int | fn.Fn
+				}) | fn.If
 				Host?: close({
 					SourcePath?: string | fn.Fn
 				}) | fn.If
 				Name?: string | fn.Fn
 			})] | fn.If
+		})
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	TaskSet :: {
+		Type:       "AWS::ECS::TaskSet"
+		Properties: close({
+			Cluster:        string | fn.Fn
+			ExternalId?:    string | fn.Fn
+			LaunchType?:    ("EC2" | "FARGATE") | fn.Fn
+			LoadBalancers?: [...close({
+				ContainerName?:    string | fn.Fn
+				ContainerPort?:    int | fn.Fn
+				LoadBalancerName?: string | fn.Fn
+				TargetGroupArn?:   string | fn.Fn
+			})] | fn.If
+			NetworkConfiguration?: close({
+				AwsVpcConfiguration?: close({
+					AssignPublicIp?: ("DISABLED" | "ENABLED") | fn.Fn
+					SecurityGroups?: [...(string | fn.Fn)] | (string | fn.Fn)
+					Subnets:         [...(string | fn.Fn)] | (string | fn.Fn)
+				}) | fn.If
+			}) | fn.If
+			PlatformVersion?: string | fn.Fn
+			Scale?:           close({
+				Unit?:  ("PERCENT") | fn.Fn
+				Value?: number | fn.Fn
+			}) | fn.If
+			Service:            string | fn.Fn
+			ServiceRegistries?: [...close({
+				ContainerName?: string | fn.Fn
+				ContainerPort?: int | fn.Fn
+				Port?:          int | fn.Fn
+				RegistryArn?:   string | fn.Fn
+			})] | fn.If
+			TaskDefinition: string | fn.Fn
 		})
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

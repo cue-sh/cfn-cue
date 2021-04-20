@@ -26,7 +26,7 @@ jobs:
         with:
           go-version: ^1.16
 
-      - name: List
+      - name: Get cue
         run: curl -L https://github.com/cuelang/cue/releases/download/v0.3.2/cue_v0.3.2_linux_amd64.tar.gz | tar -zxvf - cue
           
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -59,11 +59,11 @@ jobs:
           echo "CommitMessage=$CommitMessage" >> $GITHUB_ENV
           echo "CFN_VERSION=$CFN_VERSION" >> $GITHUB_ENV
           echo "CUE_VERSION=$CUE_VERSION" >> $GITHUB_ENV
-        if: steps.fileschanged.outputs.numfiles > 0
+#         if: steps.fileschanged.outputs.numfiles > 0
       
       - name: print
         run: echo "CommitMessage=$CommitMessage" && echo "CFN_VERSION=$CFN_VERSION" && echo "CUE_VERSION=$CUE_VERSION"
-        if: steps.fileschanged.outputs.numfiles > 0
+#         if: steps.fileschanged.outputs.numfiles > 0
       
       - name: git push
         run: |

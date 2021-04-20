@@ -25,24 +25,9 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ^1.16
-          
-      - name: release-downloader
-        # You may pin to the exact commit or the version.
-        # uses: robinraju/release-downloader@f41ad93917b84eb8b8900599138dba28ed91ce80
-        uses: robinraju/release-downloader@v1
-        with:
-          # The source repository path. Expected format {owner}/{repo}
-          repository: cuelang/cue
-          # A flag to choose between latest release and remaining releases
-          # The github tag to download the release from
-          fileName: "cue_v0.3.2_linux_amd64"
-          tag: v0.3.2
-          # Name of the file to download
-          tarBall: true
-          out-file-path: ./cue
 
       - name: List
-        run: ls -al cue
+        run: curl -L https://github.com/cuelang/cue/releases/download/v0.3.2/cue_v0.3.2_linux_amd64.tar.gz | tar -zxvf - cue
           
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2

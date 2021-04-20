@@ -53,8 +53,8 @@ jobs:
       - name: Get info 
         run: |
           CommitMessage=$(cat cue.mod/pkg/github.com/TangoGroup/aws/uswest2/uswest2.cue | grep ResourceSpecificationVersion)
-          CFN_VERSION=v$(echo $CommitMessage | cut -f 3 -d ':' | tr -d ' ' | tr -d '"')
-          CUE_VERSION=$(cat go.mod | grep "cuelang.org/go" | sed 's/cuelang.org\/go//' | sed 's/[[:blank:]]*//')
+          CFN_VERSION=$(echo $CommitMessage | cue eval - -e "#ResourceSpecificationVersion" --out text)
+          CUE_VERSION=$(go list -f "{{.Version}}" -m cuelang.org/go)
           echo "CommitMessage=$CommitMessage" && echo "CFN_VERSION=$CFN_VERSION" && echo "CUE_VERSION=$CUE_VERSION"
           echo "CommitMessage=$CommitMessage" >> $GITHUB_ENV
           echo "CFN_VERSION=$CFN_VERSION" >> $GITHUB_ENV

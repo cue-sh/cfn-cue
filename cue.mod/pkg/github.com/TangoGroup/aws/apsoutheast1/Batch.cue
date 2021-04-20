@@ -35,9 +35,9 @@ import "github.com/TangoGroup/aws/fn"
 				} | fn.#Fn
 				Type: string | fn.#Fn
 			} | fn.#If
-			ServiceRole: (=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
-			State?:      string | fn.#Fn
-			Tags?:       {
+			ServiceRole?: (=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
+			State?:       string | fn.#Fn
+			Tags?:        {
 				[string]: _
 			} | fn.#Fn
 			Type: string | fn.#Fn
@@ -117,6 +117,16 @@ import "github.com/TangoGroup/aws/fn"
 				User?:    string | fn.#Fn
 				Vcpus?:   int | fn.#Fn
 				Volumes?: [...{
+					EfsVolumeConfiguration?: {
+						AuthorizationConfig?: {
+							AccessPointId?: string | fn.#Fn
+							Iam?:           string | fn.#Fn
+						} | fn.#If
+						FileSystemId:           string | fn.#Fn
+						RootDirectory?:         string | fn.#Fn
+						TransitEncryption?:     string | fn.#Fn
+						TransitEncryptionPort?: int | fn.#Fn
+					} | fn.#If
 					Host?: {
 						SourcePath?: string | fn.#Fn
 					} | fn.#If
@@ -193,6 +203,16 @@ import "github.com/TangoGroup/aws/fn"
 						User?:    string | fn.#Fn
 						Vcpus?:   int | fn.#Fn
 						Volumes?: [...{
+							EfsVolumeConfiguration?: {
+								AuthorizationConfig?: {
+									AccessPointId?: string | fn.#Fn
+									Iam?:           string | fn.#Fn
+								} | fn.#If
+								FileSystemId:           string | fn.#Fn
+								RootDirectory?:         string | fn.#Fn
+								TransitEncryption?:     string | fn.#Fn
+								TransitEncryptionPort?: int | fn.#Fn
+							} | fn.#If
 							Host?: {
 								SourcePath?: string | fn.#Fn
 							} | fn.#If

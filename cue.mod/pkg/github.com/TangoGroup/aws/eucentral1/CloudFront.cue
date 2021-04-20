@@ -13,17 +13,17 @@ import "github.com/TangoGroup/aws/fn"
 			Name:                                     string | fn.#Fn
 			ParametersInCacheKeyAndForwardedToOrigin: {
 				CookiesConfig: {
-					CookieBehavior: string | fn.#Fn
+					CookieBehavior: (=~#"^(none|whitelist|allExcept|all)$"#) | fn.#Fn
 					Cookies?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 				} | fn.#If
 				EnableAcceptEncodingBrotli?: bool | fn.#Fn
 				EnableAcceptEncodingGzip:    bool | fn.#Fn
 				HeadersConfig:               {
-					HeaderBehavior: string | fn.#Fn
+					HeaderBehavior: (=~#"^(none|whitelist)$"#) | fn.#Fn
 					Headers?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 				} | fn.#If
 				QueryStringsConfig: {
-					QueryStringBehavior: string | fn.#Fn
+					QueryStringBehavior: (=~#"^(none|whitelist|allExcept|all)$"#) | fn.#Fn
 					QueryStrings?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 				} | fn.#If
 			} | fn.#If
@@ -50,6 +50,7 @@ import "github.com/TangoGroup/aws/fn"
 		Properties: {
 			DistributionConfig: {
 				Aliases?:        [...(string | fn.#Fn)] | (string | fn.#Fn)
+				CNAMEs?:         [...(string | fn.#Fn)] | (string | fn.#Fn)
 				CacheBehaviors?: [...{
 					AllowedMethods?:         [...(string | fn.#Fn)] | (string | fn.#Fn)
 					CachePolicyId?:          string | fn.#Fn
@@ -89,6 +90,13 @@ import "github.com/TangoGroup/aws/fn"
 					ResponseCode?:       (200 | 400 | 403 | 404 | 405 | 414 | 416 | 500 | 501 | 502 | 503 | 504) | fn.#Fn
 					ResponsePagePath?:   string | fn.#Fn
 				}] | fn.#If
+				CustomOrigin?: {
+					DNSName:              string | fn.#Fn
+					HTTPPort?:            int | fn.#Fn
+					HTTPSPort?:           int | fn.#Fn
+					OriginProtocolPolicy: string | fn.#Fn
+					OriginSSLProtocols:   [...(string | fn.#Fn)] | (string | fn.#Fn)
+				} | fn.#If
 				DefaultCacheBehavior: {
 					AllowedMethods?:         [...(string | fn.#Fn)] | (string | fn.#Fn)
 					CachePolicyId?:          string | fn.#Fn
@@ -166,8 +174,7 @@ import "github.com/TangoGroup/aws/fn"
 					}] | fn.#If
 					OriginPath?:   string | fn.#Fn
 					OriginShield?: {
-						Enabled:             bool | fn.#Fn
-						OriginShieldRegion?: string | fn.#Fn
+						[string]: _
 					} | fn.#If
 					S3OriginConfig?: {
 						OriginAccessIdentity?: string | fn.#Fn
@@ -179,6 +186,10 @@ import "github.com/TangoGroup/aws/fn"
 						Locations?:      [...(("AD" | "AE" | "AF" | "AG" | "AI" | "AL" | "AM" | "AO" | "AQ" | "AR" | "AS" | "AT" | "AU" | "AW" | "AX" | "AZ" | "BA" | "BB" | "BD" | "BE" | "BF" | "BG" | "BH" | "BI" | "BJ" | "BL" | "BM" | "BN" | "BO" | "BQ" | "BR" | "BS" | "BT" | "BV" | "BW" | "BY" | "BZ" | "CA" | "CC" | "CD" | "CF" | "CG" | "CH" | "CI" | "CK" | "CL" | "CM" | "CN" | "CO" | "CR" | "CU" | "CV" | "CW" | "CX" | "CY" | "CZ" | "DE" | "DJ" | "DK" | "DM" | "DO" | "DZ" | "EC" | "EE" | "EG" | "EH" | "ER" | "ES" | "ET" | "FI" | "FJ" | "FK" | "FM" | "FO" | "FR" | "GA" | "GB" | "GD" | "GE" | "GF" | "GG" | "GH" | "GI" | "GL" | "GM" | "GN" | "GP" | "GQ" | "GR" | "GS" | "GT" | "GU" | "GW" | "GY" | "HK" | "HM" | "HN" | "HR" | "HT" | "HU" | "ID" | "IE" | "IL" | "IM" | "IN" | "IO" | "IQ" | "IR" | "IS" | "IT" | "JE" | "JM" | "JO" | "JP" | "KE" | "KG" | "KH" | "KI" | "KM" | "KN" | "KP" | "KR" | "KW" | "KY" | "KZ" | "LA" | "LB" | "LC" | "LI" | "LK" | "LR" | "LS" | "LT" | "LU" | "LV" | "LY" | "MA" | "MC" | "MD" | "ME" | "MF" | "MG" | "MH" | "MK" | "ML" | "MM" | "MN" | "MO" | "MP" | "MQ" | "MR" | "MS" | "MT" | "MU" | "MV" | "MW" | "MX" | "MY" | "MZ" | "NA" | "NC" | "NE" | "NF" | "NG" | "NI" | "NL" | "NO" | "NP" | "NR" | "NU" | "NZ" | "OM" | "PA" | "PE" | "PF" | "PG" | "PH" | "PK" | "PL" | "PM" | "PN" | "PR" | "PS" | "PT" | "PW" | "PY" | "QA" | "RE" | "RO" | "RS" | "RU" | "RW" | "SA" | "SB" | "SC" | "SD" | "SE" | "SG" | "SH" | "SI" | "SJ" | "SK" | "SL" | "SM" | "SN" | "SO" | "SR" | "SS" | "ST" | "SV" | "SX" | "SY" | "SZ" | "TC" | "TD" | "TF" | "TG" | "TH" | "TJ" | "TK" | "TL" | "TM" | "TN" | "TO" | "TR" | "TT" | "TV" | "TW" | "TZ" | "UA" | "UG" | "UM" | "US" | "UY" | "UZ" | "VA" | "VC" | "VE" | "VG" | "VI" | "VN" | "VU" | "WF" | "WS" | "YE" | "YT" | "ZA" | "ZM" | "ZW") | fn.#Fn)] | (("AD" | "AE" | "AF" | "AG" | "AI" | "AL" | "AM" | "AO" | "AQ" | "AR" | "AS" | "AT" | "AU" | "AW" | "AX" | "AZ" | "BA" | "BB" | "BD" | "BE" | "BF" | "BG" | "BH" | "BI" | "BJ" | "BL" | "BM" | "BN" | "BO" | "BQ" | "BR" | "BS" | "BT" | "BV" | "BW" | "BY" | "BZ" | "CA" | "CC" | "CD" | "CF" | "CG" | "CH" | "CI" | "CK" | "CL" | "CM" | "CN" | "CO" | "CR" | "CU" | "CV" | "CW" | "CX" | "CY" | "CZ" | "DE" | "DJ" | "DK" | "DM" | "DO" | "DZ" | "EC" | "EE" | "EG" | "EH" | "ER" | "ES" | "ET" | "FI" | "FJ" | "FK" | "FM" | "FO" | "FR" | "GA" | "GB" | "GD" | "GE" | "GF" | "GG" | "GH" | "GI" | "GL" | "GM" | "GN" | "GP" | "GQ" | "GR" | "GS" | "GT" | "GU" | "GW" | "GY" | "HK" | "HM" | "HN" | "HR" | "HT" | "HU" | "ID" | "IE" | "IL" | "IM" | "IN" | "IO" | "IQ" | "IR" | "IS" | "IT" | "JE" | "JM" | "JO" | "JP" | "KE" | "KG" | "KH" | "KI" | "KM" | "KN" | "KP" | "KR" | "KW" | "KY" | "KZ" | "LA" | "LB" | "LC" | "LI" | "LK" | "LR" | "LS" | "LT" | "LU" | "LV" | "LY" | "MA" | "MC" | "MD" | "ME" | "MF" | "MG" | "MH" | "MK" | "ML" | "MM" | "MN" | "MO" | "MP" | "MQ" | "MR" | "MS" | "MT" | "MU" | "MV" | "MW" | "MX" | "MY" | "MZ" | "NA" | "NC" | "NE" | "NF" | "NG" | "NI" | "NL" | "NO" | "NP" | "NR" | "NU" | "NZ" | "OM" | "PA" | "PE" | "PF" | "PG" | "PH" | "PK" | "PL" | "PM" | "PN" | "PR" | "PS" | "PT" | "PW" | "PY" | "QA" | "RE" | "RO" | "RS" | "RU" | "RW" | "SA" | "SB" | "SC" | "SD" | "SE" | "SG" | "SH" | "SI" | "SJ" | "SK" | "SL" | "SM" | "SN" | "SO" | "SR" | "SS" | "ST" | "SV" | "SX" | "SY" | "SZ" | "TC" | "TD" | "TF" | "TG" | "TH" | "TJ" | "TK" | "TL" | "TM" | "TN" | "TO" | "TR" | "TT" | "TV" | "TW" | "TZ" | "UA" | "UG" | "UM" | "US" | "UY" | "UZ" | "VA" | "VC" | "VE" | "VG" | "VI" | "VN" | "VU" | "WF" | "WS" | "YE" | "YT" | "ZA" | "ZM" | "ZW") | fn.#Fn)
 						RestrictionType: ("blacklist" | "none" | "whitelist") | fn.#Fn
 					} | fn.#If
+				} | fn.#If
+				S3Origin?: {
+					DNSName:               string | fn.#Fn
+					OriginAccessIdentity?: string | fn.#Fn
 				} | fn.#If
 				ViewerCertificate?: {
 					AcmCertificateArn?:            string | fn.#Fn
@@ -218,16 +229,16 @@ import "github.com/TangoGroup/aws/fn"
 		Properties: OriginRequestPolicyConfig: {
 			Comment?:      string | fn.#Fn
 			CookiesConfig: {
-				CookieBehavior: string | fn.#Fn
+				CookieBehavior: (=~#"^(none|whitelist|all)$"#) | fn.#Fn
 				Cookies?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 			} | fn.#If
 			HeadersConfig: {
-				HeaderBehavior: string | fn.#Fn
+				HeaderBehavior: (=~#"^(none|whitelist|allViewer|allViewerAndWhitelistCloudFront)$"#) | fn.#Fn
 				Headers?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 			} | fn.#If
 			Name:               string | fn.#Fn
 			QueryStringsConfig: {
-				QueryStringBehavior: string | fn.#Fn
+				QueryStringBehavior: (=~#"^(none|whitelist|all)$"#) | fn.#Fn
 				QueryStrings?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 			} | fn.#If
 		} | fn.#If
@@ -263,7 +274,7 @@ import "github.com/TangoGroup/aws/fn"
 			}] | fn.#If
 			Fields:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 			Name:         string | fn.#Fn
-			SamplingRate: number | fn.#Fn
+			SamplingRate: (>=1 & <=100) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

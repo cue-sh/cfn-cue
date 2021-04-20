@@ -225,12 +225,14 @@ import "github.com/TangoGroup/aws/fn"
 			HealthCheckTimeoutSeconds?:  (>=2 & <=120) | fn.#Fn
 			HealthyThresholdCount?:      (>=2 & <=10) | fn.#Fn
 			Matcher?:                    {
+				GrpcCode?: string | fn.#Fn
 				HttpCode?: string | fn.#Fn
 			} | fn.#If
-			Name?:     string | fn.#Fn
-			Port?:     int | fn.#Fn
-			Protocol?: string | fn.#Fn
-			Tags?:     [...{
+			Name?:            string | fn.#Fn
+			Port?:            int | fn.#Fn
+			Protocol?:        string | fn.#Fn
+			ProtocolVersion?: string | fn.#Fn
+			Tags?:            [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If

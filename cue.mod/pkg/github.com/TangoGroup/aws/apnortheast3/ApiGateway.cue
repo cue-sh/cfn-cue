@@ -345,9 +345,10 @@ import "github.com/TangoGroup/aws/fn"
 				Key?:     string | fn.#Fn
 				Version?: string | fn.#Fn
 			} | fn.#If
-			CloneFrom?:             string | fn.#Fn
-			Description?:           string | fn.#Fn
-			EndpointConfiguration?: {
+			CloneFrom?:                 string | fn.#Fn
+			Description?:               string | fn.#Fn
+			DisableExecuteApiEndpoint?: bool | fn.#Fn
+			EndpointConfiguration?:     {
 				Types?:          [...(string | fn.#Fn)] | (string | fn.#Fn)
 				VpcEndpointIds?: [...(string | fn.#Fn)] | (string | fn.#Fn)
 			} | fn.#If

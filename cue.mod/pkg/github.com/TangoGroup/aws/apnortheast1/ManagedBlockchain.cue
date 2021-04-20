@@ -46,7 +46,7 @@ import "github.com/TangoGroup/aws/fn"
 	#Node: {
 		Type: "AWS::ManagedBlockchain::Node"
 		Properties: {
-			MemberId:          string | fn.#Fn
+			MemberId?:         string | fn.#Fn
 			NetworkId:         string | fn.#Fn
 			NodeConfiguration: {
 				AvailabilityZone: string | fn.#Fn

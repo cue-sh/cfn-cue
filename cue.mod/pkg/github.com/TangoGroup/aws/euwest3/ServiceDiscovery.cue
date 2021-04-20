@@ -77,6 +77,7 @@ import "github.com/TangoGroup/aws/fn"
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
+			Type?: string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

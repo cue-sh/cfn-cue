@@ -76,6 +76,23 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#OIDCProvider: {
+		Type: "AWS::IAM::OIDCProvider"
+		Properties: {
+			ClientIdList?: [...((strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn)
+			Tags?:         [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+			ThumbprintList: [...((strings.MinRunes(40) & strings.MaxRunes(40) & (=~#"[0-9A-Fa-f]{40}"#)) | fn.#Fn)] | ((strings.MinRunes(40) & strings.MaxRunes(40) & (=~#"[0-9A-Fa-f]{40}"#)) | fn.#Fn)
+			Url?:           (strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Policy: {
 		Type: "AWS::IAM::Policy"
 		Properties: {
@@ -131,6 +148,41 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#SAMLProvider: {
+		Type: "AWS::IAM::SAMLProvider"
+		Properties: {
+			Name?:                (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[\w._-]+"#)) | fn.#Fn
+			SamlMetadataDocument: (strings.MinRunes(1000) & strings.MaxRunes(10000000)) | fn.#Fn
+			Tags?:                [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ServerCertificate: {
+		Type: "AWS::IAM::ServerCertificate"
+		Properties: {
+			CertificateBody?:       (strings.MinRunes(1) & strings.MaxRunes(16384) & (=~#"[\u0009\u000A\u000D\u0020-\u00FF]+"#)) | fn.#Fn
+			CertificateChain?:      (strings.MinRunes(1) & strings.MaxRunes(2097152) & (=~#"[\u0009\u000A\u000D\u0020-\u00FF]+"#)) | fn.#Fn
+			Path?:                  (strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"(\u002F)|(\u002F[\u0021-\u007F]+\u002F)"#)) | fn.#Fn
+			PrivateKey?:            (strings.MinRunes(1) & strings.MaxRunes(16384) & (=~#"[\u0009\u000A\u000D\u0020-\u00FF]+"#)) | fn.#Fn
+			ServerCertificateName?: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[\w+=,.@-]+"#)) | fn.#Fn
+			Tags?:                  [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#User: {
 		Type: "AWS::IAM::User"
 		Properties: {
@@ -168,6 +220,23 @@ import (
 		Properties: {
 			GroupName: string | fn.#Fn
 			Users:     [...(string | fn.#Fn)] | (string | fn.#Fn)
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#VirtualMFADevice: {
+		Type: "AWS::IAM::VirtualMFADevice"
+		Properties: {
+			Path?: (strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"(\u002F)|(\u002F[\u0021-\u007F]+\u002F)"#)) | fn.#Fn
+			Tags?: [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+			Users:                 [...(string | fn.#Fn)] | (string | fn.#Fn)
+			VirtualMfaDeviceName?: (strings.MinRunes(1) & strings.MaxRunes(226) & (=~#"[\w+=,.@-]+"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -1,37 +1,40 @@
 package eunorth1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #SSM: {
 	#Association: {
 		Type: "AWS::SSM::Association"
 		Properties: {
 			ApplyOnlyAtCronInterval?:       bool | fn.#Fn
-			AssociationName?:               string | fn.#Fn
-			AutomationTargetParameterName?: string | fn.#Fn
-			ComplianceSeverity?:            string | fn.#Fn
-			DocumentVersion?:               string | fn.#Fn
-			InstanceId?:                    string | fn.#Fn
-			MaxConcurrency?:                string | fn.#Fn
-			MaxErrors?:                     string | fn.#Fn
-			Name:                           string | fn.#Fn
+			AssociationName?:               (=~#"^[a-zA-Z0-9_\-.]{3,128}$"#) | fn.#Fn
+			AutomationTargetParameterName?: (strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn
+			ComplianceSeverity?:            ("CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "UNSPECIFIED") | fn.#Fn
+			DocumentVersion?:               (=~#"([$]LATEST|[$]DEFAULT|^[1-9][0-9]*$)"#) | fn.#Fn
+			InstanceId?:                    (=~#"(^i-(\w{8}|\w{17})$)|(^mi-\w{17}$)"#) | fn.#Fn
+			MaxConcurrency?:                (strings.MinRunes(1) & strings.MaxRunes(7) & (=~#"^([1-9][0-9]*|[1-9][0-9]%|[1-9]%|100%)$"#)) | fn.#Fn
+			MaxErrors?:                     (strings.MinRunes(1) & strings.MaxRunes(7) & (=~#"^([1-9][0-9]*|[0]|[1-9][0-9]%|[0-9]%|100%)$"#)) | fn.#Fn
+			Name:                           (=~#"^[a-zA-Z0-9_\-.:/]{3,200}$"#) | fn.#Fn
 			OutputLocation?:                {
 				S3Location?: {
-					OutputS3BucketName?: string | fn.#Fn
+					OutputS3BucketName?: (strings.MinRunes(3) & strings.MaxRunes(63)) | fn.#Fn
 					OutputS3KeyPrefix?:  string | fn.#Fn
-					OutputS3Region?:     string | fn.#Fn
+					OutputS3Region?:     (strings.MinRunes(3) & strings.MaxRunes(20)) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			Parameters?: {
 				[string]: ParameterValues: [...(string | fn.#Fn)] | (string | fn.#Fn)
 			} | fn.#If
-			ScheduleExpression?: string | fn.#Fn
-			SyncCompliance?:     string | fn.#Fn
+			ScheduleExpression?: (strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			SyncCompliance?:     ("AUTO" | "MANUAL") | fn.#Fn
 			Targets?:            [...{
 				Key:    string | fn.#Fn
 				Values: [...(string | fn.#Fn)] | (string | fn.#Fn)
 			}] | fn.#If
-			WaitForSuccessTimeoutSeconds?: int | fn.#Fn
+			WaitForSuccessTimeoutSeconds?: (>=15 & <=172800) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -66,10 +69,43 @@ import "github.com/TangoGroup/aws/fn"
 			OwnerInformation?: string | fn.#Fn
 			ResourceType:      string | fn.#Fn
 			Targets:           [...{
-				Key:     string | fn.#Fn
-				Values?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+				Key:    string | fn.#Fn
+				Values: [...(string | fn.#Fn)] | (string | fn.#Fn)
 			}] | fn.#If
 			WindowId: string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ResourceDataSync: {
+		Type: "AWS::SSM::ResourceDataSync"
+		Properties: {
+			BucketName?:    (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+			BucketPrefix?:  string | fn.#Fn
+			BucketRegion?:  (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			KMSKeyArn?:     string | fn.#Fn
+			S3Destination?: {
+				BucketName:    (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+				BucketPrefix?: (strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+				BucketRegion:  (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+				KMSKeyArn?:    (strings.MinRunes(1) & strings.MaxRunes(512)) | fn.#Fn
+				SyncFormat:    (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			} | fn.#If
+			SyncFormat?: string | fn.#Fn
+			SyncName:    (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			SyncSource?: {
+				AwsOrganizationsSource?: {
+					OrganizationSourceType: (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+					OrganizationalUnits?:   [...(string | fn.#Fn)] | (string | fn.#Fn)
+				} | fn.#If
+				IncludeFutureRegions?: bool | fn.#Fn
+				SourceRegions:         [...(string | fn.#Fn)] | (string | fn.#Fn)
+				SourceType:            (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			} | fn.#If
+			SyncType?: (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

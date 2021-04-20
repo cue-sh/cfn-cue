@@ -1,16 +1,19 @@
 package apsouth1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #WAFv2: {
 	#IPSet: {
 		Type: "AWS::WAFv2::IPSet"
 		Properties: {
-			Addresses:        [...(string | fn.#Fn)] | (string | fn.#Fn)
-			Description?:     string | fn.#Fn
-			IPAddressVersion: string | fn.#Fn
-			Name?:            string | fn.#Fn
-			Scope:            string | fn.#Fn
+			Addresses:        [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+			Description?:     (=~#"^[a-zA-Z0-9=:#@/\-,.][a-zA-Z0-9+=:#@/\-,.\s]+[a-zA-Z0-9+=:#@/\-,.]{1,256}$"#) | fn.#Fn
+			IPAddressVersion: ("IPV4" | "IPV6") | fn.#Fn
+			Name?:            (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
+			Scope:            ("CLOUDFRONT" | "REGIONAL") | fn.#Fn
 			Tags?:            [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
@@ -25,10 +28,10 @@ import "github.com/TangoGroup/aws/fn"
 	#RegexPatternSet: {
 		Type: "AWS::WAFv2::RegexPatternSet"
 		Properties: {
-			Description?:          string | fn.#Fn
-			Name?:                 string | fn.#Fn
+			Description?:          (=~#"^[a-zA-Z0-9=:#@/\-,.][a-zA-Z0-9+=:#@/\-,.\s]+[a-zA-Z0-9+=:#@/\-,.]{1,256}$"#) | fn.#Fn
+			Name?:                 (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 			RegularExpressionList: [...(string | fn.#Fn)] | (string | fn.#Fn)
-			Scope:                 string | fn.#Fn
+			Scope:                 ("CLOUDFRONT" | "REGIONAL") | fn.#Fn
 			Tags?:                 [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
@@ -43,9 +46,15 @@ import "github.com/TangoGroup/aws/fn"
 	#RuleGroup: {
 		Type: "AWS::WAFv2::RuleGroup"
 		Properties: {
-			Capacity:     int | fn.#Fn
-			Description?: string | fn.#Fn
-			Name?:        string | fn.#Fn
+			Capacity:              int | fn.#Fn
+			CustomResponseBodies?: {
+				[string]: {
+					Content:     string | fn.#Fn
+					ContentType: string | fn.#Fn
+				}
+			} | fn.#If
+			Description?: (=~#"^[a-zA-Z0-9=:#@/\-,.][a-zA-Z0-9+=:#@/\-,.\s]+[a-zA-Z0-9+=:#@/\-,.]{1,256}$"#) | fn.#Fn
+			Name?:        (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 			Rules?:       [...{
 				Action?: {
 					Allow?: {
@@ -58,8 +67,11 @@ import "github.com/TangoGroup/aws/fn"
 						[string]: _
 					} | fn.#Fn
 				} | fn.#If
-				Name:      string | fn.#Fn
-				Priority:  int | fn.#Fn
+				Name:        (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
+				Priority:    int | fn.#Fn
+				RuleLabels?: [...{
+					Name: (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+				}] | fn.#If
 				Statement: {
 					AndStatement?: {
 						Statements: [...{
@@ -73,6 +85,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -89,31 +111,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -121,6 +147,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -139,11 +175,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -151,6 +187,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -170,7 +216,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -181,6 +227,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -199,7 +255,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -210,6 +266,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -228,7 +294,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
@@ -241,6 +307,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -257,28 +333,32 @@ import "github.com/TangoGroup/aws/fn"
 										[string]: _
 									} | fn.#Fn
 								} | fn.#If
-								PositionalConstraint: string | fn.#Fn
+								PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 								SearchString?:        string | fn.#Fn
 								SearchStringBase64?:  string | fn.#Fn
 								TextTransformations:  [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							GeoMatchStatement?: {
-								CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+								CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 							IPSetReferenceStatement?: {
-								Arn:                     string | fn.#Fn
+								Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								IPSetForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
-									Position:         string | fn.#Fn
+									Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 								} | fn.#If
+							} | fn.#If
+							LabelMatchStatement?: {
+								Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+								Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 							} | fn.#If
 							NotStatement?: {
 								Statement: {
@@ -290,6 +370,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -306,31 +396,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -338,6 +432,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -356,11 +460,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -368,6 +472,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -387,7 +501,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -398,6 +512,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -416,7 +540,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -427,6 +551,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -445,7 +579,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
@@ -460,6 +594,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -476,31 +620,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -508,6 +656,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -526,11 +684,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -538,6 +696,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -557,7 +725,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -568,6 +736,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -586,7 +764,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -597,6 +775,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -615,18 +803,18 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
 							} | fn.#If
 							RateBasedStatement?: {
-								AggregateKeyType:   ("FORWARDED_IP" | "IP") | fn.#Fn
+								AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
-								Limit:               (>=100 & <=20000000) | fn.#Fn
+								Limit:               (>=100 & <=2000000000) | fn.#Fn
 								ScopeDownStatement?: {
 									ByteMatchStatement?: {
 										FieldToMatch: {
@@ -636,6 +824,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -652,31 +850,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -684,6 +886,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -702,11 +914,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -714,6 +926,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -733,7 +955,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -744,6 +966,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -762,7 +994,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -773,6 +1005,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -791,13 +1033,13 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
 							} | fn.#If
 							RegexPatternSetReferenceStatement?: {
-								Arn:          string | fn.#Fn
+								Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								FieldToMatch: {
 									AllQueryArguments?: {
 										[string]: _
@@ -805,6 +1047,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -823,11 +1075,11 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SizeConstraintStatement?: {
-								ComparisonOperator: string | fn.#Fn
+								ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 								FieldToMatch:       {
 									AllQueryArguments?: {
 										[string]: _
@@ -835,6 +1087,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -854,7 +1116,7 @@ import "github.com/TangoGroup/aws/fn"
 								Size:                int | fn.#Fn
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SqliMatchStatement?: {
@@ -865,6 +1127,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -883,7 +1155,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							XssMatchStatement?: {
@@ -894,6 +1166,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -912,7 +1194,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 						}] | fn.#If
@@ -925,6 +1207,16 @@ import "github.com/TangoGroup/aws/fn"
 							Body?: {
 								[string]: _
 							} | fn.#Fn
+							JsonBody?: {
+								InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+								MatchPattern:             {
+									All?: {
+										[string]: _
+									} | fn.#Fn
+									IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+								MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+							} | fn.#If
 							Method?: {
 								[string]: _
 							} | fn.#Fn
@@ -941,28 +1233,32 @@ import "github.com/TangoGroup/aws/fn"
 								[string]: _
 							} | fn.#Fn
 						} | fn.#If
-						PositionalConstraint: string | fn.#Fn
+						PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 						SearchString?:        string | fn.#Fn
 						SearchStringBase64?:  string | fn.#Fn
 						TextTransformations:  [...{
 							Priority: int | fn.#Fn
-							Type:     string | fn.#Fn
+							Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					GeoMatchStatement?: {
-						CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+						CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 						ForwardedIPConfig?: {
-							FallbackBehavior: string | fn.#Fn
+							FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 							HeaderName:       string | fn.#Fn
 						} | fn.#If
 					} | fn.#If
 					IPSetReferenceStatement?: {
-						Arn:                     string | fn.#Fn
+						Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 						IPSetForwardedIPConfig?: {
-							FallbackBehavior: string | fn.#Fn
+							FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 							HeaderName:       string | fn.#Fn
-							Position:         string | fn.#Fn
+							Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 						} | fn.#If
+					} | fn.#If
+					LabelMatchStatement?: {
+						Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+						Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 					} | fn.#If
 					NotStatement?: {
 						Statement: {
@@ -976,6 +1272,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -992,31 +1298,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -1024,6 +1334,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1042,11 +1362,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -1054,6 +1374,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1073,7 +1403,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -1084,6 +1414,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1102,7 +1442,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -1113,6 +1453,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1131,7 +1481,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
@@ -1144,6 +1494,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -1160,28 +1520,32 @@ import "github.com/TangoGroup/aws/fn"
 										[string]: _
 									} | fn.#Fn
 								} | fn.#If
-								PositionalConstraint: string | fn.#Fn
+								PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 								SearchString?:        string | fn.#Fn
 								SearchStringBase64?:  string | fn.#Fn
 								TextTransformations:  [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							GeoMatchStatement?: {
-								CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+								CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 							IPSetReferenceStatement?: {
-								Arn:                     string | fn.#Fn
+								Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								IPSetForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
-									Position:         string | fn.#Fn
+									Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 								} | fn.#If
+							} | fn.#If
+							LabelMatchStatement?: {
+								Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+								Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 							} | fn.#If
 							NotStatement?: {
 								Statement: {
@@ -1193,6 +1557,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1209,31 +1583,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -1241,6 +1619,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1259,11 +1647,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -1271,6 +1659,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1290,7 +1688,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -1301,6 +1699,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1319,7 +1727,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -1330,6 +1738,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1348,7 +1766,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
@@ -1363,6 +1781,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1379,31 +1807,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -1411,6 +1843,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1429,11 +1871,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -1441,6 +1883,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1460,7 +1912,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -1471,6 +1923,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1489,7 +1951,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -1500,6 +1962,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1518,18 +1990,18 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
 							} | fn.#If
 							RateBasedStatement?: {
-								AggregateKeyType:   ("FORWARDED_IP" | "IP") | fn.#Fn
+								AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
-								Limit:               (>=100 & <=20000000) | fn.#Fn
+								Limit:               (>=100 & <=2000000000) | fn.#Fn
 								ScopeDownStatement?: {
 									ByteMatchStatement?: {
 										FieldToMatch: {
@@ -1539,6 +2011,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1555,31 +2037,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -1587,6 +2073,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1605,11 +2101,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -1617,6 +2113,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1636,7 +2142,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -1647,6 +2153,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1665,7 +2181,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -1676,6 +2192,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1694,13 +2220,13 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
 							} | fn.#If
 							RegexPatternSetReferenceStatement?: {
-								Arn:          string | fn.#Fn
+								Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								FieldToMatch: {
 									AllQueryArguments?: {
 										[string]: _
@@ -1708,6 +2234,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -1726,11 +2262,11 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SizeConstraintStatement?: {
-								ComparisonOperator: string | fn.#Fn
+								ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 								FieldToMatch:       {
 									AllQueryArguments?: {
 										[string]: _
@@ -1738,6 +2274,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -1757,7 +2303,7 @@ import "github.com/TangoGroup/aws/fn"
 								Size:                int | fn.#Fn
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SqliMatchStatement?: {
@@ -1768,6 +2314,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -1786,7 +2342,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							XssMatchStatement?: {
@@ -1797,6 +2353,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -1815,7 +2381,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 						} | fn.#If
@@ -1832,6 +2398,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1848,31 +2424,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -1880,6 +2460,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1898,11 +2488,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -1910,6 +2500,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1929,7 +2529,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -1940,6 +2540,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1958,7 +2568,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -1969,6 +2579,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -1987,7 +2607,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
@@ -2000,6 +2620,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -2016,28 +2646,32 @@ import "github.com/TangoGroup/aws/fn"
 										[string]: _
 									} | fn.#Fn
 								} | fn.#If
-								PositionalConstraint: string | fn.#Fn
+								PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 								SearchString?:        string | fn.#Fn
 								SearchStringBase64?:  string | fn.#Fn
 								TextTransformations:  [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							GeoMatchStatement?: {
-								CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+								CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 							IPSetReferenceStatement?: {
-								Arn:                     string | fn.#Fn
+								Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								IPSetForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
-									Position:         string | fn.#Fn
+									Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 								} | fn.#If
+							} | fn.#If
+							LabelMatchStatement?: {
+								Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+								Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 							} | fn.#If
 							NotStatement?: {
 								Statement: {
@@ -2049,6 +2683,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2065,31 +2709,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -2097,6 +2745,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2115,11 +2773,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -2127,6 +2785,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2146,7 +2814,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -2157,6 +2825,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2175,7 +2853,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -2186,6 +2864,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2204,7 +2892,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
@@ -2219,6 +2907,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2235,31 +2933,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -2267,6 +2969,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2285,11 +2997,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -2297,6 +3009,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2316,7 +3038,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -2327,6 +3049,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2345,7 +3077,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -2356,6 +3088,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2374,18 +3116,18 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
 							} | fn.#If
 							RateBasedStatement?: {
-								AggregateKeyType:   ("FORWARDED_IP" | "IP") | fn.#Fn
+								AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
-								Limit:               (>=100 & <=20000000) | fn.#Fn
+								Limit:               (>=100 & <=2000000000) | fn.#Fn
 								ScopeDownStatement?: {
 									ByteMatchStatement?: {
 										FieldToMatch: {
@@ -2395,6 +3137,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2411,31 +3163,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -2443,6 +3199,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2461,11 +3227,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -2473,6 +3239,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2492,7 +3268,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -2503,6 +3279,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2521,7 +3307,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -2532,6 +3318,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2550,13 +3346,13 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
 							} | fn.#If
 							RegexPatternSetReferenceStatement?: {
-								Arn:          string | fn.#Fn
+								Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								FieldToMatch: {
 									AllQueryArguments?: {
 										[string]: _
@@ -2564,6 +3360,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -2582,11 +3388,11 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SizeConstraintStatement?: {
-								ComparisonOperator: string | fn.#Fn
+								ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 								FieldToMatch:       {
 									AllQueryArguments?: {
 										[string]: _
@@ -2594,6 +3400,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -2613,7 +3429,7 @@ import "github.com/TangoGroup/aws/fn"
 								Size:                int | fn.#Fn
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SqliMatchStatement?: {
@@ -2624,6 +3440,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -2642,7 +3468,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							XssMatchStatement?: {
@@ -2653,6 +3479,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -2671,18 +3507,18 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 						}] | fn.#If
 					} | fn.#If
 					RateBasedStatement?: {
-						AggregateKeyType:   ("FORWARDED_IP" | "IP") | fn.#Fn
+						AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
 						ForwardedIPConfig?: {
-							FallbackBehavior: string | fn.#Fn
+							FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 							HeaderName:       string | fn.#Fn
 						} | fn.#If
-						Limit:               (>=100 & <=20000000) | fn.#Fn
+						Limit:               (>=100 & <=2000000000) | fn.#Fn
 						ScopeDownStatement?: {
 							AndStatement?: {
 								Statements: [...{
@@ -2694,6 +3530,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2710,31 +3556,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -2742,6 +3592,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2760,11 +3620,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -2772,6 +3632,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2791,7 +3661,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -2802,6 +3672,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2820,7 +3700,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -2831,6 +3711,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2849,7 +3739,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
@@ -2862,6 +3752,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -2878,28 +3778,32 @@ import "github.com/TangoGroup/aws/fn"
 										[string]: _
 									} | fn.#Fn
 								} | fn.#If
-								PositionalConstraint: string | fn.#Fn
+								PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 								SearchString?:        string | fn.#Fn
 								SearchStringBase64?:  string | fn.#Fn
 								TextTransformations:  [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							GeoMatchStatement?: {
-								CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+								CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 							IPSetReferenceStatement?: {
-								Arn:                     string | fn.#Fn
+								Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								IPSetForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
-									Position:         string | fn.#Fn
+									Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 								} | fn.#If
+							} | fn.#If
+							LabelMatchStatement?: {
+								Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+								Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 							} | fn.#If
 							NotStatement?: {
 								Statement: {
@@ -2911,6 +3815,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2927,31 +3841,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -2959,6 +3877,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -2977,11 +3905,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -2989,6 +3917,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3008,7 +3946,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -3019,6 +3957,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3037,7 +3985,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -3048,6 +3996,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3066,7 +4024,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
@@ -3081,6 +4039,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3097,31 +4065,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -3129,6 +4101,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3147,11 +4129,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -3159,6 +4141,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3178,7 +4170,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -3189,6 +4181,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3207,7 +4209,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -3218,6 +4220,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3236,18 +4248,18 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
 							} | fn.#If
 							RateBasedStatement?: {
-								AggregateKeyType:   ("FORWARDED_IP" | "IP") | fn.#Fn
+								AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
-								Limit:               (>=100 & <=20000000) | fn.#Fn
+								Limit:               (>=100 & <=2000000000) | fn.#Fn
 								ScopeDownStatement?: {
 									ByteMatchStatement?: {
 										FieldToMatch: {
@@ -3257,6 +4269,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3273,31 +4295,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -3305,6 +4331,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3323,11 +4359,11 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -3335,6 +4371,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3354,7 +4400,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -3365,6 +4411,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3383,7 +4439,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -3394,6 +4450,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3412,13 +4478,13 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
 							} | fn.#If
 							RegexPatternSetReferenceStatement?: {
-								Arn:          string | fn.#Fn
+								Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								FieldToMatch: {
 									AllQueryArguments?: {
 										[string]: _
@@ -3426,6 +4492,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -3444,11 +4520,11 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SizeConstraintStatement?: {
-								ComparisonOperator: string | fn.#Fn
+								ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 								FieldToMatch:       {
 									AllQueryArguments?: {
 										[string]: _
@@ -3456,6 +4532,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -3475,7 +4561,7 @@ import "github.com/TangoGroup/aws/fn"
 								Size:                int | fn.#Fn
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SqliMatchStatement?: {
@@ -3486,6 +4572,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -3504,7 +4600,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							XssMatchStatement?: {
@@ -3515,6 +4611,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -3533,13 +4639,13 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 						} | fn.#If
 					} | fn.#If
 					RegexPatternSetReferenceStatement?: {
-						Arn:          string | fn.#Fn
+						Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 						FieldToMatch: {
 							AllQueryArguments?: {
 								[string]: _
@@ -3547,6 +4653,16 @@ import "github.com/TangoGroup/aws/fn"
 							Body?: {
 								[string]: _
 							} | fn.#Fn
+							JsonBody?: {
+								InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+								MatchPattern:             {
+									All?: {
+										[string]: _
+									} | fn.#Fn
+									IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+								MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+							} | fn.#If
 							Method?: {
 								[string]: _
 							} | fn.#Fn
@@ -3565,11 +4681,11 @@ import "github.com/TangoGroup/aws/fn"
 						} | fn.#If
 						TextTransformations: [...{
 							Priority: int | fn.#Fn
-							Type:     string | fn.#Fn
+							Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					SizeConstraintStatement?: {
-						ComparisonOperator: string | fn.#Fn
+						ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 						FieldToMatch:       {
 							AllQueryArguments?: {
 								[string]: _
@@ -3577,6 +4693,16 @@ import "github.com/TangoGroup/aws/fn"
 							Body?: {
 								[string]: _
 							} | fn.#Fn
+							JsonBody?: {
+								InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+								MatchPattern:             {
+									All?: {
+										[string]: _
+									} | fn.#Fn
+									IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+								MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+							} | fn.#If
 							Method?: {
 								[string]: _
 							} | fn.#Fn
@@ -3596,7 +4722,7 @@ import "github.com/TangoGroup/aws/fn"
 						Size:                int | fn.#Fn
 						TextTransformations: [...{
 							Priority: int | fn.#Fn
-							Type:     string | fn.#Fn
+							Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					SqliMatchStatement?: {
@@ -3607,6 +4733,16 @@ import "github.com/TangoGroup/aws/fn"
 							Body?: {
 								[string]: _
 							} | fn.#Fn
+							JsonBody?: {
+								InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+								MatchPattern:             {
+									All?: {
+										[string]: _
+									} | fn.#Fn
+									IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+								MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+							} | fn.#If
 							Method?: {
 								[string]: _
 							} | fn.#Fn
@@ -3625,7 +4761,7 @@ import "github.com/TangoGroup/aws/fn"
 						} | fn.#If
 						TextTransformations: [...{
 							Priority: int | fn.#Fn
-							Type:     string | fn.#Fn
+							Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					XssMatchStatement?: {
@@ -3636,6 +4772,16 @@ import "github.com/TangoGroup/aws/fn"
 							Body?: {
 								[string]: _
 							} | fn.#Fn
+							JsonBody?: {
+								InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+								MatchPattern:             {
+									All?: {
+										[string]: _
+									} | fn.#Fn
+									IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+								MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+							} | fn.#If
 							Method?: {
 								[string]: _
 							} | fn.#Fn
@@ -3654,24 +4800,24 @@ import "github.com/TangoGroup/aws/fn"
 						} | fn.#If
 						TextTransformations: [...{
 							Priority: int | fn.#Fn
-							Type:     string | fn.#Fn
+							Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 				} | fn.#If
 				VisibilityConfig: {
 					CloudWatchMetricsEnabled: bool | fn.#Fn
-					MetricName:               string | fn.#Fn
+					MetricName:               (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 					SampledRequestsEnabled:   bool | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
-			Scope: string | fn.#Fn
+			Scope: ("CLOUDFRONT" | "REGIONAL") | fn.#Fn
 			Tags?: [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
 			VisibilityConfig: {
 				CloudWatchMetricsEnabled: bool | fn.#Fn
-				MetricName:               string | fn.#Fn
+				MetricName:               (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 				SampledRequestsEnabled:   bool | fn.#Fn
 			} | fn.#If
 		}
@@ -3684,29 +4830,64 @@ import "github.com/TangoGroup/aws/fn"
 	#WebACL: {
 		Type: "AWS::WAFv2::WebACL"
 		Properties: {
+			CustomResponseBodies?: {
+				[string]: {
+					Content:     string | fn.#Fn
+					ContentType: string | fn.#Fn
+				}
+			} | fn.#If
 			DefaultAction: {
 				Allow?: {
-					[string]: _
-				} | fn.#Fn
+					CustomRequestHandling?: {
+						InsertHeaders: [...{
+							Name:  (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+							Value: (strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+						}] | fn.#If
+					} | fn.#If
+				} | fn.#If
 				Block?: {
-					[string]: _
-				} | fn.#Fn
+					CustomResponse?: {
+						CustomResponseBodyKey?: (=~#"^[\w\-]+$"#) | fn.#Fn
+						ResponseCode:           (>=200 & <=600) | fn.#Fn
+						ResponseHeaders?:       [...{
+							Name:  (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+							Value: (strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+						}] | fn.#If
+					} | fn.#If
+				} | fn.#If
 			} | fn.#If
-			Description?: string | fn.#Fn
-			Name?:        string | fn.#Fn
+			Description?: (=~#"^[a-zA-Z0-9=:#@/\-,.][a-zA-Z0-9+=:#@/\-,.\s]+[a-zA-Z0-9+=:#@/\-,.]{1,256}$"#) | fn.#Fn
+			Name?:        (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 			Rules?:       [...{
 				Action?: {
 					Allow?: {
-						[string]: _
-					} | fn.#Fn
+						CustomRequestHandling?: {
+							InsertHeaders: [...{
+								Name:  (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+								Value: (strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+							}] | fn.#If
+						} | fn.#If
+					} | fn.#If
 					Block?: {
-						[string]: _
-					} | fn.#Fn
+						CustomResponse?: {
+							CustomResponseBodyKey?: (=~#"^[\w\-]+$"#) | fn.#Fn
+							ResponseCode:           (>=200 & <=600) | fn.#Fn
+							ResponseHeaders?:       [...{
+								Name:  (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+								Value: (strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+							}] | fn.#If
+						} | fn.#If
+					} | fn.#If
 					Count?: {
-						[string]: _
-					} | fn.#Fn
+						CustomRequestHandling?: {
+							InsertHeaders: [...{
+								Name:  (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+								Value: (strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+							}] | fn.#If
+						} | fn.#If
+					} | fn.#If
 				} | fn.#If
-				Name:            string | fn.#Fn
+				Name:            (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 				OverrideAction?: {
 					Count?: {
 						[string]: _
@@ -3715,7 +4896,10 @@ import "github.com/TangoGroup/aws/fn"
 						[string]: _
 					} | fn.#Fn
 				} | fn.#If
-				Priority:  int | fn.#Fn
+				Priority:    int | fn.#Fn
+				RuleLabels?: [...{
+					Name: (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+				}] | fn.#If
 				Statement: {
 					AndStatement?: {
 						Statements: [...{
@@ -3729,6 +4913,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3745,38 +4939,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -3784,6 +4975,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3802,17 +5003,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -3820,6 +5021,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3839,7 +5050,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -3850,6 +5061,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3868,7 +5089,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -3879,6 +5100,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3897,7 +5128,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
@@ -3910,6 +5141,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -3926,35 +5167,32 @@ import "github.com/TangoGroup/aws/fn"
 										[string]: _
 									} | fn.#Fn
 								} | fn.#If
-								PositionalConstraint: string | fn.#Fn
+								PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 								SearchString?:        string | fn.#Fn
 								SearchStringBase64?:  string | fn.#Fn
 								TextTransformations:  [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							GeoMatchStatement?: {
-								CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+								CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 							IPSetReferenceStatement?: {
-								Arn:                     string | fn.#Fn
+								Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								IPSetForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
-									Position:         string | fn.#Fn
+									Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 								} | fn.#If
 							} | fn.#If
-							ManagedRuleGroupStatement?: {
-								ExcludedRules?: [...{
-									Name: string | fn.#Fn
-								}] | fn.#If
-								Name:       string | fn.#Fn
-								VendorName: string | fn.#Fn
+							LabelMatchStatement?: {
+								Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+								Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 							} | fn.#If
 							NotStatement?: {
 								Statement: {
@@ -3966,6 +5204,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -3982,38 +5230,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -4021,6 +5266,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4039,17 +5294,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -4057,6 +5312,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4076,7 +5341,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -4087,6 +5352,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4105,7 +5380,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -4116,6 +5391,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4134,7 +5419,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
@@ -4149,6 +5434,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4165,38 +5460,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -4204,6 +5496,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4222,17 +5524,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -4240,6 +5542,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4259,7 +5571,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -4270,6 +5582,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4288,7 +5610,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -4299,6 +5621,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4317,18 +5649,18 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
 							} | fn.#If
 							RateBasedStatement?: {
-								AggregateKeyType:   ("FORWARDED_IP" | "IP") | fn.#Fn
+								AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
-								Limit:               (>=100 & <=20000000) | fn.#Fn
+								Limit:               (>=100 & <=2000000000) | fn.#Fn
 								ScopeDownStatement?: {
 									ByteMatchStatement?: {
 										FieldToMatch: {
@@ -4338,6 +5670,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4354,38 +5696,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -4393,6 +5732,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4411,17 +5760,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -4429,6 +5778,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4448,7 +5807,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -4459,6 +5818,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4477,7 +5846,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -4488,6 +5857,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4506,13 +5885,13 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
 							} | fn.#If
 							RegexPatternSetReferenceStatement?: {
-								Arn:          string | fn.#Fn
+								Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								FieldToMatch: {
 									AllQueryArguments?: {
 										[string]: _
@@ -4520,6 +5899,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -4538,17 +5927,17 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							RuleGroupReferenceStatement?: {
-								Arn:            string | fn.#Fn
+								Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								ExcludedRules?: [...{
-									Name: string | fn.#Fn
+									Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SizeConstraintStatement?: {
-								ComparisonOperator: string | fn.#Fn
+								ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 								FieldToMatch:       {
 									AllQueryArguments?: {
 										[string]: _
@@ -4556,6 +5945,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -4575,7 +5974,7 @@ import "github.com/TangoGroup/aws/fn"
 								Size:                int | fn.#Fn
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SqliMatchStatement?: {
@@ -4586,6 +5985,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -4604,7 +6013,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							XssMatchStatement?: {
@@ -4615,6 +6024,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -4633,7 +6052,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 						}] | fn.#If
@@ -4646,6 +6065,16 @@ import "github.com/TangoGroup/aws/fn"
 							Body?: {
 								[string]: _
 							} | fn.#Fn
+							JsonBody?: {
+								InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+								MatchPattern:             {
+									All?: {
+										[string]: _
+									} | fn.#Fn
+									IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+								MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+							} | fn.#If
 							Method?: {
 								[string]: _
 							} | fn.#Fn
@@ -4662,34 +6091,1192 @@ import "github.com/TangoGroup/aws/fn"
 								[string]: _
 							} | fn.#Fn
 						} | fn.#If
-						PositionalConstraint: string | fn.#Fn
+						PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 						SearchString?:        string | fn.#Fn
 						SearchStringBase64?:  string | fn.#Fn
 						TextTransformations:  [...{
 							Priority: int | fn.#Fn
-							Type:     string | fn.#Fn
+							Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					GeoMatchStatement?: {
-						CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+						CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 						ForwardedIPConfig?: {
-							FallbackBehavior: string | fn.#Fn
+							FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 							HeaderName:       string | fn.#Fn
 						} | fn.#If
 					} | fn.#If
 					IPSetReferenceStatement?: {
-						Arn:                     string | fn.#Fn
+						Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 						IPSetForwardedIPConfig?: {
-							FallbackBehavior: string | fn.#Fn
+							FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 							HeaderName:       string | fn.#Fn
-							Position:         string | fn.#Fn
+							Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 						} | fn.#If
+					} | fn.#If
+					LabelMatchStatement?: {
+						Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+						Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 					} | fn.#If
 					ManagedRuleGroupStatement?: {
 						ExcludedRules?: [...{
-							Name: string | fn.#Fn
+							Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 						}] | fn.#If
-						Name:       string | fn.#Fn
+						Name:                (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
+						ScopeDownStatement?: {
+							AndStatement?: {
+								Statements: [...{
+									ByteMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
+										SearchString?:        string | fn.#Fn
+										SearchStringBase64?:  string | fn.#Fn
+										TextTransformations:  [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									GeoMatchStatement?: {
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
+										ForwardedIPConfig?: {
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+											HeaderName:       string | fn.#Fn
+										} | fn.#If
+									} | fn.#If
+									IPSetReferenceStatement?: {
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										IPSetForwardedIPConfig?: {
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+											HeaderName:       string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
+										} | fn.#If
+									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
+									RegexPatternSetReferenceStatement?: {
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									RuleGroupReferenceStatement?: {
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										ExcludedRules?: [...{
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									SizeConstraintStatement?: {
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
+										FieldToMatch:       {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										Size:                int | fn.#Fn
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									SqliMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									XssMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+								}] | fn.#If
+							} | fn.#If
+							ByteMatchStatement?: {
+								FieldToMatch: {
+									AllQueryArguments?: {
+										[string]: _
+									} | fn.#Fn
+									Body?: {
+										[string]: _
+									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
+									Method?: {
+										[string]: _
+									} | fn.#Fn
+									QueryString?: {
+										[string]: _
+									} | fn.#Fn
+									SingleHeader?: {
+										[string]: _
+									} | fn.#Fn
+									SingleQueryArgument?: {
+										[string]: _
+									} | fn.#Fn
+									UriPath?: {
+										[string]: _
+									} | fn.#Fn
+								} | fn.#If
+								PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
+								SearchString?:        string | fn.#Fn
+								SearchStringBase64?:  string | fn.#Fn
+								TextTransformations:  [...{
+									Priority: int | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+								}] | fn.#If
+							} | fn.#If
+							GeoMatchStatement?: {
+								CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
+								ForwardedIPConfig?: {
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+									HeaderName:       string | fn.#Fn
+								} | fn.#If
+							} | fn.#If
+							IPSetReferenceStatement?: {
+								Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+								IPSetForwardedIPConfig?: {
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+									HeaderName:       string | fn.#Fn
+									Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
+								} | fn.#If
+							} | fn.#If
+							LabelMatchStatement?: {
+								Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+								Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+							} | fn.#If
+							NotStatement?: {
+								Statement: {
+									ByteMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
+										SearchString?:        string | fn.#Fn
+										SearchStringBase64?:  string | fn.#Fn
+										TextTransformations:  [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									GeoMatchStatement?: {
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
+										ForwardedIPConfig?: {
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+											HeaderName:       string | fn.#Fn
+										} | fn.#If
+									} | fn.#If
+									IPSetReferenceStatement?: {
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										IPSetForwardedIPConfig?: {
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+											HeaderName:       string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
+										} | fn.#If
+									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
+									RegexPatternSetReferenceStatement?: {
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									RuleGroupReferenceStatement?: {
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										ExcludedRules?: [...{
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									SizeConstraintStatement?: {
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
+										FieldToMatch:       {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										Size:                int | fn.#Fn
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									SqliMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									XssMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+								} | fn.#If
+							} | fn.#If
+							OrStatement?: {
+								Statements: [...{
+									ByteMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
+										SearchString?:        string | fn.#Fn
+										SearchStringBase64?:  string | fn.#Fn
+										TextTransformations:  [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									GeoMatchStatement?: {
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
+										ForwardedIPConfig?: {
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+											HeaderName:       string | fn.#Fn
+										} | fn.#If
+									} | fn.#If
+									IPSetReferenceStatement?: {
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										IPSetForwardedIPConfig?: {
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+											HeaderName:       string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
+										} | fn.#If
+									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
+									RegexPatternSetReferenceStatement?: {
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									RuleGroupReferenceStatement?: {
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										ExcludedRules?: [...{
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									SizeConstraintStatement?: {
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
+										FieldToMatch:       {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										Size:                int | fn.#Fn
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									SqliMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									XssMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+								}] | fn.#If
+							} | fn.#If
+							RateBasedStatement?: {
+								AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
+								ForwardedIPConfig?: {
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+									HeaderName:       string | fn.#Fn
+								} | fn.#If
+								Limit:               (>=100 & <=2000000000) | fn.#Fn
+								ScopeDownStatement?: {
+									ByteMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
+										SearchString?:        string | fn.#Fn
+										SearchStringBase64?:  string | fn.#Fn
+										TextTransformations:  [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									GeoMatchStatement?: {
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
+										ForwardedIPConfig?: {
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+											HeaderName:       string | fn.#Fn
+										} | fn.#If
+									} | fn.#If
+									IPSetReferenceStatement?: {
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										IPSetForwardedIPConfig?: {
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
+											HeaderName:       string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
+										} | fn.#If
+									} | fn.#If
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
+									} | fn.#If
+									RegexPatternSetReferenceStatement?: {
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									RuleGroupReferenceStatement?: {
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+										ExcludedRules?: [...{
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									SizeConstraintStatement?: {
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
+										FieldToMatch:       {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										Size:                int | fn.#Fn
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									SqliMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+									XssMatchStatement?: {
+										FieldToMatch: {
+											AllQueryArguments?: {
+												[string]: _
+											} | fn.#Fn
+											Body?: {
+												[string]: _
+											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
+											Method?: {
+												[string]: _
+											} | fn.#Fn
+											QueryString?: {
+												[string]: _
+											} | fn.#Fn
+											SingleHeader?: {
+												[string]: _
+											} | fn.#Fn
+											SingleQueryArgument?: {
+												[string]: _
+											} | fn.#Fn
+											UriPath?: {
+												[string]: _
+											} | fn.#Fn
+										} | fn.#If
+										TextTransformations: [...{
+											Priority: int | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+										}] | fn.#If
+									} | fn.#If
+								} | fn.#If
+							} | fn.#If
+							RegexPatternSetReferenceStatement?: {
+								Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+								FieldToMatch: {
+									AllQueryArguments?: {
+										[string]: _
+									} | fn.#Fn
+									Body?: {
+										[string]: _
+									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
+									Method?: {
+										[string]: _
+									} | fn.#Fn
+									QueryString?: {
+										[string]: _
+									} | fn.#Fn
+									SingleHeader?: {
+										[string]: _
+									} | fn.#Fn
+									SingleQueryArgument?: {
+										[string]: _
+									} | fn.#Fn
+									UriPath?: {
+										[string]: _
+									} | fn.#Fn
+								} | fn.#If
+								TextTransformations: [...{
+									Priority: int | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+								}] | fn.#If
+							} | fn.#If
+							RuleGroupReferenceStatement?: {
+								Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+								ExcludedRules?: [...{
+									Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
+								}] | fn.#If
+							} | fn.#If
+							SizeConstraintStatement?: {
+								ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
+								FieldToMatch:       {
+									AllQueryArguments?: {
+										[string]: _
+									} | fn.#Fn
+									Body?: {
+										[string]: _
+									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
+									Method?: {
+										[string]: _
+									} | fn.#Fn
+									QueryString?: {
+										[string]: _
+									} | fn.#Fn
+									SingleHeader?: {
+										[string]: _
+									} | fn.#Fn
+									SingleQueryArgument?: {
+										[string]: _
+									} | fn.#Fn
+									UriPath?: {
+										[string]: _
+									} | fn.#Fn
+								} | fn.#If
+								Size:                int | fn.#Fn
+								TextTransformations: [...{
+									Priority: int | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+								}] | fn.#If
+							} | fn.#If
+							SqliMatchStatement?: {
+								FieldToMatch: {
+									AllQueryArguments?: {
+										[string]: _
+									} | fn.#Fn
+									Body?: {
+										[string]: _
+									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
+									Method?: {
+										[string]: _
+									} | fn.#Fn
+									QueryString?: {
+										[string]: _
+									} | fn.#Fn
+									SingleHeader?: {
+										[string]: _
+									} | fn.#Fn
+									SingleQueryArgument?: {
+										[string]: _
+									} | fn.#Fn
+									UriPath?: {
+										[string]: _
+									} | fn.#Fn
+								} | fn.#If
+								TextTransformations: [...{
+									Priority: int | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+								}] | fn.#If
+							} | fn.#If
+							XssMatchStatement?: {
+								FieldToMatch: {
+									AllQueryArguments?: {
+										[string]: _
+									} | fn.#Fn
+									Body?: {
+										[string]: _
+									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
+									Method?: {
+										[string]: _
+									} | fn.#Fn
+									QueryString?: {
+										[string]: _
+									} | fn.#Fn
+									SingleHeader?: {
+										[string]: _
+									} | fn.#Fn
+									SingleQueryArgument?: {
+										[string]: _
+									} | fn.#Fn
+									UriPath?: {
+										[string]: _
+									} | fn.#Fn
+								} | fn.#If
+								TextTransformations: [...{
+									Priority: int | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
+								}] | fn.#If
+							} | fn.#If
+						} | fn.#If
 						VendorName: string | fn.#Fn
 					} | fn.#If
 					NotStatement?: {
@@ -4704,6 +7291,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4720,38 +7317,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -4759,6 +7353,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4777,17 +7381,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -4795,6 +7399,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4814,7 +7428,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -4825,6 +7439,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4843,7 +7467,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -4854,6 +7478,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4872,7 +7506,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
@@ -4885,6 +7519,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -4901,35 +7545,32 @@ import "github.com/TangoGroup/aws/fn"
 										[string]: _
 									} | fn.#Fn
 								} | fn.#If
-								PositionalConstraint: string | fn.#Fn
+								PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 								SearchString?:        string | fn.#Fn
 								SearchStringBase64?:  string | fn.#Fn
 								TextTransformations:  [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							GeoMatchStatement?: {
-								CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+								CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 							IPSetReferenceStatement?: {
-								Arn:                     string | fn.#Fn
+								Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								IPSetForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
-									Position:         string | fn.#Fn
+									Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 								} | fn.#If
 							} | fn.#If
-							ManagedRuleGroupStatement?: {
-								ExcludedRules?: [...{
-									Name: string | fn.#Fn
-								}] | fn.#If
-								Name:       string | fn.#Fn
-								VendorName: string | fn.#Fn
+							LabelMatchStatement?: {
+								Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+								Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 							} | fn.#If
 							NotStatement?: {
 								Statement: {
@@ -4941,6 +7582,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -4957,38 +7608,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -4996,6 +7644,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5014,17 +7672,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -5032,6 +7690,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5051,7 +7719,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -5062,6 +7730,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5080,7 +7758,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -5091,6 +7769,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5109,7 +7797,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
@@ -5124,6 +7812,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5140,38 +7838,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -5179,6 +7874,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5197,17 +7902,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -5215,6 +7920,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5234,7 +7949,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -5245,6 +7960,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5263,7 +7988,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -5274,6 +7999,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5292,18 +8027,18 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
 							} | fn.#If
 							RateBasedStatement?: {
-								AggregateKeyType:   ("FORWARDED_IP" | "IP") | fn.#Fn
+								AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
-								Limit:               (>=100 & <=20000000) | fn.#Fn
+								Limit:               (>=100 & <=2000000000) | fn.#Fn
 								ScopeDownStatement?: {
 									ByteMatchStatement?: {
 										FieldToMatch: {
@@ -5313,6 +8048,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5329,38 +8074,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -5368,6 +8110,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5386,17 +8138,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -5404,6 +8156,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5423,7 +8185,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -5434,6 +8196,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5452,7 +8224,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -5463,6 +8235,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5481,13 +8263,13 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
 							} | fn.#If
 							RegexPatternSetReferenceStatement?: {
-								Arn:          string | fn.#Fn
+								Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								FieldToMatch: {
 									AllQueryArguments?: {
 										[string]: _
@@ -5495,6 +8277,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -5513,17 +8305,17 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							RuleGroupReferenceStatement?: {
-								Arn:            string | fn.#Fn
+								Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								ExcludedRules?: [...{
-									Name: string | fn.#Fn
+									Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SizeConstraintStatement?: {
-								ComparisonOperator: string | fn.#Fn
+								ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 								FieldToMatch:       {
 									AllQueryArguments?: {
 										[string]: _
@@ -5531,6 +8323,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -5550,7 +8352,7 @@ import "github.com/TangoGroup/aws/fn"
 								Size:                int | fn.#Fn
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SqliMatchStatement?: {
@@ -5561,6 +8363,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -5579,7 +8391,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							XssMatchStatement?: {
@@ -5590,6 +8402,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -5608,7 +8430,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 						} | fn.#If
@@ -5625,6 +8447,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5641,38 +8473,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -5680,6 +8509,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5698,17 +8537,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -5716,6 +8555,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5735,7 +8584,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -5746,6 +8595,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5764,7 +8623,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -5775,6 +8634,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5793,7 +8662,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
@@ -5806,6 +8675,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -5822,35 +8701,32 @@ import "github.com/TangoGroup/aws/fn"
 										[string]: _
 									} | fn.#Fn
 								} | fn.#If
-								PositionalConstraint: string | fn.#Fn
+								PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 								SearchString?:        string | fn.#Fn
 								SearchStringBase64?:  string | fn.#Fn
 								TextTransformations:  [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							GeoMatchStatement?: {
-								CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+								CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 							IPSetReferenceStatement?: {
-								Arn:                     string | fn.#Fn
+								Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								IPSetForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
-									Position:         string | fn.#Fn
+									Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 								} | fn.#If
 							} | fn.#If
-							ManagedRuleGroupStatement?: {
-								ExcludedRules?: [...{
-									Name: string | fn.#Fn
-								}] | fn.#If
-								Name:       string | fn.#Fn
-								VendorName: string | fn.#Fn
+							LabelMatchStatement?: {
+								Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+								Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 							} | fn.#If
 							NotStatement?: {
 								Statement: {
@@ -5862,6 +8738,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5878,38 +8764,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -5917,6 +8800,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5935,17 +8828,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -5953,6 +8846,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -5972,7 +8875,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -5983,6 +8886,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6001,7 +8914,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -6012,6 +8925,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6030,7 +8953,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
@@ -6045,6 +8968,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6061,38 +8994,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -6100,6 +9030,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6118,17 +9058,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -6136,6 +9076,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6155,7 +9105,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -6166,6 +9116,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6184,7 +9144,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -6195,6 +9155,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6213,18 +9183,18 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
 							} | fn.#If
 							RateBasedStatement?: {
-								AggregateKeyType:   ("FORWARDED_IP" | "IP") | fn.#Fn
+								AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
-								Limit:               (>=100 & <=20000000) | fn.#Fn
+								Limit:               (>=100 & <=2000000000) | fn.#Fn
 								ScopeDownStatement?: {
 									ByteMatchStatement?: {
 										FieldToMatch: {
@@ -6234,6 +9204,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6250,38 +9230,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -6289,6 +9266,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6307,17 +9294,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -6325,6 +9312,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6344,7 +9341,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -6355,6 +9352,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6373,7 +9380,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -6384,6 +9391,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6402,13 +9419,13 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
 							} | fn.#If
 							RegexPatternSetReferenceStatement?: {
-								Arn:          string | fn.#Fn
+								Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								FieldToMatch: {
 									AllQueryArguments?: {
 										[string]: _
@@ -6416,6 +9433,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -6434,17 +9461,17 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							RuleGroupReferenceStatement?: {
-								Arn:            string | fn.#Fn
+								Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								ExcludedRules?: [...{
-									Name: string | fn.#Fn
+									Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SizeConstraintStatement?: {
-								ComparisonOperator: string | fn.#Fn
+								ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 								FieldToMatch:       {
 									AllQueryArguments?: {
 										[string]: _
@@ -6452,6 +9479,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -6471,7 +9508,7 @@ import "github.com/TangoGroup/aws/fn"
 								Size:                int | fn.#Fn
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SqliMatchStatement?: {
@@ -6482,6 +9519,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -6500,7 +9547,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							XssMatchStatement?: {
@@ -6511,6 +9558,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -6529,18 +9586,18 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 						}] | fn.#If
 					} | fn.#If
 					RateBasedStatement?: {
-						AggregateKeyType:   ("FORWARDED_IP" | "IP") | fn.#Fn
+						AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
 						ForwardedIPConfig?: {
-							FallbackBehavior: string | fn.#Fn
+							FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 							HeaderName:       string | fn.#Fn
 						} | fn.#If
-						Limit:               (>=100 & <=20000000) | fn.#Fn
+						Limit:               (>=100 & <=2000000000) | fn.#Fn
 						ScopeDownStatement?: {
 							AndStatement?: {
 								Statements: [...{
@@ -6552,6 +9609,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6568,38 +9635,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -6607,6 +9671,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6625,17 +9699,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -6643,6 +9717,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6662,7 +9746,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -6673,6 +9757,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6691,7 +9785,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -6702,6 +9796,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6720,7 +9824,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
@@ -6733,6 +9837,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -6749,35 +9863,32 @@ import "github.com/TangoGroup/aws/fn"
 										[string]: _
 									} | fn.#Fn
 								} | fn.#If
-								PositionalConstraint: string | fn.#Fn
+								PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 								SearchString?:        string | fn.#Fn
 								SearchStringBase64?:  string | fn.#Fn
 								TextTransformations:  [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							GeoMatchStatement?: {
-								CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+								CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 							IPSetReferenceStatement?: {
-								Arn:                     string | fn.#Fn
+								Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								IPSetForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
-									Position:         string | fn.#Fn
+									Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 								} | fn.#If
 							} | fn.#If
-							ManagedRuleGroupStatement?: {
-								ExcludedRules?: [...{
-									Name: string | fn.#Fn
-								}] | fn.#If
-								Name:       string | fn.#Fn
-								VendorName: string | fn.#Fn
+							LabelMatchStatement?: {
+								Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+								Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 							} | fn.#If
 							NotStatement?: {
 								Statement: {
@@ -6789,6 +9900,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6805,38 +9926,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -6844,6 +9962,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6862,17 +9990,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -6880,6 +10008,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6899,7 +10037,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -6910,6 +10048,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6928,7 +10076,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -6939,6 +10087,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6957,7 +10115,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
@@ -6972,6 +10130,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -6988,38 +10156,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -7027,6 +10192,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -7045,17 +10220,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -7063,6 +10238,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -7082,7 +10267,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -7093,6 +10278,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -7111,7 +10306,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -7122,6 +10317,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -7140,18 +10345,18 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								}] | fn.#If
 							} | fn.#If
 							RateBasedStatement?: {
-								AggregateKeyType:   ("FORWARDED_IP" | "IP") | fn.#Fn
+								AggregateKeyType:   ("IP" | "FORWARDED_IP") | fn.#Fn
 								ForwardedIPConfig?: {
-									FallbackBehavior: string | fn.#Fn
+									FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 									HeaderName:       string | fn.#Fn
 								} | fn.#If
-								Limit:               (>=100 & <=20000000) | fn.#Fn
+								Limit:               (>=100 & <=2000000000) | fn.#Fn
 								ScopeDownStatement?: {
 									ByteMatchStatement?: {
 										FieldToMatch: {
@@ -7161,6 +10366,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -7177,38 +10392,35 @@ import "github.com/TangoGroup/aws/fn"
 												[string]: _
 											} | fn.#Fn
 										} | fn.#If
-										PositionalConstraint: string | fn.#Fn
+										PositionalConstraint: ("EXACTLY" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CONTAINS_WORD") | fn.#Fn
 										SearchString?:        string | fn.#Fn
 										SearchStringBase64?:  string | fn.#Fn
 										TextTransformations:  [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									GeoMatchStatement?: {
-										CountryCodes?:      [...(string | fn.#Fn)] | (string | fn.#Fn)
+										CountryCodes?:      [...((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2)) | fn.#Fn)
 										ForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 									IPSetReferenceStatement?: {
-										Arn:                     string | fn.#Fn
+										Arn:                     (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										IPSetForwardedIPConfig?: {
-											FallbackBehavior: string | fn.#Fn
+											FallbackBehavior: ("MATCH" | "NO_MATCH") | fn.#Fn
 											HeaderName:       string | fn.#Fn
-											Position:         string | fn.#Fn
+											Position:         ("FIRST" | "LAST" | "ANY") | fn.#Fn
 										} | fn.#If
 									} | fn.#If
-									ManagedRuleGroupStatement?: {
-										ExcludedRules?: [...{
-											Name: string | fn.#Fn
-										}] | fn.#If
-										Name:       string | fn.#Fn
-										VendorName: string | fn.#Fn
+									LabelMatchStatement?: {
+										Key:   (=~#"^[0-9A-Za-z_:-]{1,1024}$"#) | fn.#Fn
+										Scope: ("LABEL" | "NAMESPACE") | fn.#Fn
 									} | fn.#If
 									RegexPatternSetReferenceStatement?: {
-										Arn:          string | fn.#Fn
+										Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										FieldToMatch: {
 											AllQueryArguments?: {
 												[string]: _
@@ -7216,6 +10428,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -7234,17 +10456,17 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									RuleGroupReferenceStatement?: {
-										Arn:            string | fn.#Fn
+										Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 										ExcludedRules?: [...{
-											Name: string | fn.#Fn
+											Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SizeConstraintStatement?: {
-										ComparisonOperator: string | fn.#Fn
+										ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 										FieldToMatch:       {
 											AllQueryArguments?: {
 												[string]: _
@@ -7252,6 +10474,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -7271,7 +10503,7 @@ import "github.com/TangoGroup/aws/fn"
 										Size:                int | fn.#Fn
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									SqliMatchStatement?: {
@@ -7282,6 +10514,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -7300,7 +10542,7 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 									XssMatchStatement?: {
@@ -7311,6 +10553,16 @@ import "github.com/TangoGroup/aws/fn"
 											Body?: {
 												[string]: _
 											} | fn.#Fn
+											JsonBody?: {
+												InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+												MatchPattern:             {
+													All?: {
+														[string]: _
+													} | fn.#Fn
+													IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+												} | fn.#If
+												MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+											} | fn.#If
 											Method?: {
 												[string]: _
 											} | fn.#Fn
@@ -7329,13 +10581,13 @@ import "github.com/TangoGroup/aws/fn"
 										} | fn.#If
 										TextTransformations: [...{
 											Priority: int | fn.#Fn
-											Type:     string | fn.#Fn
+											Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 										}] | fn.#If
 									} | fn.#If
 								} | fn.#If
 							} | fn.#If
 							RegexPatternSetReferenceStatement?: {
-								Arn:          string | fn.#Fn
+								Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								FieldToMatch: {
 									AllQueryArguments?: {
 										[string]: _
@@ -7343,6 +10595,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -7361,17 +10623,17 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							RuleGroupReferenceStatement?: {
-								Arn:            string | fn.#Fn
+								Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 								ExcludedRules?: [...{
-									Name: string | fn.#Fn
+									Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SizeConstraintStatement?: {
-								ComparisonOperator: string | fn.#Fn
+								ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 								FieldToMatch:       {
 									AllQueryArguments?: {
 										[string]: _
@@ -7379,6 +10641,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -7398,7 +10670,7 @@ import "github.com/TangoGroup/aws/fn"
 								Size:                int | fn.#Fn
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							SqliMatchStatement?: {
@@ -7409,6 +10681,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -7427,7 +10709,7 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 							XssMatchStatement?: {
@@ -7438,6 +10720,16 @@ import "github.com/TangoGroup/aws/fn"
 									Body?: {
 										[string]: _
 									} | fn.#Fn
+									JsonBody?: {
+										InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+										MatchPattern:             {
+											All?: {
+												[string]: _
+											} | fn.#Fn
+											IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+										MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+									} | fn.#If
 									Method?: {
 										[string]: _
 									} | fn.#Fn
@@ -7456,13 +10748,13 @@ import "github.com/TangoGroup/aws/fn"
 								} | fn.#If
 								TextTransformations: [...{
 									Priority: int | fn.#Fn
-									Type:     string | fn.#Fn
+									Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 								}] | fn.#If
 							} | fn.#If
 						} | fn.#If
 					} | fn.#If
 					RegexPatternSetReferenceStatement?: {
-						Arn:          string | fn.#Fn
+						Arn:          (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 						FieldToMatch: {
 							AllQueryArguments?: {
 								[string]: _
@@ -7470,6 +10762,16 @@ import "github.com/TangoGroup/aws/fn"
 							Body?: {
 								[string]: _
 							} | fn.#Fn
+							JsonBody?: {
+								InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+								MatchPattern:             {
+									All?: {
+										[string]: _
+									} | fn.#Fn
+									IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+								MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+							} | fn.#If
 							Method?: {
 								[string]: _
 							} | fn.#Fn
@@ -7488,17 +10790,17 @@ import "github.com/TangoGroup/aws/fn"
 						} | fn.#If
 						TextTransformations: [...{
 							Priority: int | fn.#Fn
-							Type:     string | fn.#Fn
+							Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					RuleGroupReferenceStatement?: {
-						Arn:            string | fn.#Fn
+						Arn:            (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 						ExcludedRules?: [...{
-							Name: string | fn.#Fn
+							Name: (=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					SizeConstraintStatement?: {
-						ComparisonOperator: string | fn.#Fn
+						ComparisonOperator: ("EQ" | "NE" | "LE" | "LT" | "GE" | "GT") | fn.#Fn
 						FieldToMatch:       {
 							AllQueryArguments?: {
 								[string]: _
@@ -7506,6 +10808,16 @@ import "github.com/TangoGroup/aws/fn"
 							Body?: {
 								[string]: _
 							} | fn.#Fn
+							JsonBody?: {
+								InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+								MatchPattern:             {
+									All?: {
+										[string]: _
+									} | fn.#Fn
+									IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+								MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+							} | fn.#If
 							Method?: {
 								[string]: _
 							} | fn.#Fn
@@ -7525,7 +10837,7 @@ import "github.com/TangoGroup/aws/fn"
 						Size:                int | fn.#Fn
 						TextTransformations: [...{
 							Priority: int | fn.#Fn
-							Type:     string | fn.#Fn
+							Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					SqliMatchStatement?: {
@@ -7536,6 +10848,16 @@ import "github.com/TangoGroup/aws/fn"
 							Body?: {
 								[string]: _
 							} | fn.#Fn
+							JsonBody?: {
+								InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+								MatchPattern:             {
+									All?: {
+										[string]: _
+									} | fn.#Fn
+									IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+								MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+							} | fn.#If
 							Method?: {
 								[string]: _
 							} | fn.#Fn
@@ -7554,7 +10876,7 @@ import "github.com/TangoGroup/aws/fn"
 						} | fn.#If
 						TextTransformations: [...{
 							Priority: int | fn.#Fn
-							Type:     string | fn.#Fn
+							Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					XssMatchStatement?: {
@@ -7565,6 +10887,16 @@ import "github.com/TangoGroup/aws/fn"
 							Body?: {
 								[string]: _
 							} | fn.#Fn
+							JsonBody?: {
+								InvalidFallbackBehavior?: ("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+								MatchPattern:             {
+									All?: {
+										[string]: _
+									} | fn.#Fn
+									IncludedPaths?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+								MatchScope: ("ALL" | "KEY" | "VALUE") | fn.#Fn
+							} | fn.#If
 							Method?: {
 								[string]: _
 							} | fn.#Fn
@@ -7583,24 +10915,24 @@ import "github.com/TangoGroup/aws/fn"
 						} | fn.#If
 						TextTransformations: [...{
 							Priority: int | fn.#Fn
-							Type:     string | fn.#Fn
+							Type:     ("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE") | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 				} | fn.#If
 				VisibilityConfig: {
 					CloudWatchMetricsEnabled: bool | fn.#Fn
-					MetricName:               string | fn.#Fn
+					MetricName:               (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 					SampledRequestsEnabled:   bool | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
-			Scope: string | fn.#Fn
+			Scope: ("CLOUDFRONT" | "REGIONAL") | fn.#Fn
 			Tags?: [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
 			VisibilityConfig: {
 				CloudWatchMetricsEnabled: bool | fn.#Fn
-				MetricName:               string | fn.#Fn
+				MetricName:               (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 				SampledRequestsEnabled:   bool | fn.#Fn
 			} | fn.#If
 		}
@@ -7613,8 +10945,8 @@ import "github.com/TangoGroup/aws/fn"
 	#WebACLAssociation: {
 		Type: "AWS::WAFv2::WebACLAssociation"
 		Properties: {
-			ResourceArn: string | fn.#Fn
-			WebACLArn:   string | fn.#Fn
+			ResourceArn: (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+			WebACLArn:   (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

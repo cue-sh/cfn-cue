@@ -6,10 +6,10 @@ import "github.com/TangoGroup/aws/fn"
 	#GatewayRoute: {
 		Type: "AWS::AppMesh::GatewayRoute"
 		Properties: {
-			GatewayRouteName: string | fn.#Fn
-			MeshName:         string | fn.#Fn
-			MeshOwner?:       string | fn.#Fn
-			Spec:             {
+			GatewayRouteName?: string | fn.#Fn
+			MeshName:          string | fn.#Fn
+			MeshOwner?:        string | fn.#Fn
+			Spec:              {
 				GrpcRoute?: {
 					Action: {
 						Target: {
@@ -68,15 +68,32 @@ import "github.com/TangoGroup/aws/fn"
 				BackendDefaults?: {
 					ClientPolicy?: {
 						TLS?: {
+							Certificate?: {
+								File?: {
+									CertificateChain: string | fn.#Fn
+									PrivateKey:       string | fn.#Fn
+								} | fn.#If
+								SDS?: {
+									SecretName: string | fn.#Fn
+								} | fn.#If
+							} | fn.#If
 							Enforce?:   bool | fn.#Fn
 							Ports?:     [...(int | fn.#Fn)] | (int | fn.#Fn)
 							Validation: {
+								SubjectAlternativeNames?: {
+									Match: {
+										Exact?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+									} | fn.#If
+								} | fn.#If
 								Trust: {
 									ACM?: {
 										CertificateAuthorityArns: [...(string | fn.#Fn)] | (string | fn.#Fn)
 									} | fn.#If
 									File?: {
 										CertificateChain: string | fn.#Fn
+									} | fn.#If
+									SDS?: {
+										SecretName: string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 							} | fn.#If
@@ -118,8 +135,26 @@ import "github.com/TangoGroup/aws/fn"
 								CertificateChain: string | fn.#Fn
 								PrivateKey:       string | fn.#Fn
 							} | fn.#If
+							SDS?: {
+								SecretName: string | fn.#Fn
+							} | fn.#If
 						} | fn.#If
-						Mode: string | fn.#Fn
+						Mode:        string | fn.#Fn
+						Validation?: {
+							SubjectAlternativeNames?: {
+								Match: {
+									Exact?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+							} | fn.#If
+							Trust: {
+								File?: {
+									CertificateChain: string | fn.#Fn
+								} | fn.#If
+								SDS?: {
+									SecretName: string | fn.#Fn
+								} | fn.#If
+							} | fn.#If
+						} | fn.#If
 					} | fn.#If
 				}] | fn.#If
 				Logging?: {
@@ -134,7 +169,7 @@ import "github.com/TangoGroup/aws/fn"
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
-			VirtualGatewayName: string | fn.#Fn
+			VirtualGatewayName?: string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

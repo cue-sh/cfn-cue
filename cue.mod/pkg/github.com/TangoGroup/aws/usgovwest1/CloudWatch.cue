@@ -26,7 +26,7 @@ import (
 			MetricName?:                       string | fn.#Fn
 			Metrics?:                          [...{
 				Expression?: string | fn.#Fn
-				Id:          string | fn.#Fn
+				Id:          (=~#"^([a-z])([A-Za-z0-9\_]+)$"#) | fn.#Fn
 				Label?:      string | fn.#Fn
 				MetricStat?: {
 					Metric: {

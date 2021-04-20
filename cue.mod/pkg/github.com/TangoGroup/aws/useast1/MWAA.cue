@@ -1,62 +1,64 @@
 package useast1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #MWAA: {
 	#Environment: {
 		Type: "AWS::MWAA::Environment"
 		Properties: {
-			AirflowConfigurationOptions?: {} | fn.#If
-			AirflowVersion?:              string | fn.#Fn
-			DagS3Path?:                   string | fn.#Fn
-			EnvironmentClass?:            string | fn.#Fn
-			ExecutionRoleArn?:            string | fn.#Fn
-			KmsKey?:                      string | fn.#Fn
-			LoggingConfiguration?:        {
+			AirflowConfigurationOptions?: {
+				[string]: _
+			} | fn.#Fn
+			AirflowVersion?:       (=~#"^[0-9a-z.]+$"#) | fn.#Fn
+			DagS3Path?:            (=~#".*"#) | fn.#Fn
+			EnvironmentClass?:     (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			ExecutionRoleArn?:     (=~#"^arn:aws(-[a-z]+)?:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#) | fn.#Fn
+			KmsKey?:               (=~#"^(((arn:aws(-[a-z]+)?:kms:[a-z]{2}-[a-z]+-\d:\d+:)?key\/)?[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|(arn:aws:kms:[a-z]{2}-[a-z]+-\d:\d+:)?alias/.+)$"#) | fn.#Fn
+			LoggingConfiguration?: {
 				DagProcessingLogs?: {
-					CloudWatchLogGroupArn?: string | fn.#Fn
+					CloudWatchLogGroupArn?: (=~#"^arn:aws(-[a-z]+)?:logs:[a-z0-9\-]+:\d{12}:log-group:\w+"#) | fn.#Fn
 					Enabled?:               bool | fn.#Fn
-					LogLevel?:              string | fn.#Fn
+					LogLevel?:              ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG") | fn.#Fn
 				} | fn.#If
 				SchedulerLogs?: {
-					CloudWatchLogGroupArn?: string | fn.#Fn
+					CloudWatchLogGroupArn?: (=~#"^arn:aws(-[a-z]+)?:logs:[a-z0-9\-]+:\d{12}:log-group:\w+"#) | fn.#Fn
 					Enabled?:               bool | fn.#Fn
-					LogLevel?:              string | fn.#Fn
+					LogLevel?:              ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG") | fn.#Fn
 				} | fn.#If
 				TaskLogs?: {
-					CloudWatchLogGroupArn?: string | fn.#Fn
+					CloudWatchLogGroupArn?: (=~#"^arn:aws(-[a-z]+)?:logs:[a-z0-9\-]+:\d{12}:log-group:\w+"#) | fn.#Fn
 					Enabled?:               bool | fn.#Fn
-					LogLevel?:              string | fn.#Fn
+					LogLevel?:              ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG") | fn.#Fn
 				} | fn.#If
 				WebserverLogs?: {
-					CloudWatchLogGroupArn?: string | fn.#Fn
+					CloudWatchLogGroupArn?: (=~#"^arn:aws(-[a-z]+)?:logs:[a-z0-9\-]+:\d{12}:log-group:\w+"#) | fn.#Fn
 					Enabled?:               bool | fn.#Fn
-					LogLevel?:              string | fn.#Fn
+					LogLevel?:              ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG") | fn.#Fn
 				} | fn.#If
 				WorkerLogs?: {
-					CloudWatchLogGroupArn?: string | fn.#Fn
+					CloudWatchLogGroupArn?: (=~#"^arn:aws(-[a-z]+)?:logs:[a-z0-9\-]+:\d{12}:log-group:\w+"#) | fn.#Fn
 					Enabled?:               bool | fn.#Fn
-					LogLevel?:              string | fn.#Fn
+					LogLevel?:              ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG") | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			MaxWorkers?:           int | fn.#Fn
+			MinWorkers?:           int | fn.#Fn
+			Name:                  (strings.MinRunes(1) & strings.MaxRunes(80) & (=~#"^[a-zA-Z][0-9a-zA-Z\-_]*$"#)) | fn.#Fn
 			NetworkConfiguration?: {
-				SecurityGroupIds?: {
-					SecurityGroupList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-				} | fn.#If
-				SubnetIds?: {
-					SubnetList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-				} | fn.#If
+				SecurityGroupIds?: [...((strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^sg-[a-zA-Z0-9\-._]+$"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^sg-[a-zA-Z0-9\-._]+$"#)) | fn.#Fn)
+				SubnetIds?:        [...((=~#"^subnet-[a-zA-Z0-9\-._]+$"#) | fn.#Fn)] | ((=~#"^subnet-[a-zA-Z0-9\-._]+$"#) | fn.#Fn)
 			} | fn.#If
 			PluginsS3ObjectVersion?:       string | fn.#Fn
-			PluginsS3Path?:                string | fn.#Fn
+			PluginsS3Path?:                (=~#".*"#) | fn.#Fn
 			RequirementsS3ObjectVersion?:  string | fn.#Fn
-			RequirementsS3Path?:           string | fn.#Fn
-			SourceBucketArn?:              string | fn.#Fn
+			RequirementsS3Path?:           (=~#".*"#) | fn.#Fn
+			SourceBucketArn?:              (strings.MinRunes(1) & strings.MaxRunes(1224) & (=~#"^arn:aws(-[a-z]+)?:s3:::[a-z0-9.\-]+$"#)) | fn.#Fn
 			Tags?:                         {} | fn.#If
-			WebserverAccessMode?:          string | fn.#Fn
-			WebserverUrl?:                 string | fn.#Fn
-			WeeklyMaintenanceWindowStart?: string | fn.#Fn
+			WebserverAccessMode?:          ("PRIVATE_ONLY" | "PUBLIC_ONLY") | fn.#Fn
+			WeeklyMaintenanceWindowStart?: (=~#"(MON|TUE|WED|THU|FRI|SAT|SUN):([01]\d|2[0-3]):(00|30)"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

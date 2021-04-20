@@ -78,6 +78,7 @@ import "github.com/TangoGroup/aws/fn"
 			CNAMEPrefix?:     string | fn.#Fn
 			Description?:     string | fn.#Fn
 			EnvironmentName?: string | fn.#Fn
+			OperationsRole?:  string | fn.#Fn
 			OptionSettings?:  [...{
 				Namespace:     string | fn.#Fn
 				OptionName:    string | fn.#Fn

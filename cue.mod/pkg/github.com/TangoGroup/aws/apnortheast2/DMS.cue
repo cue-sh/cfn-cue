@@ -19,8 +19,12 @@ import "github.com/TangoGroup/aws/fn"
 	#Endpoint: {
 		Type: "AWS::DMS::Endpoint"
 		Properties: {
-			CertificateArn?:   string | fn.#Fn
-			DatabaseName?:     string | fn.#Fn
+			CertificateArn?: string | fn.#Fn
+			DatabaseName?:   string | fn.#Fn
+			DocDbSettings?:  {
+				SecretsManagerAccessRoleArn?: string | fn.#Fn
+				SecretsManagerSecretId?:      string | fn.#Fn
+			} | fn.#If
 			DynamoDbSettings?: {
 				ServiceAccessRoleArn?: string | fn.#Fn
 			} | fn.#If
@@ -32,9 +36,13 @@ import "github.com/TangoGroup/aws/fn"
 			} | fn.#If
 			EndpointIdentifier?:        string | fn.#Fn
 			EndpointType:               ("source" | "target") | fn.#Fn
-			EngineName:                 ("aurora-postgresql" | "aurora" | "azuredb" | "db2" | "documentdb" | "dynamodb" | "elasticsearch" | "kafka" | "kinesis" | "mariadb" | "mongodb" | "mysql" | "neptune" | "oracle" | "postgres" | "redshift" | "s3" | "sqlserver" | "sybase") | fn.#Fn
+			EngineName:                 ("aurora-postgresql" | "aurora" | "azuredb" | "db2" | "docdb" | "dynamodb" | "elasticsearch" | "kafka" | "kinesis" | "mariadb" | "mongodb" | "mysql" | "neptune" | "oracle" | "postgres" | "redshift" | "s3" | "sqlserver" | "sybase") | fn.#Fn
 			ExtraConnectionAttributes?: string | fn.#Fn
-			KafkaSettings?:             {
+			IbmDb2Settings?:            {
+				SecretsManagerAccessRoleArn?: string | fn.#Fn
+				SecretsManagerSecretId?:      string | fn.#Fn
+			} | fn.#If
+			KafkaSettings?: {
 				Broker?: string | fn.#Fn
 				Topic?:  string | fn.#Fn
 			} | fn.#If
@@ -43,19 +51,29 @@ import "github.com/TangoGroup/aws/fn"
 				ServiceAccessRoleArn?: string | fn.#Fn
 				StreamArn?:            string | fn.#Fn
 			} | fn.#If
-			KmsKeyId?:        string | fn.#Fn
+			KmsKeyId?:                   string | fn.#Fn
+			MicrosoftSqlServerSettings?: {
+				SecretsManagerAccessRoleArn?: string | fn.#Fn
+				SecretsManagerSecretId?:      string | fn.#Fn
+			} | fn.#If
 			MongoDbSettings?: {
-				AuthMechanism?:     string | fn.#Fn
-				AuthSource?:        string | fn.#Fn
-				AuthType?:          string | fn.#Fn
-				DatabaseName?:      string | fn.#Fn
-				DocsToInvestigate?: string | fn.#Fn
-				ExtractDocId?:      string | fn.#Fn
-				NestingLevel?:      string | fn.#Fn
-				Password?:          string | fn.#Fn
-				Port?:              int | fn.#Fn
-				ServerName?:        string | fn.#Fn
-				Username?:          string | fn.#Fn
+				AuthMechanism?:               string | fn.#Fn
+				AuthSource?:                  string | fn.#Fn
+				AuthType?:                    string | fn.#Fn
+				DatabaseName?:                string | fn.#Fn
+				DocsToInvestigate?:           string | fn.#Fn
+				ExtractDocId?:                string | fn.#Fn
+				NestingLevel?:                string | fn.#Fn
+				Password?:                    string | fn.#Fn
+				Port?:                        int | fn.#Fn
+				SecretsManagerAccessRoleArn?: string | fn.#Fn
+				SecretsManagerSecretId?:      string | fn.#Fn
+				ServerName?:                  string | fn.#Fn
+				Username?:                    string | fn.#Fn
+			} | fn.#If
+			MySqlSettings?: {
+				SecretsManagerAccessRoleArn?: string | fn.#Fn
+				SecretsManagerSecretId?:      string | fn.#Fn
 			} | fn.#If
 			NeptuneSettings?: {
 				ErrorRetryDuration?:   int | fn.#Fn
@@ -66,9 +84,24 @@ import "github.com/TangoGroup/aws/fn"
 				S3BucketName?:         string | fn.#Fn
 				ServiceAccessRoleArn?: string | fn.#Fn
 			} | fn.#If
-			Password?:   string | fn.#Fn
-			Port?:       int | fn.#Fn
-			S3Settings?: {
+			OracleSettings?: {
+				SecretsManagerAccessRoleArn?:          string | fn.#Fn
+				SecretsManagerOracleAsmAccessRoleArn?: string | fn.#Fn
+				SecretsManagerOracleAsmSecretId?:      string | fn.#Fn
+				SecretsManagerSecretId?:               string | fn.#Fn
+			} | fn.#If
+			Password?:           string | fn.#Fn
+			Port?:               int | fn.#Fn
+			PostgreSqlSettings?: {
+				SecretsManagerAccessRoleArn?: string | fn.#Fn
+				SecretsManagerSecretId?:      string | fn.#Fn
+			} | fn.#If
+			RedshiftSettings?: {
+				SecretsManagerAccessRoleArn?: string | fn.#Fn
+				SecretsManagerSecretId?:      string | fn.#Fn
+			} | fn.#If
+			ResourceIdentifier?: string | fn.#Fn
+			S3Settings?:         {
 				BucketFolder?:            string | fn.#Fn
 				BucketName?:              string | fn.#Fn
 				CompressionType?:         string | fn.#Fn
@@ -77,9 +110,13 @@ import "github.com/TangoGroup/aws/fn"
 				ExternalTableDefinition?: string | fn.#Fn
 				ServiceAccessRoleArn?:    string | fn.#Fn
 			} | fn.#If
-			ServerName?: string | fn.#Fn
-			SslMode?:    ("none" | "require" | "verify-ca" | "verify-full") | fn.#Fn
-			Tags?:       [...{
+			ServerName?:     string | fn.#Fn
+			SslMode?:        ("none" | "require" | "verify-ca" | "verify-full") | fn.#Fn
+			SybaseSettings?: {
+				SecretsManagerAccessRoleArn?: string | fn.#Fn
+				SecretsManagerSecretId?:      string | fn.#Fn
+			} | fn.#If
+			Tags?: [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
@@ -126,6 +163,7 @@ import "github.com/TangoGroup/aws/fn"
 			ReplicationInstanceClass:          string | fn.#Fn
 			ReplicationInstanceIdentifier?:    string | fn.#Fn
 			ReplicationSubnetGroupIdentifier?: string | fn.#Fn
+			ResourceIdentifier?:               string | fn.#Fn
 			Tags?:                             [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
@@ -165,6 +203,7 @@ import "github.com/TangoGroup/aws/fn"
 			ReplicationInstanceArn:     string | fn.#Fn
 			ReplicationTaskIdentifier?: string | fn.#Fn
 			ReplicationTaskSettings?:   string | fn.#Fn
+			ResourceIdentifier?:        string | fn.#Fn
 			SourceEndpointArn:          string | fn.#Fn
 			TableMappings:              string | fn.#Fn
 			Tags?:                      [...{

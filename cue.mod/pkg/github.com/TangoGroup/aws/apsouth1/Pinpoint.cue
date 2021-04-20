@@ -230,9 +230,12 @@ import "github.com/TangoGroup/aws/fn"
 						Url?:               string | fn.#Fn
 					} | fn.#If
 					SMSMessage?: {
-						Body?:        string | fn.#Fn
-						MessageType?: string | fn.#Fn
-						SenderId?:    string | fn.#Fn
+						Body?:              string | fn.#Fn
+						EntityId?:          string | fn.#Fn
+						MessageType?:       string | fn.#Fn
+						OriginationNumber?: string | fn.#Fn
+						SenderId?:          string | fn.#Fn
+						TemplateId?:        string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				Schedule?: {
@@ -358,9 +361,12 @@ import "github.com/TangoGroup/aws/fn"
 					Url?:               string | fn.#Fn
 				} | fn.#If
 				SMSMessage?: {
-					Body?:        string | fn.#Fn
-					MessageType?: string | fn.#Fn
-					SenderId?:    string | fn.#Fn
+					Body?:              string | fn.#Fn
+					EntityId?:          string | fn.#Fn
+					MessageType?:       string | fn.#Fn
+					OriginationNumber?: string | fn.#Fn
+					SenderId?:          string | fn.#Fn
+					TemplateId?:        string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			Name:     string | fn.#Fn

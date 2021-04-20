@@ -141,6 +141,7 @@ import "github.com/TangoGroup/aws/fn"
 			AllowedOAuthFlowsUserPoolClient?: bool | fn.#Fn
 			AllowedOAuthScopes?:              [...(string | fn.#Fn)] | (string | fn.#Fn)
 			AnalyticsConfiguration?:          {
+				ApplicationArn?: string | fn.#Fn
 				ApplicationId?:  string | fn.#Fn
 				ExternalId?:     string | fn.#Fn
 				RoleArn?:        string | fn.#Fn

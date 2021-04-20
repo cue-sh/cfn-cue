@@ -6,8 +6,8 @@ import "github.com/TangoGroup/aws/fn"
 	#Mesh: {
 		Type: "AWS::AppMesh::Mesh"
 		Properties: {
-			MeshName: string | fn.#Fn
-			Spec?:    {
+			MeshName?: string | fn.#Fn
+			Spec?:     {
 				EgressFilter?: {
 					Type: string | fn.#Fn
 				} | fn.#If
@@ -28,7 +28,7 @@ import "github.com/TangoGroup/aws/fn"
 		Properties: {
 			MeshName:   string | fn.#Fn
 			MeshOwner?: string | fn.#Fn
-			RouteName:  string | fn.#Fn
+			RouteName?: string | fn.#Fn
 			Spec:       {
 				GrpcRoute?: {
 					Action: {
@@ -205,15 +205,32 @@ import "github.com/TangoGroup/aws/fn"
 				BackendDefaults?: {
 					ClientPolicy?: {
 						TLS?: {
+							Certificate?: {
+								File?: {
+									CertificateChain: string | fn.#Fn
+									PrivateKey:       string | fn.#Fn
+								} | fn.#If
+								SDS?: {
+									SecretName: string | fn.#Fn
+								} | fn.#If
+							} | fn.#If
 							Enforce?:   bool | fn.#Fn
 							Ports?:     [...(int | fn.#Fn)] | (int | fn.#Fn)
 							Validation: {
+								SubjectAlternativeNames?: {
+									Match: {
+										Exact?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+									} | fn.#If
+								} | fn.#If
 								Trust: {
 									ACM?: {
 										CertificateAuthorityArns: [...(string | fn.#Fn)] | (string | fn.#Fn)
 									} | fn.#If
 									File?: {
 										CertificateChain: string | fn.#Fn
+									} | fn.#If
+									SDS?: {
+										SecretName: string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 							} | fn.#If
@@ -224,15 +241,32 @@ import "github.com/TangoGroup/aws/fn"
 					VirtualService?: {
 						ClientPolicy?: {
 							TLS?: {
+								Certificate?: {
+									File?: {
+										CertificateChain: string | fn.#Fn
+										PrivateKey:       string | fn.#Fn
+									} | fn.#If
+									SDS?: {
+										SecretName: string | fn.#Fn
+									} | fn.#If
+								} | fn.#If
 								Enforce?:   bool | fn.#Fn
 								Ports?:     [...(int | fn.#Fn)] | (int | fn.#Fn)
 								Validation: {
+									SubjectAlternativeNames?: {
+										Match: {
+											Exact?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										} | fn.#If
+									} | fn.#If
 									Trust: {
 										ACM?: {
 											CertificateAuthorityArns: [...(string | fn.#Fn)] | (string | fn.#Fn)
 										} | fn.#If
 										File?: {
 											CertificateChain: string | fn.#Fn
+										} | fn.#If
+										SDS?: {
+											SecretName: string | fn.#Fn
 										} | fn.#If
 									} | fn.#If
 								} | fn.#If
@@ -291,8 +325,26 @@ import "github.com/TangoGroup/aws/fn"
 								CertificateChain: string | fn.#Fn
 								PrivateKey:       string | fn.#Fn
 							} | fn.#If
+							SDS?: {
+								SecretName: string | fn.#Fn
+							} | fn.#If
 						} | fn.#If
-						Mode: string | fn.#Fn
+						Mode:        string | fn.#Fn
+						Validation?: {
+							SubjectAlternativeNames?: {
+								Match: {
+									Exact?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+								} | fn.#If
+							} | fn.#If
+							Trust: {
+								File?: {
+									CertificateChain: string | fn.#Fn
+								} | fn.#If
+								SDS?: {
+									SecretName: string | fn.#Fn
+								} | fn.#If
+							} | fn.#If
+						} | fn.#If
 					} | fn.#If
 					Timeout?: {
 						GRPC?: {
@@ -358,7 +410,7 @@ import "github.com/TangoGroup/aws/fn"
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
-			VirtualNodeName: string | fn.#Fn
+			VirtualNodeName?: string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -383,7 +435,7 @@ import "github.com/TangoGroup/aws/fn"
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
-			VirtualRouterName: string | fn.#Fn
+			VirtualRouterName?: string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

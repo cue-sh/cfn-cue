@@ -1,6 +1,9 @@
 package cnnorthwest1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #ECS: {
 	#CapacityProvider: {
@@ -11,10 +14,10 @@ import "github.com/TangoGroup/aws/fn"
 				ManagedScaling?:     {
 					MaximumScalingStepSize?: int | fn.#Fn
 					MinimumScalingStepSize?: int | fn.#Fn
-					Status?:                 string | fn.#Fn
+					Status?:                 ("DISABLED" | "ENABLED") | fn.#Fn
 					TargetCapacity?:         int | fn.#Fn
 				} | fn.#If
-				ManagedTerminationProtection?: string | fn.#Fn
+				ManagedTerminationProtection?: ("DISABLED" | "ENABLED") | fn.#Fn
 			} | fn.#If
 			Name?: string | fn.#Fn
 			Tags?: [...{
@@ -53,6 +56,23 @@ import "github.com/TangoGroup/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ClusterCapacityProviderAssociations: {
+		Type: "AWS::ECS::ClusterCapacityProviderAssociations"
+		Properties: {
+			CapacityProviders:               [...(string | fn.#Fn)] | (string | fn.#Fn)
+			Cluster:                         (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+			DefaultCapacityProviderStrategy: [...{
+				Base?:            int | fn.#Fn
+				CapacityProvider: string | fn.#Fn
+				Weight?:          int | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#PrimaryTaskSet: {
 		Type: "AWS::ECS::PrimaryTaskSet"
 		Properties: {
@@ -76,14 +96,19 @@ import "github.com/TangoGroup/aws/fn"
 			}] | fn.#If
 			Cluster?:                 string | fn.#Fn
 			DeploymentConfiguration?: {
+				DeploymentCircuitBreaker?: {
+					Enable:   bool | fn.#Fn
+					Rollback: bool | fn.#Fn
+				} | fn.#If
 				MaximumPercent?:        int | fn.#Fn
 				MinimumHealthyPercent?: int | fn.#Fn
 			} | fn.#If
 			DeploymentController?: {
-				Type?: string | fn.#Fn
+				Type?: ("CODE_DEPLOY" | "ECS" | "EXTERNAL") | fn.#Fn
 			} | fn.#If
 			DesiredCount?:                  int | fn.#Fn
 			EnableECSManagedTags?:          bool | fn.#Fn
+			EnableExecuteCommand?:          bool | fn.#Fn
 			HealthCheckGracePeriodSeconds?: int | fn.#Fn
 			LaunchType?:                    ("EC2" | "FARGATE") | fn.#Fn
 			LoadBalancers?:                 [...{
@@ -94,21 +119,21 @@ import "github.com/TangoGroup/aws/fn"
 			}] | fn.#If
 			NetworkConfiguration?: {
 				AwsvpcConfiguration?: {
-					AssignPublicIp?: string | fn.#Fn
+					AssignPublicIp?: ("DISABLED" | "ENABLED") | fn.#Fn
 					SecurityGroups?: [...(string | fn.#Fn)] | (string | fn.#Fn)
 					Subnets?:        [...(string | fn.#Fn)] | (string | fn.#Fn)
 				} | fn.#If
 			} | fn.#If
 			PlacementConstraints?: [...{
 				Expression?: string | fn.#Fn
-				Type:        string | fn.#Fn
+				Type:        ("distinctInstance" | "memberOf") | fn.#Fn
 			}] | fn.#If
 			PlacementStrategies?: [...{
 				Field?: string | fn.#Fn
-				Type:   string | fn.#Fn
+				Type:   ("binpack" | "random" | "spread") | fn.#Fn
 			}] | fn.#If
 			PlatformVersion?:    string | fn.#Fn
-			PropagateTags?:      string | fn.#Fn
+			PropagateTags?:      ("SERVICE" | "TASK_DEFINITION") | fn.#Fn
 			Role?:               string | fn.#Fn
 			SchedulingStrategy?: ("DAEMON" | "REPLICA") | fn.#Fn
 			ServiceArn?:         string | fn.#Fn
@@ -301,7 +326,7 @@ import "github.com/TangoGroup/aws/fn"
 					} | fn.#Fn
 					FilesystemId:           string | fn.#Fn
 					RootDirectory?:         string | fn.#Fn
-					TransitEncryption?:     string | fn.#Fn
+					TransitEncryption?:     ("ENABLED" | "DISABLED") | fn.#Fn
 					TransitEncryptionPort?: int | fn.#Fn
 				} | fn.#If
 				Host?: {
@@ -321,7 +346,7 @@ import "github.com/TangoGroup/aws/fn"
 		Properties: {
 			Cluster:        string | fn.#Fn
 			ExternalId?:    string | fn.#Fn
-			LaunchType?:    string | fn.#Fn
+			LaunchType?:    ("EC2" | "FARGATE") | fn.#Fn
 			LoadBalancers?: [...{
 				ContainerName?:    string | fn.#Fn
 				ContainerPort?:    int | fn.#Fn
@@ -330,14 +355,14 @@ import "github.com/TangoGroup/aws/fn"
 			}] | fn.#If
 			NetworkConfiguration?: {
 				AwsVpcConfiguration?: {
-					AssignPublicIp?: string | fn.#Fn
+					AssignPublicIp?: ("DISABLED" | "ENABLED") | fn.#Fn
 					SecurityGroups?: [...(string | fn.#Fn)] | (string | fn.#Fn)
 					Subnets:         [...(string | fn.#Fn)] | (string | fn.#Fn)
 				} | fn.#If
 			} | fn.#If
 			PlatformVersion?: string | fn.#Fn
 			Scale?:           {
-				Unit?:  string | fn.#Fn
+				Unit?:  ("PERCENT") | fn.#Fn
 				Value?: number | fn.#Fn
 			} | fn.#If
 			Service:            string | fn.#Fn

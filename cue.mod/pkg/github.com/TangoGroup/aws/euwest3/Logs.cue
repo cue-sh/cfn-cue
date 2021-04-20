@@ -23,8 +23,8 @@ import (
 	#LogGroup: {
 		Type: "AWS::Logs::LogGroup"
 		Properties: {
-			KmsKeyId?:        string | fn.#Fn
-			LogGroupName?:    (strings.MinRunes(1) & strings.MaxRunes(512)) | fn.#Fn
+			KmsKeyId?:        (=~#"^arn:[a-z0-9-]+:kms:[a-z0-9-]+:\d{12}:(key|alias)/.+\Z"#) | fn.#Fn
+			LogGroupName?:    (strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[.\-_/#A-Za-z0-9]{1,512}\Z"#)) | fn.#Fn
 			RetentionInDays?: (1 | 3 | 5 | 7 | 14 | 30 | 60 | 90 | 120 | 150 | 180 | 365 | 400 | 545 | 731 | 1827 | 3653) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
@@ -56,6 +56,19 @@ import (
 				MetricNamespace: string | fn.#Fn
 				MetricValue:     (=~#"^(([0-9]*)|(\$.*))$"#) | fn.#Fn
 			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#QueryDefinition: {
+		Type: "AWS::Logs::QueryDefinition"
+		Properties: {
+			LogGroupNames?: [...((strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"[\.\-_/#A-Za-z0-9]+"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"[\.\-_/#A-Za-z0-9]+"#)) | fn.#Fn)
+			Name:           (strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^([^:*\/]+\/?)*[^:*\/]+$"#)) | fn.#Fn
+			QueryString:    (strings.MinRunes(1) & strings.MaxRunes(10000)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

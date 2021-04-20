@@ -6,9 +6,9 @@ import "github.com/TangoGroup/aws/fn"
 	#Canary: {
 		Type: "AWS::Synthetics::Canary"
 		Properties: {
-			ArtifactS3Location: string | fn.#Fn
+			ArtifactS3Location: (=~#"^(s3|S3)://"#) | fn.#Fn
 			Code:               {
-				Handler?:         string | fn.#Fn
+				Handler:          string | fn.#Fn
 				S3Bucket?:        string | fn.#Fn
 				S3Key?:           string | fn.#Fn
 				S3ObjectVersion?: string | fn.#Fn
@@ -16,14 +16,14 @@ import "github.com/TangoGroup/aws/fn"
 			} | fn.#If
 			ExecutionRoleArn:        string | fn.#Fn
 			FailureRetentionPeriod?: int | fn.#Fn
-			Name:                    string | fn.#Fn
+			Name:                    (=~#"^[0-9a-z_\-]{1,21}$"#) | fn.#Fn
 			RunConfig?:              {
 				ActiveTracing?:        bool | fn.#Fn
 				EnvironmentVariables?: {
 					[string]: string | fn.#Fn
 				} | fn.#If
-				MemoryInMB?:      int | fn.#Fn
-				TimeoutInSeconds: int | fn.#Fn
+				MemoryInMB?:       int | fn.#Fn
+				TimeoutInSeconds?: int | fn.#Fn
 			} | fn.#If
 			RuntimeVersion: string | fn.#Fn
 			Schedule:       {

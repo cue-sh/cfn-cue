@@ -13,17 +13,17 @@ import "github.com/TangoGroup/aws/fn"
 			Name:                                     string | fn.#Fn
 			ParametersInCacheKeyAndForwardedToOrigin: {
 				CookiesConfig: {
-					CookieBehavior: string | fn.#Fn
+					CookieBehavior: (=~#"^(none|whitelist|allExcept|all)$"#) | fn.#Fn
 					Cookies?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 				} | fn.#If
 				EnableAcceptEncodingBrotli?: bool | fn.#Fn
 				EnableAcceptEncodingGzip:    bool | fn.#Fn
 				HeadersConfig:               {
-					HeaderBehavior: string | fn.#Fn
+					HeaderBehavior: (=~#"^(none|whitelist)$"#) | fn.#Fn
 					Headers?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 				} | fn.#If
 				QueryStringsConfig: {
-					QueryStringBehavior: string | fn.#Fn
+					QueryStringBehavior: (=~#"^(none|whitelist|allExcept|all)$"#) | fn.#Fn
 					QueryStrings?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 				} | fn.#If
 			} | fn.#If
@@ -52,16 +52,16 @@ import "github.com/TangoGroup/aws/fn"
 		Properties: OriginRequestPolicyConfig: {
 			Comment?:      string | fn.#Fn
 			CookiesConfig: {
-				CookieBehavior: string | fn.#Fn
+				CookieBehavior: (=~#"^(none|whitelist|all)$"#) | fn.#Fn
 				Cookies?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 			} | fn.#If
 			HeadersConfig: {
-				HeaderBehavior: string | fn.#Fn
+				HeaderBehavior: (=~#"^(none|whitelist|allViewer|allViewerAndWhitelistCloudFront)$"#) | fn.#Fn
 				Headers?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 			} | fn.#If
 			Name:               string | fn.#Fn
 			QueryStringsConfig: {
-				QueryStringBehavior: string | fn.#Fn
+				QueryStringBehavior: (=~#"^(none|whitelist|all)$"#) | fn.#Fn
 				QueryStrings?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 			} | fn.#If
 		} | fn.#If
@@ -97,7 +97,7 @@ import "github.com/TangoGroup/aws/fn"
 			}] | fn.#If
 			Fields:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 			Name:         string | fn.#Fn
-			SamplingRate: number | fn.#Fn
+			SamplingRate: (>=1 & <=100) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

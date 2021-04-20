@@ -1,8 +1,30 @@
 package eucentral1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #EKS: {
+	#Addon: {
+		Type: "AWS::EKS::Addon"
+		Properties: {
+			AddonName:              string | fn.#Fn
+			AddonVersion?:          string | fn.#Fn
+			ClusterName:            string | fn.#Fn
+			ResolveConflicts?:      ("NONE" | "OVERWRITE") | fn.#Fn
+			ServiceAccountRoleArn?: string | fn.#Fn
+			Tags?:                  [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Cluster: {
 		Type: "AWS::EKS::Cluster"
 		Properties: {
@@ -37,8 +59,8 @@ import "github.com/TangoGroup/aws/fn"
 			PodExecutionRoleArn: string | fn.#Fn
 			Selectors:           [...{
 				Labels?: [...{
-					Key:   string | fn.#Fn
-					Value: string | fn.#Fn
+					Key:   (strings.MinRunes(1) & strings.MaxRunes(127)) | fn.#Fn
+					Value: (strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 				}] | fn.#If
 				Namespace: string | fn.#Fn
 			}] | fn.#If

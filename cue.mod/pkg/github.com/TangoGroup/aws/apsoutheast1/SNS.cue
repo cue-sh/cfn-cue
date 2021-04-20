@@ -13,7 +13,7 @@ import "github.com/TangoGroup/aws/fn"
 			FilterPolicy?: {
 				[string]: _
 			} | fn.#Fn
-			Protocol:            ("application" | "email-json" | "email" | "http" | "https" | "lambda" | "sms" | "sqs") | fn.#Fn
+			Protocol:            ("application" | "email-json" | "email" | "firehose" | "http" | "https" | "lambda" | "sms" | "sqs") | fn.#Fn
 			RawMessageDelivery?: bool | fn.#Fn
 			RedrivePolicy?:      {
 				[string]: _

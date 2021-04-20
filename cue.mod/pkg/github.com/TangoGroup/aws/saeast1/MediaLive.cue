@@ -195,9 +195,10 @@ import "github.com/TangoGroup/aws/fn"
 							YPosition?:           int | fn.#Fn
 						} | fn.#If
 						EbuTtDDestinationSettings?: {
-							FillLineGap?:  string | fn.#Fn
-							FontFamily?:   string | fn.#Fn
-							StyleControl?: string | fn.#Fn
+							CopyrightHolder?: string | fn.#Fn
+							FillLineGap?:     string | fn.#Fn
+							FontFamily?:      string | fn.#Fn
+							StyleControl?:    string | fn.#Fn
 						} | fn.#If
 						EmbeddedDestinationSettings?:           {} | fn.#If
 						EmbeddedPlusScte20DestinationSettings?: {} | fn.#If
@@ -236,6 +237,12 @@ import "github.com/TangoGroup/aws/fn"
 					OutputTimingSource?:        string | fn.#Fn
 					SupportLowFramerateInputs?: string | fn.#Fn
 				} | fn.#If
+				MotionGraphicsConfiguration?: {
+					MotionGraphicsInsertion?: string | fn.#Fn
+					MotionGraphicsSettings?:  {
+						HtmlMotionGraphicsSettings?: {} | fn.#If
+					} | fn.#If
+				} | fn.#If
 				NielsenConfiguration?: {
 					DistributorId?:          string | fn.#Fn
 					NielsenPcmToId3Tagging?: string | fn.#Fn
@@ -244,6 +251,11 @@ import "github.com/TangoGroup/aws/fn"
 					Name?:                string | fn.#Fn
 					OutputGroupSettings?: {
 						ArchiveGroupSettings?: {
+							ArchiveCdnSettings?: {
+								ArchiveS3Settings?: {
+									CannedAcl?: string | fn.#Fn
+								} | fn.#If
+							} | fn.#If
 							Destination?: {
 								DestinationRefId?: string | fn.#Fn
 							} | fn.#If
@@ -252,6 +264,11 @@ import "github.com/TangoGroup/aws/fn"
 						FrameCaptureGroupSettings?: {
 							Destination?: {
 								DestinationRefId?: string | fn.#Fn
+							} | fn.#If
+							FrameCaptureCdnSettings?: {
+								FrameCaptureS3Settings?: {
+									CannedAcl?: string | fn.#Fn
+								} | fn.#If
 							} | fn.#If
 						} | fn.#If
 						HlsGroupSettings?: {
@@ -297,6 +314,9 @@ import "github.com/TangoGroup/aws/fn"
 									MediaStoreStorageClass?:  string | fn.#Fn
 									NumRetries?:              int | fn.#Fn
 									RestartDelay?:            int | fn.#Fn
+								} | fn.#If
+								HlsS3Settings?: {
+									CannedAcl?: string | fn.#Fn
 								} | fn.#If
 								HlsWebdavSettings?: {
 									ConnectionRetryInterval?: int | fn.#Fn
@@ -480,7 +500,8 @@ import "github.com/TangoGroup/aws/fn"
 										NielsenId3Behavior?:    string | fn.#Fn
 										TimedMetadataBehavior?: string | fn.#Fn
 									} | fn.#If
-									StandardHlsSettings?: {
+									FrameCaptureHlsSettings?: {} | fn.#If
+									StandardHlsSettings?:     {
 										AudioRenditionSets?: string | fn.#Fn
 										M3u8Settings?:       {
 											AudioFramesPerPes?:     int | fn.#Fn
@@ -805,6 +826,12 @@ import "github.com/TangoGroup/aws/fn"
 								Pid?: int | fn.#Fn
 							} | fn.#If
 							TeletextSourceSettings?: {
+								OutputRectangle?: {
+									Height?:     number | fn.#Fn
+									LeftOffset?: number | fn.#Fn
+									TopOffset?:  number | fn.#Fn
+									Width?:      number | fn.#Fn
+								} | fn.#If
 								PageNumber?: string | fn.#Fn
 							} | fn.#If
 						} | fn.#If
@@ -825,7 +852,13 @@ import "github.com/TangoGroup/aws/fn"
 					Smpte2038DataPreference?: string | fn.#Fn
 					SourceEndBehavior?:       string | fn.#Fn
 					VideoSelector?:           {
-						ColorSpace?:       string | fn.#Fn
+						ColorSpace?:         string | fn.#Fn
+						ColorSpaceSettings?: {
+							Hdr10Settings?: {
+								MaxCll?:  int | fn.#Fn
+								MaxFall?: int | fn.#Fn
+							} | fn.#If
+						} | fn.#If
 						ColorSpaceUsage?:  string | fn.#Fn
 						SelectorSettings?: {
 							VideoSelectorPid?: {
@@ -849,6 +882,11 @@ import "github.com/TangoGroup/aws/fn"
 			Tags?:     {
 				[string]: _
 			} | fn.#Fn
+			Vpc?: {
+				PublicAddressAllocationIds?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+				SecurityGroupIds?:           [...(string | fn.#Fn)] | (string | fn.#Fn)
+				SubnetIds?:                  [...(string | fn.#Fn)] | (string | fn.#Fn)
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -17,7 +17,7 @@ import "github.com/TangoGroup/aws/fn"
 						Values?: [...(string | fn.#Fn)] | (string | fn.#Fn)
 					}] | fn.#If
 				} | fn.#If
-				Type?: string | fn.#Fn
+				Type?: ("TAG_FILTERS_1_0" | "CLOUDFORMATION_STACK_1_0") | fn.#Fn
 			} | fn.#If
 			Tags?: [...{
 				Key:   string | fn.#Fn

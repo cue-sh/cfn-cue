@@ -45,6 +45,10 @@ import "github.com/TangoGroup/aws/fn"
 			Properties?:               {
 				[string]: string | fn.#Fn
 			} | fn.#If
+			Tags?: [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -107,7 +111,13 @@ import "github.com/TangoGroup/aws/fn"
 	}
 	#SecurityGroup: {
 		Type: "AWS::ElastiCache::SecurityGroup"
-		Properties: Description: string | fn.#Fn
+		Properties: {
+			Description: string | fn.#Fn
+			Tags?:       [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
@@ -133,6 +143,10 @@ import "github.com/TangoGroup/aws/fn"
 			CacheSubnetGroupName?: string | fn.#Fn
 			Description:           string | fn.#Fn
 			SubnetIds:             [...(string | fn.#Fn)] | (string | fn.#Fn)
+			Tags?:                 [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -144,10 +158,10 @@ import "github.com/TangoGroup/aws/fn"
 		Type: "AWS::ElastiCache::User"
 		Properties: {
 			AccessString?:       string | fn.#Fn
-			Engine:              string | fn.#Fn
+			Engine:              ("redis") | fn.#Fn
 			NoPasswordRequired?: bool | fn.#Fn
 			Passwords?:          [...(string | fn.#Fn)] | (string | fn.#Fn)
-			UserId:              string | fn.#Fn
+			UserId:              (=~#"[a-z][a-z0-9\\-]*"#) | fn.#Fn
 			UserName:            string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
@@ -159,8 +173,8 @@ import "github.com/TangoGroup/aws/fn"
 	#UserGroup: {
 		Type: "AWS::ElastiCache::UserGroup"
 		Properties: {
-			Engine:      string | fn.#Fn
-			UserGroupId: string | fn.#Fn
+			Engine:      ("redis") | fn.#Fn
+			UserGroupId: (=~#"[a-z][a-z0-9\\-]*"#) | fn.#Fn
 			UserIds?:    [...(string | fn.#Fn)] | (string | fn.#Fn)
 		}
 		DependsOn?:           string | [...string]

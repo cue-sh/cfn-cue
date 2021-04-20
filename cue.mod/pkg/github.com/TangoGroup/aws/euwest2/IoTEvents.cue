@@ -1,55 +1,58 @@
 package euwest2
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #IoTEvents: {
 	#DetectorModel: {
 		Type: "AWS::IoTEvents::DetectorModel"
 		Properties: {
-			DetectorModelDefinition?: {
-				InitialStateName?: string | fn.#Fn
-				States?:           [...{
+			DetectorModelDefinition: {
+				InitialStateName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				States:           [...{
 					OnEnter?: {
 						Events?: [...{
 							Actions?: [...{
 								ClearTimer?: {
-									TimerName?: string | fn.#Fn
+									TimerName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								DynamoDB?: {
-									HashKeyField?: string | fn.#Fn
-									HashKeyType?:  string | fn.#Fn
-									HashKeyValue?: string | fn.#Fn
-									Operation?:    string | fn.#Fn
-									Payload?:      {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									HashKeyField: string | fn.#Fn
+									HashKeyType?: string | fn.#Fn
+									HashKeyValue: string | fn.#Fn
+									Operation?:   string | fn.#Fn
+									Payload?:     {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 									PayloadField?:  string | fn.#Fn
 									RangeKeyField?: string | fn.#Fn
 									RangeKeyType?:  string | fn.#Fn
 									RangeKeyValue?: string | fn.#Fn
-									TableName?:     string | fn.#Fn
+									TableName:      string | fn.#Fn
 								} | fn.#If
 								DynamoDBv2?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									TableName?: string | fn.#Fn
+									TableName: string | fn.#Fn
 								} | fn.#If
 								Firehose?: {
-									DeliveryStreamName?: string | fn.#Fn
-									Payload?:            {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									DeliveryStreamName: string | fn.#Fn
+									Payload?:           {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									Separator?: string | fn.#Fn
+									Separator?: (=~#"([\n\t])|(\r\n)|(,)"#) | fn.#Fn
 								} | fn.#If
 								IotEvents?: {
-									InputName?: string | fn.#Fn
-									Payload?:   {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									InputName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
+									Payload?:  {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								IotSiteWise?: {
@@ -57,13 +60,13 @@ import "github.com/TangoGroup/aws/fn"
 									EntryId?:       string | fn.#Fn
 									PropertyAlias?: string | fn.#Fn
 									PropertyId?:    string | fn.#Fn
-									PropertyValue?: {
+									PropertyValue:  {
 										Quality?:   string | fn.#Fn
 										Timestamp?: {
 											OffsetInNanos?: string | fn.#Fn
-											TimeInSeconds?: string | fn.#Fn
+											TimeInSeconds:  string | fn.#Fn
 										} | fn.#If
-										Value?: {
+										Value: {
 											BooleanValue?: string | fn.#Fn
 											DoubleValue?:  string | fn.#Fn
 											IntegerValue?: string | fn.#Fn
@@ -72,92 +75,92 @@ import "github.com/TangoGroup/aws/fn"
 									} | fn.#If
 								} | fn.#If
 								IotTopicPublish?: {
-									MqttTopic?: string | fn.#Fn
-									Payload?:   {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									MqttTopic: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+									Payload?:  {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								Lambda?: {
-									FunctionArn?: string | fn.#Fn
-									Payload?:     {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									FunctionArn: (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+									Payload?:    {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								ResetTimer?: {
-									TimerName?: string | fn.#Fn
+									TimerName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								SetTimer?: {
-									DurationExpression?: string | fn.#Fn
-									Seconds?:            int | fn.#Fn
-									TimerName?:          string | fn.#Fn
+									DurationExpression?: (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+									Seconds?:            (>=60 & <=31622400) | fn.#Fn
+									TimerName:           (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								SetVariable?: {
-									Value?:        string | fn.#Fn
-									VariableName?: string | fn.#Fn
+									Value:        (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+									VariableName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
 								} | fn.#If
 								Sns?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									TargetArn?: string | fn.#Fn
+									TargetArn: (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 								} | fn.#If
 								Sqs?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									QueueUrl?:  string | fn.#Fn
+									QueueUrl:   string | fn.#Fn
 									UseBase64?: bool | fn.#Fn
 								} | fn.#If
 							}] | fn.#If
 							Condition?: string | fn.#Fn
-							EventName?: string | fn.#Fn
+							EventName:  string | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					OnExit?: {
 						Events?: [...{
 							Actions?: [...{
 								ClearTimer?: {
-									TimerName?: string | fn.#Fn
+									TimerName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								DynamoDB?: {
-									HashKeyField?: string | fn.#Fn
-									HashKeyType?:  string | fn.#Fn
-									HashKeyValue?: string | fn.#Fn
-									Operation?:    string | fn.#Fn
-									Payload?:      {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									HashKeyField: string | fn.#Fn
+									HashKeyType?: string | fn.#Fn
+									HashKeyValue: string | fn.#Fn
+									Operation?:   string | fn.#Fn
+									Payload?:     {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 									PayloadField?:  string | fn.#Fn
 									RangeKeyField?: string | fn.#Fn
 									RangeKeyType?:  string | fn.#Fn
 									RangeKeyValue?: string | fn.#Fn
-									TableName?:     string | fn.#Fn
+									TableName:      string | fn.#Fn
 								} | fn.#If
 								DynamoDBv2?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									TableName?: string | fn.#Fn
+									TableName: string | fn.#Fn
 								} | fn.#If
 								Firehose?: {
-									DeliveryStreamName?: string | fn.#Fn
-									Payload?:            {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									DeliveryStreamName: string | fn.#Fn
+									Payload?:           {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									Separator?: string | fn.#Fn
+									Separator?: (=~#"([\n\t])|(\r\n)|(,)"#) | fn.#Fn
 								} | fn.#If
 								IotEvents?: {
-									InputName?: string | fn.#Fn
-									Payload?:   {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									InputName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
+									Payload?:  {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								IotSiteWise?: {
@@ -165,13 +168,13 @@ import "github.com/TangoGroup/aws/fn"
 									EntryId?:       string | fn.#Fn
 									PropertyAlias?: string | fn.#Fn
 									PropertyId?:    string | fn.#Fn
-									PropertyValue?: {
+									PropertyValue:  {
 										Quality?:   string | fn.#Fn
 										Timestamp?: {
 											OffsetInNanos?: string | fn.#Fn
-											TimeInSeconds?: string | fn.#Fn
+											TimeInSeconds:  string | fn.#Fn
 										} | fn.#If
-										Value?: {
+										Value: {
 											BooleanValue?: string | fn.#Fn
 											DoubleValue?:  string | fn.#Fn
 											IntegerValue?: string | fn.#Fn
@@ -180,92 +183,92 @@ import "github.com/TangoGroup/aws/fn"
 									} | fn.#If
 								} | fn.#If
 								IotTopicPublish?: {
-									MqttTopic?: string | fn.#Fn
-									Payload?:   {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									MqttTopic: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+									Payload?:  {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								Lambda?: {
-									FunctionArn?: string | fn.#Fn
-									Payload?:     {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									FunctionArn: (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+									Payload?:    {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								ResetTimer?: {
-									TimerName?: string | fn.#Fn
+									TimerName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								SetTimer?: {
-									DurationExpression?: string | fn.#Fn
-									Seconds?:            int | fn.#Fn
-									TimerName?:          string | fn.#Fn
+									DurationExpression?: (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+									Seconds?:            (>=60 & <=31622400) | fn.#Fn
+									TimerName:           (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								SetVariable?: {
-									Value?:        string | fn.#Fn
-									VariableName?: string | fn.#Fn
+									Value:        (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+									VariableName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
 								} | fn.#If
 								Sns?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									TargetArn?: string | fn.#Fn
+									TargetArn: (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 								} | fn.#If
 								Sqs?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									QueueUrl?:  string | fn.#Fn
+									QueueUrl:   string | fn.#Fn
 									UseBase64?: bool | fn.#Fn
 								} | fn.#If
 							}] | fn.#If
 							Condition?: string | fn.#Fn
-							EventName?: string | fn.#Fn
+							EventName:  string | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
 					OnInput?: {
 						Events?: [...{
 							Actions?: [...{
 								ClearTimer?: {
-									TimerName?: string | fn.#Fn
+									TimerName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								DynamoDB?: {
-									HashKeyField?: string | fn.#Fn
-									HashKeyType?:  string | fn.#Fn
-									HashKeyValue?: string | fn.#Fn
-									Operation?:    string | fn.#Fn
-									Payload?:      {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									HashKeyField: string | fn.#Fn
+									HashKeyType?: string | fn.#Fn
+									HashKeyValue: string | fn.#Fn
+									Operation?:   string | fn.#Fn
+									Payload?:     {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 									PayloadField?:  string | fn.#Fn
 									RangeKeyField?: string | fn.#Fn
 									RangeKeyType?:  string | fn.#Fn
 									RangeKeyValue?: string | fn.#Fn
-									TableName?:     string | fn.#Fn
+									TableName:      string | fn.#Fn
 								} | fn.#If
 								DynamoDBv2?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									TableName?: string | fn.#Fn
+									TableName: string | fn.#Fn
 								} | fn.#If
 								Firehose?: {
-									DeliveryStreamName?: string | fn.#Fn
-									Payload?:            {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									DeliveryStreamName: string | fn.#Fn
+									Payload?:           {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									Separator?: string | fn.#Fn
+									Separator?: (=~#"([\n\t])|(\r\n)|(,)"#) | fn.#Fn
 								} | fn.#If
 								IotEvents?: {
-									InputName?: string | fn.#Fn
-									Payload?:   {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									InputName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
+									Payload?:  {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								IotSiteWise?: {
@@ -273,13 +276,13 @@ import "github.com/TangoGroup/aws/fn"
 									EntryId?:       string | fn.#Fn
 									PropertyAlias?: string | fn.#Fn
 									PropertyId?:    string | fn.#Fn
-									PropertyValue?: {
+									PropertyValue:  {
 										Quality?:   string | fn.#Fn
 										Timestamp?: {
 											OffsetInNanos?: string | fn.#Fn
-											TimeInSeconds?: string | fn.#Fn
+											TimeInSeconds:  string | fn.#Fn
 										} | fn.#If
-										Value?: {
+										Value: {
 											BooleanValue?: string | fn.#Fn
 											DoubleValue?:  string | fn.#Fn
 											IntegerValue?: string | fn.#Fn
@@ -288,90 +291,90 @@ import "github.com/TangoGroup/aws/fn"
 									} | fn.#If
 								} | fn.#If
 								IotTopicPublish?: {
-									MqttTopic?: string | fn.#Fn
-									Payload?:   {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									MqttTopic: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+									Payload?:  {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								Lambda?: {
-									FunctionArn?: string | fn.#Fn
-									Payload?:     {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									FunctionArn: (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+									Payload?:    {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								ResetTimer?: {
-									TimerName?: string | fn.#Fn
+									TimerName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								SetTimer?: {
-									DurationExpression?: string | fn.#Fn
-									Seconds?:            int | fn.#Fn
-									TimerName?:          string | fn.#Fn
+									DurationExpression?: (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+									Seconds?:            (>=60 & <=31622400) | fn.#Fn
+									TimerName:           (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								SetVariable?: {
-									Value?:        string | fn.#Fn
-									VariableName?: string | fn.#Fn
+									Value:        (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+									VariableName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
 								} | fn.#If
 								Sns?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									TargetArn?: string | fn.#Fn
+									TargetArn: (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 								} | fn.#If
 								Sqs?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									QueueUrl?:  string | fn.#Fn
+									QueueUrl:   string | fn.#Fn
 									UseBase64?: bool | fn.#Fn
 								} | fn.#If
 							}] | fn.#If
 							Condition?: string | fn.#Fn
-							EventName?: string | fn.#Fn
+							EventName:  string | fn.#Fn
 						}] | fn.#If
 						TransitionEvents?: [...{
 							Actions?: [...{
 								ClearTimer?: {
-									TimerName?: string | fn.#Fn
+									TimerName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								DynamoDB?: {
-									HashKeyField?: string | fn.#Fn
-									HashKeyType?:  string | fn.#Fn
-									HashKeyValue?: string | fn.#Fn
-									Operation?:    string | fn.#Fn
-									Payload?:      {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									HashKeyField: string | fn.#Fn
+									HashKeyType?: string | fn.#Fn
+									HashKeyValue: string | fn.#Fn
+									Operation?:   string | fn.#Fn
+									Payload?:     {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 									PayloadField?:  string | fn.#Fn
 									RangeKeyField?: string | fn.#Fn
 									RangeKeyType?:  string | fn.#Fn
 									RangeKeyValue?: string | fn.#Fn
-									TableName?:     string | fn.#Fn
+									TableName:      string | fn.#Fn
 								} | fn.#If
 								DynamoDBv2?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									TableName?: string | fn.#Fn
+									TableName: string | fn.#Fn
 								} | fn.#If
 								Firehose?: {
-									DeliveryStreamName?: string | fn.#Fn
-									Payload?:            {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									DeliveryStreamName: string | fn.#Fn
+									Payload?:           {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									Separator?: string | fn.#Fn
+									Separator?: (=~#"([\n\t])|(\r\n)|(,)"#) | fn.#Fn
 								} | fn.#If
 								IotEvents?: {
-									InputName?: string | fn.#Fn
-									Payload?:   {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									InputName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
+									Payload?:  {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								IotSiteWise?: {
@@ -379,13 +382,13 @@ import "github.com/TangoGroup/aws/fn"
 									EntryId?:       string | fn.#Fn
 									PropertyAlias?: string | fn.#Fn
 									PropertyId?:    string | fn.#Fn
-									PropertyValue?: {
+									PropertyValue:  {
 										Quality?:   string | fn.#Fn
 										Timestamp?: {
 											OffsetInNanos?: string | fn.#Fn
-											TimeInSeconds?: string | fn.#Fn
+											TimeInSeconds:  string | fn.#Fn
 										} | fn.#If
-										Value?: {
+										Value: {
 											BooleanValue?: string | fn.#Fn
 											DoubleValue?:  string | fn.#Fn
 											IntegerValue?: string | fn.#Fn
@@ -394,60 +397,60 @@ import "github.com/TangoGroup/aws/fn"
 									} | fn.#If
 								} | fn.#If
 								IotTopicPublish?: {
-									MqttTopic?: string | fn.#Fn
-									Payload?:   {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									MqttTopic: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+									Payload?:  {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								Lambda?: {
-									FunctionArn?: string | fn.#Fn
-									Payload?:     {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+									FunctionArn: (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+									Payload?:    {
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
 								} | fn.#If
 								ResetTimer?: {
-									TimerName?: string | fn.#Fn
+									TimerName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								SetTimer?: {
-									DurationExpression?: string | fn.#Fn
-									Seconds?:            int | fn.#Fn
-									TimerName?:          string | fn.#Fn
+									DurationExpression?: (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+									Seconds?:            (>=60 & <=31622400) | fn.#Fn
+									TimerName:           (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 								} | fn.#If
 								SetVariable?: {
-									Value?:        string | fn.#Fn
-									VariableName?: string | fn.#Fn
+									Value:        (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+									VariableName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
 								} | fn.#If
 								Sns?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									TargetArn?: string | fn.#Fn
+									TargetArn: (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 								} | fn.#If
 								Sqs?: {
 									Payload?: {
-										ContentExpression?: string | fn.#Fn
-										Type?:              string | fn.#Fn
+										ContentExpression: string | fn.#Fn
+										Type:              string | fn.#Fn
 									} | fn.#If
-									QueueUrl?:  string | fn.#Fn
+									QueueUrl:   string | fn.#Fn
 									UseBase64?: bool | fn.#Fn
 								} | fn.#If
 							}] | fn.#If
-							Condition?: string | fn.#Fn
-							EventName?: string | fn.#Fn
-							NextState?: string | fn.#Fn
+							Condition: string | fn.#Fn
+							EventName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+							NextState: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
-					StateName?: string | fn.#Fn
+					StateName: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
 			DetectorModelDescription?: string | fn.#Fn
-			DetectorModelName?:        string | fn.#Fn
-			EvaluationMethod?:         string | fn.#Fn
-			Key?:                      string | fn.#Fn
-			RoleArn?:                  string | fn.#Fn
+			DetectorModelName?:        (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9_-]+$"#)) | fn.#Fn
+			EvaluationMethod?:         ("BATCH" | "SERIAL") | fn.#Fn
+			Key?:                      (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^((`[\w\- ]+`)|([\w\-]+))(\.((`[\w\- ]+`)|([\w\-]+)))*$"#)) | fn.#Fn
+			RoleArn:                   (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 			Tags?:                     [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
@@ -462,13 +465,13 @@ import "github.com/TangoGroup/aws/fn"
 	#Input: {
 		Type: "AWS::IoTEvents::Input"
 		Properties: {
-			InputDefinition?: {
-				Attributes?: [...{
-					JsonPath?: string | fn.#Fn
+			InputDefinition: {
+				Attributes: [...{
+					JsonPath: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^((`[a-zA-Z0-9_\- ]+`)|([a-zA-Z0-9_\-]+))(\.((`[a-zA-Z0-9_\- ]+`)|([a-zA-Z0-9_\-]+)))*$"#)) | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
-			InputDescription?: string | fn.#Fn
-			InputName?:        string | fn.#Fn
+			InputDescription?: (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+			InputName?:        (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
 			Tags?:             [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn

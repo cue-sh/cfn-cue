@@ -1,6 +1,9 @@
 package mesouth1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #CloudFormation: {
 	#CustomResource: {
@@ -35,9 +38,9 @@ import "github.com/TangoGroup/aws/fn"
 	#ModuleDefaultVersion: {
 		Type: "AWS::CloudFormation::ModuleDefaultVersion"
 		Properties: {
-			Arn?:        string | fn.#Fn
-			ModuleName?: string | fn.#Fn
-			VersionId?:  string | fn.#Fn
+			Arn?:        (=~#"^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/module/.+/[0-9]{8}$"#) | fn.#Fn
+			ModuleName?: (=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::MODULE"#) | fn.#Fn
+			VersionId?:  (=~#"^[0-9]{8}$"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -48,8 +51,38 @@ import "github.com/TangoGroup/aws/fn"
 	#ModuleVersion: {
 		Type: "AWS::CloudFormation::ModuleVersion"
 		Properties: {
-			ModuleName:     string | fn.#Fn
-			ModulePackage?: string | fn.#Fn
+			ModuleName:    (=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::MODULE"#) | fn.#Fn
+			ModulePackage: string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ResourceDefaultVersion: {
+		Type: "AWS::CloudFormation::ResourceDefaultVersion"
+		Properties: {
+			TypeName?:       (=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$"#) | fn.#Fn
+			TypeVersionArn?: (=~#"^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/resource/.+$"#) | fn.#Fn
+			VersionId?:      (=~#"^[A-Za-z0-9-]{1,128}$"#) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ResourceVersion: {
+		Type: "AWS::CloudFormation::ResourceVersion"
+		Properties: {
+			ExecutionRoleArn?: string | fn.#Fn
+			LoggingConfig?:    {
+				LogGroupName?: (strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[\.\-_/#A-Za-z0-9]+$"#)) | fn.#Fn
+				LogRoleArn?:   (strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			} | fn.#If
+			SchemaHandlerPackage: string | fn.#Fn
+			TypeName:             (=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

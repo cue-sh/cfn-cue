@@ -10,14 +10,9 @@ import (
 	#AccessPoint: {
 		Type: "AWS::S3::AccessPoint"
 		Properties: {
-			Bucket:         string | fn.#Fn
-			CreationDate?:  string | fn.#Fn
-			Name?:          string | fn.#Fn
-			NetworkOrigin?: string | fn.#Fn
-			Policy?:        {
-				[string]: _
-			} | fn.#Fn
-			PolicyStatus?: {
+			Bucket:  (strings.MinRunes(3) & strings.MaxRunes(255)) | fn.#Fn
+			Name?:   (strings.MinRunes(3) & strings.MaxRunes(50) & (=~#"^[a-z0-9]([a-z0-9\-]*[a-z0-9])?$"#)) | fn.#Fn
+			Policy?: {
 				[string]: _
 			} | fn.#Fn
 			PublicAccessBlockConfiguration?: {
@@ -27,7 +22,7 @@ import (
 				RestrictPublicBuckets?: bool | fn.#Fn
 			} | fn.#If
 			VpcConfiguration?: {
-				VpcId?: string | fn.#Fn
+				VpcId?: (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]

@@ -1,20 +1,50 @@
 package uswest2
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #ECR: {
+	#RegistryPolicy: {
+		Type: "AWS::ECR::RegistryPolicy"
+		Properties: PolicyText: {
+			[string]: _
+		} | fn.#Fn
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ReplicationConfiguration: {
+		Type: "AWS::ECR::ReplicationConfiguration"
+		Properties: ReplicationConfiguration: {
+			Rules: [...{
+				Destinations: [...{
+					Region:     (=~#"[0-9a-z-]{2,25}"#) | fn.#Fn
+					RegistryId: (=~#"^[0-9]{12}$"#) | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
+		} | fn.#If
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Repository: {
 		Type: "AWS::ECR::Repository"
 		Properties: {
 			ImageScanningConfiguration?: {
 				[string]: _
 			} | fn.#Fn
-			ImageTagMutability?: string | fn.#Fn
+			ImageTagMutability?: ("MUTABLE" | "IMMUTABLE") | fn.#Fn
 			LifecyclePolicy?:    {
-				LifecyclePolicyText?: string | fn.#Fn
-				RegistryId?:          string | fn.#Fn
+				LifecyclePolicyText?: (strings.MinRunes(100) & strings.MaxRunes(30720)) | fn.#Fn
+				RegistryId?:          (strings.MinRunes(12) & strings.MaxRunes(12) & (=~#"^[0-9]{12}$"#)) | fn.#Fn
 			} | fn.#If
-			RepositoryName?:       string | fn.#Fn
+			RepositoryName?:       (strings.MinRunes(2) & strings.MaxRunes(256) & (=~#"^(?=.{2,256}$)((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)$"#)) | fn.#Fn
 			RepositoryPolicyText?: {
 				[string]: _
 			} | fn.#Fn

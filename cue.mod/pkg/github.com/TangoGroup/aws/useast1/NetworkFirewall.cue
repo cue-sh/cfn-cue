@@ -1,15 +1,18 @@
 package useast1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #NetworkFirewall: {
 	#Firewall: {
 		Type: "AWS::NetworkFirewall::Firewall"
 		Properties: {
 			DeleteProtection?:               bool | fn.#Fn
-			Description?:                    string | fn.#Fn
-			FirewallName:                    string | fn.#Fn
-			FirewallPolicyArn:               string | fn.#Fn
+			Description?:                    (=~#"^.*$"#) | fn.#Fn
+			FirewallName:                    (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9-]+$"#)) | fn.#Fn
+			FirewallPolicyArn:               (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:aws.*$"#)) | fn.#Fn
 			FirewallPolicyChangeProtection?: bool | fn.#Fn
 			SubnetChangeProtection?:         bool | fn.#Fn
 			SubnetMappings:                  [...{
@@ -19,7 +22,7 @@ import "github.com/TangoGroup/aws/fn"
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
-			VpcId: string | fn.#Fn
+			VpcId: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^vpc-[0-9a-f]+$"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -30,29 +33,29 @@ import "github.com/TangoGroup/aws/fn"
 	#FirewallPolicy: {
 		Type: "AWS::NetworkFirewall::FirewallPolicy"
 		Properties: {
-			Description?:   string | fn.#Fn
+			Description?:   (strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^.*$"#)) | fn.#Fn
 			FirewallPolicy: {
 				StatefulRuleGroupReferences?: [...{
-					ResourceArn: string | fn.#Fn
+					ResourceArn: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^(arn:aws.*)$"#)) | fn.#Fn
 				}] | fn.#If
 				StatelessCustomActions?: [...{
 					ActionDefinition: {
 						PublishMetricAction?: {
 							Dimensions: [...{
-								Value: string | fn.#Fn
+								Value: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9-_ ]+$"#)) | fn.#Fn
 							}] | fn.#If
 						} | fn.#If
 					} | fn.#If
-					ActionName: string | fn.#Fn
+					ActionName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9]+$"#)) | fn.#Fn
 				}] | fn.#If
 				StatelessDefaultActions:         [...(string | fn.#Fn)] | (string | fn.#Fn)
 				StatelessFragmentDefaultActions: [...(string | fn.#Fn)] | (string | fn.#Fn)
 				StatelessRuleGroupReferences?:   [...{
-					Priority:    int | fn.#Fn
-					ResourceArn: string | fn.#Fn
+					Priority:    (>=1 & <=65535) | fn.#Fn
+					ResourceArn: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^(arn:aws.*)$"#)) | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
-			FirewallPolicyName: string | fn.#Fn
+			FirewallPolicyName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9-]+$"#)) | fn.#Fn
 			Tags?:              [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
@@ -67,15 +70,15 @@ import "github.com/TangoGroup/aws/fn"
 	#LoggingConfiguration: {
 		Type: "AWS::NetworkFirewall::LoggingConfiguration"
 		Properties: {
-			FirewallArn:          string | fn.#Fn
-			FirewallName?:        string | fn.#Fn
+			FirewallArn:          (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:aws.*$"#)) | fn.#Fn
+			FirewallName?:        (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9-]+$"#)) | fn.#Fn
 			LoggingConfiguration: {
 				LogDestinationConfigs: [...{
 					LogDestination: {
 						[string]: string | fn.#Fn
 					} | fn.#If
-					LogDestinationType: string | fn.#Fn
-					LogType:            string | fn.#Fn
+					LogDestinationType: ("S3" | "CloudWatchLogs" | "KinesisDataFirehose") | fn.#Fn
+					LogType:            ("ALERT" | "FLOW") | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
 		}
@@ -89,7 +92,7 @@ import "github.com/TangoGroup/aws/fn"
 		Type: "AWS::NetworkFirewall::RuleGroup"
 		Properties: {
 			Capacity:     int | fn.#Fn
-			Description?: string | fn.#Fn
+			Description?: (strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^.*$"#)) | fn.#Fn
 			RuleGroup?:   {
 				RuleVariables?: {
 					IPSets?: {
@@ -101,24 +104,24 @@ import "github.com/TangoGroup/aws/fn"
 				} | fn.#If
 				RulesSource: {
 					RulesSourceList?: {
-						GeneratedRulesType: string | fn.#Fn
-						TargetTypes:        [...(string | fn.#Fn)] | (string | fn.#Fn)
+						GeneratedRulesType: ("ALLOWLIST" | "DENYLIST") | fn.#Fn
+						TargetTypes:        [...(("TLS_SNI" | "HTTP_HOST") | fn.#Fn)] | (("TLS_SNI" | "HTTP_HOST") | fn.#Fn)
 						Targets:            [...(string | fn.#Fn)] | (string | fn.#Fn)
 					} | fn.#If
 					RulesString?:   string | fn.#Fn
 					StatefulRules?: [...{
-						Action: string | fn.#Fn
+						Action: ("PASS" | "DROP" | "ALERT") | fn.#Fn
 						Header: {
-							Destination:     string | fn.#Fn
-							DestinationPort: string | fn.#Fn
-							Direction:       string | fn.#Fn
-							Protocol:        string | fn.#Fn
-							Source:          string | fn.#Fn
-							SourcePort:      string | fn.#Fn
+							Destination:     (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^.*$"#)) | fn.#Fn
+							DestinationPort: (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^.*$"#)) | fn.#Fn
+							Direction:       ("FORWARD" | "ANY") | fn.#Fn
+							Protocol:        ("IP" | "TCP" | "UDP" | "ICMP" | "HTTP" | "FTP" | "TLS" | "SMB" | "DNS" | "DCERPC" | "SSH" | "SMTP" | "IMAP" | "MSN" | "KRB5" | "IKEV2" | "TFTP" | "NTP" | "DHCP") | fn.#Fn
+							Source:          (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^.*$"#)) | fn.#Fn
+							SourcePort:      (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^.*$"#)) | fn.#Fn
 						} | fn.#If
 						RuleOptions: [...{
-							Keyword:   string | fn.#Fn
-							Settings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+							Keyword:   (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^.*$"#)) | fn.#Fn
+							Settings?: [...((strings.MinRunes(1) & strings.MaxRunes(8192) & (=~#"^.*$"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(8192) & (=~#"^.*$"#)) | fn.#Fn)
 						}] | fn.#If
 					}] | fn.#If
 					StatelessRulesAndCustomActions?: {
@@ -126,14 +129,14 @@ import "github.com/TangoGroup/aws/fn"
 							ActionDefinition: {
 								PublishMetricAction?: {
 									Dimensions: [...{
-										Value: string | fn.#Fn
+										Value: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9-_ ]+$"#)) | fn.#Fn
 									}] | fn.#If
 								} | fn.#If
 							} | fn.#If
-							ActionName: string | fn.#Fn
+							ActionName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9]+$"#)) | fn.#Fn
 						}] | fn.#If
 						StatelessRules: [...{
-							Priority:       int | fn.#Fn
+							Priority:       (>=1 & <=65535) | fn.#Fn
 							RuleDefinition: {
 								Actions:         [...(string | fn.#Fn)] | (string | fn.#Fn)
 								MatchAttributes: {
@@ -142,7 +145,7 @@ import "github.com/TangoGroup/aws/fn"
 										ToPort:   int | fn.#Fn
 									}] | fn.#If
 									Destinations?: [...{
-										AddressDefinition: string | fn.#Fn
+										AddressDefinition: (strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^([a-fA-F\d:\.]+/\d{1,3})$"#)) | fn.#Fn
 									}] | fn.#If
 									Protocols?:   [...(int | fn.#Fn)] | (int | fn.#Fn)
 									SourcePorts?: [...{
@@ -150,11 +153,11 @@ import "github.com/TangoGroup/aws/fn"
 										ToPort:   int | fn.#Fn
 									}] | fn.#If
 									Sources?: [...{
-										AddressDefinition: string | fn.#Fn
+										AddressDefinition: (strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^([a-fA-F\d:\.]+/\d{1,3})$"#)) | fn.#Fn
 									}] | fn.#If
 									TCPFlags?: [...{
-										Flags:  [...(string | fn.#Fn)] | (string | fn.#Fn)
-										Masks?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+										Flags:  [...(("FIN" | "SYN" | "RST" | "PSH" | "ACK" | "URG" | "ECE" | "CWR") | fn.#Fn)] | (("FIN" | "SYN" | "RST" | "PSH" | "ACK" | "URG" | "ECE" | "CWR") | fn.#Fn)
+										Masks?: [...(("FIN" | "SYN" | "RST" | "PSH" | "ACK" | "URG" | "ECE" | "CWR") | fn.#Fn)] | (("FIN" | "SYN" | "RST" | "PSH" | "ACK" | "URG" | "ECE" | "CWR") | fn.#Fn)
 									}] | fn.#If
 								} | fn.#If
 							} | fn.#If
@@ -162,12 +165,12 @@ import "github.com/TangoGroup/aws/fn"
 					} | fn.#If
 				} | fn.#If
 			} | fn.#If
-			RuleGroupName: string | fn.#Fn
+			RuleGroupName: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9-]+$"#)) | fn.#Fn
 			Tags?:         [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
-			Type: string | fn.#Fn
+			Type: ("STATELESS" | "STATEFUL") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

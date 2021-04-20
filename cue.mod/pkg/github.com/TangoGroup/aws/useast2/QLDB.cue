@@ -27,10 +27,10 @@ import "github.com/TangoGroup/aws/fn"
 			InclusiveStartTime:   string | fn.#Fn
 			KinesisConfiguration: {
 				AggregationEnabled?: bool | fn.#Fn
-				StreamArn?:          string | fn.#Fn
+				StreamArn?:          (=~#"arn:[\w+=/,.@-]+:[\w+=/,.@-]+:[\w+=/,.@-]*:[0-9]*:[\w+=,.@-]+(/[\w+=,.@-]+)*"#) | fn.#Fn
 			} | fn.#If
 			LedgerName: string | fn.#Fn
-			RoleArn:    string | fn.#Fn
+			RoleArn:    (=~#"arn:[\w+=/,.@-]+:[\w+=/,.@-]+:[\w+=/,.@-]*:[0-9]*:[\w+=,.@-]+(/[\w+=,.@-]+)*"#) | fn.#Fn
 			StreamName: string | fn.#Fn
 			Tags?:      [...{
 				Key:   string | fn.#Fn

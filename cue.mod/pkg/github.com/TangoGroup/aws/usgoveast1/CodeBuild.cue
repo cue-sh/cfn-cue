@@ -32,9 +32,10 @@ import "github.com/TangoGroup/aws/fn"
 				Modes?:    [...(string | fn.#Fn)] | (string | fn.#Fn)
 				Type:      ("LOCAL" | "NO_CACHE" | "S3") | fn.#Fn
 			} | fn.#If
-			Description?:   string | fn.#Fn
-			EncryptionKey?: string | fn.#Fn
-			Environment:    {
+			ConcurrentBuildLimit?: int | fn.#Fn
+			Description?:          string | fn.#Fn
+			EncryptionKey?:        string | fn.#Fn
+			Environment:           {
 				Certificate?:          string | fn.#Fn
 				ComputeType:           ("BUILD_GENERAL1_2XLARGE" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_SMALL") | fn.#Fn
 				EnvironmentVariables?: [...{

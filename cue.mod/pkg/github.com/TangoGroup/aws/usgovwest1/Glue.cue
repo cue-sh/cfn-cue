@@ -45,7 +45,14 @@ import "github.com/TangoGroup/aws/fn"
 			Tags?:            {
 				[string]: _
 			} | fn.#Fn
-			Timeout?:            int | fn.#Fn
+			Timeout?:             int | fn.#Fn
+			TransformEncryption?: {
+				MLUserDataEncryption?: {
+					KmsKeyId?:                string | fn.#Fn
+					MLUserDataEncryptionMode: string | fn.#Fn
+				} | fn.#If
+				TaskRunSecurityConfigurationName?: string | fn.#Fn
+			} | fn.#If
 			TransformParameters: {
 				FindMatchesParameters?: {
 					AccuracyCostTradeoff?:    number | fn.#Fn

@@ -1,13 +1,16 @@
 package uswest2
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #DevOpsGuru: {
 	#NotificationChannel: {
 		Type: "AWS::DevOpsGuru::NotificationChannel"
 		Properties: Config: {
 			Sns?: {
-				TopicArn?: string | fn.#Fn
+				TopicArn?: (strings.MinRunes(36) & strings.MaxRunes(1024) & (=~#"^arn:aws[a-z0-9-]*:sns:[a-z0-9-]+:\d{12}:[^:]+$"#)) | fn.#Fn
 			} | fn.#If
 		} | fn.#If
 		DependsOn?:           string | [...string]
@@ -20,7 +23,7 @@ import "github.com/TangoGroup/aws/fn"
 		Type: "AWS::DevOpsGuru::ResourceCollection"
 		Properties: ResourceCollectionFilter: {
 			CloudFormation?: {
-				StackNames?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+				StackNames?: [...((strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z*]+[a-zA-Z0-9-]*$"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z*]+[a-zA-Z0-9-]*$"#)) | fn.#Fn)
 			} | fn.#If
 		} | fn.#If
 		DependsOn?:           string | [...string]

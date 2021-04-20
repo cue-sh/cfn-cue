@@ -142,6 +142,9 @@ import "github.com/TangoGroup/aws/fn"
 			RequestTemplates?: {
 				[string]: _
 			} | fn.#Fn
+			ResponseParameters?: {
+				[string]: _
+			} | fn.#Fn
 			TemplateSelectionExpression?: string | fn.#Fn
 			TimeoutInMillis?:             int | fn.#Fn
 			TlsConfig?:                   {
@@ -245,6 +248,7 @@ import "github.com/TangoGroup/aws/fn"
 				DestinationArn?: string | fn.#Fn
 				Format?:         string | fn.#Fn
 			} | fn.#If
+			AccessPolicyId?:       string | fn.#Fn
 			ApiId:                 string | fn.#Fn
 			AutoDeploy?:           bool | fn.#Fn
 			ClientCertificateId?:  string | fn.#Fn

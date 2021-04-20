@@ -1,6 +1,9 @@
 package euwest2
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #MediaPackage: {
 	#Asset: {
@@ -30,7 +33,7 @@ import "github.com/TangoGroup/aws/fn"
 		Type: "AWS::MediaPackage::Channel"
 		Properties: {
 			Description?: string | fn.#Fn
-			Id:           string | fn.#Fn
+			Id:           (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A[0-9a-zA-Z-_]+\Z"#)) | fn.#Fn
 			Tags?:        [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
@@ -62,13 +65,13 @@ import "github.com/TangoGroup/aws/fn"
 					} | fn.#If
 				} | fn.#If
 				HlsManifests?: [...{
-					AdMarkers?:                      string | fn.#Fn
-					AdTriggers?:                     [...(string | fn.#Fn)] | (string | fn.#Fn)
-					AdsOnDeliveryRestrictions?:      string | fn.#Fn
+					AdMarkers?:                      ("NONE" | "SCTE35_ENHANCED" | "PASSTHROUGH" | "DATERANGE") | fn.#Fn
+					AdTriggers?:                     [...(("SPLICE_INSERT" | "BREAK" | "PROVIDER_ADVERTISEMENT" | "DISTRIBUTOR_ADVERTISEMENT" | "PROVIDER_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_PLACEMENT_OPPORTUNITY" | "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY") | fn.#Fn)] | (("SPLICE_INSERT" | "BREAK" | "PROVIDER_ADVERTISEMENT" | "DISTRIBUTOR_ADVERTISEMENT" | "PROVIDER_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_PLACEMENT_OPPORTUNITY" | "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY") | fn.#Fn)
+					AdsOnDeliveryRestrictions?:      ("NONE" | "RESTRICTED" | "UNRESTRICTED" | "BOTH") | fn.#Fn
 					Id:                              string | fn.#Fn
 					IncludeIframeOnlyStream?:        bool | fn.#Fn
 					ManifestName?:                   string | fn.#Fn
-					PlaylistType?:                   string | fn.#Fn
+					PlaylistType?:                   ("NONE" | "EVENT" | "VOD") | fn.#Fn
 					PlaylistWindowSeconds?:          int | fn.#Fn
 					ProgramDateTimeIntervalSeconds?: int | fn.#Fn
 					Url?:                            string | fn.#Fn
@@ -78,12 +81,12 @@ import "github.com/TangoGroup/aws/fn"
 				StreamSelection?:        {
 					MaxVideoBitsPerSecond?: int | fn.#Fn
 					MinVideoBitsPerSecond?: int | fn.#Fn
-					StreamOrder?:           string | fn.#Fn
+					StreamOrder?:           ("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			DashPackage?: {
-				AdTriggers?:                [...(string | fn.#Fn)] | (string | fn.#Fn)
-				AdsOnDeliveryRestrictions?: string | fn.#Fn
+				AdTriggers?:                [...(("SPLICE_INSERT" | "BREAK" | "PROVIDER_ADVERTISEMENT" | "DISTRIBUTOR_ADVERTISEMENT" | "PROVIDER_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_PLACEMENT_OPPORTUNITY" | "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY") | fn.#Fn)] | (("SPLICE_INSERT" | "BREAK" | "PROVIDER_ADVERTISEMENT" | "DISTRIBUTOR_ADVERTISEMENT" | "PROVIDER_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_PLACEMENT_OPPORTUNITY" | "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY") | fn.#Fn)
+				AdsOnDeliveryRestrictions?: ("NONE" | "RESTRICTED" | "UNRESTRICTED" | "BOTH") | fn.#Fn
 				Encryption?:                {
 					KeyRotationIntervalSeconds?: int | fn.#Fn
 					SpekeKeyProvider:            {
@@ -94,29 +97,29 @@ import "github.com/TangoGroup/aws/fn"
 						Url:             string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				ManifestLayout?:         string | fn.#Fn
+				ManifestLayout?:         ("FULL" | "COMPACT") | fn.#Fn
 				ManifestWindowSeconds?:  int | fn.#Fn
 				MinBufferTimeSeconds?:   int | fn.#Fn
 				MinUpdatePeriodSeconds?: int | fn.#Fn
-				PeriodTriggers?:         [...(string | fn.#Fn)] | (string | fn.#Fn)
-				Profile?:                string | fn.#Fn
+				PeriodTriggers?:         [...(("ADS") | fn.#Fn)] | (("ADS") | fn.#Fn)
+				Profile?:                ("NONE" | "HBBTV_1_5") | fn.#Fn
 				SegmentDurationSeconds?: int | fn.#Fn
-				SegmentTemplateFormat?:  string | fn.#Fn
+				SegmentTemplateFormat?:  ("NUMBER_WITH_TIMELINE" | "TIME_WITH_TIMELINE" | "NUMBER_WITH_DURATION") | fn.#Fn
 				StreamSelection?:        {
 					MaxVideoBitsPerSecond?: int | fn.#Fn
 					MinVideoBitsPerSecond?: int | fn.#Fn
-					StreamOrder?:           string | fn.#Fn
+					StreamOrder?:           ("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 				} | fn.#If
 				SuggestedPresentationDelaySeconds?: int | fn.#Fn
 			} | fn.#If
 			Description?: string | fn.#Fn
 			HlsPackage?:  {
-				AdMarkers?:                 string | fn.#Fn
-				AdTriggers?:                [...(string | fn.#Fn)] | (string | fn.#Fn)
-				AdsOnDeliveryRestrictions?: string | fn.#Fn
+				AdMarkers?:                 ("NONE" | "SCTE35_ENHANCED" | "PASSTHROUGH" | "DATERANGE") | fn.#Fn
+				AdTriggers?:                [...(("SPLICE_INSERT" | "BREAK" | "PROVIDER_ADVERTISEMENT" | "DISTRIBUTOR_ADVERTISEMENT" | "PROVIDER_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_PLACEMENT_OPPORTUNITY" | "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY") | fn.#Fn)] | (("SPLICE_INSERT" | "BREAK" | "PROVIDER_ADVERTISEMENT" | "DISTRIBUTOR_ADVERTISEMENT" | "PROVIDER_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_PLACEMENT_OPPORTUNITY" | "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY") | fn.#Fn)
+				AdsOnDeliveryRestrictions?: ("NONE" | "RESTRICTED" | "UNRESTRICTED" | "BOTH") | fn.#Fn
 				Encryption?:                {
 					ConstantInitializationVector?: string | fn.#Fn
-					EncryptionMethod?:             string | fn.#Fn
+					EncryptionMethod?:             ("AES_128" | "SAMPLE_AES") | fn.#Fn
 					KeyRotationIntervalSeconds?:   int | fn.#Fn
 					RepeatExtXKey?:                bool | fn.#Fn
 					SpekeKeyProvider:              {
@@ -128,18 +131,18 @@ import "github.com/TangoGroup/aws/fn"
 					} | fn.#If
 				} | fn.#If
 				IncludeIframeOnlyStream?:        bool | fn.#Fn
-				PlaylistType?:                   string | fn.#Fn
+				PlaylistType?:                   ("NONE" | "EVENT" | "VOD") | fn.#Fn
 				PlaylistWindowSeconds?:          int | fn.#Fn
 				ProgramDateTimeIntervalSeconds?: int | fn.#Fn
 				SegmentDurationSeconds?:         int | fn.#Fn
 				StreamSelection?:                {
 					MaxVideoBitsPerSecond?: int | fn.#Fn
 					MinVideoBitsPerSecond?: int | fn.#Fn
-					StreamOrder?:           string | fn.#Fn
+					StreamOrder?:           ("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 				} | fn.#If
 				UseAudioRenditionGroup?: bool | fn.#Fn
 			} | fn.#If
-			Id:            string | fn.#Fn
+			Id:            (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A[0-9a-zA-Z-_]+\Z"#)) | fn.#Fn
 			ManifestName?: string | fn.#Fn
 			MssPackage?:   {
 				Encryption?: {
@@ -156,10 +159,10 @@ import "github.com/TangoGroup/aws/fn"
 				StreamSelection?:        {
 					MaxVideoBitsPerSecond?: int | fn.#Fn
 					MinVideoBitsPerSecond?: int | fn.#Fn
-					StreamOrder?:           string | fn.#Fn
+					StreamOrder?:           ("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			Origination?:            string | fn.#Fn
+			Origination?:            ("ALLOW" | "DENY") | fn.#Fn
 			StartoverWindowSeconds?: int | fn.#Fn
 			Tags?:                   [...{
 				Key:   string | fn.#Fn
@@ -186,7 +189,7 @@ import "github.com/TangoGroup/aws/fn"
 					} | fn.#If
 				} | fn.#If
 				HlsManifests: [...{
-					AdMarkers?:                      string | fn.#Fn
+					AdMarkers?:                      ("NONE" | "SCTE35_ENHANCED" | "PASSTHROUGH") | fn.#Fn
 					IncludeIframeOnlyStream?:        bool | fn.#Fn
 					ManifestName?:                   string | fn.#Fn
 					ProgramDateTimeIntervalSeconds?: int | fn.#Fn
@@ -194,21 +197,21 @@ import "github.com/TangoGroup/aws/fn"
 					StreamSelection?:                {
 						MaxVideoBitsPerSecond?: int | fn.#Fn
 						MinVideoBitsPerSecond?: int | fn.#Fn
-						StreamOrder?:           string | fn.#Fn
+						StreamOrder?:           ("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 					} | fn.#If
 				}] | fn.#If
 				SegmentDurationSeconds?: int | fn.#Fn
 			} | fn.#If
 			DashPackage?: {
 				DashManifests: [...{
-					ManifestLayout?:       string | fn.#Fn
+					ManifestLayout?:       ("FULL" | "COMPACT") | fn.#Fn
 					ManifestName?:         string | fn.#Fn
 					MinBufferTimeSeconds?: int | fn.#Fn
-					Profile?:              string | fn.#Fn
+					Profile?:              ("NONE" | "HBBTV_1_5") | fn.#Fn
 					StreamSelection?:      {
 						MaxVideoBitsPerSecond?: int | fn.#Fn
 						MinVideoBitsPerSecond?: int | fn.#Fn
-						StreamOrder?:           string | fn.#Fn
+						StreamOrder?:           ("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 					} | fn.#If
 				}] | fn.#If
 				Encryption?: {
@@ -220,12 +223,12 @@ import "github.com/TangoGroup/aws/fn"
 				} | fn.#If
 				PeriodTriggers?:         [...(string | fn.#Fn)] | (string | fn.#Fn)
 				SegmentDurationSeconds?: int | fn.#Fn
-				SegmentTemplateFormat?:  string | fn.#Fn
+				SegmentTemplateFormat?:  ("NUMBER_WITH_TIMELINE" | "TIME_WITH_TIMELINE" | "NUMBER_WITH_DURATION") | fn.#Fn
 			} | fn.#If
 			HlsPackage?: {
 				Encryption?: {
 					ConstantInitializationVector?: string | fn.#Fn
-					EncryptionMethod?:             string | fn.#Fn
+					EncryptionMethod?:             ("AES_128" | "SAMPLE_AES") | fn.#Fn
 					SpekeKeyProvider:              {
 						RoleArn:   string | fn.#Fn
 						SystemIds: [...(string | fn.#Fn)] | (string | fn.#Fn)
@@ -233,7 +236,7 @@ import "github.com/TangoGroup/aws/fn"
 					} | fn.#If
 				} | fn.#If
 				HlsManifests: [...{
-					AdMarkers?:                      string | fn.#Fn
+					AdMarkers?:                      ("NONE" | "SCTE35_ENHANCED" | "PASSTHROUGH") | fn.#Fn
 					IncludeIframeOnlyStream?:        bool | fn.#Fn
 					ManifestName?:                   string | fn.#Fn
 					ProgramDateTimeIntervalSeconds?: int | fn.#Fn
@@ -241,7 +244,7 @@ import "github.com/TangoGroup/aws/fn"
 					StreamSelection?:                {
 						MaxVideoBitsPerSecond?: int | fn.#Fn
 						MinVideoBitsPerSecond?: int | fn.#Fn
-						StreamOrder?:           string | fn.#Fn
+						StreamOrder?:           ("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 					} | fn.#If
 				}] | fn.#If
 				SegmentDurationSeconds?: int | fn.#Fn
@@ -261,7 +264,7 @@ import "github.com/TangoGroup/aws/fn"
 					StreamSelection?: {
 						MaxVideoBitsPerSecond?: int | fn.#Fn
 						MinVideoBitsPerSecond?: int | fn.#Fn
-						StreamOrder?:           string | fn.#Fn
+						StreamOrder?:           ("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 					} | fn.#If
 				}] | fn.#If
 				SegmentDurationSeconds?: int | fn.#Fn
@@ -285,7 +288,7 @@ import "github.com/TangoGroup/aws/fn"
 				CdnIdentifierSecret: string | fn.#Fn
 				SecretsRoleArn:      string | fn.#Fn
 			} | fn.#If
-			Id:    string | fn.#Fn
+			Id:    (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A[0-9a-zA-Z-_]+\Z"#)) | fn.#Fn
 			Tags?: [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn

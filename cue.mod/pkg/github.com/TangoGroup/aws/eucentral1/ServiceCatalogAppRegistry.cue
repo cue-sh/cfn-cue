@@ -1,13 +1,16 @@
 package eucentral1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #ServiceCatalogAppRegistry: {
 	#Application: {
 		Type: "AWS::ServiceCatalogAppRegistry::Application"
 		Properties: {
 			Description?: string | fn.#Fn
-			Name:         string | fn.#Fn
+			Name:         (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\w+"#)) | fn.#Fn
 			Tags?:        {
 				[string]: string | fn.#Fn
 			} | fn.#If
@@ -21,9 +24,11 @@ import "github.com/TangoGroup/aws/fn"
 	#AttributeGroup: {
 		Type: "AWS::ServiceCatalogAppRegistry::AttributeGroup"
 		Properties: {
-			Attributes:   {} | fn.#If
+			Attributes: {
+				[string]: _
+			} | fn.#Fn
 			Description?: string | fn.#Fn
-			Name:         string | fn.#Fn
+			Name:         (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\w+"#)) | fn.#Fn
 			Tags?:        {
 				[string]: string | fn.#Fn
 			} | fn.#If
@@ -37,8 +42,8 @@ import "github.com/TangoGroup/aws/fn"
 	#AttributeGroupAssociation: {
 		Type: "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation"
 		Properties: {
-			Application:    string | fn.#Fn
-			AttributeGroup: string | fn.#Fn
+			Application:    (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\w+|[a-z0-9]{12}"#)) | fn.#Fn
+			AttributeGroup: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\w+|[a-z0-9]{12}"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -49,9 +54,9 @@ import "github.com/TangoGroup/aws/fn"
 	#ResourceAssociation: {
 		Type: "AWS::ServiceCatalogAppRegistry::ResourceAssociation"
 		Properties: {
-			Application:  string | fn.#Fn
-			Resource:     string | fn.#Fn
-			ResourceType: string | fn.#Fn
+			Application:  (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\w+|[a-z0-9]{12}"#)) | fn.#Fn
+			Resource:     (=~#"\w+|arn:aws[-a-z]*:cloudformation:[a-z]{2}(-gov)?-[a-z]+-\d:\d{12}:stack/[a-zA-Z][-A-Za-z0-9]{0,127}/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"#) | fn.#Fn
+			ResourceType: ("CFN_STACK") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

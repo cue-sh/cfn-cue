@@ -1,10 +1,9 @@
-module github.com/TangoGroup/cfn-cue
+module github.com/cue-sh/cfn-cue
 
 go 1.12
 
 require (
-	cuelang.org/go v0.2.2
-	github.com/davecgh/go-spew v1.1.1
+	cuelang.org/go v0.3.2
 	github.com/google/go-cmp v0.5.0 // indirect
 	github.com/lib/pq v1.7.0 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect

@@ -67,12 +67,13 @@ import "github.com/TangoGroup/aws/fn"
 	#Configuration: {
 		Type: "AWS::AmazonMQ::Configuration"
 		Properties: {
-			Data:          string | fn.#Fn
-			Description?:  string | fn.#Fn
-			EngineType:    string | fn.#Fn
-			EngineVersion: string | fn.#Fn
-			Name:          string | fn.#Fn
-			Tags?:         [...{
+			AuthenticationStrategy?: string | fn.#Fn
+			Data:                    string | fn.#Fn
+			Description?:            string | fn.#Fn
+			EngineType:              string | fn.#Fn
+			EngineVersion:           string | fn.#Fn
+			Name:                    string | fn.#Fn
+			Tags?:                   [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If

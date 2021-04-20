@@ -26,7 +26,7 @@ import (
 			MetricName?:                       string | fn.#Fn
 			Metrics?:                          [...{
 				Expression?: string | fn.#Fn
-				Id:          string | fn.#Fn
+				Id:          (=~#"^([a-z])([A-Za-z0-9\_]+)$"#) | fn.#Fn
 				Label?:      string | fn.#Fn
 				MetricStat?: {
 					Metric: {
@@ -87,12 +87,12 @@ import (
 		Type: "AWS::CloudWatch::CompositeAlarm"
 		Properties: {
 			ActionsEnabled?:          bool | fn.#Fn
-			AlarmActions?:            [...(string | fn.#Fn)] | (string | fn.#Fn)
+			AlarmActions?:            [...((strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)
 			AlarmDescription?:        string | fn.#Fn
-			AlarmName:                string | fn.#Fn
-			AlarmRule:                string | fn.#Fn
-			InsufficientDataActions?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-			OKActions?:               [...(string | fn.#Fn)] | (string | fn.#Fn)
+			AlarmName:                (strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+			AlarmRule:                (strings.MinRunes(1) & strings.MaxRunes(10240)) | fn.#Fn
+			InsufficientDataActions?: [...((strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)
+			OKActions?:               [...((strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

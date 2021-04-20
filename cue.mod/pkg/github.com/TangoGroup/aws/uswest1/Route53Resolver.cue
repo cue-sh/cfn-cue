@@ -1,11 +1,74 @@
 package uswest1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #Route53Resolver: {
+	#FirewallDomainList: {
+		Type: "AWS::Route53Resolver::FirewallDomainList"
+		Properties: {
+			DomainFileUrl?: (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			Domains?:       [...((strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn)
+			Name?:          (strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"(?!^[0-9]+$)([a-zA-Z0-9\-_' ']+)"#)) | fn.#Fn
+			Tags?:          [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#FirewallRuleGroup: {
+		Type: "AWS::Route53Resolver::FirewallRuleGroup"
+		Properties: {
+			FirewallRules?: [...{
+				Action:                ("ALLOW" | "BLOCK" | "ALERT") | fn.#Fn
+				BlockOverrideDnsType?: ("CNAME") | fn.#Fn
+				BlockOverrideDomain?:  (strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+				BlockOverrideTtl?:     int | fn.#Fn
+				BlockResponse?:        ("NODATA" | "NXDOMAIN" | "OVERRIDE") | fn.#Fn
+				FirewallDomainListId:  (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+				Priority:              int | fn.#Fn
+			}] | fn.#If
+			Name?: (strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"(?!^[0-9]+$)([a-zA-Z0-9\-_' ']+)"#)) | fn.#Fn
+			Tags?: [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#FirewallRuleGroupAssociation: {
+		Type: "AWS::Route53Resolver::FirewallRuleGroupAssociation"
+		Properties: {
+			FirewallRuleGroupId: (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			MutationProtection?: ("ENABLED" | "DISABLED") | fn.#Fn
+			Name?:               (=~#"(?!^[0-9]+$)([a-zA-Z0-9\-_' ']+)"#) | fn.#Fn
+			Priority:            int | fn.#Fn
+			Tags?:               [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+			VpcId: (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ResolverDNSSECConfig: {
 		Type: "AWS::Route53Resolver::ResolverDNSSECConfig"
-		Properties: ResourceId?: string | fn.#Fn
+		Properties: ResourceId?: (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
@@ -36,8 +99,8 @@ import "github.com/TangoGroup/aws/fn"
 	#ResolverQueryLoggingConfig: {
 		Type: "AWS::Route53Resolver::ResolverQueryLoggingConfig"
 		Properties: {
-			DestinationArn?: string | fn.#Fn
-			Name?:           string | fn.#Fn
+			DestinationArn?: (strings.MinRunes(1) & strings.MaxRunes(600)) | fn.#Fn
+			Name?:           (strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"(?!^[0-9]+$)([a-zA-Z0-9\-_' ']+)"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -48,8 +111,8 @@ import "github.com/TangoGroup/aws/fn"
 	#ResolverQueryLoggingConfigAssociation: {
 		Type: "AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation"
 		Properties: {
-			ResolverQueryLogConfigId?: string | fn.#Fn
-			ResourceId?:               string | fn.#Fn
+			ResolverQueryLogConfigId?: (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			ResourceId?:               (strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

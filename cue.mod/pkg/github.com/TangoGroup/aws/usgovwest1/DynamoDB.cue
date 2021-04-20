@@ -10,8 +10,14 @@ import "github.com/TangoGroup/aws/fn"
 				AttributeName: string | fn.#Fn
 				AttributeType: ("B" | "N" | "S") | fn.#Fn
 			}] | fn.#If
-			BillingMode?:            ("PAY_PER_REQUEST" | "PROVISIONED") | fn.#Fn
+			BillingMode?:                      ("PAY_PER_REQUEST" | "PROVISIONED") | fn.#Fn
+			ContributorInsightsSpecification?: {
+				Enabled: bool | fn.#Fn
+			} | fn.#If
 			GlobalSecondaryIndexes?: [...{
+				ContributorInsightsSpecification?: {
+					Enabled: bool | fn.#Fn
+				} | fn.#If
 				IndexName: string | fn.#Fn
 				KeySchema: [...{
 					AttributeName: string | fn.#Fn
@@ -30,6 +36,9 @@ import "github.com/TangoGroup/aws/fn"
 				AttributeName: string | fn.#Fn
 				KeyType:       ("HASH" | "RANGE") | fn.#Fn
 			}] | fn.#If
+			KinesisStreamSpecification?: {
+				StreamArn: string | fn.#Fn
+			} | fn.#If
 			LocalSecondaryIndexes?: [...{
 				IndexName: string | fn.#Fn
 				KeySchema: [...{

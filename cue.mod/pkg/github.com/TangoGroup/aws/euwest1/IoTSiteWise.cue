@@ -1,12 +1,21 @@
 package euwest1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #IoTSiteWise: {
 	#AccessPolicy: {
 		Type: "AWS::IoTSiteWise::AccessPolicy"
 		Properties: {
 			AccessPolicyIdentity: {
+				IamRole?: {
+					arn?: string | fn.#Fn
+				} | fn.#If
+				IamUser?: {
+					arn?: string | fn.#Fn
+				} | fn.#If
 				User?: {
 					id?: string | fn.#Fn
 				} | fn.#If
@@ -32,14 +41,14 @@ import "github.com/TangoGroup/aws/fn"
 		Properties: {
 			AssetHierarchies?: [...{
 				ChildAssetId: string | fn.#Fn
-				LogicalId:    string | fn.#Fn
+				LogicalId:    (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
 			}] | fn.#If
 			AssetModelId:     string | fn.#Fn
 			AssetName:        string | fn.#Fn
 			AssetProperties?: [...{
 				Alias?:             string | fn.#Fn
-				LogicalId:          string | fn.#Fn
-				NotificationState?: string | fn.#Fn
+				LogicalId:          (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+				NotificationState?: ("ENABLED" | "DISABLED") | fn.#Fn
 			}] | fn.#If
 			Tags?: [...{
 				Key:   string | fn.#Fn
@@ -55,18 +64,62 @@ import "github.com/TangoGroup/aws/fn"
 	#AssetModel: {
 		Type: "AWS::IoTSiteWise::AssetModel"
 		Properties: {
+			AssetModelCompositeModels?: [...{
+				CompositeModelProperties?: [...{
+					DataType:      ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT") | fn.#Fn
+					DataTypeSpec?: ("AWS/ALARM_STATE") | fn.#Fn
+					LogicalId:     (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+					Name:          string | fn.#Fn
+					Type:          {
+						Attribute?: {
+							DefaultValue?: string | fn.#Fn
+						} | fn.#If
+						Metric?: {
+							Expression: string | fn.#Fn
+							Variables:  [...{
+								Name:  string | fn.#Fn
+								Value: {
+									HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+									PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+								} | fn.#If
+							}] | fn.#If
+							Window: {
+								Tumbling?: {
+									Interval: ("1w" | "1d" | "1h" | "15m" | "5m" | "1m") | fn.#Fn
+								} | fn.#If
+							} | fn.#If
+						} | fn.#If
+						Transform?: {
+							Expression: string | fn.#Fn
+							Variables:  [...{
+								Name:  string | fn.#Fn
+								Value: {
+									HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+									PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+								} | fn.#If
+							}] | fn.#If
+						} | fn.#If
+						TypeName: ("Measurement" | "Attribute" | "Transform" | "Metric") | fn.#Fn
+					} | fn.#If
+					Unit?: string | fn.#Fn
+				}] | fn.#If
+				Description?: string | fn.#Fn
+				Name:         string | fn.#Fn
+				Type:         string | fn.#Fn
+			}] | fn.#If
 			AssetModelDescription?: string | fn.#Fn
 			AssetModelHierarchies?: [...{
 				ChildAssetModelId: string | fn.#Fn
-				LogicalId:         string | fn.#Fn
+				LogicalId:         (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
 				Name:              string | fn.#Fn
 			}] | fn.#If
 			AssetModelName:        string | fn.#Fn
 			AssetModelProperties?: [...{
-				DataType:  string | fn.#Fn
-				LogicalId: string | fn.#Fn
-				Name:      string | fn.#Fn
-				Type:      {
+				DataType:      ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT") | fn.#Fn
+				DataTypeSpec?: ("AWS/ALARM_STATE") | fn.#Fn
+				LogicalId:     (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+				Name:          string | fn.#Fn
+				Type:          {
 					Attribute?: {
 						DefaultValue?: string | fn.#Fn
 					} | fn.#If
@@ -75,13 +128,13 @@ import "github.com/TangoGroup/aws/fn"
 						Variables:  [...{
 							Name:  string | fn.#Fn
 							Value: {
-								HierarchyLogicalId?: string | fn.#Fn
-								PropertyLogicalId:   string | fn.#Fn
+								HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+								PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
 							} | fn.#If
 						}] | fn.#If
 						Window: {
 							Tumbling?: {
-								Interval: string | fn.#Fn
+								Interval: ("1w" | "1d" | "1h" | "15m" | "5m" | "1m") | fn.#Fn
 							} | fn.#If
 						} | fn.#If
 					} | fn.#If
@@ -90,12 +143,12 @@ import "github.com/TangoGroup/aws/fn"
 						Variables:  [...{
 							Name:  string | fn.#Fn
 							Value: {
-								HierarchyLogicalId?: string | fn.#Fn
-								PropertyLogicalId:   string | fn.#Fn
+								HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+								PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
 							} | fn.#If
 						}] | fn.#If
 					} | fn.#If
-					TypeName: string | fn.#Fn
+					TypeName: ("Measurement" | "Attribute" | "Transform" | "Metric") | fn.#Fn
 				} | fn.#If
 				Unit?: string | fn.#Fn
 			}] | fn.#If
@@ -155,6 +208,7 @@ import "github.com/TangoGroup/aws/fn"
 	#Portal: {
 		Type: "AWS::IoTSiteWise::Portal"
 		Properties: {
+			PortalAuthMode?:    string | fn.#Fn
 			PortalContactEmail: string | fn.#Fn
 			PortalDescription?: string | fn.#Fn
 			PortalName:         string | fn.#Fn

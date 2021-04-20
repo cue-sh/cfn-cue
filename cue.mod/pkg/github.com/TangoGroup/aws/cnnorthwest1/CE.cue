@@ -1,14 +1,18 @@
 package cnnorthwest1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #CE: {
 	#CostCategory: {
 		Type: "AWS::CE::CostCategory"
 		Properties: {
-			Name:        string | fn.#Fn
-			RuleVersion: string | fn.#Fn
-			Rules:       string | fn.#Fn
+			DefaultValue?: (strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn
+			Name:          (strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn
+			RuleVersion:   ("CostCategoryExpression.v1") | fn.#Fn
+			Rules:         string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

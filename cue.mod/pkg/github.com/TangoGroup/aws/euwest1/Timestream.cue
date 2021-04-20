@@ -1,13 +1,16 @@
 package euwest1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #Timestream: {
 	#Database: {
 		Type: "AWS::Timestream::Database"
 		Properties: {
-			DatabaseName?: string | fn.#Fn
-			KmsKeyId?:     string | fn.#Fn
+			DatabaseName?: (=~#"^[a-zA-Z0-9_.-]{3,64}$"#) | fn.#Fn
+			KmsKeyId?:     (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 			Tags?:         [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
@@ -22,11 +25,11 @@ import "github.com/TangoGroup/aws/fn"
 	#Table: {
 		Type: "AWS::Timestream::Table"
 		Properties: {
-			DatabaseName:         string | fn.#Fn
+			DatabaseName:         (=~#"^[a-zA-Z0-9_.-]{3,64}$"#) | fn.#Fn
 			RetentionProperties?: {
 				[string]: _
 			} | fn.#Fn
-			TableName?: string | fn.#Fn
+			TableName?: (=~#"^[a-zA-Z0-9_.-]{3,64}$"#) | fn.#Fn
 			Tags?:      [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn

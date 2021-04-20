@@ -1,15 +1,18 @@
 package saeast1
 
-import "github.com/TangoGroup/aws/fn"
+import (
+	"github.com/TangoGroup/aws/fn"
+	"strings"
+)
 
 #IoT: {
 	#Authorizer: {
 		Type: "AWS::IoT::Authorizer"
 		Properties: {
 			AuthorizerFunctionArn: string | fn.#Fn
-			AuthorizerName?:       string | fn.#Fn
+			AuthorizerName?:       (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[\w=,@-]+"#)) | fn.#Fn
 			SigningDisabled?:      bool | fn.#Fn
-			Status?:               string | fn.#Fn
+			Status?:               ("ACTIVE" | "INACTIVE") | fn.#Fn
 			Tags?:                 [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
@@ -28,11 +31,35 @@ import "github.com/TangoGroup/aws/fn"
 	#Certificate: {
 		Type: "AWS::IoT::Certificate"
 		Properties: {
-			CACertificatePem?:          string | fn.#Fn
-			CertificateMode?:           string | fn.#Fn
-			CertificatePem?:            string | fn.#Fn
+			CACertificatePem?:          (strings.MinRunes(1) & strings.MaxRunes(65536)) | fn.#Fn
+			CertificateMode?:           ("DEFAULT" | "SNI_ONLY") | fn.#Fn
+			CertificatePem?:            (strings.MinRunes(1) & strings.MaxRunes(65536)) | fn.#Fn
 			CertificateSigningRequest?: string | fn.#Fn
-			Status:                     string | fn.#Fn
+			Status:                     ("ACTIVE" | "INACTIVE" | "REVOKED" | "PENDING_TRANSFER" | "PENDING_ACTIVATION") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DomainConfiguration: {
+		Type: "AWS::IoT::DomainConfiguration"
+		Properties: {
+			AuthorizerConfig?: {
+				AllowAuthorizerOverride?: bool | fn.#Fn
+				DefaultAuthorizerName?:   (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[\w=,@-]+$"#)) | fn.#Fn
+			} | fn.#If
+			DomainConfigurationName?:   (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[\w.-]+$"#)) | fn.#Fn
+			DomainConfigurationStatus?: ("ENABLED" | "DISABLED") | fn.#Fn
+			DomainName?:                (strings.MinRunes(1) & strings.MaxRunes(253)) | fn.#Fn
+			ServerCertificateArns?:     [...((strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\d{1}:\d{12}:certificate/[a-zA-Z0-9/-]+$"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\d{1}:\d{12}:certificate/[a-zA-Z0-9/-]+$"#)) | fn.#Fn)
+			ServiceType?:               ("DATA" | "CREDENTIAL_PROVIDER" | "JOBS") | fn.#Fn
+			Tags?:                      [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+			ValidationCertificateArn?: (=~#"^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\d{1}:\d{12}:certificate/[a-zA-Z0-9/-]+$"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -84,7 +111,7 @@ import "github.com/TangoGroup/aws/fn"
 				Value: string | fn.#Fn
 			}] | fn.#If
 			TemplateBody:  string | fn.#Fn
-			TemplateName?: string | fn.#Fn
+			TemplateName?: (strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[0-9A-Za-z_-]+$"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -123,7 +150,11 @@ import "github.com/TangoGroup/aws/fn"
 	#TopicRule: {
 		Type: "AWS::IoT::TopicRule"
 		Properties: {
-			RuleName?:        string | fn.#Fn
+			RuleName?: string | fn.#Fn
+			Tags?:     [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
 			TopicRulePayload: {
 				Actions: [...{
 					CloudwatchAlarm?: {
@@ -131,6 +162,10 @@ import "github.com/TangoGroup/aws/fn"
 						RoleArn:     string | fn.#Fn
 						StateReason: string | fn.#Fn
 						StateValue:  string | fn.#Fn
+					} | fn.#If
+					CloudwatchLogs?: {
+						LogGroupName: string | fn.#Fn
+						RoleArn:      string | fn.#Fn
 					} | fn.#If
 					CloudwatchMetric?: {
 						MetricName:       string | fn.#Fn
@@ -165,6 +200,7 @@ import "github.com/TangoGroup/aws/fn"
 						Type:     string | fn.#Fn
 					} | fn.#If
 					Firehose?: {
+						BatchMode?:         bool | fn.#Fn
 						DeliveryStreamName: string | fn.#Fn
 						RoleArn:            string | fn.#Fn
 						Separator?:         string | fn.#Fn
@@ -185,10 +221,12 @@ import "github.com/TangoGroup/aws/fn"
 						Url: string | fn.#Fn
 					} | fn.#If
 					IotAnalytics?: {
+						BatchMode?:  bool | fn.#Fn
 						ChannelName: string | fn.#Fn
 						RoleArn:     string | fn.#Fn
 					} | fn.#If
 					IotEvents?: {
+						BatchMode?: bool | fn.#Fn
 						InputName:  string | fn.#Fn
 						MessageId?: string | fn.#Fn
 						RoleArn:    string | fn.#Fn
@@ -215,6 +253,15 @@ import "github.com/TangoGroup/aws/fn"
 						}] | fn.#If
 						RoleArn: string | fn.#Fn
 					} | fn.#If
+					Kafka?: {
+						ClientProperties: {
+							[string]: string | fn.#Fn
+						} | fn.#If
+						DestinationArn: string | fn.#Fn
+						Key?:           string | fn.#Fn
+						Partition?:     string | fn.#Fn
+						Topic:          string | fn.#Fn
+					} | fn.#If
 					Kinesis?: {
 						PartitionKey?: string | fn.#Fn
 						RoleArn:       string | fn.#Fn
@@ -230,6 +277,7 @@ import "github.com/TangoGroup/aws/fn"
 					} | fn.#If
 					S3?: {
 						BucketName: string | fn.#Fn
+						CannedAcl?: ("private" | "public-read" | "public-read-write" | "aws-exec-read" | "authenticated-read" | "bucket-owner-read" | "bucket-owner-full-control" | "log-delivery-write") | fn.#Fn
 						Key:        string | fn.#Fn
 						RoleArn:    string | fn.#Fn
 					} | fn.#If
@@ -247,6 +295,21 @@ import "github.com/TangoGroup/aws/fn"
 						ExecutionNamePrefix?: string | fn.#Fn
 						RoleArn:              string | fn.#Fn
 						StateMachineName:     string | fn.#Fn
+					} | fn.#If
+					Timestream?: {
+						DatabaseName: string | fn.#Fn
+						Dimensions:   {
+							TimestreamDimensionsList?: [...{
+								Name:  string | fn.#Fn
+								Value: string | fn.#Fn
+							}] | fn.#If
+						} | fn.#If
+						RoleArn:    string | fn.#Fn
+						TableName:  string | fn.#Fn
+						Timestamp?: {
+							Unit:  string | fn.#Fn
+							Value: string | fn.#Fn
+						} | fn.#If
 					} | fn.#If
 				}] | fn.#If
 				AwsIotSqlVersion?: string | fn.#Fn
@@ -258,6 +321,10 @@ import "github.com/TangoGroup/aws/fn"
 						StateReason: string | fn.#Fn
 						StateValue:  string | fn.#Fn
 					} | fn.#If
+					CloudwatchLogs?: {
+						LogGroupName: string | fn.#Fn
+						RoleArn:      string | fn.#Fn
+					} | fn.#If
 					CloudwatchMetric?: {
 						MetricName:       string | fn.#Fn
 						MetricNamespace:  string | fn.#Fn
@@ -291,6 +358,7 @@ import "github.com/TangoGroup/aws/fn"
 						Type:     string | fn.#Fn
 					} | fn.#If
 					Firehose?: {
+						BatchMode?:         bool | fn.#Fn
 						DeliveryStreamName: string | fn.#Fn
 						RoleArn:            string | fn.#Fn
 						Separator?:         string | fn.#Fn
@@ -311,10 +379,12 @@ import "github.com/TangoGroup/aws/fn"
 						Url: string | fn.#Fn
 					} | fn.#If
 					IotAnalytics?: {
+						BatchMode?:  bool | fn.#Fn
 						ChannelName: string | fn.#Fn
 						RoleArn:     string | fn.#Fn
 					} | fn.#If
 					IotEvents?: {
+						BatchMode?: bool | fn.#Fn
 						InputName:  string | fn.#Fn
 						MessageId?: string | fn.#Fn
 						RoleArn:    string | fn.#Fn
@@ -341,6 +411,15 @@ import "github.com/TangoGroup/aws/fn"
 						}] | fn.#If
 						RoleArn: string | fn.#Fn
 					} | fn.#If
+					Kafka?: {
+						ClientProperties: {
+							[string]: string | fn.#Fn
+						} | fn.#If
+						DestinationArn: string | fn.#Fn
+						Key?:           string | fn.#Fn
+						Partition?:     string | fn.#Fn
+						Topic:          string | fn.#Fn
+					} | fn.#If
 					Kinesis?: {
 						PartitionKey?: string | fn.#Fn
 						RoleArn:       string | fn.#Fn
@@ -356,6 +435,7 @@ import "github.com/TangoGroup/aws/fn"
 					} | fn.#If
 					S3?: {
 						BucketName: string | fn.#Fn
+						CannedAcl?: ("private" | "public-read" | "public-read-write" | "aws-exec-read" | "authenticated-read" | "bucket-owner-read" | "bucket-owner-full-control" | "log-delivery-write") | fn.#Fn
 						Key:        string | fn.#Fn
 						RoleArn:    string | fn.#Fn
 					} | fn.#If
@@ -373,6 +453,21 @@ import "github.com/TangoGroup/aws/fn"
 						ExecutionNamePrefix?: string | fn.#Fn
 						RoleArn:              string | fn.#Fn
 						StateMachineName:     string | fn.#Fn
+					} | fn.#If
+					Timestream?: {
+						DatabaseName: string | fn.#Fn
+						Dimensions:   {
+							TimestreamDimensionsList?: [...{
+								Name:  string | fn.#Fn
+								Value: string | fn.#Fn
+							}] | fn.#If
+						} | fn.#If
+						RoleArn:    string | fn.#Fn
+						TableName:  string | fn.#Fn
+						Timestamp?: {
+							Unit:  string | fn.#Fn
+							Value: string | fn.#Fn
+						} | fn.#If
 					} | fn.#If
 				} | fn.#If
 				RuleDisabled: bool | fn.#Fn
@@ -391,7 +486,7 @@ import "github.com/TangoGroup/aws/fn"
 			HttpUrlProperties?: {
 				ConfirmationUrl?: string | fn.#Fn
 			} | fn.#If
-			Status?:        string | fn.#Fn
+			Status?:        ("ENABLED" | "IN_PROGRESS" | "DISABLED") | fn.#Fn
 			VpcProperties?: {
 				RoleArn?:        string | fn.#Fn
 				SecurityGroups?: [...(string | fn.#Fn)] | (string | fn.#Fn)

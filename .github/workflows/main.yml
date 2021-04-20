@@ -35,7 +35,7 @@ jobs:
           repository: cuelang/cue
           # A flag to choose between latest release and remaining releases
           # The github tag to download the release from
-          fileName: "cue_v0.3.2_linux_amd64.tar.gz"
+          fileName: "cue_v0.3.2_linux_amd64"
           tag: v0.3.2
           # Name of the file to download
           tarBall: true

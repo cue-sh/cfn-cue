@@ -25,9 +25,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ^1.16
-
-      - name: Get cue
-        run: curl -L https://github.com/cuelang/cue/releases/download/v0.3.2/cue_v0.3.2_linux_amd64.tar.gz | tar -zxvf - cue; ls -al
           
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -52,7 +49,7 @@ jobs:
 
       - name: Get info 
         run: |
-          ls -al
+          curl -L https://github.com/cuelang/cue/releases/download/v0.3.2/cue_v0.3.2_linux_amd64.tar.gz | tar -zxvf - cue; ls -al
           CommitMessage=$(cat cue.mod/pkg/github.com/TangoGroup/aws/uswest2/uswest2.cue | grep ResourceSpecificationVersion)
           CFN_VERSION=$(echo $CommitMessage | ./cue eval - -e "#ResourceSpecificationVersion" --out text)
           CUE_VERSION=$(go list -f "{{.Version}}" -m cuelang.org/go)

@@ -1,1 +1,1 @@
-module: "github.com/TangoGroup/cfn-cue"
+module: "github.com/cue-sh/cfn-cue"

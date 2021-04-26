@@ -285,12 +285,7 @@ func templateParameters() *ast.Field {
 		{"MinValue", `int | =~"^[0-9]+$"`},
 		{"NoEcho", `bool | =~"^(true|false)$"`},
 	}
-	parameterPropertiesFields := []ast.Decl{
-		&ast.Field{
-			Label: ast.NewIdent("Type"),
-			Value: parameterDisjunction,
-		},
-	}
+	parameterPropertiesFields := []ast.Decl{newField("Type", parameterDisjunction)}
 
 	for _, arr := range parameterProperties {
 		prop := arr[0]
@@ -316,61 +311,9 @@ func templateParameters() *ast.Field {
 // 	return nil
 // }
 
-// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html
-func templateMappings() *ast.Field {
-	return &ast.Field{
-		Label:    ast.NewIdent("Mappings"),
-		Optional: token.Elided.Pos(),
-		Value: ast.NewStruct(
-			ast.NewList(&ast.BasicLit{Value: "string"}),
-			ast.NewStruct(
-				ast.NewList(&ast.BasicLit{Value: "string"}),
-				ast.NewStruct(
-					ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
-					ast.NewBinExpr(token.OR, &ast.BasicLit{Value: "string | int | bool"}, ast.NewList(&ast.Ellipsis{Type: &ast.BasicLit{Value: "(string | int | bool)"}}))))),
-	}
-}
-
-// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html
-func templateConditions() *ast.Field {
-	conditionsFunctions := []ast.Expr{
-		ast.NewSel(ast.NewIdent("fn"), "And"),
-		ast.NewSel(ast.NewIdent("fn"), "Equals"),
-		ast.NewSel(ast.NewIdent("fn"), "If"),
-		ast.NewSel(ast.NewIdent("fn"), "Not"),
-		ast.NewSel(ast.NewIdent("fn"), "Or"),
-	}
-	conditionsFunctionDisjunction := conditionsFunctions[0]
-	for _, function := range conditionsFunctions[1:] {
-		conditionsFunctionDisjunction = &ast.BinaryExpr{X: conditionsFunctionDisjunction, Op: token.OR, Y: function}
-	}
-	// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html
-	return &ast.Field{
-		Label:    ast.NewIdent("Conditions"),
-		Optional: token.Elided.Pos(),
-		Value:    ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), conditionsFunctionDisjunction),
-	}
-}
-
 func tryParse(str string) ast.Expr {
 	expr, _ := parser.ParseExpr("", str)
 	return expr
-}
-
-// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html
-func templateOutputs() *ast.Field {
-	return &ast.Field{
-		Label:    ast.NewIdent("Outputs"),
-		Optional: token.Elided.Pos(),
-		Value: tryParse(`{
-			[=~"[a-zA-Z0-9]"]: {
-				Description?: string
-				Value:        _
-				Condition?:   string
-				Export?: Name: _
-			}
-		}`),
-	}
 }
 
 func newField(name string, value ast.Expr) *ast.Field {
@@ -899,13 +842,39 @@ func main() {
 					newOptionalField("AWSTemplateFormatVersion", ast.NewString("2010-09-09")),
 					newOptionalField("Description", &ast.BasicLit{Value: "string"}),
 					newOptionalField("Metadata", ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), &ast.BasicLit{Value: "_"})),
-					templateMappings(),
-					templateConditions(),
+					// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html
+					newOptionalField("Mappings", ast.NewStruct(
+						ast.NewList(&ast.BasicLit{Value: "string"}),
+						ast.NewStruct(
+							ast.NewList(&ast.BasicLit{Value: "string"}),
+							ast.NewStruct(
+								ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
+								ast.NewBinExpr(token.OR, &ast.BasicLit{Value: "string | int | bool"}, ast.NewList(&ast.Ellipsis{Type: &ast.BasicLit{Value: "(string | int | bool)"}})))))),
+
+					// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html
+					newOptionalField("Conditions", ast.NewStruct(
+						ast.NewList(&ast.BasicLit{Value: "string"}),
+						ast.NewBinExpr(
+							token.OR, ast.NewSel(ast.NewIdent("fn"), "And"),
+							ast.NewSel(ast.NewIdent("fn"), "Equals"),
+							ast.NewSel(ast.NewIdent("fn"), "If"),
+							ast.NewSel(ast.NewIdent("fn"), "Not"),
+							ast.NewSel(ast.NewIdent("fn"), "Or"),
+						),
+					)),
 					templateParameters(),
 					// templateResources1,
 					templateResources2,
 					// resourcesForLoop,
-					templateOutputs(),
+					// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html
+					newOptionalField("Outputs", tryParse(`{
+						[=~"[a-zA-Z0-9]"]: {
+							Description?: string
+							Value:        _
+							Condition?:   string
+							Export?: Name: _
+						}
+					}`)),
 				},
 			},
 		})

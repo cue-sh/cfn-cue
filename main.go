@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -9,126 +10,13 @@ import (
 	"os"
 	"path"
 	"sort"
-	"strconv"
 	"strings"
 
 	"cuelang.org/go/cue/ast"
 	"cuelang.org/go/cue/format"
+	"cuelang.org/go/cue/parser"
 	"cuelang.org/go/cue/token"
 )
-
-const propertyPrefix = "prop"
-
-func mapFromCFNTypeToCue(cfnType string) (lit ast.Expr) {
-	switch cfnType {
-	case "String":
-		lit = &ast.BasicLit{Value: "string"}
-	case "Integer", "Long":
-		lit = &ast.BasicLit{Value: "int"}
-	case "Double":
-		lit = &ast.BasicLit{Value: "number"}
-	case "Boolean":
-		lit = &ast.BasicLit{Value: "bool"}
-	case "Json":
-		lit = &ast.StructLit{
-			Elts: []ast.Decl{
-				&ast.Field{
-					Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-					Value: &ast.BasicLit{Value: "_"},
-				},
-			},
-		}
-	case "Map":
-		lit = &ast.StructLit{}
-	case "Timestamp":
-		lit = &ast.BasicLit{Value: "time.Time"}
-	default:
-		// TODO clean this up... feels super ugly.
-		lit = &ast.BasicLit{Value: propertyPrefix + cfnType}
-	}
-	return lit
-}
-
-func convertTypeToCUE(name string) string {
-	switch name {
-	case "String":
-		return "string"
-	case "Long":
-		return "int"
-	case "Integer":
-		return "int"
-	case "Double":
-		return "number"
-	case "Boolean":
-		return "bool"
-	case "Timestamp":
-		return "time.Time"
-	case "Json":
-		return "struct"
-	case "Map":
-		return "struct"
-	default:
-		return name
-	}
-}
-
-func (p Property) getPrimitiveTypeString() string {
-	if p.IsPrimitive() {
-		return p.PrimitiveType
-	}
-
-	if p.IsMap() && p.IsMapOfPrimitives() {
-		return p.PrimitiveItemType
-	}
-
-	if p.IsList() && p.IsListOfPrimitives() {
-		return p.PrimitiveItemType
-	}
-
-	return ""
-}
-
-func (p Property) getCUEPrimitiveType() ast.Expr {
-	return mapFromCFNTypeToCue(p.getPrimitiveTypeString())
-}
-
-func getPrimitiveConstraints(prop Property, valueType ValueType) (constraints []ast.Expr, imports map[string]bool) {
-	constraints = make([]ast.Expr, 0)
-	imports = map[string]bool{}
-	if prop.Value.ValueType != "" {
-		if valueType.AllowedValues != nil {
-			allowedValues := createExprFromAllowedValues(prop, valueType.AllowedValues, prop.getPrimitiveTypeString())
-			constraints = append(constraints, allowedValues)
-		}
-		if valueType.NumberMax > 1 {
-			min := valueType.NumberMin
-			max := valueType.NumberMax
-			allowedValues := createExprFromNumberMinMax(prop, min, max)
-			constraints = append(constraints, allowedValues)
-		}
-		if valueType.StringMax > 0 {
-			min := valueType.StringMin
-			max := valueType.StringMax
-			allowedValues := createExprFromStringMinMax(prop, int64(min), int64(max))
-			constraints = append(constraints, allowedValues)
-			imports["strings"] = true
-		}
-		if valueType.AllowedPatternRegex != "" {
-			regex := valueType.AllowedPatternRegex
-			allowedValues := createExprFromPatternRegex(prop, regex)
-			constraints = append(constraints, allowedValues)
-		}
-		// Going to need to be smarter about this... I need to make sure that the marshalled JSON
-		// string of this struct is less that JSONMax characters.
-		// if valueType.JSONMax > 0 {
-		// 	min := 0
-		// 	max := valueType.JSONMax
-		// 	allowedValues := createFieldFromStringMinMax(property, propertyResource, int64(min), int64(max))
-		// 	propertyDecls = append(propertyDecls, allowedValues)
-		// }
-	}
-	return constraints, imports
-}
 
 func mergeMaps(a, b map[string]bool) map[string]bool {
 	for str := range b {
@@ -189,14 +77,16 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 				value = &ast.StructLit{
 					Elts: []ast.Decl{
 						jsonStruct,
-						&ast.Field{
-							Label: ast.NewIdent("Version"),
-							Value: &ast.BinaryExpr{
-								X:  ast.NewIdent("string"),
-								Op: token.OR,
-								Y:  &ast.BasicLit{Value: `*"2012-10-17"`},
-							},
-						},
+						NewField("Version", ast.NewBinExpr(token.OR, ast.NewIdent("string"), &ast.BasicLit{Value: `*"2012-10-17"`})),
+						// &ast.Field{
+						// 	Label: ast.NewIdent("Version"),
+						// 	Value: ast.NewBinExpr(token.OR, ast.NewIdent("string"), &ast.BasicLit{Value: `*"2012-10-17"`}),
+						// 	// Value: &ast.BinaryExpr{
+						// 	// 	X:  ast.NewIdent("string"),
+						// 	// 	Op: token.OR,
+						// 	// 	Y:  &ast.BasicLit{Value: `*"2012-10-17"`},
+						// 	// },
+						// },
 					},
 				}
 			}
@@ -211,13 +101,14 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 		if len(constraints) > 0 {
 			value = constraints[0]
 			for _, constraint := range constraints[1:] {
-				val := &ast.BinaryExpr{
-					X:  value,
-					Op: token.AND,
-					Y: &ast.ParenExpr{
-						X: constraint,
-					},
-				}
+				val := ast.NewBinExpr(token.AND, value, &ast.ParenExpr{X: constraint})
+				// val := &ast.BinaryExpr{
+				// 	X:  value,
+				// 	Op: token.AND,
+				// 	Y: &ast.ParenExpr{
+				// 		X: constraint,
+				// 	},
+				// }
 				value = val
 			}
 
@@ -228,11 +119,13 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 			// value2 = val
 			// value2 = nil
 		}
-
-		value = &ast.BinaryExpr{
-			X:  value,
-			Op: token.OR,
-			Y:  ast.NewSel(ast.NewIdent("fn"), "#Fn"),
+		if *intrinsicsFlag {
+			value = ast.NewBinExpr(token.OR, value, ast.NewSel(ast.NewIdent("fn"), "#Fn"))
+			// value = &ast.BinaryExpr{
+			// 	X:  value,
+			// 	Op: token.OR,
+			// 	Y:  ast.NewSel(ast.NewIdent("fn"), "#Fn"),
+			// }
 		}
 
 		if prop.IsList() {
@@ -248,14 +141,7 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 		}
 		if typeName == parentResource.Properties[parentName].ItemType {
 			// Weird recursion... might need some cleverness with Aliases to structure this correctly.
-			value = &ast.StructLit{
-				Elts: []ast.Decl{
-					&ast.Field{
-						Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-						Value: &ast.BasicLit{Value: "_"},
-					},
-				},
-			}
+			value = ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), &ast.BasicLit{Value: "_"})
 		} else {
 			var v ast.StructLit
 			v, imports = createStructFromResource(name, resourceSubproperties[typeName], resourceSubproperties, valueTypes)
@@ -277,32 +163,16 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 			// } else {
 			// 	s = ast.NewSel(ast.NewIdent("fn"), "Fn")
 			// }
-			value = &ast.BinaryExpr{
-				X:  value,
-				Op: token.OR,
-				Y:  value2,
-			}
+			value = ast.NewBinExpr(token.OR, value, value2)
 		}
 	}
 
 	if prop.IsMap() {
-		value = &ast.StructLit{
-			Elts: []ast.Decl{
-				&ast.Field{
-					Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-					Value: value,
-				},
-			},
-		}
+		value = ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), value)
 	}
 
-	if prop.IsMap() || (prop.IsList() && !prop.IsListOfPrimitives()) || prop.IsCustomType() {
-
-		value = &ast.BinaryExpr{
-			X:  value,
-			Op: token.OR,
-			Y:  ast.NewSel(ast.NewIdent("fn"), "#If"),
-		}
+	if *intrinsicsFlag && (prop.IsMap() || (prop.IsList() && !prop.IsListOfPrimitives()) || prop.IsCustomType()) {
+		value = ast.NewBinExpr(token.OR, value, ast.NewSel(ast.NewIdent("fn"), "#If"))
 	}
 
 	var optional token.Pos
@@ -319,51 +189,6 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 	}
 
 	return node, imports
-}
-
-func createExprFromAllowedValues(prop Property, allowedValues []string, propertyType string) (expr ast.Expr) {
-	for _, allowedValue := range allowedValues {
-		var e ast.Expr
-		if propertyType == "Integer" {
-			e = &ast.BasicLit{Value: allowedValue}
-		} else {
-			e = ast.NewString(allowedValue)
-		}
-		if expr != nil {
-			e = &ast.BinaryExpr{X: expr, Op: token.OR, Y: e}
-		}
-		expr = e
-	}
-
-	return expr
-}
-
-func createExprFromNumberMinMax(prop Property, min, max float64) (expr ast.Expr) {
-	geq := &ast.UnaryExpr{
-		Op: token.GEQ,
-		X:  &ast.BasicLit{Kind: token.FLOAT, Value: strconv.FormatFloat(min, 'f', -1, 64)},
-	}
-
-	leq := &ast.UnaryExpr{
-		Op: token.LEQ,
-		X:  &ast.BasicLit{Kind: token.FLOAT, Value: strconv.FormatFloat(max, 'f', -1, 64)},
-	}
-
-	return &ast.BinaryExpr{X: geq, Op: token.AND, Y: leq}
-}
-
-func createExprFromStringMinMax(prop Property, min, max int64) (expr ast.Expr) {
-	minLen := ast.NewCall(ast.NewSel(ast.NewIdent("strings"), "MinRunes"), &ast.BasicLit{Value: strconv.FormatInt(min, 10)})
-	maxLen := ast.NewCall(ast.NewSel(ast.NewIdent("strings"), "MaxRunes"), &ast.BasicLit{Value: strconv.FormatInt(max, 10)})
-
-	return &ast.BinaryExpr{X: minLen, Op: token.AND, Y: maxLen}
-}
-
-func createExprFromPatternRegex(prop Property, regex string) (expr ast.Expr) {
-	return &ast.UnaryExpr{
-		Op: token.MAT,
-		X:  &ast.BasicLit{Kind: token.STRING, Value: "#\"" + regex + "\"#"},
-	}
 }
 
 func propertyNames(p map[string]Property) (keys []string) {
@@ -507,11 +332,13 @@ func templateParameters() *ast.Field {
 	for _, arr := range parameterProperties {
 		prop := arr[0]
 		propType := arr[1]
-		parameterPropertiesFields = append(parameterPropertiesFields, &ast.Field{
-			Label:    ast.NewIdent(prop),
-			Value:    &ast.BasicLit{Value: propType},
-			Optional: token.Elided.Pos(),
-		})
+		parameterPropertiesFields = append(parameterPropertiesFields, NewOptionalField(prop, &ast.BasicLit{Value: propType}))
+		// 	&ast.Field{
+		// 	Label:    ast.NewIdent(prop),
+		// 	Value:    &ast.BasicLit{Value: propType},
+		// 	Optional: token.Elided.Pos(),
+		// }
+		// )
 	}
 
 	templateParameters := &ast.Field{
@@ -612,45 +439,42 @@ func writeServiceFile(serviceName string, resources map[string]Resource, shortRe
 // }
 
 func templateResourceSpecVersion(resourceSpecificationVersion string) *ast.Field {
-	return &ast.Field{
-		Label: ast.NewIdent("#ResourceSpecificationVersion"),
-		// Token: token.ISA,
-		Value: ast.NewString(resourceSpecificationVersion),
-	}
+	return NewField("#ResourceSpecificationVersion", ast.NewString(resourceSpecificationVersion))
+	// return &ast.Field{
+	// 	Label: ast.NewIdent("#ResourceSpecificationVersion"),
+	// 	// Token: token.ISA,
+	// 	Value: ast.NewString(resourceSpecificationVersion),
+	// }
 }
 
 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
 func templateVersion() *ast.Field {
-	return &ast.Field{
-		Label:    ast.NewIdent("AWSTemplateFormatVersion"),
-		Value:    ast.NewString("2010-09-09"),
-		Optional: token.Elided.Pos(),
-	}
+	return NewOptionalField("AWSTemplateFormatVersion", ast.NewString("2010-09-09"))
+	// return &ast.Field{
+	// 	Label:    ast.NewIdent("AWSTemplateFormatVersion"),
+	// 	Value:    ast.NewString("2010-09-09"),
+	// 	Optional: token.Elided.Pos(),
+	// }
 }
 
 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-description-structure.html
 func templateDescription() *ast.Field {
-	return &ast.Field{
-		Label:    ast.NewIdent("Description"),
-		Value:    &ast.BasicLit{Value: "string"},
-		Optional: token.Elided.Pos(),
-	}
+	return NewOptionalField("Description", &ast.BasicLit{Value: "string"})
+	// return &ast.Field{
+	// 	Label:    ast.NewIdent("Description"),
+	// 	Value:    &ast.BasicLit{Value: "string"},
+	// 	Optional: token.Elided.Pos(),
+	// }
 }
 
 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/metadata-section-structure.html
 func templateMetadata() *ast.Field {
-	return &ast.Field{
-		Label:    ast.NewIdent("Metadata"),
-		Optional: token.Elided.Pos(),
-		Value: &ast.StructLit{
-			Elts: []ast.Decl{
-				&ast.Field{
-					Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-					Value: &ast.BasicLit{Value: "_"},
-				},
-			},
-		},
-	}
+	return NewOptionalField("Metadata", ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), &ast.BasicLit{Value: "_"}))
+	// return &ast.Field{
+	// 	Label:    ast.NewIdent("Metadata"),
+	// 	Optional: token.Elided.Pos(),
+	// 	Value:    ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), &ast.BasicLit{Value: "_"}),
+	// }
 }
 
 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html
@@ -658,32 +482,39 @@ func templateMappings() *ast.Field {
 	return &ast.Field{
 		Label:    ast.NewIdent("Mappings"),
 		Optional: token.Elided.Pos(),
-		Value: &ast.StructLit{
-			Elts: []ast.Decl{
-				&ast.Field{
-					Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-					Value: &ast.StructLit{
-						Elts: []ast.Decl{
-							&ast.Field{
-								Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-								Value: &ast.StructLit{
-									Elts: []ast.Decl{
-										&ast.Field{
-											Label: ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
-											Value: &ast.BinaryExpr{
-												X:  &ast.BasicLit{Value: "string | int | bool"},
-												Op: token.OR,
-												Y:  ast.NewList(&ast.Ellipsis{Type: &ast.BasicLit{Value: "(string | int | bool)"}}),
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
+		Value: ast.NewStruct(
+			ast.NewList(&ast.BasicLit{Value: "string"}),
+			ast.NewStruct(
+				ast.NewList(&ast.BasicLit{Value: "string"}),
+				ast.NewStruct(
+					ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
+					ast.NewBinExpr(token.OR, &ast.BasicLit{Value: "string | int | bool"}, ast.NewList(&ast.Ellipsis{Type: &ast.BasicLit{Value: "(string | int | bool)"}}))))),
+		// Value: &ast.StructLit{
+		// 	Elts: []ast.Decl{
+		// 		&ast.Field{
+		// 			Label: ast.NewList(&ast.BasicLit{Value: "string"}),
+		// 			Value: &ast.StructLit{
+		// 				Elts: []ast.Decl{
+		// 					&ast.Field{
+		// 						Label: ast.NewList(&ast.BasicLit{Value: "string"}),
+		// 						Value: &ast.StructLit{
+		// 							Elts: []ast.Decl{
+		// 								&ast.Field{
+		// 									Label: ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
+		// 									Value: &ast.BinaryExpr{
+		// 										X:  &ast.BasicLit{Value: "string | int | bool"},
+		// 										Op: token.OR,
+		// 										Y:  ast.NewList(&ast.Ellipsis{Type: &ast.BasicLit{Value: "(string | int | bool)"}}),
+		// 									},
+		// 								},
+		// 							},
+		// 						},
+		// 					},
+		// 				},
+		// 			},
+		// 		},
+		// 	},
+		// },
 	}
 }
 
@@ -704,15 +535,21 @@ func templateConditions() *ast.Field {
 	return &ast.Field{
 		Label:    ast.NewIdent("Conditions"),
 		Optional: token.Elided.Pos(),
-		Value: &ast.StructLit{
-			Elts: []ast.Decl{
-				&ast.Field{
-					Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-					Value: conditionsFunctionDisjunction,
-				},
-			},
-		},
+		Value:    ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), conditionsFunctionDisjunction),
+		// Value: &ast.StructLit{
+		// 	Elts: []ast.Decl{
+		// 		&ast.Field{
+		// 			Label: ast.NewList(&ast.BasicLit{Value: "string"}),
+		// 			Value: conditionsFunctionDisjunction,
+		// 		},
+		// 	},
+		// },
 	}
+}
+
+func tryParse(str string) ast.Expr {
+	expr, _ := parser.ParseExpr("", str)
+	return expr
 }
 
 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html
@@ -720,40 +557,35 @@ func templateOutputs() *ast.Field {
 	return &ast.Field{
 		Label:    ast.NewIdent("Outputs"),
 		Optional: token.Elided.Pos(),
-		Value: &ast.StructLit{
-			Elts: []ast.Decl{
-				&ast.Field{
-					Label: ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
-					Value: &ast.StructLit{
-						Elts: []ast.Decl{
-							&ast.Field{
-								Label:    ast.NewIdent("Description"),
-								Value:    &ast.BasicLit{Value: "string"},
-								Optional: token.Elided.Pos(),
-							},
-							&ast.Field{Label: ast.NewIdent("Value"), Value: &ast.BasicLit{Value: "_"}},
-							&ast.Field{
-								Label:    ast.NewIdent("Condition"),
-								Optional: token.Elided.Pos(),
-								Value:    ast.NewIdent("string"),
-							},
-							&ast.Field{
-								Label:    ast.NewIdent("Export"),
-								Optional: token.Elided.Pos(),
-								Value: &ast.StructLit{
-									Elts: []ast.Decl{
-										&ast.Field{
-											Label: ast.NewIdent("Name"),
-											Value: &ast.BasicLit{Value: "_"},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
+		Value: tryParse(`{
+			[=~"[a-zA-Z0-9]"]: {
+				Description?: string
+				Value:        _
+				Condition?:   string
+				Export?: Name: _
+			}
+		}`),
+
+		// Value: &ast.StructLit{
+		// 	Elts: []ast.Decl{
+		// 		&ast.Field{
+		// 			Label: ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
+		// 			Value: ast.NewStruct(
+		// 				ast.NewIdent("Description"),
+		// 				&ast.BasicLit{Value: "string"},
+		// 				token.Elided.Pos(),
+		// 				ast.NewIdent("Value"),
+		// 				&ast.BasicLit{Value: "_"},
+		// 				ast.NewIdent("Condition"),
+		// 				ast.NewIdent("string"),
+		// 				token.Elided.Pos(),
+		// 				ast.NewIdent("Export"),
+		// 				ast.NewStruct(ast.NewIdent("Name"), &ast.BasicLit{Value: "_"}),
+		// 				token.Elided.Pos(),
+		// 			),
+		// 		},
+		// 	},
+		// },
 	}
 }
 
@@ -761,11 +593,38 @@ func resourceDependsOn() *ast.Field {
 	return &ast.Field{
 		Label:    ast.NewIdent("DependsOn"),
 		Optional: token.Elided.Pos(),
-		Value: &ast.BinaryExpr{
-			X:  ast.NewIdent("string"),
-			Op: token.OR,
-			Y:  ast.NewList(&ast.Ellipsis{Type: ast.NewIdent("string")}),
-		},
+		Value:    tryParse("string | [...string]"),
+		// Value:    ast.NewBinExpr(token.OR, ast.NewIdent("string"), ast.NewList(&ast.Ellipsis{Type: ast.NewIdent("string")})),
+	}
+}
+
+func NewField(name string, value ast.Expr) *ast.Field {
+	return &ast.Field{
+		Label: ast.NewIdent(name),
+		Value: value,
+	}
+}
+
+func NewOptionalField(name string, value ast.Expr) *ast.Field {
+	return &ast.Field{
+		Label:    ast.NewIdent(name),
+		Optional: token.Elided.Pos(),
+		Value:    value,
+	}
+}
+
+func top() *ast.BasicLit {
+	return &ast.BasicLit{Value: "_"}
+}
+
+func bulkOptionalLabel() *ast.ListLit {
+	return ast.NewList(&ast.BasicLit{Value: "string"})
+}
+
+func NewBulkOptionalField(value ast.Expr) *ast.Field {
+	return &ast.Field{
+		Label: ast.NewList(&ast.BasicLit{Value: "string"}),
+		Value: value,
 	}
 }
 
@@ -834,16 +693,9 @@ func resourcePolicies(resourceName string) []*ast.Field {
 	for _, deletionPolicy := range deletionPolicyStrings[1:] {
 		deletionPolicies = &ast.BinaryExpr{X: deletionPolicies, Op: token.OR, Y: ast.NewString(deletionPolicy)}
 	}
-	policies = append(policies, &ast.Field{
-		Label:    ast.NewIdent("DeletionPolicy"),
-		Optional: token.Elided.Pos(),
-		Value:    deletionPolicies,
-	})
-	policies = append(policies, &ast.Field{
-		Label:    ast.NewIdent("UpdateReplacePolicy"),
-		Optional: token.Elided.Pos(),
-		Value:    deletionPolicies,
-	})
+	policies = append(policies, NewOptionalField("DeletionPolicy", deletionPolicies))
+	policies = append(policies, NewOptionalField("UpdateReplacePolicy", deletionPolicies))
+
 	switch resourceName {
 	case "AWS::AutoScaling::AutoScalingGroup",
 		"AWS::ElastiCache::ReplicationGroup",
@@ -854,14 +706,7 @@ func resourcePolicies(resourceName string) []*ast.Field {
 		policies = append(policies, &ast.Field{
 			Label:    ast.NewIdent("UpdatePolicy"),
 			Optional: token.Elided.Pos(),
-			Value: &ast.StructLit{
-				Elts: []ast.Decl{
-					&ast.Field{
-						Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-						Value: &ast.BasicLit{Value: "_"},
-					},
-				},
-			},
+			Value:    ast.NewStruct(bulkOptionalLabel(), top()),
 		})
 		deletionPolicyStrings = append(deletionPolicyStrings, "Snapshot")
 	}
@@ -872,14 +717,7 @@ func resourceMetadata() *ast.Field {
 	return &ast.Field{
 		Label:    ast.NewIdent("Metadata"),
 		Optional: token.Elided.Pos(),
-		Value: &ast.StructLit{
-			Elts: []ast.Decl{
-				&ast.Field{
-					Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-					Value: &ast.BasicLit{Value: "_"},
-				},
-			},
-		},
+		Value:    ast.NewStruct(bulkOptionalLabel(), top()),
 	}
 }
 
@@ -901,8 +739,14 @@ func resourceType(resourceName string) *ast.Field {
 	return &resourceType
 }
 
+var regionFlag = flag.String("region", "", "Choose a single region to generate")
+var intrinsicsFlag = flag.Bool("intrinsics", true, "Turn intrinsic functions on/off")
+
 func main() {
+	flag.Parse()
+	fmt.Println("Region: " + *regionFlag)
 	regions := []string{
+		"af-south-1",
 		"ap-east-1",
 		"ap-northeast-1",
 		"ap-northeast-2",
@@ -915,6 +759,7 @@ func main() {
 		"cn-northwest-1",
 		"eu-central-1",
 		"eu-north-1",
+		"eu-south-1",
 		"eu-west-1",
 		"eu-west-2",
 		"eu-west-3",
@@ -931,9 +776,11 @@ func main() {
 	for _, region := range regions {
 		shortRegion := strings.ReplaceAll(region, "-", "")
 
-		// if region != "us-west-2" {
-		// 	continue
-		// }
+		if *regionFlag != "" {
+			if region != *regionFlag {
+				continue
+			}
+		}
 
 		cloudformationSpec := "https://github.com/aws-cloudformation/cfn-python-lint/raw/master/src/cfnlint/data/CloudSpecs/" + region + ".json"
 		fmt.Println(cloudformationSpec)

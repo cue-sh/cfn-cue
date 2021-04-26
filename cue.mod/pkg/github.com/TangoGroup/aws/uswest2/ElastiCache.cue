@@ -136,7 +136,7 @@ import "github.com/TangoGroup/aws/fn"
 		DeletionPolicy?:      "Delete" | "Retain" | "Snapshot"
 		UpdateReplacePolicy?: "Delete" | "Retain" | "Snapshot"
 		UpdatePolicy?: [string]: _
-		Metadata?: [string]:     _
+		Metadata?: [string]: _
 		Condition?: string
 	}
 	#SecurityGroup: {

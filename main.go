@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"reflect"
 	"sort"
 	"strings"
 
@@ -25,47 +26,60 @@ func mergeMaps(a, b map[string]bool) map[string]bool {
 	return a
 }
 
-func createFieldFromProperty(name string, prop Property, resourceSubproperties map[string]Resource, valueTypes map[string]ValueType, parentName string, parentResource Resource) (node *ast.Field, imports map[string]bool) {
+func propertyCustomizations(name string, parentName string, prop Property) (changed bool, p Property) {
+	if parentName == "AWS::AppSync::GraphQLApi" && name == "AdditionalAuthenticationProviders" {
+		p = Property{ItemType: "AdditionalAuthenticationProvider", Type: "List", Required: false}
+	}
+	if parentName == "AWS::AppSync::GraphQLApi" && name == "Tags" {
+		p = Property{ItemType: "Tag", Type: "List", Required: false}
+	}
+	if parentName == "AWS::CodeBuild::Project" && name == "FilterGroups" {
+		p = Property{ItemType: "WebhookFilter", Type: "List", Required: false}
+	}
+	// AWS::EC2::Instance.NoDevice
+	if name == "NoDevice" && prop.Type == "NoDevice" {
+		p = Property{PrimitiveType: "String", Required: false}
+	}
+	// AWS::Glue::SecurityConfiguration.S3Encryptions
+	// if name == "S3Encryptions" && prop.Type == "S3Encryption" {
+	if parentName == "EncryptionConfiguration" && name == "S3Encryptions" {
+		p = Property{ItemType: "S3Encryption", Type: "List", Required: false}
+	}
+	// AWS::IoTAnalytics::Channel.ServiceManagedS3 -- Skipped
+	// AWS::IoTAnalytics::Datastore.ServiceManagedS3 -- Skipped
+	// AWS::LakeFormation::DataLakeSettings.Admins
+	if parentName == "AWS::LakeFormation::DataLakeSettings" && name == "Admins" {
+		p = Property{ItemType: "DataLakePrincipal", Type: "List", Required: false}
+	}
+	// AWS::MediaLive::Channel.AribSourceSettings -- Skipped
+	// AWS::Transfer::User.SshPublicKey
+	if parentName == "AWS::Transfer::User" && name == "SshPublicKeys" {
+		p = Property{PrimitiveItemType: "String", Type: "List", Required: false}
+	}
+
+	changed = !reflect.ValueOf(p).IsZero()
+
+	return changed, p
+}
+
+func createExprFromProperty(name string, prop Property, resourceSubproperties map[string]Resource, valueTypes map[string]ValueType, parentName string, parentResource Resource) (node *ast.Expr, imports map[string]bool) {
 	// Need to capture Map Types, and put the PrimitiveItemType or ItemType properly into a struct
 	var value ast.Expr
 	var value2 ast.Expr
 	custom := false
 
-	if parentName == "AWS::AppSync::GraphQLApi" && name == "AdditionalAuthenticationProviders" {
-		prop = Property{ItemType: "AdditionalAuthenticationProvider", Type: "List", Required: false}
+	changed, tmpProp := propertyCustomizations(name, parentName, prop)
+
+	if changed {
+		prop = tmpProp
 	}
-	if parentName == "AWS::AppSync::GraphQLApi" && name == "Tags" {
-		prop = Property{ItemType: "Tag", Type: "List", Required: false}
-	}
-	if parentName == "AWS::CodeBuild::Project" && name == "FilterGroups" {
-		prop = Property{ItemType: "WebhookFilter", Type: "List", Required: false}
-	}
+
 	if name == "FilterGroups" && prop.ItemType == "FilterGroup" {
 		var v ast.StructLit
 		v, imports = createStructFromResource(name, resourceSubproperties["WebhookFilter"], resourceSubproperties, valueTypes)
 		value = ast.NewList(&ast.Ellipsis{Type: &v})
 		prop = Property{ItemType: "WebhookFilter", Type: "List", Required: false}
 		custom = true
-	}
-	// AWS::EC2::Instance.NoDevice
-	if name == "NoDevice" && prop.Type == "NoDevice" {
-		prop = Property{PrimitiveType: "String", Required: false}
-	}
-	// AWS::Glue::SecurityConfiguration.S3Encryptions
-	// if name == "S3Encryptions" && prop.Type == "S3Encryption" {
-	if parentName == "EncryptionConfiguration" && name == "S3Encryptions" {
-		prop = Property{ItemType: "S3Encryption", Type: "List", Required: false}
-	}
-	// AWS::IoTAnalytics::Channel.ServiceManagedS3 -- Skipped
-	// AWS::IoTAnalytics::Datastore.ServiceManagedS3 -- Skipped
-	// AWS::LakeFormation::DataLakeSettings.Admins
-	if parentName == "AWS::LakeFormation::DataLakeSettings" && name == "Admins" {
-		prop = Property{ItemType: "DataLakePrincipal", Type: "List", Required: false}
-	}
-	// AWS::MediaLive::Channel.AribSourceSettings -- Skipped
-	// AWS::Transfer::User.SshPublicKey
-	if parentName == "AWS::Transfer::User" && name == "SshPublicKeys" {
-		prop = Property{PrimitiveItemType: "String", Type: "List", Required: false}
 	}
 
 	if prop.IsPrimitive() || prop.IsMapOfPrimitives() || prop.IsListOfPrimitives() {
@@ -154,20 +168,7 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 		value = ast.NewBinExpr(token.OR, value, ast.NewSel(ast.NewIdent("fn"), "#If"))
 	}
 
-	var optional token.Pos
-	switch prop.Required {
-	case true:
-		optional = token.NoRelPos.Pos()
-	case false:
-		optional = token.Elided.Pos()
-	}
-	node = &ast.Field{
-		Label:    ast.NewIdent(name),
-		Value:    value,
-		Optional: optional,
-	}
-
-	return node, imports
+	return &value, imports
 }
 
 func createStructFromResource(resourceName string, resource Resource, resourceSubproperties map[string]Resource, valueTypes map[string]ValueType) (s ast.StructLit, imports map[string]bool) {
@@ -181,11 +182,25 @@ func createStructFromResource(resourceName string, resource Resource, resourceSu
 	for _, propertyName := range propertyNames {
 		propertyResource := properties[propertyName]
 
-		value, propImports := createFieldFromProperty(propertyName, propertyResource, resourceSubproperties, valueTypes, resourceName, resource)
+		expr, propImports := createExprFromProperty(propertyName, propertyResource, resourceSubproperties, valueTypes, resourceName, resource)
+
+		var optional token.Pos
+		switch propertyResource.Required {
+		case true:
+			optional = token.NoRelPos.Pos()
+		case false:
+			optional = token.Elided.Pos()
+		}
+		node := &ast.Field{
+			Label:    ast.NewIdent(propertyName),
+			Value:    *expr,
+			Optional: optional,
+		}
+
 		if len(propImports) > 0 {
 			imports = mergeMaps(imports, propImports)
 		}
-		propertyDecls = append(propertyDecls, value)
+		propertyDecls = append(propertyDecls, node)
 	}
 
 	if resourceName == "AWS::CloudFormation::CustomResource" {

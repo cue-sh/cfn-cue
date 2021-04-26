@@ -77,16 +77,7 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 				value = &ast.StructLit{
 					Elts: []ast.Decl{
 						jsonStruct,
-						NewField("Version", ast.NewBinExpr(token.OR, ast.NewIdent("string"), &ast.BasicLit{Value: `*"2012-10-17"`})),
-						// &ast.Field{
-						// 	Label: ast.NewIdent("Version"),
-						// 	Value: ast.NewBinExpr(token.OR, ast.NewIdent("string"), &ast.BasicLit{Value: `*"2012-10-17"`}),
-						// 	// Value: &ast.BinaryExpr{
-						// 	// 	X:  ast.NewIdent("string"),
-						// 	// 	Op: token.OR,
-						// 	// 	Y:  &ast.BasicLit{Value: `*"2012-10-17"`},
-						// 	// },
-						// },
+						newField("Version", ast.NewBinExpr(token.OR, ast.NewIdent("string"), &ast.BasicLit{Value: `*"2012-10-17"`})),
 					},
 				}
 			}
@@ -102,13 +93,6 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 			value = constraints[0]
 			for _, constraint := range constraints[1:] {
 				val := ast.NewBinExpr(token.AND, value, &ast.ParenExpr{X: constraint})
-				// val := &ast.BinaryExpr{
-				// 	X:  value,
-				// 	Op: token.AND,
-				// 	Y: &ast.ParenExpr{
-				// 		X: constraint,
-				// 	},
-				// }
 				value = val
 			}
 
@@ -121,11 +105,6 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 		}
 		if *intrinsicsFlag {
 			value = ast.NewBinExpr(token.OR, value, ast.NewSel(ast.NewIdent("fn"), "#Fn"))
-			// value = &ast.BinaryExpr{
-			// 	X:  value,
-			// 	Op: token.OR,
-			// 	Y:  ast.NewSel(ast.NewIdent("fn"), "#Fn"),
-			// }
 		}
 
 		if prop.IsList() {
@@ -191,14 +170,6 @@ func createFieldFromProperty(name string, prop Property, resourceSubproperties m
 	return node, imports
 }
 
-func propertyNames(p map[string]Property) (keys []string) {
-	keys = make([]string, 0, len(p))
-	for key := range p {
-		keys = append(keys, key)
-	}
-	return keys
-}
-
 func createStructFromResource(resourceName string, resource Resource, resourceSubproperties map[string]Resource, valueTypes map[string]ValueType) (s ast.StructLit, imports map[string]bool) {
 	properties := resource.Properties
 	propertyNames := propertyNames(resource.Properties)
@@ -236,14 +207,6 @@ func createStructFromResource(resourceName string, resource Resource, resourceSu
 		Elts: propertyDecls,
 	}
 	return s, imports
-}
-
-func resourceNamesSlice(p map[string]Resource) (keys []string) {
-	keys = make([]string, 0, len(p))
-	for key := range p {
-		keys = append(keys, key)
-	}
-	return keys
 }
 
 func templateParameters() *ast.Field {
@@ -332,150 +295,26 @@ func templateParameters() *ast.Field {
 	for _, arr := range parameterProperties {
 		prop := arr[0]
 		propType := arr[1]
-		parameterPropertiesFields = append(parameterPropertiesFields, NewOptionalField(prop, &ast.BasicLit{Value: propType}))
-		// 	&ast.Field{
-		// 	Label:    ast.NewIdent(prop),
-		// 	Value:    &ast.BasicLit{Value: propType},
-		// 	Optional: token.Elided.Pos(),
-		// }
-		// )
+		parameterPropertiesFields = append(parameterPropertiesFields, newOptionalField(prop, &ast.BasicLit{Value: propType}))
 	}
 
-	templateParameters := &ast.Field{
-		Label:    ast.NewIdent("Parameters"),
-		Optional: token.Elided.Pos(),
-		Value: &ast.StructLit{
-			Elts: []ast.Decl{
-				&ast.Field{
-					Label: ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
-					Value: &ast.StructLit{
-						Elts: parameterPropertiesFields,
-					},
-				},
-			},
-		},
-	}
+	templateParameters := newOptionalField("Parameters", ast.NewStruct(
+		ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}), &ast.StructLit{Elts: parameterPropertiesFields}),
+	)
+
 	return templateParameters
 }
 
-func propertiesByResource(spec *CloudFormationResourceSpecification) *map[string]map[string]Resource {
-	// Find weird/broken properties
-	// fmt.Println("weird/broken properties")
-	// weirdProps := []string{}
-	// for resourcePropertyName, property := range spec.Properties {
-	// 	if len(property.Properties) == 0 {
-	// 		weirdProps = append(weirdProps, resourcePropertyName)
-	// 	}
-	// }
-	// sort.Strings(weirdProps)
-	// for _, prop := range weirdProps {
-	// 	fmt.Println(prop)
-	// }
-	// panic(0)
-	propertiesByResource := map[string]map[string]Resource{}
+// func writeServiceFile(serviceName string, resources map[string]Resource, shortRegion string) error {
 
-	for resourcePropertyName, property := range spec.Properties {
-		splits := strings.Split(resourcePropertyName, ".")
-		if len(splits) > 1 {
-			resourceName := splits[0]
-			if propertiesByResource[resourceName] == nil {
-				propertiesByResource[resourceName] = map[string]Resource{}
-			}
-			propertyName := splits[1]
-			propertiesByResource[resourceName][propertyName] = property
-		}
-	}
-
-	for resourceName := range spec.Resources {
-		if propertiesByResource[resourceName] == nil {
-			propertiesByResource[resourceName] = map[string]Resource{}
-		}
-		propertiesByResource[resourceName]["Tag"] = spec.Properties["Tag"]
-	}
-
-	return &propertiesByResource
-}
-
-func serviceNames(spec *CloudFormationResourceSpecification) []string {
-	servicesMap := map[string]bool{}
-
-	for resourceName := range spec.Resources {
-		splits := strings.Split(resourceName, "::")
-		servicesMap[splits[1]] = true
-	}
-
-	serviceNames := make([]string, 0, len(servicesMap))
-	for serviceName := range servicesMap {
-		serviceNames = append(serviceNames, serviceName)
-	}
-	sort.Strings(serviceNames)
-	return serviceNames
-}
-
-func resourcesByService(spec *CloudFormationResourceSpecification, serviceNames []string) *map[string]map[string]Resource {
-	resourcesByService := map[string]map[string]Resource{}
-	for _, service := range serviceNames {
-		resourcesByService[service] = map[string]Resource{}
-	}
-
-	for resourceName, resource := range spec.Resources {
-		splits := strings.Split(resourceName, "::")
-		service := splits[1]
-
-		resourcesByService[service][resourceName] = resource
-	}
-	return &resourcesByService
-}
-
-func writeServiceFile(serviceName string, resources map[string]Resource, shortRegion string) error {
-
-	return nil
-}
+// 	return nil
+// }
 
 // func templateResources() *ast.Field {
 // 	propertiesByResource := map[string]map[string]Resource{}
 
 // 	return nil
 // }
-
-func templateResourceSpecVersion(resourceSpecificationVersion string) *ast.Field {
-	return NewField("#ResourceSpecificationVersion", ast.NewString(resourceSpecificationVersion))
-	// return &ast.Field{
-	// 	Label: ast.NewIdent("#ResourceSpecificationVersion"),
-	// 	// Token: token.ISA,
-	// 	Value: ast.NewString(resourceSpecificationVersion),
-	// }
-}
-
-// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
-func templateVersion() *ast.Field {
-	return NewOptionalField("AWSTemplateFormatVersion", ast.NewString("2010-09-09"))
-	// return &ast.Field{
-	// 	Label:    ast.NewIdent("AWSTemplateFormatVersion"),
-	// 	Value:    ast.NewString("2010-09-09"),
-	// 	Optional: token.Elided.Pos(),
-	// }
-}
-
-// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-description-structure.html
-func templateDescription() *ast.Field {
-	return NewOptionalField("Description", &ast.BasicLit{Value: "string"})
-	// return &ast.Field{
-	// 	Label:    ast.NewIdent("Description"),
-	// 	Value:    &ast.BasicLit{Value: "string"},
-	// 	Optional: token.Elided.Pos(),
-	// }
-}
-
-// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/metadata-section-structure.html
-func templateMetadata() *ast.Field {
-	return NewOptionalField("Metadata", ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), &ast.BasicLit{Value: "_"}))
-	// return &ast.Field{
-	// 	Label:    ast.NewIdent("Metadata"),
-	// 	Optional: token.Elided.Pos(),
-	// 	Value:    ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), &ast.BasicLit{Value: "_"}),
-	// }
-}
 
 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html
 func templateMappings() *ast.Field {
@@ -489,32 +328,6 @@ func templateMappings() *ast.Field {
 				ast.NewStruct(
 					ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
 					ast.NewBinExpr(token.OR, &ast.BasicLit{Value: "string | int | bool"}, ast.NewList(&ast.Ellipsis{Type: &ast.BasicLit{Value: "(string | int | bool)"}}))))),
-		// Value: &ast.StructLit{
-		// 	Elts: []ast.Decl{
-		// 		&ast.Field{
-		// 			Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-		// 			Value: &ast.StructLit{
-		// 				Elts: []ast.Decl{
-		// 					&ast.Field{
-		// 						Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-		// 						Value: &ast.StructLit{
-		// 							Elts: []ast.Decl{
-		// 								&ast.Field{
-		// 									Label: ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
-		// 									Value: &ast.BinaryExpr{
-		// 										X:  &ast.BasicLit{Value: "string | int | bool"},
-		// 										Op: token.OR,
-		// 										Y:  ast.NewList(&ast.Ellipsis{Type: &ast.BasicLit{Value: "(string | int | bool)"}}),
-		// 									},
-		// 								},
-		// 							},
-		// 						},
-		// 					},
-		// 				},
-		// 			},
-		// 		},
-		// 	},
-		// },
 	}
 }
 
@@ -536,14 +349,6 @@ func templateConditions() *ast.Field {
 		Label:    ast.NewIdent("Conditions"),
 		Optional: token.Elided.Pos(),
 		Value:    ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), conditionsFunctionDisjunction),
-		// Value: &ast.StructLit{
-		// 	Elts: []ast.Decl{
-		// 		&ast.Field{
-		// 			Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-		// 			Value: conditionsFunctionDisjunction,
-		// 		},
-		// 	},
-		// },
 	}
 }
 
@@ -565,47 +370,17 @@ func templateOutputs() *ast.Field {
 				Export?: Name: _
 			}
 		}`),
-
-		// Value: &ast.StructLit{
-		// 	Elts: []ast.Decl{
-		// 		&ast.Field{
-		// 			Label: ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
-		// 			Value: ast.NewStruct(
-		// 				ast.NewIdent("Description"),
-		// 				&ast.BasicLit{Value: "string"},
-		// 				token.Elided.Pos(),
-		// 				ast.NewIdent("Value"),
-		// 				&ast.BasicLit{Value: "_"},
-		// 				ast.NewIdent("Condition"),
-		// 				ast.NewIdent("string"),
-		// 				token.Elided.Pos(),
-		// 				ast.NewIdent("Export"),
-		// 				ast.NewStruct(ast.NewIdent("Name"), &ast.BasicLit{Value: "_"}),
-		// 				token.Elided.Pos(),
-		// 			),
-		// 		},
-		// 	},
-		// },
 	}
 }
 
-func resourceDependsOn() *ast.Field {
-	return &ast.Field{
-		Label:    ast.NewIdent("DependsOn"),
-		Optional: token.Elided.Pos(),
-		Value:    tryParse("string | [...string]"),
-		// Value:    ast.NewBinExpr(token.OR, ast.NewIdent("string"), ast.NewList(&ast.Ellipsis{Type: ast.NewIdent("string")})),
-	}
-}
-
-func NewField(name string, value ast.Expr) *ast.Field {
+func newField(name string, value ast.Expr) *ast.Field {
 	return &ast.Field{
 		Label: ast.NewIdent(name),
 		Value: value,
 	}
 }
 
-func NewOptionalField(name string, value ast.Expr) *ast.Field {
+func newOptionalField(name string, value ast.Expr) *ast.Field {
 	return &ast.Field{
 		Label:    ast.NewIdent(name),
 		Optional: token.Elided.Pos(),
@@ -621,7 +396,7 @@ func bulkOptionalLabel() *ast.ListLit {
 	return ast.NewList(&ast.BasicLit{Value: "string"})
 }
 
-func NewBulkOptionalField(value ast.Expr) *ast.Field {
+func newBulkOptionalField(value ast.Expr) *ast.Field {
 	return &ast.Field{
 		Label: ast.NewList(&ast.BasicLit{Value: "string"}),
 		Value: value,
@@ -693,8 +468,8 @@ func resourcePolicies(resourceName string) []*ast.Field {
 	for _, deletionPolicy := range deletionPolicyStrings[1:] {
 		deletionPolicies = &ast.BinaryExpr{X: deletionPolicies, Op: token.OR, Y: ast.NewString(deletionPolicy)}
 	}
-	policies = append(policies, NewOptionalField("DeletionPolicy", deletionPolicies))
-	policies = append(policies, NewOptionalField("UpdateReplacePolicy", deletionPolicies))
+	policies = append(policies, newOptionalField("DeletionPolicy", deletionPolicies))
+	policies = append(policies, newOptionalField("UpdateReplacePolicy", deletionPolicies))
 
 	switch resourceName {
 	case "AWS::AutoScaling::AutoScalingGroup",
@@ -848,7 +623,7 @@ func main() {
 				resourceElts := []ast.Decl{
 					resourceType,
 					propertiesStruct,
-					resourceDependsOn(),
+					newOptionalField("DependsOn", ast.NewBinExpr(token.OR, ast.NewIdent("string"), ast.NewList(&ast.Ellipsis{Type: ast.NewIdent("string")}))),
 				}
 
 				for _, policy := range resourcePolicies(resourceName) {
@@ -892,13 +667,7 @@ func main() {
 
 			ff.Decls = append(ff.Decls, imports)
 
-			serviceField := &ast.Field{
-				Label: ast.NewIdent("#" + serviceName),
-				// Token: token.ISA,
-				Value: &ast.StructLit{
-					Elts: serviceResources,
-				},
-			}
+			serviceField := newField("#"+serviceName, &ast.StructLit{Elts: serviceResources})
 
 			ff.Decls = append(ff.Decls, serviceField)
 			b, _ := format.Node(ff, format.Simplify())
@@ -965,7 +734,7 @@ func main() {
 					Path: ast.NewString("github.com/TangoGroup/aws/fn"),
 				}},
 			},
-			templateResourceSpecVersion(spec.ResourceSpecificationVersion),
+			newField("#ResourceSpecificationVersion", ast.NewString(spec.ResourceSpecificationVersion)),
 		}
 
 		deletionPolicyStrings := []string{"Delete", "Retain", "Snapshot"}
@@ -995,11 +764,7 @@ func main() {
 						Label: ast.NewList(&ast.UnaryExpr{Op: token.MAT, X: ast.NewString("[a-zA-Z0-9]")}),
 						Value: &ast.StructLit{
 							Elts: []ast.Decl{
-								&ast.Field{
-									Label:    ast.NewIdent("Description"),
-									Optional: token.Elided.Pos(),
-									Value:    ast.NewIdent("string"),
-								},
+								newOptionalField("Description", ast.NewIdent("string")),
 								// &ast.Field{
 								// 	Label: ast.NewIdent("Type"),
 								// 	Value: ast.NewCall(ast.NewIdent("or"), &ast.ListComprehension{
@@ -1012,67 +777,20 @@ func main() {
 								// 		Expr: ast.NewSel(ast.NewIdent("resource"), "Type"),
 								// 	}),
 								// },
-								&ast.Field{
-									Label: ast.NewIdent("Type"),
-									Value: resourceTypeStrings,
-								},
-								&ast.Field{
-									Label: ast.NewIdent("Properties"),
-									Value: &ast.StructLit{
-										Elts: []ast.Decl{
-											&ast.Field{
-												Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-												Value: &ast.BasicLit{Value: "_"},
-											},
-										},
-									},
-								},
-								&ast.Field{
-									Label:    ast.NewIdent("DependsOn"),
-									Optional: token.Elided.Pos(),
-									Value: &ast.BinaryExpr{
-										X:  ast.NewIdent("string"),
-										Op: token.OR,
-										Y:  ast.NewList(&ast.Ellipsis{Type: ast.NewIdent("string")}),
-									},
-								},
-								&ast.Field{
-									Label:    ast.NewIdent("DeletionPolicy"),
-									Optional: token.Elided.Pos(),
-									Value:    deletionPolicies,
-								},
-								&ast.Field{
-									Label:    ast.NewIdent("UpdateReplacePolicy"),
-									Optional: token.Elided.Pos(),
-									Value:    deletionPolicies,
-								},
-								&ast.Field{
-									Label:    ast.NewIdent("CreationPolicy"),
-									Optional: token.Elided.Pos(),
-									Value:    ast.NewIdent("_"),
-								},
-								&ast.Field{
-									Label:    ast.NewIdent("UpdatePolicy"),
-									Optional: token.Elided.Pos(),
-									Value:    ast.NewIdent("_"),
-								},
-								&ast.Field{
-									Label:    ast.NewIdent("Metadata"),
-									Optional: token.Elided.Pos(),
-									Value: &ast.StructLit{
-										Elts: []ast.Decl{
-											&ast.Field{
-												Label: ast.NewList(&ast.BasicLit{Value: "string"}),
-												Value: &ast.BasicLit{Value: "_"},
-											},
-										},
-									},
-								},
-								&ast.Field{
-									Label:    ast.NewIdent("Condition"),
-									Optional: token.Elided.Pos(),
-									Value:    ast.NewIdent("string"),
-								},
+								newField("Type", resourceTypeStrings),
+								newField("Properties", ast.NewStruct(bulkOptionalLabel(), top())),
+								newOptionalField("DependsOn",
+									ast.NewBinExpr(token.OR,
+										ast.NewIdent("string"),
+										ast.NewList(&ast.Ellipsis{Type: ast.NewIdent("string")}),
+									),
+								),
+								newOptionalField("DeletionPolicy", deletionPolicies),
+								newOptionalField("UpdateReplacePolicy", deletionPolicies),
+								newOptionalField("CreationPolicy", ast.NewIdent("_")),
+								newOptionalField("UpdatePolicy", ast.NewIdent("_")),
+								newOptionalField("Metadata", ast.NewStruct(bulkOptionalLabel(), top())),
+								newOptionalField("Condition", ast.NewIdent("string")),
 							},
 						},
 					},
@@ -1178,9 +896,9 @@ func main() {
 			// Token: token.ISA,
 			Value: &ast.StructLit{
 				Elts: []ast.Decl{
-					templateVersion(),
-					templateDescription(),
-					templateMetadata(),
+					newOptionalField("AWSTemplateFormatVersion", ast.NewString("2010-09-09")),
+					newOptionalField("Description", &ast.BasicLit{Value: "string"}),
+					newOptionalField("Metadata", ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), &ast.BasicLit{Value: "_"})),
 					templateMappings(),
 					templateConditions(),
 					templateParameters(),
@@ -1192,13 +910,7 @@ func main() {
 			},
 		})
 
-		declarations = append(declarations, &ast.Field{
-			Label: ast.NewIdent("ResourceTypesMap"),
-			// Token: token.ISA,
-			Value: &ast.StructLit{
-				Elts: resourceTypesFields,
-			},
-		})
+		declarations = append(declarations, newField("ResourceTypesMap", &ast.StructLit{Elts: resourceTypesFields}))
 
 		// resourcesMap := &ast.Field{
 		// 	Label: ast.NewIdent("ResourceTypesMap"),

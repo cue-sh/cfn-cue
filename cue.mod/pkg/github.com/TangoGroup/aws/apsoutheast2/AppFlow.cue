@@ -203,7 +203,7 @@ import (
 							BucketPrefix?:     string | fn.#Fn
 							FailOnFirstError?: bool | fn.#Fn
 						} | fn.#If
-						IdFieldNames?:       [...((=~#"\S+"#) | fn.#Fn)] | ((=~#"\S+"#) | fn.#Fn)
+						IdFieldNames?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
 						Object:              (=~#"\S+"#) | fn.#Fn
 						WriteOperationType?: ("INSERT" | "UPSERT" | "UPDATE") | fn.#Fn
 					} | fn.#If

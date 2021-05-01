@@ -59,12 +59,8 @@ import (
 						SecretManagerArn:     (=~#"arn:([a-z\d-]+):.*:.*:secret:AmazonLookoutMetrics-.+"#) | fn.#Fn
 						TableName:            (strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
 						VpcConfiguration:     {
-							SecurityGroupIdList: {
-								SecurityGroupIdList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-							} | fn.#If
-							SubnetIdList: {
-								SubnetIdList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-							} | fn.#If
+							SecurityGroupIdList: [...((strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[-0-9a-zA-Z]+"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[-0-9a-zA-Z]+"#)) | fn.#Fn)
+							SubnetIdList:        [...((=~#"[\-0-9a-zA-Z]+"#) | fn.#Fn)] | ((=~#"[\-0-9a-zA-Z]+"#) | fn.#Fn)
 						} | fn.#If
 					} | fn.#If
 					RedshiftSourceConfig?: {
@@ -76,12 +72,8 @@ import (
 						SecretManagerArn:  (=~#"arn:([a-z\d-]+):.*:.*:secret:AmazonLookoutMetrics-.+"#) | fn.#Fn
 						TableName:         (strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
 						VpcConfiguration:  {
-							SecurityGroupIdList: {
-								SecurityGroupIdList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-							} | fn.#If
-							SubnetIdList: {
-								SubnetIdList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-							} | fn.#If
+							SecurityGroupIdList: [...((strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[-0-9a-zA-Z]+"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[-0-9a-zA-Z]+"#)) | fn.#Fn)
+							SubnetIdList:        [...((=~#"[\-0-9a-zA-Z]+"#) | fn.#Fn)] | ((=~#"[\-0-9a-zA-Z]+"#) | fn.#Fn)
 						} | fn.#If
 					} | fn.#If
 					S3SourceConfig?: {

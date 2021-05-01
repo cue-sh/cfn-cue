@@ -48,8 +48,8 @@ import (
 			Content: {
 				[string]: _
 			} | fn.#Fn
-			DocumentType?: string | fn.#Fn
-			Name?:         string | fn.#Fn
+			DocumentType?: ("ApplicationConfiguration" | "ApplicationConfigurationSchema" | "Automation" | "Automation.ChangeTemplate" | "Command" | "DeploymentStrategy" | "Package" | "Policy" | "Session") | fn.#Fn
+			Name?:         (=~#"^[a-zA-Z0-9_\-.]{3,128}$"#) | fn.#Fn
 			Tags?:         [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn

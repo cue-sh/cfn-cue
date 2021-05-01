@@ -14,10 +14,8 @@ import (
 					ActionId:     string | fn.#Fn
 					Description?: string | fn.#Fn
 					Parameters?:  {} | fn.#If
-					StartAfter?:  {
-						ExperimentTemplateActionItemStartAfterList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					Targets?: {} | fn.#If
+					StartAfter?:  [...(string | fn.#Fn)] | (string | fn.#Fn)
+					Targets?:     {} | fn.#If
 				}
 			} | fn.#If
 			Description:    string | fn.#Fn
@@ -31,17 +29,11 @@ import (
 			} | fn.#If
 			Targets: {
 				[string]: {
-					Filters?: {
-						ExperimentTemplateTargetFilterList?: [...{
-							Path:   string | fn.#Fn
-							Values: {
-								ExperimentTemplateTargetFilterValues?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-							} | fn.#If
-						}] | fn.#If
-					} | fn.#If
-					ResourceArns?: {
-						ResourceArnList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
+					Filters?: [...{
+						Path:   string | fn.#Fn
+						Values: [...(string | fn.#Fn)] | (string | fn.#Fn)
+					}] | fn.#If
+					ResourceArns?: [...(string | fn.#Fn)] | (string | fn.#Fn)
 					ResourceTags?: {} | fn.#If
 					ResourceType:  string | fn.#Fn
 					SelectionMode: string | fn.#Fn

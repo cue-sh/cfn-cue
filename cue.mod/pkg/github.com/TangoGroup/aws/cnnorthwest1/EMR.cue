@@ -25,15 +25,7 @@ import "github.com/TangoGroup/aws/fn"
 					Path:  string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
-			Configurations?: [...{
-				Classification?:          string | fn.#Fn
-				ConfigurationProperties?: {
-					[string]: string | fn.#Fn
-				} | fn.#If
-				Configurations?: [...{
-					[string]: _
-				}] | fn.#If
-			}] | fn.#If
+			Configurations?:    [..._#Configuration] | fn.#If
 			CustomAmiId?:       string | fn.#Fn
 			EbsRootVolumeSize?: int | fn.#Fn
 			Instances:          {
@@ -43,16 +35,8 @@ import "github.com/TangoGroup/aws/fn"
 					InstanceTypeConfigs?: [...{
 						BidPrice?:                            string | fn.#Fn
 						BidPriceAsPercentageOfOnDemandPrice?: number | fn.#Fn
-						Configurations?:                      [...{
-							Classification?:          string | fn.#Fn
-							ConfigurationProperties?: {
-								[string]: string | fn.#Fn
-							} | fn.#If
-							Configurations?: [...{
-								[string]: _
-							}] | fn.#If
-						}] | fn.#If
-						EbsConfiguration?: {
+						Configurations?:                      [..._#Configuration] | fn.#If
+						EbsConfiguration?:                    {
 							EbsBlockDeviceConfigs?: [...{
 								VolumeSpecification: {
 									Iops?:      int | fn.#Fn
@@ -116,16 +100,8 @@ import "github.com/TangoGroup/aws/fn"
 							} | fn.#If
 						}] | fn.#If
 					} | fn.#If
-					BidPrice?:       string | fn.#Fn
-					Configurations?: [...{
-						Classification?:          string | fn.#Fn
-						ConfigurationProperties?: {
-							[string]: string | fn.#Fn
-						} | fn.#If
-						Configurations?: [...{
-							[string]: _
-						}] | fn.#If
-					}] | fn.#If
+					BidPrice?:         string | fn.#Fn
+					Configurations?:   [..._#Configuration] | fn.#If
 					EbsConfiguration?: {
 						EbsBlockDeviceConfigs?: [...{
 							VolumeSpecification: {
@@ -153,16 +129,8 @@ import "github.com/TangoGroup/aws/fn"
 					InstanceTypeConfigs?: [...{
 						BidPrice?:                            string | fn.#Fn
 						BidPriceAsPercentageOfOnDemandPrice?: number | fn.#Fn
-						Configurations?:                      [...{
-							Classification?:          string | fn.#Fn
-							ConfigurationProperties?: {
-								[string]: string | fn.#Fn
-							} | fn.#If
-							Configurations?: [...{
-								[string]: _
-							}] | fn.#If
-						}] | fn.#If
-						EbsConfiguration?: {
+						Configurations?:                      [..._#Configuration] | fn.#If
+						EbsConfiguration?:                    {
 							EbsBlockDeviceConfigs?: [...{
 								VolumeSpecification: {
 									Iops?:      int | fn.#Fn
@@ -226,16 +194,8 @@ import "github.com/TangoGroup/aws/fn"
 							} | fn.#If
 						}] | fn.#If
 					} | fn.#If
-					BidPrice?:       string | fn.#Fn
-					Configurations?: [...{
-						Classification?:          string | fn.#Fn
-						ConfigurationProperties?: {
-							[string]: string | fn.#Fn
-						} | fn.#If
-						Configurations?: [...{
-							[string]: _
-						}] | fn.#If
-					}] | fn.#If
+					BidPrice?:         string | fn.#Fn
+					Configurations?:   [..._#Configuration] | fn.#If
 					EbsConfiguration?: {
 						EbsBlockDeviceConfigs?: [...{
 							VolumeSpecification: {
@@ -301,6 +261,13 @@ import "github.com/TangoGroup/aws/fn"
 				Value: string | fn.#Fn
 			}] | fn.#If
 			VisibleToAllUsers?: bool | fn.#Fn
+			_#Configuration: {
+				Classification?:          string | fn.#Fn
+				ConfigurationProperties?: {
+					[string]: string | fn.#Fn
+				} | fn.#If
+				Configurations?: [..._#Configuration] | fn.#If
+			}
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -316,16 +283,8 @@ import "github.com/TangoGroup/aws/fn"
 			InstanceTypeConfigs?: [...{
 				BidPrice?:                            string | fn.#Fn
 				BidPriceAsPercentageOfOnDemandPrice?: number | fn.#Fn
-				Configurations?:                      [...{
-					Classification?:          string | fn.#Fn
-					ConfigurationProperties?: {
-						[string]: string | fn.#Fn
-					} | fn.#If
-					Configurations?: [...{
-						[string]: _
-					}] | fn.#If
-				}] | fn.#If
-				EbsConfiguration?: {
+				Configurations?:                      [..._#Configuration] | fn.#If
+				EbsConfiguration?:                    {
 					EbsBlockDeviceConfigs?: [...{
 						VolumeSpecification: {
 							Iops?:      int | fn.#Fn
@@ -353,6 +312,13 @@ import "github.com/TangoGroup/aws/fn"
 			Name?:                   string | fn.#Fn
 			TargetOnDemandCapacity?: int | fn.#Fn
 			TargetSpotCapacity?:     int | fn.#Fn
+			_#Configuration: {
+				Classification?:          string | fn.#Fn
+				ConfigurationProperties?: {
+					[string]: string | fn.#Fn
+				} | fn.#If
+				Configurations?: [..._#Configuration] | fn.#If
+			}
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -397,16 +363,8 @@ import "github.com/TangoGroup/aws/fn"
 					} | fn.#If
 				}] | fn.#If
 			} | fn.#If
-			BidPrice?:       string | fn.#Fn
-			Configurations?: [...{
-				Classification?:          string | fn.#Fn
-				ConfigurationProperties?: {
-					[string]: string | fn.#Fn
-				} | fn.#If
-				Configurations?: [...{
-					[string]: _
-				}] | fn.#If
-			}] | fn.#If
+			BidPrice?:         string | fn.#Fn
+			Configurations?:   [..._#Configuration] | fn.#If
 			EbsConfiguration?: {
 				EbsBlockDeviceConfigs?: [...{
 					VolumeSpecification: {
@@ -424,6 +382,13 @@ import "github.com/TangoGroup/aws/fn"
 			JobFlowId:     string | fn.#Fn
 			Market?:       string | fn.#Fn
 			Name?:         string | fn.#Fn
+			_#Configuration: {
+				Classification?:          string | fn.#Fn
+				ConfigurationProperties?: {
+					[string]: string | fn.#Fn
+				} | fn.#If
+				Configurations?: [..._#Configuration] | fn.#If
+			}
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

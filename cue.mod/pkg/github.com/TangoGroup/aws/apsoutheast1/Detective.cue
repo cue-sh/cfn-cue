@@ -8,7 +8,10 @@ import (
 #Detective: {
 	#Graph: {
 		Type: "AWS::Detective::Graph"
-		Properties: {}
+		Properties: Tags?: [...{
+			Key:   string | fn.#Fn
+			Value: string | fn.#Fn
+		}] | fn.#If
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"

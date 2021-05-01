@@ -22,10 +22,10 @@ import "github.com/TangoGroup/aws/fn"
 				} | fn.#If
 				AntennaDownlinkDemodDecodeConfig?: {
 					DecodeConfig?: {
-						UnvalidatedJson?: (=~#"^[{}\[\]:.,"0-9A-z\-_\s]{1,8192}$"#) | fn.#Fn
+						UnvalidatedJSON?: (=~#"^[{}\[\]:.,"0-9A-z\-_\s]{1,8192}$"#) | fn.#Fn
 					} | fn.#If
 					DemodulationConfig?: {
-						UnvalidatedJson?: (=~#"^[{}\[\]:.,"0-9A-z\-_\s]{1,8192}$"#) | fn.#Fn
+						UnvalidatedJSON?: (=~#"^[{}\[\]:.,"0-9A-z\-_\s]{1,8192}$"#) | fn.#Fn
 					} | fn.#If
 					SpectrumConfig?: {
 						Bandwidth?: {

@@ -6,6 +6,13 @@ import "github.com/TangoGroup/aws/fn"
 	#Group: {
 		Type: "AWS::ResourceGroups::Group"
 		Properties: {
+			Configuration?: [...{
+				Parameters?: [...{
+					Name?:   string | fn.#Fn
+					Values?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+				}] | fn.#If
+				Type?: string | fn.#Fn
+			}] | fn.#If
 			Description?:   string | fn.#Fn
 			Name:           string | fn.#Fn
 			ResourceQuery?: {
@@ -19,7 +26,8 @@ import "github.com/TangoGroup/aws/fn"
 				} | fn.#If
 				Type?: ("TAG_FILTERS_1_0" | "CLOUDFORMATION_STACK_1_0") | fn.#Fn
 			} | fn.#If
-			Tags?: [...{
+			Resources?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+			Tags?:      [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If

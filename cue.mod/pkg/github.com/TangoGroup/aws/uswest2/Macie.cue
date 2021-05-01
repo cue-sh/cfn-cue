@@ -6,12 +6,12 @@ import "github.com/TangoGroup/aws/fn"
 	#CustomDataIdentifier: {
 		Type: "AWS::Macie::CustomDataIdentifier"
 		Properties: {
-			Description?:          string | fn.#Fn
-			IgnoreWords?:          [...(string | fn.#Fn)] | (string | fn.#Fn)
-			Keywords?:             [...(string | fn.#Fn)] | (string | fn.#Fn)
-			MaximumMatchDistance?: int | fn.#Fn
-			Name:                  string | fn.#Fn
-			Regex:                 string | fn.#Fn
+			Description?:          *string | fn.#Fn
+			IgnoreWords?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Keywords?:             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			MaximumMatchDistance?: *int | fn.#Fn
+			Name:                  *string | fn.#Fn
+			Regex:                 *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -22,13 +22,13 @@ import "github.com/TangoGroup/aws/fn"
 	#FindingsFilter: {
 		Type: "AWS::Macie::FindingsFilter"
 		Properties: {
-			Action?:         ("ARCHIVE" | "NOOP") | fn.#Fn
-			Description?:    string | fn.#Fn
-			FindingCriteria: {
-				Criterion?: {} | fn.#If
+			Action?:         *("ARCHIVE" | "NOOP") | fn.#Fn
+			Description?:    *string | fn.#Fn
+			FindingCriteria: *{
+				Criterion?: *{} | fn.#If
 			} | fn.#If
-			Name:      string | fn.#Fn
-			Position?: int | fn.#Fn
+			Name:      *string | fn.#Fn
+			Position?: *int | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -39,8 +39,8 @@ import "github.com/TangoGroup/aws/fn"
 	#Session: {
 		Type: "AWS::Macie::Session"
 		Properties: {
-			FindingPublishingFrequency?: ("FIFTEEN_MINUTES" | "ONE_HOUR" | "SIX_HOURS") | fn.#Fn
-			Status?:                     ("ENABLED" | "PAUSED") | fn.#Fn
+			FindingPublishingFrequency?: *("FIFTEEN_MINUTES" | "ONE_HOUR" | "SIX_HOURS") | fn.#Fn
+			Status?:                     *("ENABLED" | "PAUSED") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

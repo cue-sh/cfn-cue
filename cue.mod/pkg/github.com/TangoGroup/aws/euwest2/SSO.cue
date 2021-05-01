@@ -28,9 +28,7 @@ import (
 			AccessControlAttributes?: [...{
 				Key:   string | fn.#Fn
 				Value: {
-					Source: {
-						AccessControlAttributeValueSourceList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
+					Source: [...(string | fn.#Fn)] | (string | fn.#Fn)
 				} | fn.#If
 			}] | fn.#If
 			InstanceArn: (strings.MinRunes(10) & strings.MaxRunes(1224) & (=~#"arn:aws:sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}"#)) | fn.#Fn

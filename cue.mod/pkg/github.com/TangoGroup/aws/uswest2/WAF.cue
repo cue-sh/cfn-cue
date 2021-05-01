@@ -6,17 +6,17 @@ import "github.com/TangoGroup/aws/fn"
 	#ByteMatchSet: {
 		Type: "AWS::WAF::ByteMatchSet"
 		Properties: {
-			ByteMatchTuples?: [...{
-				FieldToMatch: {
-					Data?: string | fn.#Fn
-					Type:  string | fn.#Fn
+			ByteMatchTuples?: *[...{
+				FieldToMatch: *{
+					Data?: *string | fn.#Fn
+					Type:  *string | fn.#Fn
 				} | fn.#If
-				PositionalConstraint: string | fn.#Fn
-				TargetString?:        string | fn.#Fn
-				TargetStringBase64?:  string | fn.#Fn
-				TextTransformation:   string | fn.#Fn
+				PositionalConstraint: *string | fn.#Fn
+				TargetString?:        *string | fn.#Fn
+				TargetStringBase64?:  *string | fn.#Fn
+				TextTransformation:   *string | fn.#Fn
 			}] | fn.#If
-			Name: string | fn.#Fn
+			Name: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -27,11 +27,11 @@ import "github.com/TangoGroup/aws/fn"
 	#IPSet: {
 		Type: "AWS::WAF::IPSet"
 		Properties: {
-			IPSetDescriptors?: [...{
-				Type:  string | fn.#Fn
-				Value: string | fn.#Fn
+			IPSetDescriptors?: *[...{
+				Type:  *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			Name: string | fn.#Fn
+			Name: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -42,12 +42,12 @@ import "github.com/TangoGroup/aws/fn"
 	#Rule: {
 		Type: "AWS::WAF::Rule"
 		Properties: {
-			MetricName:  string | fn.#Fn
-			Name:        string | fn.#Fn
-			Predicates?: [...{
-				DataId:  string | fn.#Fn
-				Negated: bool | fn.#Fn
-				Type:    ("ByteMatch" | "GeoMatch" | "IPMatch" | "RegexMatch" | "SizeConstraint" | "SqlInjectionMatch" | "XssMatch") | fn.#Fn
+			MetricName:  *string | fn.#Fn
+			Name:        *string | fn.#Fn
+			Predicates?: *[...{
+				DataId:  *string | fn.#Fn
+				Negated: *bool | fn.#Fn
+				Type:    *("ByteMatch" | "GeoMatch" | "IPMatch" | "RegexMatch" | "SizeConstraint" | "SqlInjectionMatch" | "XssMatch") | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -59,15 +59,15 @@ import "github.com/TangoGroup/aws/fn"
 	#SizeConstraintSet: {
 		Type: "AWS::WAF::SizeConstraintSet"
 		Properties: {
-			Name:            string | fn.#Fn
-			SizeConstraints: [...{
-				ComparisonOperator: string | fn.#Fn
-				FieldToMatch:       {
-					Data?: string | fn.#Fn
-					Type:  string | fn.#Fn
+			Name:            *string | fn.#Fn
+			SizeConstraints: *[...{
+				ComparisonOperator: *string | fn.#Fn
+				FieldToMatch:       *{
+					Data?: *string | fn.#Fn
+					Type:  *string | fn.#Fn
 				} | fn.#If
-				Size:               int | fn.#Fn
-				TextTransformation: string | fn.#Fn
+				Size:               *int | fn.#Fn
+				TextTransformation: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -79,13 +79,13 @@ import "github.com/TangoGroup/aws/fn"
 	#SqlInjectionMatchSet: {
 		Type: "AWS::WAF::SqlInjectionMatchSet"
 		Properties: {
-			Name:                     string | fn.#Fn
-			SqlInjectionMatchTuples?: [...{
-				FieldToMatch: {
-					Data?: string | fn.#Fn
-					Type:  string | fn.#Fn
+			Name:                     *string | fn.#Fn
+			SqlInjectionMatchTuples?: *[...{
+				FieldToMatch: *{
+					Data?: *string | fn.#Fn
+					Type:  *string | fn.#Fn
 				} | fn.#If
-				TextTransformation: string | fn.#Fn
+				TextTransformation: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -97,17 +97,17 @@ import "github.com/TangoGroup/aws/fn"
 	#WebACL: {
 		Type: "AWS::WAF::WebACL"
 		Properties: {
-			DefaultAction: {
-				Type: string | fn.#Fn
+			DefaultAction: *{
+				Type: *string | fn.#Fn
 			} | fn.#If
-			MetricName: string | fn.#Fn
-			Name:       string | fn.#Fn
-			Rules?:     [...{
-				Action?: {
-					Type: string | fn.#Fn
+			MetricName: *string | fn.#Fn
+			Name:       *string | fn.#Fn
+			Rules?:     *[...{
+				Action?: *{
+					Type: *string | fn.#Fn
 				} | fn.#If
-				Priority: int | fn.#Fn
-				RuleId:   string | fn.#Fn
+				Priority: *int | fn.#Fn
+				RuleId:   *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -119,13 +119,13 @@ import "github.com/TangoGroup/aws/fn"
 	#XssMatchSet: {
 		Type: "AWS::WAF::XssMatchSet"
 		Properties: {
-			Name:           string | fn.#Fn
-			XssMatchTuples: [...{
-				FieldToMatch: {
-					Data?: string | fn.#Fn
-					Type:  string | fn.#Fn
+			Name:           *string | fn.#Fn
+			XssMatchTuples: *[...{
+				FieldToMatch: *{
+					Data?: *string | fn.#Fn
+					Type:  *string | fn.#Fn
 				} | fn.#If
-				TextTransformation: string | fn.#Fn
+				TextTransformation: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

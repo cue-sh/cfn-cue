@@ -56,6 +56,30 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#PartnerAccount: {
+		Type: "AWS::IoTWireless::PartnerAccount"
+		Properties: {
+			AccountLinked?:    bool | fn.#Fn
+			Fingerprint?:      (=~#"[a-fA-F0-9]{64}"#) | fn.#Fn
+			PartnerAccountId?: string | fn.#Fn
+			PartnerType?:      ("Sidewalk") | fn.#Fn
+			Sidewalk?:         {
+				AppServerPrivateKey: (strings.MinRunes(1) & strings.MaxRunes(4096) & (=~#"[a-fA-F0-9]{64}"#)) | fn.#Fn
+			} | fn.#If
+			SidewalkUpdate?: {
+				AppServerPrivateKey?: (strings.MinRunes(1) & strings.MaxRunes(4096) & (=~#"[a-fA-F0-9]{64}"#)) | fn.#Fn
+			} | fn.#If
+			Tags?: [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ServiceProfile: {
 		Type: "AWS::IoTWireless::ServiceProfile"
 		Properties: {
@@ -85,6 +109,53 @@ import (
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TaskDefinition: {
+		Type: "AWS::IoTWireless::TaskDefinition"
+		Properties: {
+			AutoCreateTasks:                bool | fn.#Fn
+			LoRaWANUpdateGatewayTaskEntry?: {
+				CurrentVersion?: {
+					Model?:          (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+					PackageVersion?: (strings.MinRunes(1) & strings.MaxRunes(32)) | fn.#Fn
+					Station?:        (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+				} | fn.#If
+				UpdateVersion?: {
+					Model?:          (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+					PackageVersion?: (strings.MinRunes(1) & strings.MaxRunes(32)) | fn.#Fn
+					Station?:        (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			Name?: (strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			Tags?: [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+			TaskDefinitionType?: ("UPDATE") | fn.#Fn
+			Update?:             {
+				LoRaWAN?: {
+					CurrentVersion?: {
+						Model?:          (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+						PackageVersion?: (strings.MinRunes(1) & strings.MaxRunes(32)) | fn.#Fn
+						Station?:        (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+					} | fn.#If
+					SigKeyCrc?:       int | fn.#Fn
+					UpdateSignature?: (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+					UpdateVersion?:   {
+						Model?:          (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+						PackageVersion?: (strings.MinRunes(1) & strings.MaxRunes(32)) | fn.#Fn
+						Station?:        (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				UpdateDataRole?:   (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+				UpdateDataSource?: (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

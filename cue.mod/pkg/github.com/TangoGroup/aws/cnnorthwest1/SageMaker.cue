@@ -9,19 +9,19 @@ import (
 	#App: {
 		Type: "AWS::SageMaker::App"
 		Properties: {
-			AppName:       (strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#)) | fn.#Fn
-			AppType:       ("JupyterServer" | "KernelGateway") | fn.#Fn
-			DomainId:      (strings.MinRunes(1) & strings.MaxRunes(63)) | fn.#Fn
-			ResourceSpec?: {
-				InstanceType?:             ("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
-				SageMakerImageArn?:        (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#)) | fn.#Fn
-				SageMakerImageVersionArn?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#)) | fn.#Fn
+			AppName:       *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#)) | fn.#Fn
+			AppType:       *("JupyterServer" | "KernelGateway") | fn.#Fn
+			DomainId:      *(strings.MinRunes(1) & strings.MaxRunes(63)) | fn.#Fn
+			ResourceSpec?: *{
+				InstanceType?:             *("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
+				SageMakerImageArn?:        *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#)) | fn.#Fn
+				SageMakerImageVersionArn?: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#)) | fn.#Fn
 			} | fn.#If
-			Tags?: [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			UserProfileName: (strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#)) | fn.#Fn
+			UserProfileName: *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -32,21 +32,21 @@ import (
 	#AppImageConfig: {
 		Type: "AWS::SageMaker::AppImageConfig"
 		Properties: {
-			AppImageConfigName:        (strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#)) | fn.#Fn
-			KernelGatewayImageConfig?: {
-				FileSystemConfig?: {
-					DefaultGid?: int | fn.#Fn
-					DefaultUid?: int | fn.#Fn
-					MountPath?:  (strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^/.*"#)) | fn.#Fn
+			AppImageConfigName:        *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#)) | fn.#Fn
+			KernelGatewayImageConfig?: *{
+				FileSystemConfig?: *{
+					DefaultGid?: *int | fn.#Fn
+					DefaultUid?: *int | fn.#Fn
+					MountPath?:  *(strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^/.*"#)) | fn.#Fn
 				} | fn.#If
-				KernelSpecs: [...{
-					DisplayName?: (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
-					Name:         (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+				KernelSpecs: *[...{
+					DisplayName?: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+					Name:         *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
-			Tags?: [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -58,44 +58,44 @@ import (
 	#Domain: {
 		Type: "AWS::SageMaker::Domain"
 		Properties: {
-			AppNetworkAccessType?: ("PublicInternetOnly" | "VpcOnly") | fn.#Fn
-			AuthMode:              ("SSO" | "IAM") | fn.#Fn
-			DefaultUserSettings:   {
-				ExecutionRole?:            (strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
-				JupyterServerAppSettings?: {
-					DefaultResourceSpec?: {
-						InstanceType?:             ("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
-						SageMakerImageArn?:        (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
-						SageMakerImageVersionArn?: (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
+			AppNetworkAccessType?: *("PublicInternetOnly" | "VpcOnly") | fn.#Fn
+			AuthMode:              *("SSO" | "IAM") | fn.#Fn
+			DefaultUserSettings:   *{
+				ExecutionRole?:            *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
+				JupyterServerAppSettings?: *{
+					DefaultResourceSpec?: *{
+						InstanceType?:             *("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
+						SageMakerImageArn?:        *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
+						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				KernelGatewayAppSettings?: {
-					CustomImages?: [...{
-						AppImageConfigName:  (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
-						ImageName:           (=~#"^[a-zA-Z0-9]([-.]?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
-						ImageVersionNumber?: int | fn.#Fn
+				KernelGatewayAppSettings?: *{
+					CustomImages?: *[...{
+						AppImageConfigName:  *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
+						ImageName:           *(=~#"^[a-zA-Z0-9]([-.]?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
+						ImageVersionNumber?: *int | fn.#Fn
 					}] | fn.#If
-					DefaultResourceSpec?: {
-						InstanceType?:             ("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
-						SageMakerImageArn?:        (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
-						SageMakerImageVersionArn?: (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
+					DefaultResourceSpec?: *{
+						InstanceType?:             *("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
+						SageMakerImageArn?:        *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
+						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				SecurityGroups?:  [...((=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | ((=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
-				SharingSettings?: {
-					NotebookOutputOption?: ("Allowed" | "Disabled") | fn.#Fn
-					S3KmsKeyId?:           (=~#".*"#) | fn.#Fn
-					S3OutputPath?:         (=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				SecurityGroups?:  [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+				SharingSettings?: *{
+					NotebookOutputOption?: *("Allowed" | "Disabled") | fn.#Fn
+					S3KmsKeyId?:           *(=~#".*"#) | fn.#Fn
+					S3OutputPath?:         *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			DomainName: (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
-			KmsKeyId?:  (=~#".*"#) | fn.#Fn
-			SubnetIds:  [...((=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | ((=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
-			Tags?:      [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			DomainName: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
+			KmsKeyId?:  *(=~#".*"#) | fn.#Fn
+			SubnetIds:  [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+			Tags?:      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			VpcId: (=~#"[-0-9a-zA-Z]+"#) | fn.#Fn
+			VpcId: *(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -106,13 +106,13 @@ import (
 	#Image: {
 		Type: "AWS::SageMaker::Image"
 		Properties: {
-			ImageDescription?: (strings.MinRunes(1) & strings.MaxRunes(512) & (=~#".+"#)) | fn.#Fn
-			ImageDisplayName?: (strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Za-z0-9 -_]+$"#)) | fn.#Fn
-			ImageName:         (strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*$"#)) | fn.#Fn
-			ImageRoleArn:      (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:aws(-[\w]+)*:iam::[0-9]{12}:role/.*$"#)) | fn.#Fn
-			Tags?:             [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			ImageDescription?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#".+"#)) | fn.#Fn
+			ImageDisplayName?: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Za-z0-9 -_]+$"#)) | fn.#Fn
+			ImageName:         *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*$"#)) | fn.#Fn
+			ImageRoleArn:      *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:aws(-[\w]+)*:iam::[0-9]{12}:role/.*$"#)) | fn.#Fn
+			Tags?:             *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -124,8 +124,8 @@ import (
 	#ImageVersion: {
 		Type: "AWS::SageMaker::ImageVersion"
 		Properties: {
-			BaseImage: (strings.MinRunes(1) & strings.MaxRunes(255) & (=~#".+"#)) | fn.#Fn
-			ImageName: (strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[A-Za-z0-9]([-.]?[A-Za-z0-9])*$"#)) | fn.#Fn
+			BaseImage: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#".+"#)) | fn.#Fn
+			ImageName: *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[A-Za-z0-9]([-.]?[A-Za-z0-9])*$"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -136,84 +136,84 @@ import (
 	#MonitoringSchedule: {
 		Type: "AWS::SageMaker::MonitoringSchedule"
 		Properties: {
-			EndpointName?:                   (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
-			FailureReason?:                  (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
-			LastMonitoringExecutionSummary?: {
-				CreationTime:              string | fn.#Fn
-				EndpointName?:             (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
-				FailureReason?:            string | fn.#Fn
-				LastModifiedTime:          string | fn.#Fn
-				MonitoringExecutionStatus: ("Pending" | "Completed" | "CompletedWithViolations" | "InProgress" | "Failed" | "Stopping" | "Stopped") | fn.#Fn
-				MonitoringScheduleName:    (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
-				ProcessingJobArn?:         (=~#"aws[a-z\-]*:sagemaker:[a-z0-9\-]*:[0-9]{12}:processing-job/.*"#) | fn.#Fn
-				ScheduledTime:             string | fn.#Fn
+			EndpointName?:                   *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+			FailureReason?:                  *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			LastMonitoringExecutionSummary?: *{
+				CreationTime:              *string | fn.#Fn
+				EndpointName?:             *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+				FailureReason?:            *string | fn.#Fn
+				LastModifiedTime:          *string | fn.#Fn
+				MonitoringExecutionStatus: *("Pending" | "Completed" | "CompletedWithViolations" | "InProgress" | "Failed" | "Stopping" | "Stopped") | fn.#Fn
+				MonitoringScheduleName:    *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+				ProcessingJobArn?:         *(=~#"aws[a-z\-]*:sagemaker:[a-z0-9\-]*:[0-9]{12}:processing-job/.*"#) | fn.#Fn
+				ScheduledTime:             *string | fn.#Fn
 			} | fn.#If
-			MonitoringScheduleConfig: {
-				MonitoringJobDefinition: {
-					BaselineConfig?: {
-						ConstraintsResource?: {
-							S3Uri?: (=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+			MonitoringScheduleConfig: *{
+				MonitoringJobDefinition: *{
+					BaselineConfig?: *{
+						ConstraintsResource?: *{
+							S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 						} | fn.#If
-						StatisticsResource?: {
-							S3Uri?: (=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+						StatisticsResource?: *{
+							S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 						} | fn.#If
 					} | fn.#If
-					Environment?:               {} | fn.#If
-					MonitoringAppSpecification: {
-						ContainerArguments?:              [...((strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-						ContainerEntrypoint?:             [...((strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-						ImageUri:                         (=~#".*"#) | fn.#Fn
-						PostAnalyticsProcessorSourceUri?: (=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
-						RecordPreprocessorSourceUri?:     (=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					Environment?:               *{} | fn.#If
+					MonitoringAppSpecification: *{
+						ContainerArguments?:              [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+						ContainerEntrypoint?:             [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+						ImageUri:                         *(=~#".*"#) | fn.#Fn
+						PostAnalyticsProcessorSourceUri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+						RecordPreprocessorSourceUri?:     *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 					} | fn.#If
-					MonitoringInputs: [...{
-						EndpointInput: {
-							EndpointName:            (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
-							LocalPath:               (=~#".*"#) | fn.#Fn
-							S3DataDistributionType?: ("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
-							S3InputMode?:            ("Pipe" | "File") | fn.#Fn
+					MonitoringInputs: *[...{
+						EndpointInput: *{
+							EndpointName:            *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+							LocalPath:               *(=~#".*"#) | fn.#Fn
+							S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+							S3InputMode?:            *("Pipe" | "File") | fn.#Fn
 						} | fn.#If
 					}] | fn.#If
-					MonitoringOutputConfig: {
-						KmsKeyId?:         (=~#".*"#) | fn.#Fn
-						MonitoringOutputs: [...{
-							S3Output: {
-								LocalPath:     (=~#".*"#) | fn.#Fn
-								S3UploadMode?: ("Continuous" | "EndOfJob") | fn.#Fn
-								S3Uri:         (=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					MonitoringOutputConfig: *{
+						KmsKeyId?:         *(=~#".*"#) | fn.#Fn
+						MonitoringOutputs: *[...{
+							S3Output: *{
+								LocalPath:     *(=~#".*"#) | fn.#Fn
+								S3UploadMode?: *("Continuous" | "EndOfJob") | fn.#Fn
+								S3Uri:         *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 							} | fn.#If
 						}] | fn.#If
 					} | fn.#If
-					MonitoringResources: {
-						ClusterConfig: {
-							InstanceCount:   (>=1 & <=100) | fn.#Fn
-							InstanceType:    string | fn.#Fn
-							VolumeKmsKeyId?: string | fn.#Fn
-							VolumeSizeInGB:  (>=1 & <=16384) | fn.#Fn
+					MonitoringResources: *{
+						ClusterConfig: *{
+							InstanceCount:   *(>=1 & <=100) | fn.#Fn
+							InstanceType:    *string | fn.#Fn
+							VolumeKmsKeyId?: *string | fn.#Fn
+							VolumeSizeInGB:  *(>=1 & <=16384) | fn.#Fn
 						} | fn.#If
 					} | fn.#If
-					NetworkConfig?: {
-						EnableInterContainerTrafficEncryption?: bool | fn.#Fn
-						EnableNetworkIsolation?:                bool | fn.#Fn
-						VpcConfig?:                             {
-							SecurityGroupIds: [...((=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | ((=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
-							Subnets:          [...((=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | ((=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+					NetworkConfig?: *{
+						EnableInterContainerTrafficEncryption?: *bool | fn.#Fn
+						EnableNetworkIsolation?:                *bool | fn.#Fn
+						VpcConfig?:                             *{
+							SecurityGroupIds: [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+							Subnets:          [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
 						} | fn.#If
 					} | fn.#If
-					RoleArn:            (strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
-					StoppingCondition?: {
-						MaxRuntimeInSeconds: (>=1 & <=86400) | fn.#Fn
+					RoleArn:            *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
+					StoppingCondition?: *{
+						MaxRuntimeInSeconds: *(>=1 & <=86400) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				ScheduleConfig?: {
-					ScheduleExpression: (strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+				ScheduleConfig?: *{
+					ScheduleExpression: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			MonitoringScheduleName:    (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
-			MonitoringScheduleStatus?: ("Pending" | "Failed" | "Scheduled" | "Stopped") | fn.#Fn
-			Tags?:                     [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			MonitoringScheduleName:    *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+			MonitoringScheduleStatus?: *("Pending" | "Failed" | "Scheduled" | "Stopped") | fn.#Fn
+			Tags?:                     *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -225,40 +225,40 @@ import (
 	#UserProfile: {
 		Type: "AWS::SageMaker::UserProfile"
 		Properties: {
-			DomainId:                    (strings.MinRunes(1) & strings.MaxRunes(63)) | fn.#Fn
-			SingleSignOnUserIdentifier?: (=~#"UserName"#) | fn.#Fn
-			SingleSignOnUserValue?:      (strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
-			Tags?:                       [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			DomainId:                    *(strings.MinRunes(1) & strings.MaxRunes(63)) | fn.#Fn
+			SingleSignOnUserIdentifier?: *(=~#"UserName"#) | fn.#Fn
+			SingleSignOnUserValue?:      *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			Tags?:                       *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			UserProfileName: (strings.MinRunes(1) & strings.MaxRunes(63)) | fn.#Fn
-			UserSettings?:   {
-				ExecutionRole?:            (strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
-				JupyterServerAppSettings?: {
-					DefaultResourceSpec?: {
-						InstanceType?:             ("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
-						SageMakerImageArn?:        (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
-						SageMakerImageVersionArn?: (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
+			UserProfileName: *(strings.MinRunes(1) & strings.MaxRunes(63)) | fn.#Fn
+			UserSettings?:   *{
+				ExecutionRole?:            *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
+				JupyterServerAppSettings?: *{
+					DefaultResourceSpec?: *{
+						InstanceType?:             *("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
+						SageMakerImageArn?:        *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
+						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				KernelGatewayAppSettings?: {
-					CustomImages?: [...{
-						AppImageConfigName:  (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
-						ImageName:           (=~#"^[a-zA-Z0-9]([-.]?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
-						ImageVersionNumber?: int | fn.#Fn
+				KernelGatewayAppSettings?: *{
+					CustomImages?: *[...{
+						AppImageConfigName:  *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
+						ImageName:           *(=~#"^[a-zA-Z0-9]([-.]?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
+						ImageVersionNumber?: *int | fn.#Fn
 					}] | fn.#If
-					DefaultResourceSpec?: {
-						InstanceType?:             ("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
-						SageMakerImageArn?:        (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
-						SageMakerImageVersionArn?: (=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
+					DefaultResourceSpec?: *{
+						InstanceType?:             *("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
+						SageMakerImageArn?:        *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
+						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				SecurityGroups?:  [...((=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | ((=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
-				SharingSettings?: {
-					NotebookOutputOption?: ("Allowed" | "Disabled") | fn.#Fn
-					S3KmsKeyId?:           (=~#".*"#) | fn.#Fn
-					S3OutputPath?:         (=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				SecurityGroups?:  [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+				SharingSettings?: *{
+					NotebookOutputOption?: *("Allowed" | "Disabled") | fn.#Fn
+					S3KmsKeyId?:           *(=~#".*"#) | fn.#Fn
+					S3OutputPath?:         *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 		}

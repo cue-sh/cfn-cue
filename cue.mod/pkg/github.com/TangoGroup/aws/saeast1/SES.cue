@@ -6,17 +6,17 @@ import "github.com/TangoGroup/aws/fn"
 	#ContactList: {
 		Type: "AWS::SES::ContactList"
 		Properties: {
-			ContactListName?: (=~#"^[a-zA-Z0-9_-]{1,64}$"#) | fn.#Fn
-			Description?:     string | fn.#Fn
-			Tags?:            [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			ContactListName?: *(=~#"^[a-zA-Z0-9_-]{1,64}$"#) | fn.#Fn
+			Description?:     *string | fn.#Fn
+			Tags?:            *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			Topics?: [...{
-				DefaultSubscriptionStatus: string | fn.#Fn
-				Description?:              string | fn.#Fn
-				DisplayName:               string | fn.#Fn
-				TopicName:                 (=~#"^[a-zA-Z0-9_-]{1,64}$"#) | fn.#Fn
+			Topics?: *[...{
+				DefaultSubscriptionStatus: *string | fn.#Fn
+				Description?:              *string | fn.#Fn
+				DisplayName:               *string | fn.#Fn
+				TopicName:                 *(=~#"^[a-zA-Z0-9_-]{1,64}$"#) | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

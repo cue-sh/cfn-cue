@@ -9,24 +9,24 @@ import (
 	#AccessPolicy: {
 		Type: "AWS::IoTSiteWise::AccessPolicy"
 		Properties: {
-			AccessPolicyIdentity: {
-				IamRole?: {
-					arn?: string | fn.#Fn
+			AccessPolicyIdentity: *{
+				IamRole?: *{
+					arn?: *string | fn.#Fn
 				} | fn.#If
-				IamUser?: {
-					arn?: string | fn.#Fn
+				IamUser?: *{
+					arn?: *string | fn.#Fn
 				} | fn.#If
-				User?: {
-					id?: string | fn.#Fn
+				User?: *{
+					id?: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			AccessPolicyPermission: string | fn.#Fn
-			AccessPolicyResource:   {
-				Portal?: {
-					id?: string | fn.#Fn
+			AccessPolicyPermission: *string | fn.#Fn
+			AccessPolicyResource:   *{
+				Portal?: *{
+					id?: *string | fn.#Fn
 				} | fn.#If
-				Project?: {
-					id?: string | fn.#Fn
+				Project?: *{
+					id?: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 		}
@@ -39,20 +39,20 @@ import (
 	#Asset: {
 		Type: "AWS::IoTSiteWise::Asset"
 		Properties: {
-			AssetHierarchies?: [...{
-				ChildAssetId: string | fn.#Fn
-				LogicalId:    (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+			AssetHierarchies?: *[...{
+				ChildAssetId: *string | fn.#Fn
+				LogicalId:    *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
 			}] | fn.#If
-			AssetModelId:     string | fn.#Fn
-			AssetName:        string | fn.#Fn
-			AssetProperties?: [...{
-				Alias?:             string | fn.#Fn
-				LogicalId:          (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
-				NotificationState?: ("ENABLED" | "DISABLED") | fn.#Fn
+			AssetModelId:     *string | fn.#Fn
+			AssetName:        *string | fn.#Fn
+			AssetProperties?: *[...{
+				Alias?:             *string | fn.#Fn
+				LogicalId:          *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+				NotificationState?: *("ENABLED" | "DISABLED") | fn.#Fn
 			}] | fn.#If
-			Tags?: [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -64,97 +64,97 @@ import (
 	#AssetModel: {
 		Type: "AWS::IoTSiteWise::AssetModel"
 		Properties: {
-			AssetModelCompositeModels?: [...{
-				CompositeModelProperties?: [...{
-					DataType:      ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT") | fn.#Fn
-					DataTypeSpec?: ("AWS/ALARM_STATE") | fn.#Fn
-					LogicalId:     (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
-					Name:          string | fn.#Fn
-					Type:          {
-						Attribute?: {
-							DefaultValue?: string | fn.#Fn
+			AssetModelCompositeModels?: *[...{
+				CompositeModelProperties?: *[...{
+					DataType:      *("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT") | fn.#Fn
+					DataTypeSpec?: *("AWS/ALARM_STATE") | fn.#Fn
+					LogicalId:     *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+					Name:          *string | fn.#Fn
+					Type:          *{
+						Attribute?: *{
+							DefaultValue?: *string | fn.#Fn
 						} | fn.#If
-						Metric?: {
-							Expression: string | fn.#Fn
-							Variables:  [...{
-								Name:  string | fn.#Fn
-								Value: {
-									HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
-									PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+						Metric?: *{
+							Expression: *string | fn.#Fn
+							Variables:  *[...{
+								Name:  *string | fn.#Fn
+								Value: *{
+									HierarchyLogicalId?: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+									PropertyLogicalId:   *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
 								} | fn.#If
 							}] | fn.#If
-							Window: {
-								Tumbling?: {
-									Interval: ("1w" | "1d" | "1h" | "15m" | "5m" | "1m") | fn.#Fn
+							Window: *{
+								Tumbling?: *{
+									Interval: *("1w" | "1d" | "1h" | "15m" | "5m" | "1m") | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 						} | fn.#If
-						Transform?: {
-							Expression: string | fn.#Fn
-							Variables:  [...{
-								Name:  string | fn.#Fn
-								Value: {
-									HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
-									PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+						Transform?: *{
+							Expression: *string | fn.#Fn
+							Variables:  *[...{
+								Name:  *string | fn.#Fn
+								Value: *{
+									HierarchyLogicalId?: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+									PropertyLogicalId:   *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
 								} | fn.#If
 							}] | fn.#If
 						} | fn.#If
-						TypeName: ("Measurement" | "Attribute" | "Transform" | "Metric") | fn.#Fn
+						TypeName: *("Measurement" | "Attribute" | "Transform" | "Metric") | fn.#Fn
 					} | fn.#If
-					Unit?: string | fn.#Fn
+					Unit?: *string | fn.#Fn
 				}] | fn.#If
-				Description?: string | fn.#Fn
-				Name:         string | fn.#Fn
-				Type:         string | fn.#Fn
+				Description?: *string | fn.#Fn
+				Name:         *string | fn.#Fn
+				Type:         *string | fn.#Fn
 			}] | fn.#If
-			AssetModelDescription?: string | fn.#Fn
-			AssetModelHierarchies?: [...{
-				ChildAssetModelId: string | fn.#Fn
-				LogicalId:         (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
-				Name:              string | fn.#Fn
+			AssetModelDescription?: *string | fn.#Fn
+			AssetModelHierarchies?: *[...{
+				ChildAssetModelId: *string | fn.#Fn
+				LogicalId:         *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+				Name:              *string | fn.#Fn
 			}] | fn.#If
-			AssetModelName:        string | fn.#Fn
-			AssetModelProperties?: [...{
-				DataType:      ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT") | fn.#Fn
-				DataTypeSpec?: ("AWS/ALARM_STATE") | fn.#Fn
-				LogicalId:     (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
-				Name:          string | fn.#Fn
-				Type:          {
-					Attribute?: {
-						DefaultValue?: string | fn.#Fn
+			AssetModelName:        *string | fn.#Fn
+			AssetModelProperties?: *[...{
+				DataType:      *("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT") | fn.#Fn
+				DataTypeSpec?: *("AWS/ALARM_STATE") | fn.#Fn
+				LogicalId:     *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+				Name:          *string | fn.#Fn
+				Type:          *{
+					Attribute?: *{
+						DefaultValue?: *string | fn.#Fn
 					} | fn.#If
-					Metric?: {
-						Expression: string | fn.#Fn
-						Variables:  [...{
-							Name:  string | fn.#Fn
-							Value: {
-								HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
-								PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+					Metric?: *{
+						Expression: *string | fn.#Fn
+						Variables:  *[...{
+							Name:  *string | fn.#Fn
+							Value: *{
+								HierarchyLogicalId?: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+								PropertyLogicalId:   *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
 							} | fn.#If
 						}] | fn.#If
-						Window: {
-							Tumbling?: {
-								Interval: ("1w" | "1d" | "1h" | "15m" | "5m" | "1m") | fn.#Fn
+						Window: *{
+							Tumbling?: *{
+								Interval: *("1w" | "1d" | "1h" | "15m" | "5m" | "1m") | fn.#Fn
 							} | fn.#If
 						} | fn.#If
 					} | fn.#If
-					Transform?: {
-						Expression: string | fn.#Fn
-						Variables:  [...{
-							Name:  string | fn.#Fn
-							Value: {
-								HierarchyLogicalId?: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
-								PropertyLogicalId:   (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+					Transform?: *{
+						Expression: *string | fn.#Fn
+						Variables:  *[...{
+							Name:  *string | fn.#Fn
+							Value: *{
+								HierarchyLogicalId?: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
+								PropertyLogicalId:   *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
 							} | fn.#If
 						}] | fn.#If
 					} | fn.#If
-					TypeName: ("Measurement" | "Attribute" | "Transform" | "Metric") | fn.#Fn
+					TypeName: *("Measurement" | "Attribute" | "Transform" | "Metric") | fn.#Fn
 				} | fn.#If
-				Unit?: string | fn.#Fn
+				Unit?: *string | fn.#Fn
 			}] | fn.#If
-			Tags?: [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -166,13 +166,13 @@ import (
 	#Dashboard: {
 		Type: "AWS::IoTSiteWise::Dashboard"
 		Properties: {
-			DashboardDefinition:  string | fn.#Fn
-			DashboardDescription: string | fn.#Fn
-			DashboardName:        string | fn.#Fn
-			ProjectId?:           string | fn.#Fn
-			Tags?:                [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			DashboardDefinition:  *string | fn.#Fn
+			DashboardDescription: *string | fn.#Fn
+			DashboardName:        *string | fn.#Fn
+			ProjectId?:           *string | fn.#Fn
+			Tags?:                *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -184,19 +184,19 @@ import (
 	#Gateway: {
 		Type: "AWS::IoTSiteWise::Gateway"
 		Properties: {
-			GatewayCapabilitySummaries?: [...{
-				CapabilityConfiguration?: string | fn.#Fn
-				CapabilityNamespace:      string | fn.#Fn
+			GatewayCapabilitySummaries?: *[...{
+				CapabilityConfiguration?: *string | fn.#Fn
+				CapabilityNamespace:      *string | fn.#Fn
 			}] | fn.#If
-			GatewayName:     string | fn.#Fn
-			GatewayPlatform: {
-				Greengrass: {
-					GroupArn: string | fn.#Fn
+			GatewayName:     *string | fn.#Fn
+			GatewayPlatform: *{
+				Greengrass: *{
+					GroupArn: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			Tags?: [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -208,14 +208,14 @@ import (
 	#Portal: {
 		Type: "AWS::IoTSiteWise::Portal"
 		Properties: {
-			PortalAuthMode?:    string | fn.#Fn
-			PortalContactEmail: string | fn.#Fn
-			PortalDescription?: string | fn.#Fn
-			PortalName:         string | fn.#Fn
-			RoleArn:            string | fn.#Fn
-			Tags?:              [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			PortalAuthMode?:    *string | fn.#Fn
+			PortalContactEmail: *string | fn.#Fn
+			PortalDescription?: *string | fn.#Fn
+			PortalName:         *string | fn.#Fn
+			RoleArn:            *string | fn.#Fn
+			Tags?:              *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -227,12 +227,12 @@ import (
 	#Project: {
 		Type: "AWS::IoTSiteWise::Project"
 		Properties: {
-			PortalId:            string | fn.#Fn
-			ProjectDescription?: string | fn.#Fn
-			ProjectName:         string | fn.#Fn
-			Tags?:               [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			PortalId:            *string | fn.#Fn
+			ProjectDescription?: *string | fn.#Fn
+			ProjectName:         *string | fn.#Fn
+			Tags?:               *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

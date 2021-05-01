@@ -5,7 +5,7 @@ import "github.com/TangoGroup/aws/fn"
 #SecurityHub: {
 	#Hub: {
 		Type: "AWS::SecurityHub::Hub"
-		Properties: Tags?: {
+		Properties: Tags?: *{
 			[string]: _
 		} | fn.#Fn
 		DependsOn?:           string | [...string]

@@ -9,12 +9,12 @@ import (
 	#Connection: {
 		Type: "AWS::CodeStarConnections::Connection"
 		Properties: {
-			ConnectionName: (strings.MinRunes(1) & strings.MaxRunes(32)) | fn.#Fn
-			HostArn?:       (=~#"arn:aws(-[\w]+)*:.+:.+:[0-9]{12}:.+"#) | fn.#Fn
-			ProviderType?:  string | fn.#Fn
-			Tags?:          [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			ConnectionName: *(strings.MinRunes(1) & strings.MaxRunes(32)) | fn.#Fn
+			HostArn?:       *(=~#"arn:aws(-[\w]+)*:.+:.+:[0-9]{12}:.+"#) | fn.#Fn
+			ProviderType?:  *string | fn.#Fn
+			Tags?:          *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

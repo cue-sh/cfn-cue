@@ -6,11 +6,11 @@ import "github.com/TangoGroup/aws/fn"
 	#RegistryPolicy: {
 		Type: "AWS::EventSchemas::RegistryPolicy"
 		Properties: {
-			Policy: {
+			Policy: *{
 				[string]: _
 			} | fn.#Fn
-			RegistryName: string | fn.#Fn
-			RevisionId?:  string | fn.#Fn
+			RegistryName: *string | fn.#Fn
+			RevisionId?:  *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -6,11 +6,11 @@ import "github.com/TangoGroup/aws/fn"
 	#Discoverer: {
 		Type: "AWS::EventSchemas::Discoverer"
 		Properties: {
-			Description?: string | fn.#Fn
-			SourceArn:    string | fn.#Fn
-			Tags?:        [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Description?: *string | fn.#Fn
+			SourceArn:    *string | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -22,11 +22,11 @@ import "github.com/TangoGroup/aws/fn"
 	#Registry: {
 		Type: "AWS::EventSchemas::Registry"
 		Properties: {
-			Description?:  string | fn.#Fn
-			RegistryName?: string | fn.#Fn
-			Tags?:         [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Description?:  *string | fn.#Fn
+			RegistryName?: *string | fn.#Fn
+			Tags?:         *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -38,11 +38,11 @@ import "github.com/TangoGroup/aws/fn"
 	#RegistryPolicy: {
 		Type: "AWS::EventSchemas::RegistryPolicy"
 		Properties: {
-			Policy: {
+			Policy: *{
 				[string]: _
 			} | fn.#Fn
-			RegistryName: string | fn.#Fn
-			RevisionId?:  string | fn.#Fn
+			RegistryName: *string | fn.#Fn
+			RevisionId?:  *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -53,15 +53,15 @@ import "github.com/TangoGroup/aws/fn"
 	#Schema: {
 		Type: "AWS::EventSchemas::Schema"
 		Properties: {
-			Content:      string | fn.#Fn
-			Description?: string | fn.#Fn
-			RegistryName: string | fn.#Fn
-			SchemaName?:  string | fn.#Fn
-			Tags?:        [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Content:      *string | fn.#Fn
+			Description?: *string | fn.#Fn
+			RegistryName: *string | fn.#Fn
+			SchemaName?:  *string | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			Type: string | fn.#Fn
+			Type: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

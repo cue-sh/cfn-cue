@@ -8,7 +8,7 @@ import (
 #LookoutVision: {
 	#Project: {
 		Type: "AWS::LookoutVision::Project"
-		Properties: ProjectName: (strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[a-zA-Z0-9][a-zA-Z0-9_\-]*"#)) | fn.#Fn
+		Properties: ProjectName: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[a-zA-Z0-9][a-zA-Z0-9_\-]*"#)) | fn.#Fn
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"

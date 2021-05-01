@@ -6,13 +6,13 @@ import "github.com/TangoGroup/aws/fn"
 	#ResourceShare: {
 		Type: "AWS::RAM::ResourceShare"
 		Properties: {
-			AllowExternalPrincipals?: bool | fn.#Fn
-			Name:                     string | fn.#Fn
-			Principals?:              [...(string | fn.#Fn)] | (string | fn.#Fn)
-			ResourceArns?:            [...(string | fn.#Fn)] | (string | fn.#Fn)
-			Tags?:                    [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			AllowExternalPrincipals?: *bool | fn.#Fn
+			Name:                     *string | fn.#Fn
+			Principals?:              [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			ResourceArns?:            [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:                    *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

@@ -9,26 +9,26 @@ import (
 	#CloudFormationProduct: {
 		Type: "AWS::ServiceCatalog::CloudFormationProduct"
 		Properties: {
-			AcceptLanguage?:                string | fn.#Fn
-			Description?:                   string | fn.#Fn
-			Distributor?:                   string | fn.#Fn
-			Name:                           string | fn.#Fn
-			Owner:                          string | fn.#Fn
-			ProvisioningArtifactParameters: [...{
-				Description?:               string | fn.#Fn
-				DisableTemplateValidation?: bool | fn.#Fn
-				Info:                       {
+			AcceptLanguage?:                *string | fn.#Fn
+			Description?:                   *string | fn.#Fn
+			Distributor?:                   *string | fn.#Fn
+			Name:                           *string | fn.#Fn
+			Owner:                          *string | fn.#Fn
+			ProvisioningArtifactParameters: *[...{
+				Description?:               *string | fn.#Fn
+				DisableTemplateValidation?: *bool | fn.#Fn
+				Info:                       *{
 					[string]: _
 				} | fn.#Fn
-				Name?: string | fn.#Fn
+				Name?: *string | fn.#Fn
 			}] | fn.#If
-			ReplaceProvisioningArtifacts?: bool | fn.#Fn
-			SupportDescription?:           string | fn.#Fn
-			SupportEmail?:                 string | fn.#Fn
-			SupportUrl?:                   string | fn.#Fn
-			Tags?:                         [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			ReplaceProvisioningArtifacts?: *bool | fn.#Fn
+			SupportDescription?:           *string | fn.#Fn
+			SupportEmail?:                 *string | fn.#Fn
+			SupportUrl?:                   *string | fn.#Fn
+			Tags?:                         *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -40,31 +40,31 @@ import (
 	#CloudFormationProvisionedProduct: {
 		Type: "AWS::ServiceCatalog::CloudFormationProvisionedProduct"
 		Properties: {
-			AcceptLanguage?:           ("en" | "jp" | "zh") | fn.#Fn
-			NotificationArns?:         [...(string | fn.#Fn)] | (string | fn.#Fn)
-			PathId?:                   (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-			PathName?:                 (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-			ProductId?:                (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-			ProductName?:              (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-			ProvisionedProductName?:   (strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-			ProvisioningArtifactId?:   (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-			ProvisioningArtifactName?: string | fn.#Fn
-			ProvisioningParameters?:   [...{
-				Key:   (strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
-				Value: string | fn.#Fn
+			AcceptLanguage?:           *("en" | "jp" | "zh") | fn.#Fn
+			NotificationArns?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			PathId?:                   *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+			PathName?:                 *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+			ProductId?:                *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+			ProductName?:              *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+			ProvisionedProductName?:   *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+			ProvisioningArtifactId?:   *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+			ProvisioningArtifactName?: *string | fn.#Fn
+			ProvisioningParameters?:   *[...{
+				Key:   *(strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			ProvisioningPreferences?: {
-				StackSetAccounts?:                   [...((=~#"^[0-9]{12}$"#) | fn.#Fn)] | ((=~#"^[0-9]{12}$"#) | fn.#Fn)
-				StackSetFailureToleranceCount?:      int | fn.#Fn
-				StackSetFailureTolerancePercentage?: int | fn.#Fn
-				StackSetMaxConcurrencyCount?:        int | fn.#Fn
-				StackSetMaxConcurrencyPercentage?:   (>=1 & <=100) | fn.#Fn
-				StackSetOperationType?:              ("CREATE" | "UPDATE" | "DELETE") | fn.#Fn
-				StackSetRegions?:                    [...((=~#"^[a-z]{2}-([a-z]+-)+[1-9]"#) | fn.#Fn)] | ((=~#"^[a-z]{2}-([a-z]+-)+[1-9]"#) | fn.#Fn)
+			ProvisioningPreferences?: *{
+				StackSetAccounts?:                   [...(*(=~#"^[0-9]{12}$"#) | fn.#Fn)] | (*(=~#"^[0-9]{12}$"#) | fn.#Fn)
+				StackSetFailureToleranceCount?:      *int | fn.#Fn
+				StackSetFailureTolerancePercentage?: *int | fn.#Fn
+				StackSetMaxConcurrencyCount?:        *int | fn.#Fn
+				StackSetMaxConcurrencyPercentage?:   *(>=1 & <=100) | fn.#Fn
+				StackSetOperationType?:              *("CREATE" | "UPDATE" | "DELETE") | fn.#Fn
+				StackSetRegions?:                    [...(*(=~#"^[a-z]{2}-([a-z]+-)+[1-9]"#) | fn.#Fn)] | (*(=~#"^[a-z]{2}-([a-z]+-)+[1-9]"#) | fn.#Fn)
 			} | fn.#If
-			Tags?: [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -76,11 +76,11 @@ import (
 	#LaunchNotificationConstraint: {
 		Type: "AWS::ServiceCatalog::LaunchNotificationConstraint"
 		Properties: {
-			AcceptLanguage?:  string | fn.#Fn
-			Description?:     string | fn.#Fn
-			NotificationArns: [...(string | fn.#Fn)] | (string | fn.#Fn)
-			PortfolioId:      string | fn.#Fn
-			ProductId:        string | fn.#Fn
+			AcceptLanguage?:  *string | fn.#Fn
+			Description?:     *string | fn.#Fn
+			NotificationArns: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			PortfolioId:      *string | fn.#Fn
+			ProductId:        *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -91,12 +91,12 @@ import (
 	#LaunchRoleConstraint: {
 		Type: "AWS::ServiceCatalog::LaunchRoleConstraint"
 		Properties: {
-			AcceptLanguage?: string | fn.#Fn
-			Description?:    string | fn.#Fn
-			LocalRoleName?:  string | fn.#Fn
-			PortfolioId:     string | fn.#Fn
-			ProductId:       string | fn.#Fn
-			RoleArn?:        string | fn.#Fn
+			AcceptLanguage?: *string | fn.#Fn
+			Description?:    *string | fn.#Fn
+			LocalRoleName?:  *string | fn.#Fn
+			PortfolioId:     *string | fn.#Fn
+			ProductId:       *string | fn.#Fn
+			RoleArn?:        *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -107,11 +107,11 @@ import (
 	#LaunchTemplateConstraint: {
 		Type: "AWS::ServiceCatalog::LaunchTemplateConstraint"
 		Properties: {
-			AcceptLanguage?: string | fn.#Fn
-			Description?:    string | fn.#Fn
-			PortfolioId:     string | fn.#Fn
-			ProductId:       string | fn.#Fn
-			Rules:           string | fn.#Fn
+			AcceptLanguage?: *string | fn.#Fn
+			Description?:    *string | fn.#Fn
+			PortfolioId:     *string | fn.#Fn
+			ProductId:       *string | fn.#Fn
+			Rules:           *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -122,13 +122,13 @@ import (
 	#Portfolio: {
 		Type: "AWS::ServiceCatalog::Portfolio"
 		Properties: {
-			AcceptLanguage?: string | fn.#Fn
-			Description?:    string | fn.#Fn
-			DisplayName:     string | fn.#Fn
-			ProviderName:    string | fn.#Fn
-			Tags?:           [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			AcceptLanguage?: *string | fn.#Fn
+			Description?:    *string | fn.#Fn
+			DisplayName:     *string | fn.#Fn
+			ProviderName:    *string | fn.#Fn
+			Tags?:           *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -140,10 +140,10 @@ import (
 	#PortfolioPrincipalAssociation: {
 		Type: "AWS::ServiceCatalog::PortfolioPrincipalAssociation"
 		Properties: {
-			AcceptLanguage?: string | fn.#Fn
-			PortfolioId:     string | fn.#Fn
-			PrincipalARN:    string | fn.#Fn
-			PrincipalType:   string | fn.#Fn
+			AcceptLanguage?: *string | fn.#Fn
+			PortfolioId:     *string | fn.#Fn
+			PrincipalARN:    *string | fn.#Fn
+			PrincipalType:   *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -154,11 +154,11 @@ import (
 	#ResourceUpdateConstraint: {
 		Type: "AWS::ServiceCatalog::ResourceUpdateConstraint"
 		Properties: {
-			AcceptLanguage?:               string | fn.#Fn
-			Description?:                  string | fn.#Fn
-			PortfolioId:                   string | fn.#Fn
-			ProductId:                     string | fn.#Fn
-			TagUpdateOnProvisionedProduct: string | fn.#Fn
+			AcceptLanguage?:               *string | fn.#Fn
+			Description?:                  *string | fn.#Fn
+			PortfolioId:                   *string | fn.#Fn
+			ProductId:                     *string | fn.#Fn
+			TagUpdateOnProvisionedProduct: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -169,14 +169,14 @@ import (
 	#ServiceAction: {
 		Type: "AWS::ServiceCatalog::ServiceAction"
 		Properties: {
-			AcceptLanguage?: ("en" | "jp" | "zh") | fn.#Fn
-			Definition:      [...{
-				Key:   (strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
-				Value: string | fn.#Fn
+			AcceptLanguage?: *("en" | "jp" | "zh") | fn.#Fn
+			Definition:      *[...{
+				Key:   *(strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			DefinitionType: ("SSM_AUTOMATION") | fn.#Fn
-			Description?:   string | fn.#Fn
-			Name:           (strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			DefinitionType: *("SSM_AUTOMATION") | fn.#Fn
+			Description?:   *string | fn.#Fn
+			Name:           *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -187,9 +187,9 @@ import (
 	#ServiceActionAssociation: {
 		Type: "AWS::ServiceCatalog::ServiceActionAssociation"
 		Properties: {
-			ProductId:              (strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}\Z"#)) | fn.#Fn
-			ProvisioningArtifactId: (strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}\Z"#)) | fn.#Fn
-			ServiceActionId:        (strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}\Z"#)) | fn.#Fn
+			ProductId:              *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}\Z"#)) | fn.#Fn
+			ProvisioningArtifactId: *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}\Z"#)) | fn.#Fn
+			ServiceActionId:        *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}\Z"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -200,9 +200,9 @@ import (
 	#TagOption: {
 		Type: "AWS::ServiceCatalog::TagOption"
 		Properties: {
-			Active?: bool | fn.#Fn
-			Key:     string | fn.#Fn
-			Value:   string | fn.#Fn
+			Active?: *bool | fn.#Fn
+			Key:     *string | fn.#Fn
+			Value:   *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -213,8 +213,8 @@ import (
 	#TagOptionAssociation: {
 		Type: "AWS::ServiceCatalog::TagOptionAssociation"
 		Properties: {
-			ResourceId:  string | fn.#Fn
-			TagOptionId: string | fn.#Fn
+			ResourceId:  *string | fn.#Fn
+			TagOptionId: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

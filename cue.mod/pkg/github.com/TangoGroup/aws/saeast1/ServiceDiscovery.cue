@@ -6,11 +6,11 @@ import "github.com/TangoGroup/aws/fn"
 	#HttpNamespace: {
 		Type: "AWS::ServiceDiscovery::HttpNamespace"
 		Properties: {
-			Description?: string | fn.#Fn
-			Name:         string | fn.#Fn
-			Tags?:        [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Description?: *string | fn.#Fn
+			Name:         *string | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -22,11 +22,11 @@ import "github.com/TangoGroup/aws/fn"
 	#Instance: {
 		Type: "AWS::ServiceDiscovery::Instance"
 		Properties: {
-			InstanceAttributes: {
+			InstanceAttributes: *{
 				[string]: _
 			} | fn.#Fn
-			InstanceId?: string | fn.#Fn
-			ServiceId:   string | fn.#Fn
+			InstanceId?: *string | fn.#Fn
+			ServiceId:   *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -37,13 +37,13 @@ import "github.com/TangoGroup/aws/fn"
 	#PrivateDnsNamespace: {
 		Type: "AWS::ServiceDiscovery::PrivateDnsNamespace"
 		Properties: {
-			Description?: string | fn.#Fn
-			Name:         string | fn.#Fn
-			Tags?:        [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Description?: *string | fn.#Fn
+			Name:         *string | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			Vpc: string | fn.#Fn
+			Vpc: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -54,11 +54,11 @@ import "github.com/TangoGroup/aws/fn"
 	#PublicDnsNamespace: {
 		Type: "AWS::ServiceDiscovery::PublicDnsNamespace"
 		Properties: {
-			Description?: string | fn.#Fn
-			Name:         string | fn.#Fn
-			Tags?:        [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Description?: *string | fn.#Fn
+			Name:         *string | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -70,30 +70,30 @@ import "github.com/TangoGroup/aws/fn"
 	#Service: {
 		Type: "AWS::ServiceDiscovery::Service"
 		Properties: {
-			Description?: string | fn.#Fn
-			DnsConfig?:   {
-				DnsRecords: [...{
-					TTL:  number | fn.#Fn
-					Type: string | fn.#Fn
+			Description?: *string | fn.#Fn
+			DnsConfig?:   *{
+				DnsRecords: *[...{
+					TTL:  *number | fn.#Fn
+					Type: *string | fn.#Fn
 				}] | fn.#If
-				NamespaceId?:   string | fn.#Fn
-				RoutingPolicy?: string | fn.#Fn
+				NamespaceId?:   *string | fn.#Fn
+				RoutingPolicy?: *string | fn.#Fn
 			} | fn.#If
-			HealthCheckConfig?: {
-				FailureThreshold?: number | fn.#Fn
-				ResourcePath?:     string | fn.#Fn
-				Type:              string | fn.#Fn
+			HealthCheckConfig?: *{
+				FailureThreshold?: *number | fn.#Fn
+				ResourcePath?:     *string | fn.#Fn
+				Type:              *string | fn.#Fn
 			} | fn.#If
-			HealthCheckCustomConfig?: {
-				FailureThreshold?: number | fn.#Fn
+			HealthCheckCustomConfig?: *{
+				FailureThreshold?: *number | fn.#Fn
 			} | fn.#If
-			Name?:        string | fn.#Fn
-			NamespaceId?: string | fn.#Fn
-			Tags?:        [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Name?:        *string | fn.#Fn
+			NamespaceId?: *string | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			Type?: string | fn.#Fn
+			Type?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

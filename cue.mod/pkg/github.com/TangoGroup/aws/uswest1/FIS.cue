@@ -9,34 +9,34 @@ import (
 	#ExperimentTemplate: {
 		Type: "AWS::FIS::ExperimentTemplate"
 		Properties: {
-			Actions?: {
+			Actions?: *{
 				[string]: {
-					ActionId:     string | fn.#Fn
-					Description?: string | fn.#Fn
-					Parameters?:  {} | fn.#If
-					StartAfter?:  [...(string | fn.#Fn)] | (string | fn.#Fn)
-					Targets?:     {} | fn.#If
+					ActionId:     *string | fn.#Fn
+					Description?: *string | fn.#Fn
+					Parameters?:  *{} | fn.#If
+					StartAfter?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Targets?:     *{} | fn.#If
 				}
 			} | fn.#If
-			Description:    string | fn.#Fn
-			RoleArn:        string | fn.#Fn
-			StopConditions: [...{
-				Source: string | fn.#Fn
-				Value?: (strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+			Description:    *string | fn.#Fn
+			RoleArn:        *string | fn.#Fn
+			StopConditions: *[...{
+				Source: *string | fn.#Fn
+				Value?: *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 			}] | fn.#If
-			Tags: {
-				[string]: string | fn.#Fn
+			Tags: *{
+				[string]: *string | fn.#Fn
 			} | fn.#If
-			Targets: {
+			Targets: *{
 				[string]: {
-					Filters?: [...{
-						Path:   string | fn.#Fn
-						Values: [...(string | fn.#Fn)] | (string | fn.#Fn)
+					Filters?: *[...{
+						Path:   *string | fn.#Fn
+						Values: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					}] | fn.#If
-					ResourceArns?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					ResourceTags?: {} | fn.#If
-					ResourceType:  string | fn.#Fn
-					SelectionMode: string | fn.#Fn
+					ResourceArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					ResourceTags?: *{} | fn.#If
+					ResourceType:  *string | fn.#Fn
+					SelectionMode: *string | fn.#Fn
 				}
 			} | fn.#If
 		}

@@ -6,8 +6,8 @@ import "github.com/TangoGroup/aws/fn"
 	#Device: {
 		Type: "AWS::IoT1Click::Device"
 		Properties: {
-			DeviceId: string | fn.#Fn
-			Enabled:  bool | fn.#Fn
+			DeviceId: *string | fn.#Fn
+			Enabled:  *bool | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -18,14 +18,14 @@ import "github.com/TangoGroup/aws/fn"
 	#Placement: {
 		Type: "AWS::IoT1Click::Placement"
 		Properties: {
-			AssociatedDevices?: {
+			AssociatedDevices?: *{
 				[string]: _
 			} | fn.#Fn
-			Attributes?: {
+			Attributes?: *{
 				[string]: _
 			} | fn.#Fn
-			PlacementName?: string | fn.#Fn
-			ProjectName:    string | fn.#Fn
+			PlacementName?: *string | fn.#Fn
+			ProjectName:    *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -36,16 +36,16 @@ import "github.com/TangoGroup/aws/fn"
 	#Project: {
 		Type: "AWS::IoT1Click::Project"
 		Properties: {
-			Description?:      string | fn.#Fn
-			PlacementTemplate: {
-				DefaultAttributes?: {
+			Description?:      *string | fn.#Fn
+			PlacementTemplate: *{
+				DefaultAttributes?: *{
 					[string]: _
 				} | fn.#Fn
-				DeviceTemplates?: {
+				DeviceTemplates?: *{
 					[string]: _
 				} | fn.#Fn
 			} | fn.#If
-			ProjectName?: string | fn.#Fn
+			ProjectName?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -6,12 +6,12 @@ import "github.com/TangoGroup/aws/fn"
 	#Ledger: {
 		Type: "AWS::QLDB::Ledger"
 		Properties: {
-			DeletionProtection?: bool | fn.#Fn
-			Name?:               string | fn.#Fn
-			PermissionsMode:     string | fn.#Fn
-			Tags?:               [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			DeletionProtection?: *bool | fn.#Fn
+			Name?:               *string | fn.#Fn
+			PermissionsMode:     *string | fn.#Fn
+			Tags?:               *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -23,18 +23,18 @@ import "github.com/TangoGroup/aws/fn"
 	#Stream: {
 		Type: "AWS::QLDB::Stream"
 		Properties: {
-			ExclusiveEndTime?:    string | fn.#Fn
-			InclusiveStartTime:   string | fn.#Fn
-			KinesisConfiguration: {
-				AggregationEnabled?: bool | fn.#Fn
-				StreamArn?:          (=~#"arn:[\w+=/,.@-]+:[\w+=/,.@-]+:[\w+=/,.@-]*:[0-9]*:[\w+=,.@-]+(/[\w+=,.@-]+)*"#) | fn.#Fn
+			ExclusiveEndTime?:    *string | fn.#Fn
+			InclusiveStartTime:   *string | fn.#Fn
+			KinesisConfiguration: *{
+				AggregationEnabled?: *bool | fn.#Fn
+				StreamArn?:          *(=~#"arn:[\w+=/,.@-]+:[\w+=/,.@-]+:[\w+=/,.@-]*:[0-9]*:[\w+=,.@-]+(/[\w+=,.@-]+)*"#) | fn.#Fn
 			} | fn.#If
-			LedgerName: string | fn.#Fn
-			RoleArn:    (=~#"arn:[\w+=/,.@-]+:[\w+=/,.@-]+:[\w+=/,.@-]*:[0-9]*:[\w+=,.@-]+(/[\w+=,.@-]+)*"#) | fn.#Fn
-			StreamName: string | fn.#Fn
-			Tags?:      [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			LedgerName: *string | fn.#Fn
+			RoleArn:    *(=~#"arn:[\w+=/,.@-]+:[\w+=/,.@-]+:[\w+=/,.@-]*:[0-9]*:[\w+=,.@-]+(/[\w+=,.@-]+)*"#) | fn.#Fn
+			StreamName: *string | fn.#Fn
+			Tags?:      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

@@ -6,8 +6,8 @@ import "github.com/TangoGroup/aws/fn"
 	#Metadata: {
 		Type: "AWS::CDK::Metadata"
 		Properties: {
-			Analytics?: string | fn.#Fn
-			Modules?:   string | fn.#Fn
+			Analytics?: *string | fn.#Fn
+			Modules?:   *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

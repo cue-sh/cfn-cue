@@ -5,26 +5,26 @@ import "github.com/TangoGroup/aws/fn"
 #CloudFront: {
 	#CachePolicy: {
 		Type: "AWS::CloudFront::CachePolicy"
-		Properties: CachePolicyConfig: {
-			Comment?:                                 string | fn.#Fn
-			DefaultTTL:                               number | fn.#Fn
-			MaxTTL:                                   number | fn.#Fn
-			MinTTL:                                   number | fn.#Fn
-			Name:                                     string | fn.#Fn
-			ParametersInCacheKeyAndForwardedToOrigin: {
-				CookiesConfig: {
-					CookieBehavior: (=~#"^(none|whitelist|allExcept|all)$"#) | fn.#Fn
-					Cookies?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
+		Properties: CachePolicyConfig: *{
+			Comment?:                                 *string | fn.#Fn
+			DefaultTTL:                               *number | fn.#Fn
+			MaxTTL:                                   *number | fn.#Fn
+			MinTTL:                                   *number | fn.#Fn
+			Name:                                     *string | fn.#Fn
+			ParametersInCacheKeyAndForwardedToOrigin: *{
+				CookiesConfig: *{
+					CookieBehavior: *(=~#"^(none|whitelist|allExcept|all)$"#) | fn.#Fn
+					Cookies?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				} | fn.#If
-				EnableAcceptEncodingBrotli?: bool | fn.#Fn
-				EnableAcceptEncodingGzip:    bool | fn.#Fn
-				HeadersConfig:               {
-					HeaderBehavior: (=~#"^(none|whitelist)$"#) | fn.#Fn
-					Headers?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
+				EnableAcceptEncodingBrotli?: *bool | fn.#Fn
+				EnableAcceptEncodingGzip:    *bool | fn.#Fn
+				HeadersConfig:               *{
+					HeaderBehavior: *(=~#"^(none|whitelist)$"#) | fn.#Fn
+					Headers?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				} | fn.#If
-				QueryStringsConfig: {
-					QueryStringBehavior: (=~#"^(none|whitelist|allExcept|all)$"#) | fn.#Fn
-					QueryStrings?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
+				QueryStringsConfig: *{
+					QueryStringBehavior: *(=~#"^(none|whitelist|allExcept|all)$"#) | fn.#Fn
+					QueryStrings?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				} | fn.#If
 			} | fn.#If
 		} | fn.#If
@@ -36,10 +36,10 @@ import "github.com/TangoGroup/aws/fn"
 	}
 	#KeyGroup: {
 		Type: "AWS::CloudFront::KeyGroup"
-		Properties: KeyGroupConfig: {
-			Comment?: string | fn.#Fn
-			Items:    [...(string | fn.#Fn)] | (string | fn.#Fn)
-			Name:     string | fn.#Fn
+		Properties: KeyGroupConfig: *{
+			Comment?: *string | fn.#Fn
+			Items:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Name:     *string | fn.#Fn
 		} | fn.#If
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -49,20 +49,20 @@ import "github.com/TangoGroup/aws/fn"
 	}
 	#OriginRequestPolicy: {
 		Type: "AWS::CloudFront::OriginRequestPolicy"
-		Properties: OriginRequestPolicyConfig: {
-			Comment?:      string | fn.#Fn
-			CookiesConfig: {
-				CookieBehavior: (=~#"^(none|whitelist|all)$"#) | fn.#Fn
-				Cookies?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
+		Properties: OriginRequestPolicyConfig: *{
+			Comment?:      *string | fn.#Fn
+			CookiesConfig: *{
+				CookieBehavior: *(=~#"^(none|whitelist|all)$"#) | fn.#Fn
+				Cookies?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
-			HeadersConfig: {
-				HeaderBehavior: (=~#"^(none|whitelist|allViewer|allViewerAndWhitelistCloudFront)$"#) | fn.#Fn
-				Headers?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
+			HeadersConfig: *{
+				HeaderBehavior: *(=~#"^(none|whitelist|allViewer|allViewerAndWhitelistCloudFront)$"#) | fn.#Fn
+				Headers?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
-			Name:               string | fn.#Fn
-			QueryStringsConfig: {
-				QueryStringBehavior: (=~#"^(none|whitelist|all)$"#) | fn.#Fn
-				QueryStrings?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
+			Name:               *string | fn.#Fn
+			QueryStringsConfig: *{
+				QueryStringBehavior: *(=~#"^(none|whitelist|all)$"#) | fn.#Fn
+				QueryStrings?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 		} | fn.#If
 		DependsOn?:           string | [...string]
@@ -73,11 +73,11 @@ import "github.com/TangoGroup/aws/fn"
 	}
 	#PublicKey: {
 		Type: "AWS::CloudFront::PublicKey"
-		Properties: PublicKeyConfig: {
-			CallerReference: string | fn.#Fn
-			Comment?:        string | fn.#Fn
-			EncodedKey:      string | fn.#Fn
-			Name:            string | fn.#Fn
+		Properties: PublicKeyConfig: *{
+			CallerReference: *string | fn.#Fn
+			Comment?:        *string | fn.#Fn
+			EncodedKey:      *string | fn.#Fn
+			Name:            *string | fn.#Fn
 		} | fn.#If
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -88,16 +88,16 @@ import "github.com/TangoGroup/aws/fn"
 	#RealtimeLogConfig: {
 		Type: "AWS::CloudFront::RealtimeLogConfig"
 		Properties: {
-			EndPoints: [...{
-				KinesisStreamConfig: {
-					RoleArn:   string | fn.#Fn
-					StreamArn: string | fn.#Fn
+			EndPoints: *[...{
+				KinesisStreamConfig: *{
+					RoleArn:   *string | fn.#Fn
+					StreamArn: *string | fn.#Fn
 				} | fn.#If
-				StreamType: string | fn.#Fn
+				StreamType: *string | fn.#Fn
 			}] | fn.#If
-			Fields:       [...(string | fn.#Fn)] | (string | fn.#Fn)
-			Name:         string | fn.#Fn
-			SamplingRate: (>=1 & <=100) | fn.#Fn
+			Fields:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Name:         *string | fn.#Fn
+			SamplingRate: *(>=1 & <=100) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

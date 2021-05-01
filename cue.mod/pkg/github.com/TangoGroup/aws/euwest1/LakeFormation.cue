@@ -6,10 +6,10 @@ import "github.com/TangoGroup/aws/fn"
 	#DataLakeSettings: {
 		Type: "AWS::LakeFormation::DataLakeSettings"
 		Properties: {
-			Admins?: [...{
-				DataLakePrincipalIdentifier?: string | fn.#Fn
+			Admins?: *[...{
+				DataLakePrincipalIdentifier?: *string | fn.#Fn
 			}] | fn.#If
-			TrustedResourceOwners?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+			TrustedResourceOwners?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -20,34 +20,34 @@ import "github.com/TangoGroup/aws/fn"
 	#Permissions: {
 		Type: "AWS::LakeFormation::Permissions"
 		Properties: {
-			DataLakePrincipal: {
-				DataLakePrincipalIdentifier?: string | fn.#Fn
+			DataLakePrincipal: *{
+				DataLakePrincipalIdentifier?: *string | fn.#Fn
 			} | fn.#If
-			Permissions?:                [...(string | fn.#Fn)] | (string | fn.#Fn)
-			PermissionsWithGrantOption?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-			Resource:                    {
-				DataLocationResource?: {
-					CatalogId?:  string | fn.#Fn
-					S3Resource?: string | fn.#Fn
+			Permissions?:                [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			PermissionsWithGrantOption?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Resource:                    *{
+				DataLocationResource?: *{
+					CatalogId?:  *string | fn.#Fn
+					S3Resource?: *string | fn.#Fn
 				} | fn.#If
-				DatabaseResource?: {
-					CatalogId?: string | fn.#Fn
-					Name?:      string | fn.#Fn
+				DatabaseResource?: *{
+					CatalogId?: *string | fn.#Fn
+					Name?:      *string | fn.#Fn
 				} | fn.#If
-				TableResource?: {
-					CatalogId?:     string | fn.#Fn
-					DatabaseName?:  string | fn.#Fn
-					Name?:          string | fn.#Fn
-					TableWildcard?: {} | fn.#If
+				TableResource?: *{
+					CatalogId?:     *string | fn.#Fn
+					DatabaseName?:  *string | fn.#Fn
+					Name?:          *string | fn.#Fn
+					TableWildcard?: *{} | fn.#If
 				} | fn.#If
-				TableWithColumnsResource?: {
-					CatalogId?:      string | fn.#Fn
-					ColumnNames?:    [...(string | fn.#Fn)] | (string | fn.#Fn)
-					ColumnWildcard?: {
-						ExcludedColumnNames?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+				TableWithColumnsResource?: *{
+					CatalogId?:      *string | fn.#Fn
+					ColumnNames?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					ColumnWildcard?: *{
+						ExcludedColumnNames?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					} | fn.#If
-					DatabaseName?: string | fn.#Fn
-					Name?:         string | fn.#Fn
+					DatabaseName?: *string | fn.#Fn
+					Name?:         *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 		}
@@ -60,9 +60,9 @@ import "github.com/TangoGroup/aws/fn"
 	#Resource: {
 		Type: "AWS::LakeFormation::Resource"
 		Properties: {
-			ResourceArn:          string | fn.#Fn
-			RoleArn?:             string | fn.#Fn
-			UseServiceLinkedRole: bool | fn.#Fn
+			ResourceArn:          *string | fn.#Fn
+			RoleArn?:             *string | fn.#Fn
+			UseServiceLinkedRole: *bool | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

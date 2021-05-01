@@ -9,15 +9,15 @@ import (
 	#Channel: {
 		Type: "AWS::IVS::Channel"
 		Properties: {
-			Authorized?:                bool | fn.#Fn
-			LatencyMode?:               ("NORMAL" | "LOW") | fn.#Fn
-			Name?:                      (=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn
-			RecordingConfigurationArn?: (=~#"^$|arn:aws:ivs:[a-z0-9-]+:[0-9]+:recording-configuration/[a-zA-Z0-9-]+$"#) | fn.#Fn
-			Tags?:                      [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Authorized?:                *bool | fn.#Fn
+			LatencyMode?:               *("NORMAL" | "LOW") | fn.#Fn
+			Name?:                      *(=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn
+			RecordingConfigurationArn?: *(=~#"^$|arn:aws:ivs:[a-z0-9-]+:[0-9]+:recording-configuration/[a-zA-Z0-9-]+$"#) | fn.#Fn
+			Tags?:                      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
-			Type?: ("STANDARD" | "BASIC") | fn.#Fn
+			Type?: *("STANDARD" | "BASIC") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -28,11 +28,11 @@ import (
 	#PlaybackKeyPair: {
 		Type: "AWS::IVS::PlaybackKeyPair"
 		Properties: {
-			Name?:             (=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn
-			PublicKeyMaterial: string | fn.#Fn
-			Tags?:             [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Name?:             *(=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn
+			PublicKeyMaterial: *string | fn.#Fn
+			Tags?:             *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -44,15 +44,15 @@ import (
 	#RecordingConfiguration: {
 		Type: "AWS::IVS::RecordingConfiguration"
 		Properties: {
-			DestinationConfiguration: {
-				S3: {
-					BucketName: (strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[a-z0-9-.]+$"#)) | fn.#Fn
+			DestinationConfiguration: *{
+				S3: *{
+					BucketName: *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[a-z0-9-.]+$"#)) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			Name?: (=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn
-			Tags?: [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Name?: *(=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -64,10 +64,10 @@ import (
 	#StreamKey: {
 		Type: "AWS::IVS::StreamKey"
 		Properties: {
-			ChannelArn: (=~#"^arn:aws:ivs:[a-z0-9-]+:[0-9]+:channel/[a-zA-Z0-9-]+$"#) | fn.#Fn
-			Tags?:      [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			ChannelArn: *(=~#"^arn:aws:ivs:[a-z0-9-]+:[0-9]+:channel/[a-zA-Z0-9-]+$"#) | fn.#Fn
+			Tags?:      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

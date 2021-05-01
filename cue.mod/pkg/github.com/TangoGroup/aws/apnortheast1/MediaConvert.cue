@@ -6,24 +6,24 @@ import "github.com/TangoGroup/aws/fn"
 	#JobTemplate: {
 		Type: "AWS::MediaConvert::JobTemplate"
 		Properties: {
-			AccelerationSettings?: {
-				Mode: string | fn.#Fn
+			AccelerationSettings?: *{
+				Mode: *string | fn.#Fn
 			} | fn.#If
-			Category?:        string | fn.#Fn
-			Description?:     string | fn.#Fn
-			HopDestinations?: [...{
-				Priority?:    int | fn.#Fn
-				Queue?:       string | fn.#Fn
-				WaitMinutes?: int | fn.#Fn
+			Category?:        *string | fn.#Fn
+			Description?:     *string | fn.#Fn
+			HopDestinations?: *[...{
+				Priority?:    *int | fn.#Fn
+				Queue?:       *string | fn.#Fn
+				WaitMinutes?: *int | fn.#Fn
 			}] | fn.#If
-			Name?:        string | fn.#Fn
-			Priority?:    int | fn.#Fn
-			Queue?:       string | fn.#Fn
-			SettingsJson: {
+			Name?:        *string | fn.#Fn
+			Priority?:    *int | fn.#Fn
+			Queue?:       *string | fn.#Fn
+			SettingsJson: *{
 				[string]: _
 			} | fn.#Fn
-			StatusUpdateInterval?: string | fn.#Fn
-			Tags?:                 {
+			StatusUpdateInterval?: *string | fn.#Fn
+			Tags?:                 *{
 				[string]: _
 			} | fn.#Fn
 		}
@@ -36,13 +36,13 @@ import "github.com/TangoGroup/aws/fn"
 	#Preset: {
 		Type: "AWS::MediaConvert::Preset"
 		Properties: {
-			Category?:    string | fn.#Fn
-			Description?: string | fn.#Fn
-			Name?:        string | fn.#Fn
-			SettingsJson: {
+			Category?:    *string | fn.#Fn
+			Description?: *string | fn.#Fn
+			Name?:        *string | fn.#Fn
+			SettingsJson: *{
 				[string]: _
 			} | fn.#Fn
-			Tags?: {
+			Tags?: *{
 				[string]: _
 			} | fn.#Fn
 		}
@@ -55,11 +55,11 @@ import "github.com/TangoGroup/aws/fn"
 	#Queue: {
 		Type: "AWS::MediaConvert::Queue"
 		Properties: {
-			Description?: string | fn.#Fn
-			Name?:        string | fn.#Fn
-			PricingPlan?: string | fn.#Fn
-			Status?:      string | fn.#Fn
-			Tags?:        {
+			Description?: *string | fn.#Fn
+			Name?:        *string | fn.#Fn
+			PricingPlan?: *string | fn.#Fn
+			Status?:      *string | fn.#Fn
+			Tags?:        *{
 				[string]: _
 			} | fn.#Fn
 		}

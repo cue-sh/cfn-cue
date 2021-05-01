@@ -9,18 +9,18 @@ import (
 	#ProfilingGroup: {
 		Type: "AWS::CodeGuruProfiler::ProfilingGroup"
 		Properties: {
-			AgentPermissions?: {
+			AgentPermissions?: *{
 				[string]: _
 			} | fn.#Fn
-			AnomalyDetectionNotificationConfiguration?: [...{
-				channelId?: (=~#"[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"#) | fn.#Fn
-				channelUri: (=~#"^arn:aws([-\w]*):[a-z-]+:(([a-z]+-)+[0-9]+)?:([0-9]{12}):[^.]+$"#) | fn.#Fn
+			AnomalyDetectionNotificationConfiguration?: *[...{
+				channelId?: *(=~#"[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"#) | fn.#Fn
+				channelUri: *(=~#"^arn:aws([-\w]*):[a-z-]+:(([a-z]+-)+[0-9]+)?:([0-9]{12}):[^.]+$"#) | fn.#Fn
 			}] | fn.#If
-			ComputePlatform?:   ("Default" | "AWSLambda") | fn.#Fn
-			ProfilingGroupName: (strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[\w-]+$"#)) | fn.#Fn
-			Tags?:              [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			ComputePlatform?:   *("Default" | "AWSLambda") | fn.#Fn
+			ProfilingGroupName: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[\w-]+$"#)) | fn.#Fn
+			Tags?:              *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

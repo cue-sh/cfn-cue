@@ -9,15 +9,15 @@ import (
 	#EventIntegration: {
 		Type: "AWS::AppIntegrations::EventIntegration"
 		Properties: {
-			Description?:   (strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
-			EventBridgeBus: (strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z0-9/\._\-]+$"#)) | fn.#Fn
-			EventFilter:    {
-				Source: (strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^aws\.partner\/.*$"#)) | fn.#Fn
+			Description?:   *(strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
+			EventBridgeBus: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z0-9/\._\-]+$"#)) | fn.#Fn
+			EventFilter:    *{
+				Source: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^aws\.partner\/.*$"#)) | fn.#Fn
 			} | fn.#If
-			Name:  (strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z0-9/\._\-]+$"#)) | fn.#Fn
-			Tags?: [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Name:  *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z0-9/\._\-]+$"#)) | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

@@ -6,23 +6,23 @@ import "github.com/TangoGroup/aws/fn"
 	#Skill: {
 		Type: "Alexa::ASK::Skill"
 		Properties: {
-			AuthenticationConfiguration: {
-				ClientId:     string | fn.#Fn
-				ClientSecret: string | fn.#Fn
-				RefreshToken: string | fn.#Fn
+			AuthenticationConfiguration: *{
+				ClientId:     *string | fn.#Fn
+				ClientSecret: *string | fn.#Fn
+				RefreshToken: *string | fn.#Fn
 			} | fn.#If
-			SkillPackage: {
-				Overrides?: {
-					Manifest?: {
+			SkillPackage: *{
+				Overrides?: *{
+					Manifest?: *{
 						[string]: _
 					} | fn.#Fn
 				} | fn.#If
-				S3Bucket:         string | fn.#Fn
-				S3BucketRole?:    string | fn.#Fn
-				S3Key:            string | fn.#Fn
-				S3ObjectVersion?: string | fn.#Fn
+				S3Bucket:         *string | fn.#Fn
+				S3BucketRole?:    *string | fn.#Fn
+				S3Key:            *string | fn.#Fn
+				S3ObjectVersion?: *string | fn.#Fn
 			} | fn.#If
-			VendorId: string | fn.#Fn
+			VendorId: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

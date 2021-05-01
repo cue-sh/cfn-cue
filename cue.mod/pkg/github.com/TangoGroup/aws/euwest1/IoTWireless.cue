@@ -92,6 +92,53 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#TaskDefinition: {
+		Type: "AWS::IoTWireless::TaskDefinition"
+		Properties: {
+			AutoCreateTasks:                bool | fn.#Fn
+			LoRaWANUpdateGatewayTaskEntry?: {
+				CurrentVersion?: {
+					Model?:          (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+					PackageVersion?: (strings.MinRunes(1) & strings.MaxRunes(32)) | fn.#Fn
+					Station?:        (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+				} | fn.#If
+				UpdateVersion?: {
+					Model?:          (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+					PackageVersion?: (strings.MinRunes(1) & strings.MaxRunes(32)) | fn.#Fn
+					Station?:        (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			Name?: (strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			Tags?: [...{
+				Key:   string | fn.#Fn
+				Value: string | fn.#Fn
+			}] | fn.#If
+			TaskDefinitionType?: ("UPDATE") | fn.#Fn
+			Update?:             {
+				LoRaWAN?: {
+					CurrentVersion?: {
+						Model?:          (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+						PackageVersion?: (strings.MinRunes(1) & strings.MaxRunes(32)) | fn.#Fn
+						Station?:        (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+					} | fn.#If
+					SigKeyCrc?:       int | fn.#Fn
+					UpdateSignature?: (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+					UpdateVersion?:   {
+						Model?:          (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+						PackageVersion?: (strings.MinRunes(1) & strings.MaxRunes(32)) | fn.#Fn
+						Station?:        (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				UpdateDataRole?:   (strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+				UpdateDataSource?: (strings.MinRunes(1) & strings.MaxRunes(4096)) | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#WirelessDevice: {
 		Type: "AWS::IoTWireless::WirelessDevice"
 		Properties: {

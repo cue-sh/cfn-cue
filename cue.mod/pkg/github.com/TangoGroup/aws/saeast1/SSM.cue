@@ -45,15 +45,27 @@ import (
 	#Document: {
 		Type: "AWS::SSM::Document"
 		Properties: {
+			Attachments?: [...{
+				Key?:    ("SourceUrl" | "S3FileUrl" | "AttachmentReference") | fn.#Fn
+				Name?:   string | fn.#Fn
+				Values?: [...((strings.MinRunes(1) & strings.MaxRunes(100000)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(100000)) | fn.#Fn)
+			}] | fn.#If
 			Content: {
 				[string]: _
 			} | fn.#Fn
-			DocumentType?: string | fn.#Fn
-			Name?:         string | fn.#Fn
-			Tags?:         [...{
+			DocumentFormat?: ("YAML" | "JSON") | fn.#Fn
+			DocumentType?:   ("ApplicationConfiguration" | "ApplicationConfigurationSchema" | "Automation" | "Automation.ChangeTemplate" | "Command" | "DeploymentStrategy" | "Package" | "Policy" | "Session") | fn.#Fn
+			Name?:           (=~#"^[a-zA-Z0-9_\-.]{3,128}$"#) | fn.#Fn
+			Requires?:       [...{
+				Name?:    (=~#"^[a-zA-Z0-9_\-.:/]{3,200}$"#) | fn.#Fn
+				Version?: (=~#"([$]LATEST|[$]DEFAULT|^[1-9][0-9]*$)"#) | fn.#Fn
+			}] | fn.#If
+			Tags?: [...{
 				Key:   string | fn.#Fn
 				Value: string | fn.#Fn
 			}] | fn.#If
+			TargetType?:  (=~#"^\/[\w\.\-\:\/]*$"#) | fn.#Fn
+			VersionName?: (=~#"^[a-zA-Z0-9_\-.]{1,128}$"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -29,7 +29,6 @@ import (
 			} | fn.#Fn
 			KeySpec?:             ("SYMMETRIC_DEFAULT" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521" | "ECC_SECG_P256K1") | fn.#Fn
 			KeyUsage?:            ("ENCRYPT_DECRYPT" | "SIGN_VERIFY") | fn.#Fn
-			MultiRegion?:         bool | fn.#Fn
 			PendingWindowInDays?: (>=7 & <=30) | fn.#Fn
 			Tags?:                [...{
 				Key:   string | fn.#Fn

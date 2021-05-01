@@ -27,7 +27,7 @@ import (
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
 		UpdatePolicy?: [string]: _
-		Metadata?: [string]:     _
+		Metadata?: [string]: _
 		Condition?: string
 	}
 	#CodeSigningConfig: {
@@ -134,6 +134,7 @@ import (
 			}] | fn.#If
 			FunctionName?: string | fn.#Fn
 			Handler?:      string | fn.#Fn
+			Id?:           string | fn.#Fn
 			ImageConfig?:  {
 				Command?:          [...(string | fn.#Fn)] | (string | fn.#Fn)
 				EntryPoint?:       [...(string | fn.#Fn)] | (string | fn.#Fn)
@@ -155,8 +156,8 @@ import (
 				Mode?: string | fn.#Fn
 			} | fn.#If
 			VpcConfig?: {
-				SecurityGroupIds: [...(string | fn.#Fn)] | (string | fn.#Fn)
-				SubnetIds:        [...(string | fn.#Fn)] | (string | fn.#Fn)
+				SecurityGroupIds?: [...(string | fn.#Fn)] | (string | fn.#Fn)
+				SubnetIds?:        [...(string | fn.#Fn)] | (string | fn.#Fn)
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]

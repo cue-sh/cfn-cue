@@ -90,7 +90,7 @@ import "github.com/TangoGroup/aws/fn"
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
 		UpdatePolicy?: [string]: _
-		Metadata?: [string]:     _
+		Metadata?: [string]: _
 		Condition?: string
 	}
 	#LaunchConfiguration: {

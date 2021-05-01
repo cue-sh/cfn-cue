@@ -38,11 +38,13 @@ import (
 	#FileSystem: {
 		Type: "AWS::EFS::FileSystem"
 		Properties: {
-			BackupPolicy?: {
+			AvailabilityZoneName?: string | fn.#Fn
+			BackupPolicy?:         {
 				Status: string | fn.#Fn
 			} | fn.#If
-			Encrypted?:        bool | fn.#Fn
-			FileSystemPolicy?: {
+			BypassPolicyLockoutSafetyCheck?: bool | fn.#Fn
+			Encrypted?:                      bool | fn.#Fn
+			FileSystemPolicy?:               {
 				[string]: _
 			} | fn.#Fn
 			FileSystemTags?: [...{

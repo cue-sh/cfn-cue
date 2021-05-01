@@ -67,6 +67,10 @@ import "github.com/TangoGroup/aws/fn"
 						QueryString:           bool | fn.#Fn
 						QueryStringCacheKeys?: [...(string | fn.#Fn)] | (string | fn.#Fn)
 					} | fn.#If
+					FunctionAssociations?: [...{
+						EventType?:   string | fn.#Fn
+						FunctionARN?: string | fn.#Fn
+					}] | fn.#If
 					LambdaFunctionAssociations?: [...{
 						EventType?:        ("origin-request" | "origin-response" | "viewer-request" | "viewer-response") | fn.#Fn
 						IncludeBody?:      bool | fn.#Fn
@@ -113,6 +117,10 @@ import "github.com/TangoGroup/aws/fn"
 						QueryString:           bool | fn.#Fn
 						QueryStringCacheKeys?: [...(string | fn.#Fn)] | (string | fn.#Fn)
 					} | fn.#If
+					FunctionAssociations?: [...{
+						EventType?:   string | fn.#Fn
+						FunctionARN?: string | fn.#Fn
+					}] | fn.#If
 					LambdaFunctionAssociations?: [...{
 						EventType?:        ("origin-request" | "origin-response" | "viewer-request" | "viewer-response") | fn.#Fn
 						IncludeBody?:      bool | fn.#Fn
@@ -172,10 +180,8 @@ import "github.com/TangoGroup/aws/fn"
 						HeaderName:  string | fn.#Fn
 						HeaderValue: string | fn.#Fn
 					}] | fn.#If
-					OriginPath?:   string | fn.#Fn
-					OriginShield?: {
-						[string]: _
-					} | fn.#If
+					OriginPath?:     string | fn.#Fn
+					OriginShield?:   {} | fn.#If
 					S3OriginConfig?: {
 						OriginAccessIdentity?: string | fn.#Fn
 					} | fn.#If

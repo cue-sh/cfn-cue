@@ -166,11 +166,14 @@ import (
 						PostAnalyticsProcessorSourceUri?: (=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 						RecordPreprocessorSourceUri?:     (=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 					} | fn.#If
-					MonitoringInputs: {
-						MonitoringInputs?: [...{
-							[string]: _
-						}] | fn.#If
-					} | fn.#If
+					MonitoringInputs: [...{
+						EndpointInput: {
+							EndpointName:            (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+							LocalPath:               (=~#".*"#) | fn.#Fn
+							S3DataDistributionType?: ("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+							S3InputMode?:            ("Pipe" | "File") | fn.#Fn
+						} | fn.#If
+					}] | fn.#If
 					MonitoringOutputConfig: {
 						KmsKeyId?:         (=~#".*"#) | fn.#Fn
 						MonitoringOutputs: [...{

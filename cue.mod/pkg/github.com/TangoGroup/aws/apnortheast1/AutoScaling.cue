@@ -90,7 +90,7 @@ import "github.com/TangoGroup/aws/fn"
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
 		UpdatePolicy?: [string]: _
-		Metadata?: [string]:     _
+		Metadata?: [string]: _
 		Condition?: string
 	}
 	#LaunchConfiguration: {
@@ -207,6 +207,20 @@ import "github.com/TangoGroup/aws/fn"
 			MinSize?:             int | fn.#Fn
 			Recurrence?:          string | fn.#Fn
 			StartTime?:           string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#WarmPool: {
+		Type: "AWS::AutoScaling::WarmPool"
+		Properties: {
+			AutoScalingGroupName:      string | fn.#Fn
+			MaxGroupPreparedCapacity?: int | fn.#Fn
+			MinSize?:                  int | fn.#Fn
+			PoolState?:                string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

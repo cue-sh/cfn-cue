@@ -119,16 +119,16 @@ func createExprFromProperty(name string, prop Property, resourceSubproperties ma
 			value = &ast.ParenExpr{X: value}
 		}
 	} else if !custom {
-		// This is a more complex type, we need to recurse...
 		var typeName string
 		if prop.IsList() || prop.IsMap() {
 			typeName = prop.ItemType
 		} else {
 			typeName = prop.Type
 		}
-		if typeName == parentResource.Properties[parentName].ItemType {
-			// Weird recursion... might need some cleverness with Aliases to structure this correctly.
-			value = ast.NewStruct(ast.NewList(&ast.BasicLit{Value: "string"}), &ast.BasicLit{Value: "_"})
+		resource := resourceSubproperties[typeName]
+
+		if resource.Recursive {
+			value = ast.NewIdent("_#" + typeName)
 		} else {
 			var v ast.StructLit
 			v, imports = createStructFromResource(name, resourceSubproperties[typeName], resourceSubproperties, valueTypes)
@@ -140,16 +140,6 @@ func createExprFromProperty(name string, prop Property, resourceSubproperties ma
 		value2 := value
 		value = ast.NewList(&ast.Ellipsis{Type: value})
 		if prop.IsListOfPrimitives() {
-			// var s ast.Expr
-			// if value2 != nil {
-			// 	s = &ast.BinaryExpr{
-			// 		X:  value2,
-			// 		Op: token.OR,
-			// 		Y:  ast.NewSel(ast.NewIdent("fn"), "Fn"),
-			// 	}
-			// } else {
-			// 	s = ast.NewSel(ast.NewIdent("fn"), "Fn")
-			// }
 			value = ast.NewBinExpr(token.OR, value, value2)
 		}
 	}
@@ -195,6 +185,7 @@ func createStructFromResource(resourceName string, resource Resource, resourceSu
 			imports = mergeMaps(imports, propImports)
 		}
 		propertyDecls = append(propertyDecls, node)
+
 	}
 
 	if resourceName == "AWS::CloudFormation::CustomResource" {
@@ -455,11 +446,76 @@ func resourceType(resourceName string) *ast.Field {
 	return &resourceType
 }
 
-// func processResource(resourceName string, resource Resource, resourceSubproperties map[string]Resource) {
+type Parents struct {
+	arr []string
+}
 
-// }
+func (p *Parents) Push(el string) {
+	p.arr = append(p.arr, el)
+}
 
-// func processService()
+func (p *Parents) Pop() {
+	n := len(p.arr) - 1
+	p.arr[n] = ""
+	p.arr = p.arr[:n]
+}
+
+func (p *Parents) Len() int {
+	return len(p.arr)
+}
+
+func (p *Parents) Contains(str string) bool {
+	for _, el := range p.arr {
+		if el == str {
+			return true
+		}
+	}
+	return false
+}
+
+func findRecursiveProperties(resource Resource, properties map[string]Resource, parents *Parents) {
+	for _, property := range resource.Properties {
+		var propertyType string
+		switch {
+		case property.ItemType != "":
+			propertyType = property.ItemType
+		case property.PrimitiveItemType != "":
+			propertyType = property.PrimitiveItemType
+		case property.Type != "":
+			propertyType = property.Type
+		default:
+			propertyType = property.PrimitiveType
+		}
+
+		if parents.Contains(propertyType) {
+			propResource := properties[propertyType]
+			propResource.Recursive = true
+			properties[propertyType] = propResource
+			return
+		}
+
+		if ((property.ItemType != "") || (property.Type != "")) && !parents.Contains(propertyType) {
+			parents.Push(propertyType)
+			findRecursiveProperties(properties[propertyType], properties, parents)
+			parents.Pop()
+		}
+	}
+}
+
+func findRecursive(resourcesByService map[string]map[string]Resource, propertiesByResource map[string]map[string]Resource) {
+	for _, resources := range resourcesByService {
+		for resourceName, resource := range resources {
+			parents := &Parents{}
+			findRecursiveProperties(resource, propertiesByResource[resourceName], parents)
+
+			for propertyName, property := range propertiesByResource[resourceName] {
+				if property.Recursive {
+					fmt.Println("  Recursive Property: " + resourceName + " - " + propertyName)
+				}
+			}
+		}
+	}
+}
 
 func processRegion(region string) {
 
@@ -469,29 +525,28 @@ func processRegion(region string) {
 	fmt.Println(cloudformationSpec)
 	data, _ := downloadSpec(cloudformationSpec)
 
-	// fmt.Println(string(data))
-
 	spec, specErr := processSpec("cfn", data)
 	if specErr != nil {
 		fmt.Println(specErr)
 		return
 	}
 
-	// propertiesByResource := map[string]map[string]Resource{}
 	propertiesByResource := *propertiesByResource(spec)
 
 	serviceNames := serviceNames(spec)
 
 	resourcesByService := *resourcesByService(spec, serviceNames)
 
-	// importDeclarations := make([]*ast.ImportSpec, 0)
+	findRecursive(resourcesByService, propertiesByResource)
+
+	// os.Exit(0)
 
 	resourceTypes := make([]ast.Expr, 0)
 	// resourceTypesFields := []ast.Decl{}
 
 	for _, serviceName := range serviceNames {
 		resources := resourcesByService[serviceName]
-		// fmt.Println(i, ":", serviceName)
+		// fmt.Println(serviceName)
 		ff := &ast.File{
 			Filename: serviceName,
 			Decls: []ast.Decl{
@@ -519,9 +574,15 @@ func processRegion(region string) {
 			resourceSubproperties := propertiesByResource[resourceName]
 
 			resourceStr := splits[2]
-			// fmt.Println("  " + resourceName)
 
 			properties, resourceImports := createStructFromResource(resourceName, resource, resourceSubproperties, spec.ValueTypes)
+			for propertyName, propertyResource := range resourceSubproperties {
+				if propertyResource.Recursive {
+					propertyStruct, propertyImports := createStructFromResource(propertyName, propertyResource, resourceSubproperties, spec.ValueTypes)
+					properties.Elts = append(properties.Elts, newField("_#"+propertyName, &propertyStruct))
+					importStrings = mergeMaps(importStrings, propertyImports)
+				}
+			}
 			importStrings = mergeMaps(importStrings, resourceImports)
 			propertiesStruct := newField("Properties", &properties)
 
@@ -563,15 +624,9 @@ func processRegion(region string) {
 
 		servicePackage := path.Join("github.com/TangoGroup/aws/", shortRegion)
 
-		// importDeclarations = append(importDeclarations,
-		// 	ast.NewImport(ast.NewIdent(strings.ToLower(serviceName)),
-		// 		servicePackage))
-
 		folder := path.Join("cue.mod", "pkg", servicePackage)
 
 		os.MkdirAll(folder, os.ModePerm)
-
-		// fmt.Println("Saving", path.Join(folder, serviceName+".cue"))
 
 		cuefile, err := os.Create(path.Join(folder, serviceName+".cue"))
 		if err != nil {
@@ -584,7 +639,6 @@ func processRegion(region string) {
 			cuefile.Close()
 			return
 		}
-		// fmt.Println(l, "bytes written successfully")
 		err = cuefile.Close()
 		if err != nil {
 			fmt.Println(err)
@@ -597,8 +651,6 @@ func processRegion(region string) {
 	for _, resource := range resourceTypes[1:] {
 		resourceTypesExpr = &ast.BinaryExpr{X: resourceTypesExpr, Op: token.OR, Y: resource}
 	}
-
-	// expr := ast.NewList(resourceTypes...)
 
 	resourceNames := resourceNamesSlice(spec.Resources)
 	sort.Strings(resourceNames)

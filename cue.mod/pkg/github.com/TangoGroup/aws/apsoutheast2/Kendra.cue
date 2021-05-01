@@ -12,57 +12,41 @@ import (
 			DataSourceConfiguration?: {
 				ConfluenceConfiguration?: {
 					AttachmentConfiguration?: {
-						AttachmentFieldMappings?: {
-							ConfluenceAttachmentFieldMappingsList?: [...{
-								DataSourceFieldName: ("AUTHOR" | "CONTENT_TYPE" | "CREATED_DATE" | "DISPLAY_URL" | "FILE_SIZE" | "ITEM_TYPE" | "PARENT_ID" | "SPACE_KEY" | "SPACE_NAME" | "URL" | "VERSION") | fn.#Fn
-								DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-								IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
+						AttachmentFieldMappings?: [...{
+							DataSourceFieldName: ("AUTHOR" | "CONTENT_TYPE" | "CREATED_DATE" | "DISPLAY_URL" | "FILE_SIZE" | "ITEM_TYPE" | "PARENT_ID" | "SPACE_KEY" | "SPACE_NAME" | "URL" | "VERSION") | fn.#Fn
+							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+						}] | fn.#If
 						CrawlAttachments?: bool | fn.#Fn
 					} | fn.#If
 					BlogConfiguration?: {
-						BlogFieldMappings?: {
-							ConfluenceBlogFieldMappingsList?: [...{
-								DataSourceFieldName: ("AUTHOR" | "DISPLAY_URL" | "ITEM_TYPE" | "LABELS" | "PUBLISH_DATE" | "SPACE_KEY" | "SPACE_NAME" | "URL" | "VERSION") | fn.#Fn
-								DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-								IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
+						BlogFieldMappings?: [...{
+							DataSourceFieldName: ("AUTHOR" | "DISPLAY_URL" | "ITEM_TYPE" | "LABELS" | "PUBLISH_DATE" | "SPACE_KEY" | "SPACE_NAME" | "URL" | "VERSION") | fn.#Fn
+							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+						}] | fn.#If
 					} | fn.#If
-					ExclusionPatterns?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					InclusionPatterns?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
+					ExclusionPatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					InclusionPatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
 					PageConfiguration?: {
-						PageFieldMappings?: {
-							ConfluencePageFieldMappingsList?: [...{
-								DataSourceFieldName: ("AUTHOR" | "CONTENT_STATUS" | "CREATED_DATE" | "DISPLAY_URL" | "ITEM_TYPE" | "LABELS" | "MODIFIED_DATE" | "PARENT_ID" | "SPACE_KEY" | "SPACE_NAME" | "URL" | "VERSION") | fn.#Fn
-								DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-								IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
+						PageFieldMappings?: [...{
+							DataSourceFieldName: ("AUTHOR" | "CONTENT_STATUS" | "CREATED_DATE" | "DISPLAY_URL" | "ITEM_TYPE" | "LABELS" | "MODIFIED_DATE" | "PARENT_ID" | "SPACE_KEY" | "SPACE_NAME" | "URL" | "VERSION") | fn.#Fn
+							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+						}] | fn.#If
 					} | fn.#If
 					SecretArn:           (strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
 					ServerUrl:           (strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file)://([^\s]*)"#)) | fn.#Fn
 					SpaceConfiguration?: {
 						CrawlArchivedSpaces?: bool | fn.#Fn
 						CrawlPersonalSpaces?: bool | fn.#Fn
-						ExcludeSpaces?:       {
-							ConfluenceSpaceList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-						} | fn.#If
-						IncludeSpaces?: {
-							ConfluenceSpaceList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-						} | fn.#If
-						SpaceFieldMappings?: {
-							ConfluenceSpaceFieldMappingsList?: [...{
-								DataSourceFieldName: ("DISPLAY_URL" | "ITEM_TYPE" | "SPACE_KEY" | "URL") | fn.#Fn
-								DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-								IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
+						ExcludeSpaces?:       [...((strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn)
+						IncludeSpaces?:       [...((strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn)
+						SpaceFieldMappings?:  [...{
+							DataSourceFieldName: ("DISPLAY_URL" | "ITEM_TYPE" | "SPACE_KEY" | "URL") | fn.#Fn
+							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+						}] | fn.#If
 					} | fn.#If
 					Version:           ("CLOUD" | "SERVER") | fn.#Fn
 					VpcConfiguration?: {
@@ -75,19 +59,15 @@ import (
 						AllowedGroupsColumnName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
 					} | fn.#If
 					ColumnConfiguration: {
-						ChangeDetectingColumns: {
-							ChangeDetectingColumns?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-						} | fn.#If
+						ChangeDetectingColumns:   [...((strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn)
 						DocumentDataColumnName:   (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
 						DocumentIdColumnName:     (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
 						DocumentTitleColumnName?: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-						FieldMappings?:           {
-							DataSourceToIndexFieldMappingList?: [...{
-								DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-								DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-								IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
+						FieldMappings?:           [...{
+							DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+						}] | fn.#If
 					} | fn.#If
 					ConnectionConfiguration: {
 						DatabaseHost: (strings.MinRunes(1) & strings.MaxRunes(253)) | fn.#Fn
@@ -106,49 +86,29 @@ import (
 					} | fn.#If
 				} | fn.#If
 				GoogleDriveConfiguration?: {
-					ExcludeMimeTypes?: {
-						ExcludeMimeTypesList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					ExcludeSharedDrives?: {
-						ExcludeSharedDrivesList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					ExcludeUserAccounts?: {
-						ExcludeUserAccountsList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					ExclusionPatterns?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					FieldMappings?: {
-						DataSourceToIndexFieldMappingList?: [...{
-							DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-						}] | fn.#If
-					} | fn.#If
-					InclusionPatterns?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					SecretArn: (strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
+					ExcludeMimeTypes?:    [...((strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+					ExcludeSharedDrives?: [...((strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+					ExcludeUserAccounts?: [...((strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+					ExclusionPatterns?:   [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					FieldMappings?:       [...{
+						DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+						DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+						IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+					}] | fn.#If
+					InclusionPatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					SecretArn:          (strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
 				} | fn.#If
 				OneDriveConfiguration?: {
 					DisableLocalGroups?: bool | fn.#Fn
-					ExclusionPatterns?:  {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					FieldMappings?: {
-						DataSourceToIndexFieldMappingList?: [...{
-							DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-						}] | fn.#If
-					} | fn.#If
-					InclusionPatterns?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					OneDriveUsers: {
-						OneDriveUserList?: {
-							OneDriveUserList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-						} | fn.#If
+					ExclusionPatterns?:  [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					FieldMappings?:      [...{
+						DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+						DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+						IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+					}] | fn.#If
+					InclusionPatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					OneDriveUsers:      {
+						OneDriveUserList?:   [...((strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^(?!\s).+@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^(?!\s).+@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"#)) | fn.#Fn)
 						OneDriveUserS3Path?: {
 							Bucket: (strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"[a-z0-9][\.\-a-z0-9]{1,61}[a-z0-9]"#)) | fn.#Fn
 							Key:    (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
@@ -165,94 +125,66 @@ import (
 					DocumentsMetadataConfiguration?: {
 						S3Prefix?: (strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 					} | fn.#If
-					ExclusionPatterns?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					InclusionPatterns?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					InclusionPrefixes?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
+					ExclusionPatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					InclusionPatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					InclusionPrefixes?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
 				} | fn.#If
 				SalesforceConfiguration?: {
 					ChatterFeedConfiguration?: {
 						DocumentDataFieldName:   (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
 						DocumentTitleFieldName?: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-						FieldMappings?:          {
-							DataSourceToIndexFieldMappingList?: [...{
+						FieldMappings?:          [...{
+							DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+						}] | fn.#If
+						IncludeFilterTypes?: [...(("ACTIVE_USER" | "STANDARD_USER") | fn.#Fn)] | (("ACTIVE_USER" | "STANDARD_USER") | fn.#Fn)
+					} | fn.#If
+					CrawlAttachments?:              bool | fn.#Fn
+					ExcludeAttachmentFilePatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					IncludeAttachmentFilePatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					KnowledgeArticleConfiguration?: {
+						CustomKnowledgeArticleTypeConfigurations?: [...{
+							DocumentDataFieldName:   (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+							DocumentTitleFieldName?: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+							FieldMappings?:          [...{
 								DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
 								DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
 								IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
 							}] | fn.#If
-						} | fn.#If
-						IncludeFilterTypes?: {
-							SalesforceChatterFeedIncludeFilterTypes?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-						} | fn.#If
-					} | fn.#If
-					CrawlAttachments?:              bool | fn.#Fn
-					ExcludeAttachmentFilePatterns?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					IncludeAttachmentFilePatterns?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					KnowledgeArticleConfiguration?: {
-						CustomKnowledgeArticleTypeConfigurations?: {
-							SalesforceCustomKnowledgeArticleTypeConfigurationList?: [...{
-								DocumentDataFieldName:   (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-								DocumentTitleFieldName?: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-								FieldMappings?:          {
-									DataSourceToIndexFieldMappingList?: [...{
-										DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-										DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-										IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-									}] | fn.#If
-								} | fn.#If
-								Name: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
-						IncludedStates: {
-							SalesforceKnowledgeArticleStateList?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-						} | fn.#If
+							Name: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+						}] | fn.#If
+						IncludedStates:                             [...(("DRAFT" | "PUBLISHED" | "ARCHIVED") | fn.#Fn)] | (("DRAFT" | "PUBLISHED" | "ARCHIVED") | fn.#Fn)
 						StandardKnowledgeArticleTypeConfiguration?: {
 							DocumentDataFieldName:   (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
 							DocumentTitleFieldName?: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-							FieldMappings?:          {
-								DataSourceToIndexFieldMappingList?: [...{
-									DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-									DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-									IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-								}] | fn.#If
-							} | fn.#If
+							FieldMappings?:          [...{
+								DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+								DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+								IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+							}] | fn.#If
 						} | fn.#If
 					} | fn.#If
 					SecretArn:                              (strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
 					ServerUrl:                              (strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file)://([^\s]*)"#)) | fn.#Fn
 					StandardObjectAttachmentConfiguration?: {
 						DocumentTitleFieldName?: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-						FieldMappings?:          {
-							DataSourceToIndexFieldMappingList?: [...{
-								DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-								DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-								IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
-					} | fn.#If
-					StandardObjectConfigurations?: {
-						SalesforceStandardObjectConfigurationList?: [...{
-							DocumentDataFieldName:   (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-							DocumentTitleFieldName?: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-							FieldMappings?:          {
-								DataSourceToIndexFieldMappingList?: [...{
-									DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-									DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-									IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-								}] | fn.#If
-							} | fn.#If
-							Name: ("ACCOUNT" | "CAMPAIGN" | "CASE" | "CONTACT" | "CONTRACT" | "DOCUMENT" | "GROUP" | "IDEA" | "LEAD" | "OPPORTUNITY" | "PARTNER" | "PRICEBOOK" | "PRODUCT" | "PROFILE" | "SOLUTION" | "TASK" | "USER") | fn.#Fn
+						FieldMappings?:          [...{
+							DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
 						}] | fn.#If
 					} | fn.#If
+					StandardObjectConfigurations?: [...{
+						DocumentDataFieldName:   (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+						DocumentTitleFieldName?: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+						FieldMappings?:          [...{
+							DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+						}] | fn.#If
+						Name: ("ACCOUNT" | "CAMPAIGN" | "CASE" | "CONTACT" | "CONTRACT" | "DOCUMENT" | "GROUP" | "IDEA" | "LEAD" | "OPPORTUNITY" | "PARTNER" | "PRICEBOOK" | "PRODUCT" | "PROFILE" | "SOLUTION" | "TASK" | "USER") | fn.#Fn
+					}] | fn.#If
 				} | fn.#If
 				ServiceNowConfiguration?: {
 					HostUrl:                        (strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(?!(^(https?|ftp|file):\/\/))[a-z0-9-]+(\.service-now\.com)$"#)) | fn.#Fn
@@ -260,38 +192,26 @@ import (
 						CrawlAttachments?:              bool | fn.#Fn
 						DocumentDataFieldName:          (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
 						DocumentTitleFieldName?:        (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-						ExcludeAttachmentFilePatterns?: {
-							DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-						} | fn.#If
-						FieldMappings?: {
-							DataSourceToIndexFieldMappingList?: [...{
-								DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-								DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-								IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
-						IncludeAttachmentFilePatterns?: {
-							DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-						} | fn.#If
+						ExcludeAttachmentFilePatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+						FieldMappings?:                 [...{
+							DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+						}] | fn.#If
+						IncludeAttachmentFilePatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
 					} | fn.#If
 					SecretArn:                    (strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
 					ServiceCatalogConfiguration?: {
 						CrawlAttachments?:              bool | fn.#Fn
 						DocumentDataFieldName:          (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
 						DocumentTitleFieldName?:        (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-						ExcludeAttachmentFilePatterns?: {
-							DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-						} | fn.#If
-						FieldMappings?: {
-							DataSourceToIndexFieldMappingList?: [...{
-								DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-								DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-								IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
-						IncludeAttachmentFilePatterns?: {
-							DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-						} | fn.#If
+						ExcludeAttachmentFilePatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+						FieldMappings?:                 [...{
+							DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+						}] | fn.#If
+						IncludeAttachmentFilePatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
 					} | fn.#If
 					ServiceNowBuildVersion: ("LONDON" | "OTHERS") | fn.#Fn
 				} | fn.#If
@@ -299,24 +219,18 @@ import (
 					CrawlAttachments?:       bool | fn.#Fn
 					DisableLocalGroups?:     bool | fn.#Fn
 					DocumentTitleFieldName?: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-					ExclusionPatterns?:      {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					FieldMappings?: {
-						DataSourceToIndexFieldMappingList?: [...{
-							DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
-							DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
-							IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
-						}] | fn.#If
-					} | fn.#If
-					InclusionPatterns?: {
-						DataSourceInclusionsExclusionsStrings?: [...(string | fn.#Fn)] | (string | fn.#Fn)
-					} | fn.#If
-					SecretArn:         (strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
-					SharePointVersion: ("SHAREPOINT_ONLINE") | fn.#Fn
-					Urls:              [...((strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file)://([^\s]*)"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file)://([^\s]*)"#)) | fn.#Fn)
-					UseChangeLog?:     bool | fn.#Fn
-					VpcConfiguration?: {
+					ExclusionPatterns?:      [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					FieldMappings?:          [...{
+						DataSourceFieldName: (strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+						DateFieldFormat?:    (strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+						IndexFieldName:      (strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+					}] | fn.#If
+					InclusionPatterns?: [...((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					SecretArn:          (strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
+					SharePointVersion:  ("SHAREPOINT_ONLINE") | fn.#Fn
+					Urls:               [...((strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file)://([^\s]*)"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file)://([^\s]*)"#)) | fn.#Fn)
+					UseChangeLog?:      bool | fn.#Fn
+					VpcConfiguration?:  {
 						SecurityGroupIds: [...((strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[\-0-9a-zA-Z]+"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[\-0-9a-zA-Z]+"#)) | fn.#Fn)
 						SubnetIds:        [...((strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[\-0-9a-zA-Z]+"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[\-0-9a-zA-Z]+"#)) | fn.#Fn)
 					} | fn.#If
@@ -377,11 +291,10 @@ import (
 					Freshness?:            bool | fn.#Fn
 					Importance?:           (>=1 & <=10) | fn.#Fn
 					RankOrder?:            ("ASCENDING" | "DESCENDING") | fn.#Fn
-					ValueImportanceItems?: {
-						ValueImportanceItems?: [...{
-							[string]: _
-						}] | fn.#If
-					} | fn.#If
+					ValueImportanceItems?: [...{
+						Key?:   (strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn
+						Value?: (>=1 & <=10) | fn.#Fn
+					}] | fn.#If
 				} | fn.#If
 				Search?: {
 					Displayable?: bool | fn.#Fn

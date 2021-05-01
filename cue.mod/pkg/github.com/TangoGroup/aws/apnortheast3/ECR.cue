@@ -36,7 +36,11 @@ import (
 	#Repository: {
 		Type: "AWS::ECR::Repository"
 		Properties: {
-			LifecyclePolicy?: {
+			ImageScanningConfiguration?: {
+				[string]: _
+			} | fn.#Fn
+			ImageTagMutability?: ("MUTABLE" | "IMMUTABLE") | fn.#Fn
+			LifecyclePolicy?:    {
 				LifecyclePolicyText?: (strings.MinRunes(100) & strings.MaxRunes(30720)) | fn.#Fn
 				RegistryId?:          (strings.MinRunes(12) & strings.MaxRunes(12) & (=~#"^[0-9]{12}$"#)) | fn.#Fn
 			} | fn.#If

@@ -298,12 +298,10 @@ import (
 					} | fn.#If
 					Timestream?: {
 						DatabaseName: string | fn.#Fn
-						Dimensions:   {
-							TimestreamDimensionsList?: [...{
-								Name:  string | fn.#Fn
-								Value: string | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
+						Dimensions:   [...{
+							Name:  string | fn.#Fn
+							Value: string | fn.#Fn
+						}] | fn.#If
 						RoleArn:    string | fn.#Fn
 						TableName:  string | fn.#Fn
 						Timestamp?: {
@@ -456,12 +454,10 @@ import (
 					} | fn.#If
 					Timestream?: {
 						DatabaseName: string | fn.#Fn
-						Dimensions:   {
-							TimestreamDimensionsList?: [...{
-								Name:  string | fn.#Fn
-								Value: string | fn.#Fn
-							}] | fn.#If
-						} | fn.#If
+						Dimensions:   [...{
+							Name:  string | fn.#Fn
+							Value: string | fn.#Fn
+						}] | fn.#If
 						RoleArn:    string | fn.#Fn
 						TableName:  string | fn.#Fn
 						Timestamp?: {
@@ -470,8 +466,8 @@ import (
 						} | fn.#If
 					} | fn.#If
 				} | fn.#If
-				RuleDisabled: bool | fn.#Fn
-				Sql:          string | fn.#Fn
+				RuleDisabled?: bool | fn.#Fn
+				Sql:           string | fn.#Fn
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]

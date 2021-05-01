@@ -8,25 +8,19 @@ import "github.com/TangoGroup/aws/fn"
 		Properties: {
 			ApiPassthrough?: {
 				Extensions?: {
-					CertificatePolicies?: {
-						CertificatePolicyList?: [...{
-							CertPolicyId:      string | fn.#Fn
-							PolicyQualifiers?: {
-								PolicyQualifierInfoList?: [...{
-									PolicyQualifierId: string | fn.#Fn
-									Qualifier:         {
-										CpsUri: string | fn.#Fn
-									} | fn.#If
-								}] | fn.#If
+					CertificatePolicies?: [...{
+						CertPolicyId:      string | fn.#Fn
+						PolicyQualifiers?: [...{
+							PolicyQualifierId: string | fn.#Fn
+							Qualifier:         {
+								CpsUri: string | fn.#Fn
 							} | fn.#If
 						}] | fn.#If
-					} | fn.#If
-					ExtendedKeyUsage?: {
-						ExtendedKeyUsageList?: [...{
-							ExtendedKeyUsageObjectIdentifier?: string | fn.#Fn
-							ExtendedKeyUsageType?:             string | fn.#Fn
-						}] | fn.#If
-					} | fn.#If
+					}] | fn.#If
+					ExtendedKeyUsage?: [...{
+						ExtendedKeyUsageObjectIdentifier?: string | fn.#Fn
+						ExtendedKeyUsageType?:             string | fn.#Fn
+					}] | fn.#If
 					KeyUsage?: {
 						CRLSign?:          bool | fn.#Fn
 						DataEncipherment?: bool | fn.#Fn
@@ -38,39 +32,37 @@ import "github.com/TangoGroup/aws/fn"
 						KeyEncipherment?:  bool | fn.#Fn
 						NonRepudiation?:   bool | fn.#Fn
 					} | fn.#If
-					SubjectAlternativeNames?: {
-						GeneralNameList?: [...{
-							DirectoryName?: {
-								CommonName?:                 string | fn.#Fn
-								Country?:                    string | fn.#Fn
-								DistinguishedNameQualifier?: string | fn.#Fn
-								GenerationQualifier?:        string | fn.#Fn
-								GivenName?:                  string | fn.#Fn
-								Initials?:                   string | fn.#Fn
-								Locality?:                   string | fn.#Fn
-								Organization?:               string | fn.#Fn
-								OrganizationalUnit?:         string | fn.#Fn
-								Pseudonym?:                  string | fn.#Fn
-								SerialNumber?:               string | fn.#Fn
-								State?:                      string | fn.#Fn
-								Surname?:                    string | fn.#Fn
-								Title?:                      string | fn.#Fn
-							} | fn.#If
-							DnsName?:      string | fn.#Fn
-							EdiPartyName?: {
-								NameAssigner: string | fn.#Fn
-								PartyName:    string | fn.#Fn
-							} | fn.#If
-							IpAddress?: string | fn.#Fn
-							OtherName?: {
-								TypeId: string | fn.#Fn
-								Value:  string | fn.#Fn
-							} | fn.#If
-							RegisteredId?:              string | fn.#Fn
-							Rfc822Name?:                string | fn.#Fn
-							UniformResourceIdentifier?: string | fn.#Fn
-						}] | fn.#If
-					} | fn.#If
+					SubjectAlternativeNames?: [...{
+						DirectoryName?: {
+							CommonName?:                 string | fn.#Fn
+							Country?:                    string | fn.#Fn
+							DistinguishedNameQualifier?: string | fn.#Fn
+							GenerationQualifier?:        string | fn.#Fn
+							GivenName?:                  string | fn.#Fn
+							Initials?:                   string | fn.#Fn
+							Locality?:                   string | fn.#Fn
+							Organization?:               string | fn.#Fn
+							OrganizationalUnit?:         string | fn.#Fn
+							Pseudonym?:                  string | fn.#Fn
+							SerialNumber?:               string | fn.#Fn
+							State?:                      string | fn.#Fn
+							Surname?:                    string | fn.#Fn
+							Title?:                      string | fn.#Fn
+						} | fn.#If
+						DnsName?:      string | fn.#Fn
+						EdiPartyName?: {
+							NameAssigner: string | fn.#Fn
+							PartyName:    string | fn.#Fn
+						} | fn.#If
+						IpAddress?: string | fn.#Fn
+						OtherName?: {
+							TypeId: string | fn.#Fn
+							Value:  string | fn.#Fn
+						} | fn.#If
+						RegisteredId?:              string | fn.#Fn
+						Rfc822Name?:                string | fn.#Fn
+						UniformResourceIdentifier?: string | fn.#Fn
+					}] | fn.#If
 				} | fn.#If
 				Subject?: {
 					CommonName?:                 string | fn.#Fn
@@ -123,11 +115,43 @@ import "github.com/TangoGroup/aws/fn"
 					KeyEncipherment?:  bool | fn.#Fn
 					NonRepudiation?:   bool | fn.#Fn
 				} | fn.#If
-				SubjectInformationAccess?: {
-					SubjectInformationAccess?: [...{
-						[string]: _
-					}] | fn.#If
-				} | fn.#If
+				SubjectInformationAccess?: [...{
+					AccessLocation: {
+						DirectoryName?: {
+							CommonName?:                 string | fn.#Fn
+							Country?:                    string | fn.#Fn
+							DistinguishedNameQualifier?: string | fn.#Fn
+							GenerationQualifier?:        string | fn.#Fn
+							GivenName?:                  string | fn.#Fn
+							Initials?:                   string | fn.#Fn
+							Locality?:                   string | fn.#Fn
+							Organization?:               string | fn.#Fn
+							OrganizationalUnit?:         string | fn.#Fn
+							Pseudonym?:                  string | fn.#Fn
+							SerialNumber?:               string | fn.#Fn
+							State?:                      string | fn.#Fn
+							Surname?:                    string | fn.#Fn
+							Title?:                      string | fn.#Fn
+						} | fn.#If
+						DnsName?:      string | fn.#Fn
+						EdiPartyName?: {
+							NameAssigner: string | fn.#Fn
+							PartyName:    string | fn.#Fn
+						} | fn.#If
+						IpAddress?: string | fn.#Fn
+						OtherName?: {
+							TypeId: string | fn.#Fn
+							Value:  string | fn.#Fn
+						} | fn.#If
+						RegisteredId?:              string | fn.#Fn
+						Rfc822Name?:                string | fn.#Fn
+						UniformResourceIdentifier?: string | fn.#Fn
+					} | fn.#If
+					AccessMethod: {
+						AccessMethodType?:       string | fn.#Fn
+						CustomObjectIdentifier?: string | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
 			} | fn.#If
 			KeyAlgorithm:             string | fn.#Fn
 			RevocationConfiguration?: {

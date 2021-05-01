@@ -112,7 +112,7 @@ func createExprFromProperty(name string, prop Property, resourceSubproperties ma
 			}
 		}
 		if *intrinsicsFlag {
-			value = ast.NewBinExpr(token.OR, value, ast.NewSel(ast.NewIdent("fn"), "#Fn"))
+			value = ast.NewBinExpr(token.OR, &ast.UnaryExpr{Op: token.MUL, X: value}, ast.NewSel(ast.NewIdent("fn"), "#Fn"))
 		}
 
 		if prop.IsList() {
@@ -149,7 +149,7 @@ func createExprFromProperty(name string, prop Property, resourceSubproperties ma
 	}
 
 	if *intrinsicsFlag && (prop.IsMap() || (prop.IsList() && !prop.IsListOfPrimitives()) || prop.IsCustomType()) {
-		value = ast.NewBinExpr(token.OR, value, ast.NewSel(ast.NewIdent("fn"), "#If"))
+		value = ast.NewBinExpr(token.OR, &ast.UnaryExpr{Op: token.MUL, X: value}, ast.NewSel(ast.NewIdent("fn"), "#If"))
 	}
 
 	return &value, imports

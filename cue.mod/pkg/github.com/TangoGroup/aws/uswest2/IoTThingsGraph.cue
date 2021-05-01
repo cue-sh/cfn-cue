@@ -6,10 +6,10 @@ import "github.com/TangoGroup/aws/fn"
 	#FlowTemplate: {
 		Type: "AWS::IoTThingsGraph::FlowTemplate"
 		Properties: {
-			CompatibleNamespaceVersion?: number | fn.#Fn
-			Definition:                  {
-				Language: string | fn.#Fn
-				Text:     string | fn.#Fn
+			CompatibleNamespaceVersion?: *number | fn.#Fn
+			Definition:                  *{
+				Language: *string | fn.#Fn
+				Text:     *string | fn.#Fn
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]

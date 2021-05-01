@@ -6,11 +6,11 @@ import "github.com/TangoGroup/aws/fn"
 	#ProfilePermission: {
 		Type: "AWS::Signer::ProfilePermission"
 		Properties: {
-			Action:          string | fn.#Fn
-			Principal:       string | fn.#Fn
-			ProfileName:     string | fn.#Fn
-			ProfileVersion?: (=~#"^[0-9a-zA-Z]{10}$"#) | fn.#Fn
-			StatementId:     string | fn.#Fn
+			Action:          *string | fn.#Fn
+			Principal:       *string | fn.#Fn
+			ProfileName:     *string | fn.#Fn
+			ProfileVersion?: *(=~#"^[0-9a-zA-Z]{10}$"#) | fn.#Fn
+			StatementId:     *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -21,14 +21,14 @@ import "github.com/TangoGroup/aws/fn"
 	#SigningProfile: {
 		Type: "AWS::Signer::SigningProfile"
 		Properties: {
-			PlatformId:               ("AWSLambda-SHA384-ECDSA") | fn.#Fn
-			SignatureValidityPeriod?: {
-				Type?:  ("DAYS" | "MONTHS" | "YEARS") | fn.#Fn
-				Value?: int | fn.#Fn
+			PlatformId:               *("AWSLambda-SHA384-ECDSA") | fn.#Fn
+			SignatureValidityPeriod?: *{
+				Type?:  *("DAYS" | "MONTHS" | "YEARS") | fn.#Fn
+				Value?: *int | fn.#Fn
 			} | fn.#If
-			Tags?: [...{
-				Key:   string | fn.#Fn
-				Value: string | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

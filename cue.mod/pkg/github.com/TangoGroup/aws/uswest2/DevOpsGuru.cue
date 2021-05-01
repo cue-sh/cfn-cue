@@ -8,9 +8,9 @@ import (
 #DevOpsGuru: {
 	#NotificationChannel: {
 		Type: "AWS::DevOpsGuru::NotificationChannel"
-		Properties: Config: {
-			Sns?: {
-				TopicArn?: (strings.MinRunes(36) & strings.MaxRunes(1024) & (=~#"^arn:aws[a-z0-9-]*:sns:[a-z0-9-]+:\d{12}:[^:]+$"#)) | fn.#Fn
+		Properties: Config: *{
+			Sns?: *{
+				TopicArn?: *(strings.MinRunes(36) & strings.MaxRunes(1024) & (=~#"^arn:aws[a-z0-9-]*:sns:[a-z0-9-]+:\d{12}:[^:]+$"#)) | fn.#Fn
 			} | fn.#If
 		} | fn.#If
 		DependsOn?:           string | [...string]
@@ -21,9 +21,9 @@ import (
 	}
 	#ResourceCollection: {
 		Type: "AWS::DevOpsGuru::ResourceCollection"
-		Properties: ResourceCollectionFilter: {
-			CloudFormation?: {
-				StackNames?: [...((strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z*]+[a-zA-Z0-9-]*$"#)) | fn.#Fn)] | ((strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z*]+[a-zA-Z0-9-]*$"#)) | fn.#Fn)
+		Properties: ResourceCollectionFilter: *{
+			CloudFormation?: *{
+				StackNames?: [...(*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z*]+[a-zA-Z0-9-]*$"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z*]+[a-zA-Z0-9-]*$"#)) | fn.#Fn)
 			} | fn.#If
 		} | fn.#If
 		DependsOn?:           string | [...string]

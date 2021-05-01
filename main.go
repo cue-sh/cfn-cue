@@ -558,7 +558,7 @@ func processRegion(region string) {
 		importStrings := map[string]bool{}
 		imports := &ast.ImportDecl{
 			Specs: []*ast.ImportSpec{{
-				Path: ast.NewString("github.com/TangoGroup/aws/fn"),
+				Path: ast.NewString("github.com/cue-sh/cfn-cue/aws/fn"),
 			}},
 		}
 
@@ -622,7 +622,7 @@ func processRegion(region string) {
 		ff.Decls = append(ff.Decls, serviceField)
 		b, _ := format.Node(ff, format.Simplify())
 
-		servicePackage := path.Join("github.com/TangoGroup/aws/", shortRegion)
+		servicePackage := path.Join("github.com/cue-sh/cfn-cue/aws/", shortRegion)
 
 		folder := path.Join("cue.mod", "pkg", servicePackage)
 
@@ -672,7 +672,7 @@ func processRegion(region string) {
 		},
 		&ast.ImportDecl{
 			Specs: []*ast.ImportSpec{{
-				Path: ast.NewString("github.com/TangoGroup/aws/fn"),
+				Path: ast.NewString("github.com/cue-sh/cfn-cue/aws/fn"),
 			}},
 		},
 		newField("#ResourceSpecificationVersion", ast.NewString(spec.ResourceSpecificationVersion)),
@@ -771,7 +771,7 @@ func processRegion(region string) {
 	}
 
 	b, _ := format.Node(allServicesFile, format.Simplify())
-	packageFolder := path.Join("cue.mod/pkg/github.com/TangoGroup/aws", shortRegion)
+	packageFolder := path.Join("cue.mod/pkg/github.com/cue-sh/cfn-cue/aws", shortRegion)
 
 	os.MkdirAll(packageFolder, os.ModePerm)
 

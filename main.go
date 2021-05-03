@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -17,6 +18,7 @@ import (
 	"cuelang.org/go/cue/format"
 	"cuelang.org/go/cue/parser"
 	"cuelang.org/go/cue/token"
+	"github.com/google/go-github/v35/github"
 )
 
 func mergeMaps(a, b map[string]bool) map[string]bool {
@@ -507,22 +509,16 @@ func findRecursive(resourcesByService map[string]map[string]Resource, properties
 		for resourceName, resource := range resources {
 			parents := &Parents{}
 			findRecursiveProperties(resource, propertiesByResource[resourceName], parents)
-
-			for propertyName, property := range propertiesByResource[resourceName] {
-				if property.Recursive {
-					fmt.Println("  Recursive Property: " + resourceName + " - " + propertyName)
-				}
-			}
 		}
 	}
 }
 
-func processRegion(region string) {
-
+func processRegion(region, cloudformationSpec string) {
 	shortRegion := strings.ReplaceAll(region, "-", "")
 
-	cloudformationSpec := "https://github.com/aws-cloudformation/cfn-python-lint/raw/master/src/cfnlint/data/CloudSpecs/" + region + ".json"
-	fmt.Println(cloudformationSpec)
+	// cloudformationSpec := "https://github.com/aws-cloudformation/cfn-python-lint/raw/master/src/cfnlint/data/CloudSpecs/" + region + ".json"
+	// fmt.Println(cloudformationSpec)
+	fmt.Println("Generating " + region)
 	data, _ := downloadSpec(cloudformationSpec)
 
 	spec, specErr := processSpec("cfn", data)
@@ -801,46 +797,44 @@ var fullDisjunction = flag.Bool("full", false, "This flag switch cfn-cue to use 
 
 func main() {
 	flag.Parse()
-	fmt.Println("Region: " + *regionFlag)
-	regions := []string{
-		"af-south-1",
-		"ap-east-1",
-		"ap-northeast-1",
-		"ap-northeast-2",
-		"ap-northeast-3",
-		"ap-south-1",
-		"ap-southeast-1",
-		"ap-southeast-2",
-		"ca-central-1",
-		"cn-north-1",
-		"cn-northwest-1",
-		"eu-central-1",
-		"eu-north-1",
-		"eu-south-1",
-		"eu-west-1",
-		"eu-west-2",
-		"eu-west-3",
-		"me-south-1",
-		"sa-east-1",
-		"us-east-1",
-		"us-east-2",
-		"us-gov-east-1",
-		"us-gov-west-1",
-		"us-west-1",
-		"us-west-2",
+
+	client := github.NewClient(nil)
+	master := &github.RepositoryContentGetOptions{Ref: "master"}
+	_, dirContent, _, listErr := client.Repositories.GetContents(context.Background(), "aws-cloudformation", "cfn-python-lint", "src/cfnlint/data/CloudSpecs", master)
+	if listErr != nil {
+		fmt.Println(listErr)
+		os.Exit(1)
 	}
 
-	for _, region := range regions {
+	regions := map[string]string{}
 
-		if *regionFlag != "" {
-			if region != *regionFlag {
-				continue
+	for _, c := range dirContent {
+		filename := c.GetName()
+		if strings.Contains(filename, ".json") {
+			regionName := strings.ReplaceAll(filename, ".json", "")
+			regions[regionName] = c.GetDownloadURL()
+		}
+	}
+
+	if *regionFlag != "" {
+		validRegion := false
+		for regionName := range regions {
+			if *regionFlag == regionName {
+				validRegion = true
 			}
 		}
-		processRegion(region)
-
+		if !validRegion {
+			fmt.Println(*regionFlag + " is not a valid region")
+			os.Exit(1)
+		}
 	}
 
+	for region, downloadURL := range regions {
+		if *regionFlag != "" && region != *regionFlag {
+			continue
+		}
+		processRegion(region, downloadURL)
+	}
 }
 
 func downloadSpec(location string) ([]byte, error) {

@@ -616,7 +616,12 @@ func processRegion(region, cloudformationSpec string) {
 		serviceField := newField("#"+serviceName, &ast.StructLit{Elts: serviceResources})
 
 		ff.Decls = append(ff.Decls, serviceField)
-		b, _ := format.Node(ff, format.Simplify())
+		b, formatErr := format.Node(ff, format.Simplify())
+
+		if formatErr != nil {
+			fmt.Println("Error formatting " + serviceName)
+			continue
+		}
 
 		servicePackage := path.Join("github.com/cue-sh/cfn-cue/aws/", shortRegion)
 
@@ -791,6 +796,60 @@ func processRegion(region, cloudformationSpec string) {
 
 }
 
+func saveRegions(regions []string) {
+	sort.Strings(regions)
+	fmt.Println("Generating Regions")
+	var binaryExpr ast.Expr
+	binaryExpr = ast.NewString(regions[0])
+
+	for _, region := range regions[1:] {
+		binaryExpr = &ast.BinaryExpr{
+			X:  binaryExpr,
+			Op: token.OR,
+			Y:  ast.NewString(region),
+		}
+	}
+
+	file := &ast.File{
+		Filename: "regions.cue",
+		Decls: []ast.Decl{
+			&ast.Package{
+				Name: ast.NewIdent("regions"),
+			},
+			&ast.Field{
+				Label: ast.NewIdent("#Regions"),
+				Value: binaryExpr,
+			},
+		},
+	}
+	bytes, formatErr := format.Node(file, format.Simplify())
+
+	if formatErr != nil {
+		fmt.Println("Error formatting regions")
+		return
+	}
+
+	folder := path.Join("cue.mod", "pkg", "github.com/cue-sh/cfn-cue/aws/regions")
+	os.MkdirAll(folder, os.ModePerm)
+
+	cuefile, err := os.Create(path.Join(folder, file.Filename))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	_, err = cuefile.Write(bytes)
+	if err != nil {
+		fmt.Println(err)
+		cuefile.Close()
+		return
+	}
+	err = cuefile.Close()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
 var regionFlag = flag.String("region", "", "Choose a single region to generate")
 var intrinsicsFlag = flag.Bool("intrinsics", true, "Turn intrinsic functions on/off")
 var fullDisjunction = flag.Bool("full", false, "This flag switch cfn-cue to use full resource disjunctions.")
@@ -835,6 +894,13 @@ func main() {
 		}
 		processRegion(region, downloadURL)
 	}
+
+	regionsArr := make([]string, 0, len(regions))
+
+	for k := range regions {
+		regionsArr = append(regionsArr, k)
+	}
+	saveRegions(regionsArr)
 }
 
 func downloadSpec(location string) ([]byte, error) {

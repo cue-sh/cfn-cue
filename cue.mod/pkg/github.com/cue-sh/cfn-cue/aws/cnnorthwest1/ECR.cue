@@ -9,6 +9,9 @@ import (
 	#Repository: {
 		Type: "AWS::ECR::Repository"
 		Properties: {
+			EncryptionConfiguration?: *{
+				[string]: _
+			} | fn.#Fn
 			ImageScanningConfiguration?: *{
 				[string]: _
 			} | fn.#Fn

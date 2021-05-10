@@ -22,10 +22,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 				AntennaDownlinkDemodDecodeConfig?: *{
 					DecodeConfig?: *{
-						UnvalidatedJson?: *string | fn.#Fn
+						UnvalidatedJSON?: *(=~#"^[{}\[\]:.,"0-9A-z\-_\s]{1,8192}$"#) | fn.#Fn
 					} | fn.#If
 					DemodulationConfig?: *{
-						UnvalidatedJson?: *string | fn.#Fn
+						UnvalidatedJSON?: *(=~#"^[{}\[\]:.,"0-9A-z\-_\s]{1,8192}$"#) | fn.#Fn
 					} | fn.#If
 					SpectrumConfig?: *{
 						Bandwidth?: *{

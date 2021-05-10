@@ -149,7 +149,7 @@ import (
 				ScheduledTime:             *string | fn.#Fn
 			} | fn.#If
 			MonitoringScheduleConfig: *{
-				MonitoringJobDefinition: *{
+				MonitoringJobDefinition?: *{
 					BaselineConfig?: *{
 						ConstraintsResource?: *{
 							S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
@@ -205,7 +205,9 @@ import (
 						MaxRuntimeInSeconds: *(>=1 & <=86400) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				ScheduleConfig?: *{
+				MonitoringJobDefinitionName?: *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
+				MonitoringType?:              *("DataQuality" | "ModelQuality" | "ModelBias" | "ModelExplainability") | fn.#Fn
+				ScheduleConfig?:              *{
 					ScheduleExpression: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 				} | fn.#If
 			} | fn.#If

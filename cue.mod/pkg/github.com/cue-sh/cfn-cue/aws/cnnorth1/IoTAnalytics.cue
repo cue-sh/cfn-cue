@@ -82,7 +82,15 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 				EntryName?: *string | fn.#Fn
 			}] | fn.#If
-			DatasetName?:     *string | fn.#Fn
+			DatasetName?:   *string | fn.#Fn
+			LateDataRules?: *[...{
+				RuleConfiguration: *{
+					DeltaTimeSessionWindowConfiguration?: *{
+						TimeoutInMinutes: *int | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				RuleName?: *string | fn.#Fn
+			}] | fn.#If
 			RetentionPeriod?: *{
 				NumberOfDays: *int | fn.#Fn
 				Unlimited:    *bool | fn.#Fn
@@ -121,6 +129,17 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					RoleArn:    *string | fn.#Fn
 				} | fn.#If
 				ServiceManagedS3?: *{} | fn.#If
+			} | fn.#If
+			FileFormatConfiguration?: *{
+				JsonConfiguration?:    *{} | fn.#If
+				ParquetConfiguration?: *{
+					SchemaDefinition?: *{
+						Columns?: *[...{
+							Name: *string | fn.#Fn
+							Type: *string | fn.#Fn
+						}] | fn.#If
+					} | fn.#If
+				} | fn.#If
 			} | fn.#If
 			RetentionPeriod?: *{
 				NumberOfDays?: *int | fn.#Fn

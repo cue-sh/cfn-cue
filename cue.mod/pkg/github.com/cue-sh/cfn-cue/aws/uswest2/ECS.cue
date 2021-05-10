@@ -149,7 +149,6 @@ import (
 			PropagateTags?:      *("SERVICE" | "TASK_DEFINITION") | fn.#Fn
 			Role?:               *string | fn.#Fn
 			SchedulingStrategy?: *("DAEMON" | "REPLICA") | fn.#Fn
-			ServiceArn?:         *string | fn.#Fn
 			ServiceName?:        *string | fn.#Fn
 			ServiceRegistries?:  *[...{
 				ContainerName?: *string | fn.#Fn

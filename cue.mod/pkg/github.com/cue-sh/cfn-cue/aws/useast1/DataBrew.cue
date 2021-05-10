@@ -100,15 +100,17 @@ import (
 			EncryptionKeyArn?: *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 			EncryptionMode?:   *("SSE-KMS" | "SSE-S3") | fn.#Fn
 			JobSample?:        *{
-				[string]: _
-			} | fn.#Fn
+				Mode?: *("FULL_DATASET" | "CUSTOM_ROWS") | fn.#Fn
+				Size?: *int | fn.#Fn
+			} | fn.#If
 			LogSubscription?: *("ENABLE" | "DISABLE") | fn.#Fn
 			MaxCapacity?:     *int | fn.#Fn
 			MaxRetries?:      *int | fn.#Fn
 			Name:             *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			OutputLocation?:  *{
-				[string]: _
-			} | fn.#Fn
+				Bucket: *string | fn.#Fn
+				Key?:   *string | fn.#Fn
+			} | fn.#If
 			Outputs?: *[...{
 				CompressionFormat?: *("GZIP" | "LZ4" | "SNAPPY" | "BZIP2" | "DEFLATE" | "LZO" | "BROTLI" | "ZSTD" | "ZLIB") | fn.#Fn
 				Format?:            *("CSV" | "JSON" | "PARQUET" | "GLUEPARQUET" | "AVRO" | "ORC" | "XML") | fn.#Fn
@@ -150,8 +152,9 @@ import (
 			RecipeName:  *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			RoleArn:     *string | fn.#Fn
 			Sample?:     *{
-				[string]: _
-			} | fn.#Fn
+				Size?: *int | fn.#Fn
+				Type:  *("FIRST_N" | "LAST_N" | "RANDOM") | fn.#Fn
+			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

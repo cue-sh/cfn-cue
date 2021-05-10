@@ -1162,8 +1162,9 @@ import (
 	#VPCEndpointService: {
 		Type: "AWS::EC2::VPCEndpointService"
 		Properties: {
-			AcceptanceRequired?:     *bool | fn.#Fn
-			NetworkLoadBalancerArns: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			AcceptanceRequired?:      *bool | fn.#Fn
+			GatewayLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			NetworkLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -180,8 +180,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						HeaderName:  *string | fn.#Fn
 						HeaderValue: *string | fn.#Fn
 					}] | fn.#If
-					OriginPath?:     *string | fn.#Fn
-					OriginShield?:   *{} | fn.#If
+					OriginPath?:   *string | fn.#Fn
+					OriginShield?: *{
+						Enabled?:            *bool | fn.#Fn
+						OriginShieldRegion?: *string | fn.#Fn
+					} | fn.#If
 					S3OriginConfig?: *{
 						OriginAccessIdentity?: *string | fn.#Fn
 					} | fn.#If

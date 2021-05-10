@@ -109,6 +109,11 @@ import (
 			Tags?:   *{
 				[string]: _
 			} | fn.#Fn
+			Taints?: *[...{
+				Effect?: *string | fn.#Fn
+				Key?:    *string | fn.#Fn
+				Value?:  *string | fn.#Fn
+			}] | fn.#If
 			Version?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

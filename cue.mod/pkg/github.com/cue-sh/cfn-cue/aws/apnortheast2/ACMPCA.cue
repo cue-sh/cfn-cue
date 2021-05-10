@@ -153,8 +153,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					} | fn.#If
 				}] | fn.#If
 			} | fn.#If
-			KeyAlgorithm:             *string | fn.#Fn
-			RevocationConfiguration?: *{
+			KeyAlgorithm:                *string | fn.#Fn
+			KeyStorageSecurityStandard?: *string | fn.#Fn
+			RevocationConfiguration?:    *{
 				CrlConfiguration?: *{
 					CustomCname?:      *string | fn.#Fn
 					Enabled?:          *bool | fn.#Fn

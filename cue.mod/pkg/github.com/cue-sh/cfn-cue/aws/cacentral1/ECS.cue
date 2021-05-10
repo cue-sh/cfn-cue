@@ -149,7 +149,6 @@ import (
 			PropagateTags?:      *("SERVICE" | "TASK_DEFINITION") | fn.#Fn
 			Role?:               *string | fn.#Fn
 			SchedulingStrategy?: *("DAEMON" | "REPLICA") | fn.#Fn
-			ServiceArn?:         *string | fn.#Fn
 			ServiceName?:        *string | fn.#Fn
 			ServiceRegistries?:  *[...{
 				ContainerName?: *string | fn.#Fn
@@ -292,7 +291,10 @@ import (
 				}] | fn.#If
 				WorkingDirectory?: *string | fn.#Fn
 			}] | fn.#If
-			Cpu?:                   *string | fn.#Fn
+			Cpu?:              *string | fn.#Fn
+			EphemeralStorage?: *{
+				SizeInGiB?: *int | fn.#Fn
+			} | fn.#If
 			ExecutionRoleArn?:      *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 			Family?:                *string | fn.#Fn
 			InferenceAccelerators?: *[...{

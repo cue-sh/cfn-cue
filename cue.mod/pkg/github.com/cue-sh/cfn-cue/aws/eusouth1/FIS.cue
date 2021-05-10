@@ -13,9 +13,13 @@ import (
 				[string]: {
 					ActionId:     *string | fn.#Fn
 					Description?: *string | fn.#Fn
-					Parameters?:  *{} | fn.#If
-					StartAfter?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					Targets?:     *{} | fn.#If
+					Parameters?:  *{
+						[string]: *string | fn.#Fn
+					} | fn.#If
+					StartAfter?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Targets?:    *{
+						[string]: *string | fn.#Fn
+					} | fn.#If
 				}
 			} | fn.#If
 			Description:    *string | fn.#Fn
@@ -34,7 +38,9 @@ import (
 						Values: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					}] | fn.#If
 					ResourceArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					ResourceTags?: *{} | fn.#If
+					ResourceTags?: *{
+						[string]: *string | fn.#Fn
+					} | fn.#If
 					ResourceType:  *string | fn.#Fn
 					SelectionMode: *string | fn.#Fn
 				}

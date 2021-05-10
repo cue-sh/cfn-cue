@@ -19,7 +19,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			ClientAuthentication?: *{
 				Sasl?: *{
-					Scram: *{
+					Iam?: *{
+						Enabled: *bool | fn.#Fn
+					} | fn.#If
+					Scram?: *{
 						Enabled: *bool | fn.#Fn
 					} | fn.#If
 				} | fn.#If

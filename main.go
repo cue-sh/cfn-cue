@@ -541,6 +541,9 @@ func processRegion(region, cloudformationSpec string) {
 	// resourceTypesFields := []ast.Decl{}
 
 	for _, serviceName := range serviceNames {
+		if *serviceFlag != "" && !strings.Contains(*serviceFlag, serviceName) {
+			continue
+		}
 		resources := resourcesByService[serviceName]
 		// fmt.Println(serviceName)
 		ff := &ast.File{
@@ -564,6 +567,9 @@ func processRegion(region, cloudformationSpec string) {
 		sort.Strings(resourceNames)
 
 		for _, resourceName := range resourceNames {
+			if *resourceFlag != "" && resourceName != *resourceFlag {
+				continue
+			}
 			resource := resources[resourceName]
 
 			splits := strings.Split(resourceName, "::")
@@ -598,7 +604,7 @@ func processRegion(region, cloudformationSpec string) {
 
 			serviceResources = append(serviceResources, newField("#"+resourceStr, &ast.StructLit{Elts: resourceElts}))
 
-			resourceTypes = append(resourceTypes, ast.NewSel(ast.NewIdent(serviceName), resourceStr))
+			resourceTypes = append(resourceTypes, ast.NewSel(ast.NewIdent("#"+serviceName), "#"+resourceStr))
 		}
 
 		builtInImports := []string{}
@@ -623,9 +629,9 @@ func processRegion(region, cloudformationSpec string) {
 			continue
 		}
 
-		servicePackage := path.Join("github.com/cue-sh/cfn-cue/aws/", shortRegion)
+		// servicePackage := path.Join("/aws/", shortRegion)
 
-		folder := path.Join("cue.mod", "pkg", servicePackage)
+		folder := path.Join("aws", *prefix, shortRegion)
 
 		os.MkdirAll(folder, os.ModePerm)
 
@@ -743,11 +749,11 @@ func processRegion(region, cloudformationSpec string) {
 				newOptionalField("Conditions", ast.NewStruct(
 					ast.NewList(&ast.BasicLit{Value: "string"}),
 					ast.NewBinExpr(
-						token.OR, ast.NewSel(ast.NewIdent("fn"), "And"),
-						ast.NewSel(ast.NewIdent("fn"), "Equals"),
-						ast.NewSel(ast.NewIdent("fn"), "If"),
-						ast.NewSel(ast.NewIdent("fn"), "Not"),
-						ast.NewSel(ast.NewIdent("fn"), "Or"),
+						token.OR, ast.NewSel(ast.NewIdent("fn"), "#And"),
+						ast.NewSel(ast.NewIdent("fn"), "#Equals"),
+						ast.NewSel(ast.NewIdent("fn"), "#If"),
+						ast.NewSel(ast.NewIdent("fn"), "#Not"),
+						ast.NewSel(ast.NewIdent("fn"), "#Or"),
 					),
 				)),
 				templateParameters(),
@@ -772,7 +778,7 @@ func processRegion(region, cloudformationSpec string) {
 	}
 
 	b, _ := format.Node(allServicesFile, format.Simplify())
-	packageFolder := path.Join("cue.mod/pkg/github.com/cue-sh/cfn-cue/aws", shortRegion)
+	packageFolder := path.Join("aws", *prefix, shortRegion)
 
 	os.MkdirAll(packageFolder, os.ModePerm)
 
@@ -829,7 +835,7 @@ func saveRegions(regions []string) {
 		return
 	}
 
-	folder := path.Join("cue.mod", "pkg", "github.com/cue-sh/cfn-cue/aws/regions")
+	folder := path.Join("aws", "regions")
 	os.MkdirAll(folder, os.ModePerm)
 
 	cuefile, err := os.Create(path.Join(folder, file.Filename))
@@ -853,6 +859,9 @@ func saveRegions(regions []string) {
 var regionFlag = flag.String("region", "", "Choose a single region to generate")
 var intrinsicsFlag = flag.Bool("intrinsics", true, "Turn intrinsic functions on/off")
 var fullDisjunction = flag.Bool("full", false, "This flag switch cfn-cue to use full resource disjunctions.")
+var serviceFlag = flag.String("service", "", "Only process a single service")
+var resourceFlag = flag.String("resource", "", "Only this resource")
+var prefix = flag.String("prefix", "", "this prefix")
 
 func main() {
 	flag.Parse()

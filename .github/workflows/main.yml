@@ -50,7 +50,7 @@ jobs:
       - name: Get info 
         run: |
           curl -L https://github.com/cuelang/cue/releases/download/v0.3.2/cue_v0.3.2_linux_amd64.tar.gz | tar -zxvf - cue; ls -al
-          CommitMessage=$(cat cue.mod/pkg/github.com/cue-sh/cfn-cue/aws/uswest2/uswest2.cue | grep ResourceSpecificationVersion)
+          CommitMessage=$(cat aws/uswest2/uswest2.cue | grep ResourceSpecificationVersion)
           CFN_VERSION=$(echo $CommitMessage | ./cue eval - -e "#ResourceSpecificationVersion" --out text)
           CUE_VERSION=$(go list -f "{{.Version}}" -m cuelang.org/go)
           echo "CommitMessage=$CommitMessage" && echo "CFN_VERSION=$CFN_VERSION" && echo "CUE_VERSION=$CUE_VERSION"

@@ -12,6 +12,7 @@ import (
 			AutoScalingGroupProvider: *{
 				AutoScalingGroupArn: *string | fn.#Fn
 				ManagedScaling?:     *{
+					InstanceWarmupPeriod?:   *int | fn.#Fn
 					MaximumScalingStepSize?: *int | fn.#Fn
 					MinimumScalingStepSize?: *int | fn.#Fn
 					Status?:                 *("DISABLED" | "ENABLED") | fn.#Fn

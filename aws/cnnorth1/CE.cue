@@ -1,4 +1,4 @@
-package apnortheast2
+package cnnorth1
 
 import (
 	"github.com/cue-sh/cfn-cue/aws/fn"

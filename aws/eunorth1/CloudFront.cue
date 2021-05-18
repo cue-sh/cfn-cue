@@ -209,6 +209,26 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Function: {
+		Type: "AWS::CloudFront::Function"
+		Properties: {
+			AutoPublish?:    *bool | fn.#Fn
+			FunctionCode?:   *string | fn.#Fn
+			FunctionConfig?: *{
+				Comment: *string | fn.#Fn
+				Runtime: *string | fn.#Fn
+			} | fn.#If
+			FunctionMetadata?: *{
+				FunctionARN: *string | fn.#Fn
+			} | fn.#If
+			Name: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#KeyGroup: {
 		Type: "AWS::CloudFront::KeyGroup"
 		Properties: KeyGroupConfig: *{

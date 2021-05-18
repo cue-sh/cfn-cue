@@ -116,6 +116,7 @@ import (
 					} | fn.#If
 					ExpirationDate?:                    *time.Time | fn.#Fn
 					ExpirationInDays?:                  *int | fn.#Fn
+					ExpiredObjectDeleteMarker?:         *bool | fn.#Fn
 					Id?:                                *string | fn.#Fn
 					NoncurrentVersionExpirationInDays?: *int | fn.#Fn
 					NoncurrentVersionTransition?:       *{

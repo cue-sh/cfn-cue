@@ -53,8 +53,12 @@ import (
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			WorkGroupConfiguration?: *{
-				BytesScannedCutoffPerQuery?:      *int | fn.#Fn
-				EnforceWorkGroupConfiguration?:   *bool | fn.#Fn
+				BytesScannedCutoffPerQuery?:    *int | fn.#Fn
+				EnforceWorkGroupConfiguration?: *bool | fn.#Fn
+				EngineVersion?:                 *{
+					EffectiveEngineVersion?: *string | fn.#Fn
+					SelectedEngineVersion?:  *string | fn.#Fn
+				} | fn.#If
 				PublishCloudWatchMetricsEnabled?: *bool | fn.#Fn
 				RequesterPaysEnabled?:            *bool | fn.#Fn
 				ResultConfiguration?:             *{
@@ -66,8 +70,12 @@ import (
 				} | fn.#If
 			} | fn.#If
 			WorkGroupConfigurationUpdates?: *{
-				BytesScannedCutoffPerQuery?:       *int | fn.#Fn
-				EnforceWorkGroupConfiguration?:    *bool | fn.#Fn
+				BytesScannedCutoffPerQuery?:    *int | fn.#Fn
+				EnforceWorkGroupConfiguration?: *bool | fn.#Fn
+				EngineVersion?:                 *{
+					EffectiveEngineVersion?: *string | fn.#Fn
+					SelectedEngineVersion?:  *string | fn.#Fn
+				} | fn.#If
 				PublishCloudWatchMetricsEnabled?:  *bool | fn.#Fn
 				RemoveBytesScannedCutoffPerQuery?: *bool | fn.#Fn
 				RequesterPaysEnabled?:             *bool | fn.#Fn

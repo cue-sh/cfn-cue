@@ -118,6 +118,7 @@ import (
 				Enabled?:                      *bool | fn.#Fn
 				RetainStacksOnAccountRemoval?: *bool | fn.#Fn
 			} | fn.#If
+			CallAs?:               *("SELF" | "DELEGATED_ADMIN") | fn.#Fn
 			Capabilities?:         [...(*("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND") | fn.#Fn)] | (*("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND") | fn.#Fn)
 			Description?:          *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 			ExecutionRoleName?:    *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn

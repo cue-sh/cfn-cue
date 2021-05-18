@@ -360,14 +360,14 @@ import (
 				VersionNumber?: *(>=1 & <=100000) | fn.#Fn
 			} | fn.#If
 			Compatibility: *("NONE" | "DISABLED" | "BACKWARD" | "BACKWARD_ALL" | "FORWARD" | "FORWARD_ALL" | "FULL" | "FULL_ALL") | fn.#Fn
-			DataFormat:    *("AVRO") | fn.#Fn
+			DataFormat:    *("AVRO" | "JSON") | fn.#Fn
 			Description?:  *string | fn.#Fn
 			Name:          *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			Registry?:     *{
 				Arn?:  *(=~#"arn:(aws|aws-us-gov|aws-cn):glue:.*"#) | fn.#Fn
 				Name?: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			} | fn.#If
-			SchemaDefinition: *string | fn.#Fn
+			SchemaDefinition: *(strings.MinRunes(1) & strings.MaxRunes(170000)) | fn.#Fn
 			Tags?:            *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
@@ -387,7 +387,7 @@ import (
 				SchemaArn?:    *(=~#"arn:(aws|aws-us-gov|aws-cn):glue:.*"#) | fn.#Fn
 				SchemaName?:   *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			} | fn.#If
-			SchemaDefinition: *string | fn.#Fn
+			SchemaDefinition: *(strings.MinRunes(1) & strings.MaxRunes(170000)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

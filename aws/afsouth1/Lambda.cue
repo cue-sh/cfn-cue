@@ -65,7 +65,6 @@ import (
 			MaximumRecordAgeInSeconds?:      *(>=-1 & <=604800) | fn.#Fn
 			MaximumRetryAttempts?:           *(>=-1 & <=10000) | fn.#Fn
 			ParallelizationFactor?:          *(>=1 & <=10) | fn.#Fn
-			PartialBatchResponse?:           *bool | fn.#Fn
 			Queues?:                         [...(*(strings.MinRunes(1) & strings.MaxRunes(1000) & (=~#"[\s\S]*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1000) & (=~#"[\s\S]*"#)) | fn.#Fn)
 			SelfManagedEventSource?:         *{
 				Endpoints?: *{

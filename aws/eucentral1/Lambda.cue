@@ -87,7 +87,6 @@ import (
 			MaximumRecordAgeInSeconds?:      *(>=-1 & <=604800) | fn.#Fn
 			MaximumRetryAttempts?:           *(>=-1 & <=10000) | fn.#Fn
 			ParallelizationFactor?:          *(>=1 & <=10) | fn.#Fn
-			PartialBatchResponse?:           *bool | fn.#Fn
 			Queues?:                         [...(*(strings.MinRunes(1) & strings.MaxRunes(1000) & (=~#"[\s\S]*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1000) & (=~#"[\s\S]*"#)) | fn.#Fn)
 			SelfManagedEventSource?:         *{
 				Endpoints?: *{
@@ -169,8 +168,9 @@ import (
 	#LayerVersion: {
 		Type: "AWS::Lambda::LayerVersion"
 		Properties: {
-			CompatibleRuntimes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Content:             *{
+			CompatibleArchitectures?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			CompatibleRuntimes?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Content:                  *{
 				S3Bucket:         *string | fn.#Fn
 				S3Key:            *string | fn.#Fn
 				S3ObjectVersion?: *string | fn.#Fn

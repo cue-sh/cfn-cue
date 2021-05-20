@@ -1,4 +1,4 @@
-import aws "github.com/TangoGroup/aws/uswest2"
+import aws "github.com/cue-sh/cfn-cue/aws/uswest2"
 
 template: aws.#Template & {
 	Resources: S3Bucket1: aws.#S3.#Bucket & {

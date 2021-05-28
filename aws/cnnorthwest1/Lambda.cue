@@ -70,7 +70,6 @@ import (
 			MaximumRecordAgeInSeconds?:      *(>=-1 & <=604800) | fn.#Fn
 			MaximumRetryAttempts?:           *(>=-1 & <=10000) | fn.#Fn
 			ParallelizationFactor?:          *(>=1 & <=10) | fn.#Fn
-			PartialBatchResponse?:           *bool | fn.#Fn
 			Queues?:                         [...(*(strings.MinRunes(1) & strings.MaxRunes(1000) & (=~#"[\s\S]*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1000) & (=~#"[\s\S]*"#)) | fn.#Fn)
 			SelfManagedEventSource?:         *{
 				Endpoints?: *{
@@ -117,6 +116,7 @@ import (
 			}] | fn.#If
 			FunctionName?: *string | fn.#Fn
 			Handler?:      *(=~#"^[^\s]+$"#) | fn.#Fn
+			Id?:           *string | fn.#Fn
 			ImageConfig?:  *{
 				Command?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				EntryPoint?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -138,8 +138,8 @@ import (
 				Mode?: *("Active" | "PassThrough") | fn.#Fn
 			} | fn.#If
 			VpcConfig?: *{
-				SecurityGroupIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				SubnetIds:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SubnetIds?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]

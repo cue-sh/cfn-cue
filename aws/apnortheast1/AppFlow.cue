@@ -231,6 +231,16 @@ import (
 							} | fn.#If
 						} | fn.#If
 					} | fn.#If
+					Zendesk?: *{
+						ErrorHandlingConfig?: *{
+							BucketName?:       *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
+							BucketPrefix?:     *string | fn.#Fn
+							FailOnFirstError?: *bool | fn.#Fn
+						} | fn.#If
+						IdFieldNames?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						Object:              *(=~#"\S+"#) | fn.#Fn
+						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE") | fn.#Fn
+					} | fn.#If
 				} | fn.#If
 			}] | fn.#If
 			FlowName:         *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[a-zA-Z0-9][\w!@#.-]+"#)) | fn.#Fn

@@ -14,6 +14,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				AutomaticBackupRetentionDays?:  *int | fn.#Fn
 				CopyTagsToBackups?:             *bool | fn.#Fn
 				DailyAutomaticBackupStartTime?: *string | fn.#Fn
+				DataCompressionType?:           *string | fn.#Fn
 				DeploymentType?:                *string | fn.#Fn
 				DriveCacheType?:                *string | fn.#Fn
 				ExportPath?:                    *string | fn.#Fn

@@ -161,6 +161,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					Enabled?:          *bool | fn.#Fn
 					ExpirationInDays?: *int | fn.#Fn
 					S3BucketName?:     *string | fn.#Fn
+					S3ObjectAcl?:      *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			SigningAlgorithm: *string | fn.#Fn

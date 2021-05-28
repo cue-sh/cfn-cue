@@ -9,6 +9,9 @@ import (
 	#Detector: {
 		Type: "AWS::FraudDetector::Detector"
 		Properties: {
+			AssociatedModels?: *[...{
+				Arn?: *string | fn.#Fn
+			}] | fn.#If
 			Description?:           *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 			DetectorId:             *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[0-9a-z_-]+$"#)) | fn.#Fn
 			DetectorVersionStatus?: *("DRAFT" | "ACTIVE") | fn.#Fn

@@ -116,6 +116,7 @@ import (
 			}] | fn.#If
 			FunctionName?: *string | fn.#Fn
 			Handler?:      *(=~#"^[^\s]+$"#) | fn.#Fn
+			Id?:           *string | fn.#Fn
 			ImageConfig?:  *{
 				Command?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				EntryPoint?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -137,8 +138,8 @@ import (
 				Mode?: *("Active" | "PassThrough") | fn.#Fn
 			} | fn.#If
 			VpcConfig?: *{
-				SecurityGroupIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				SubnetIds:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SubnetIds?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]

@@ -789,6 +789,7 @@ import (
 			DefaultRouteTablePropagation?: *("disable" | "enable") | fn.#Fn
 			Description?:                  *string | fn.#Fn
 			DnsSupport?:                   *("disable" | "enable") | fn.#Fn
+			MulticastSupport?:             *string | fn.#Fn
 			Tags?:                         *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
@@ -811,6 +812,24 @@ import (
 			}] | fn.#If
 			TransitGatewayId: *string | fn.#Fn
 			VpcId:            *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayPeeringAttachment: {
+		Type: "AWS::EC2::TransitGatewayPeeringAttachment"
+		Properties: {
+			PeerAccountId:        *string | fn.#Fn
+			PeerRegion:           *string | fn.#Fn
+			PeerTransitGatewayId: *string | fn.#Fn
+			Tags?:                *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -37,11 +37,12 @@ import (
 		Type: "AWS::ECR::Repository"
 		Properties: {
 			EncryptionConfiguration?: *{
-				[string]: _
-			} | fn.#Fn
+				EncryptionType: *("AES256" | "KMS") | fn.#Fn
+				KmsKey?:        *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+			} | fn.#If
 			ImageScanningConfiguration?: *{
-				[string]: _
-			} | fn.#Fn
+				ScanOnPush?: *bool | fn.#Fn
+			} | fn.#If
 			ImageTagMutability?: *("MUTABLE" | "IMMUTABLE") | fn.#Fn
 			LifecyclePolicy?:    *{
 				LifecyclePolicyText?: *(strings.MinRunes(100) & strings.MaxRunes(30720)) | fn.#Fn

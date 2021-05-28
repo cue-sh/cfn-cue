@@ -15,10 +15,11 @@ import (
 				InsightsEnabled?:      *bool | fn.#Fn
 				NotificationsEnabled?: *bool | fn.#Fn
 			} | fn.#If
-			Tags?: *[...{
-				Key:   *string | fn.#Fn
-				Value: *string | fn.#Fn
-			}] | fn.#If
+			Tags?: [...(*{
+				[string]: _
+			} | fn.#Fn)] | (*{
+				[string]: _
+			} | fn.#Fn)
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -84,10 +85,11 @@ import (
 				ServiceType?:   *string | fn.#Fn
 				URLPath?:       *string | fn.#Fn
 			} | fn.#If
-			Tags?: *[...{
-				Key:   *string | fn.#Fn
-				Value: *string | fn.#Fn
-			}] | fn.#If
+			Tags?: [...(*{
+				[string]: _
+			} | fn.#Fn)] | (*{
+				[string]: _
+			} | fn.#Fn)
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

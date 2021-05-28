@@ -37,6 +37,31 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ConfigurationAggregator: {
+		Type: "AWS::Config::ConfigurationAggregator"
+		Properties: {
+			AccountAggregationSources?: *[...{
+				AccountIds:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				AllAwsRegions?: *bool | fn.#Fn
+				AwsRegions?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			}] | fn.#If
+			ConfigurationAggregatorName?:   *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[\w\-]+"#)) | fn.#Fn
+			OrganizationAggregationSource?: *{
+				AllAwsRegions?: *bool | fn.#Fn
+				AwsRegions?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				RoleArn:        *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ConfigurationRecorder: {
 		Type: "AWS::Config::ConfigurationRecorder"
 		Properties: {

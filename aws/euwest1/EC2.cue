@@ -1301,6 +1301,24 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#TransitGatewayPeeringAttachment: {
+		Type: "AWS::EC2::TransitGatewayPeeringAttachment"
+		Properties: {
+			PeerAccountId:        *string | fn.#Fn
+			PeerRegion:           *string | fn.#Fn
+			PeerTransitGatewayId: *string | fn.#Fn
+			Tags?:                *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#TransitGatewayRoute: {
 		Type: "AWS::EC2::TransitGatewayRoute"
 		Properties: {

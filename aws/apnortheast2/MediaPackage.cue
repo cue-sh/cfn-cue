@@ -32,9 +32,15 @@ import (
 	#Channel: {
 		Type: "AWS::MediaPackage::Channel"
 		Properties: {
-			Description?: *string | fn.#Fn
-			Id:           *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A[0-9a-zA-Z-_]+\Z"#)) | fn.#Fn
-			Tags?:        *[...{
+			Description?:      *string | fn.#Fn
+			EgressAccessLogs?: *{
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"\A\/aws\/MediaPackage\/[0-9a-zA-Z-_\/\.#]+\Z"#)) | fn.#Fn
+			} | fn.#If
+			Id:                 *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A[0-9a-zA-Z-_]+\Z"#)) | fn.#Fn
+			IngressAccessLogs?: *{
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"\A\/aws\/MediaPackage\/[0-9a-zA-Z-_\/\.#]+\Z"#)) | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -55,8 +61,9 @@ import (
 			ChannelId:    *string | fn.#Fn
 			CmafPackage?: *{
 				Encryption?: *{
-					KeyRotationIntervalSeconds?: *int | fn.#Fn
-					SpekeKeyProvider:            *{
+					ConstantInitializationVector?: *(strings.MinRunes(32) & strings.MaxRunes(32) & (=~#"\A[0-9a-fA-F]+\Z"#)) | fn.#Fn
+					KeyRotationIntervalSeconds?:   *int | fn.#Fn
+					SpekeKeyProvider:              *{
 						CertificateArn?: *string | fn.#Fn
 						ResourceId:      *string | fn.#Fn
 						RoleArn:         *string | fn.#Fn
@@ -111,6 +118,8 @@ import (
 					StreamOrder?:           *("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 				} | fn.#If
 				SuggestedPresentationDelaySeconds?: *int | fn.#Fn
+				UtcTiming?:                         *("HTTP-ISO" | "HTTP-HEAD" | "NONE") | fn.#Fn
+				UtcTimingUri?:                      *string | fn.#Fn
 			} | fn.#If
 			Description?: *string | fn.#Fn
 			HlsPackage?:  *{
@@ -200,7 +209,8 @@ import (
 						StreamOrder?:           *("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 					} | fn.#If
 				}] | fn.#If
-				SegmentDurationSeconds?: *int | fn.#Fn
+				IncludeEncoderConfigurationInSegments?: *bool | fn.#Fn
+				SegmentDurationSeconds?:                *int | fn.#Fn
 			} | fn.#If
 			DashPackage?: *{
 				DashManifests: *[...{
@@ -221,9 +231,10 @@ import (
 						Url:       *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				PeriodTriggers?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				SegmentDurationSeconds?: *int | fn.#Fn
-				SegmentTemplateFormat?:  *("NUMBER_WITH_TIMELINE" | "TIME_WITH_TIMELINE" | "NUMBER_WITH_DURATION") | fn.#Fn
+				IncludeEncoderConfigurationInSegments?: *bool | fn.#Fn
+				PeriodTriggers?:                        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SegmentDurationSeconds?:                *int | fn.#Fn
+				SegmentTemplateFormat?:                 *("NUMBER_WITH_TIMELINE" | "TIME_WITH_TIMELINE" | "NUMBER_WITH_DURATION") | fn.#Fn
 			} | fn.#If
 			HlsPackage?: *{
 				Encryption?: *{
@@ -287,6 +298,9 @@ import (
 			Authorization?: *{
 				CdnIdentifierSecret: *string | fn.#Fn
 				SecretsRoleArn:      *string | fn.#Fn
+			} | fn.#If
+			EgressAccessLogs?: *{
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"\A\/aws\/MediaPackage\/[0-9a-zA-Z-_\/\.#]+\Z"#)) | fn.#Fn
 			} | fn.#If
 			Id:    *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A[0-9a-zA-Z-_]+\Z"#)) | fn.#Fn
 			Tags?: *[...{

@@ -34,11 +34,11 @@ import (
 		Properties: {
 			Description?:      *string | fn.#Fn
 			EgressAccessLogs?: *{
-				LogGroupName?: *string | fn.#Fn
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"\A\/aws\/MediaPackage\/[0-9a-zA-Z-_\/\.#]+\Z"#)) | fn.#Fn
 			} | fn.#If
 			Id:                 *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A[0-9a-zA-Z-_]+\Z"#)) | fn.#Fn
 			IngressAccessLogs?: *{
-				LogGroupName?: *string | fn.#Fn
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"\A\/aws\/MediaPackage\/[0-9a-zA-Z-_\/\.#]+\Z"#)) | fn.#Fn
 			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
@@ -61,7 +61,7 @@ import (
 			ChannelId:    *string | fn.#Fn
 			CmafPackage?: *{
 				Encryption?: *{
-					ConstantInitializationVector?: *string | fn.#Fn
+					ConstantInitializationVector?: *(strings.MinRunes(32) & strings.MaxRunes(32) & (=~#"\A[0-9a-fA-F]+\Z"#)) | fn.#Fn
 					KeyRotationIntervalSeconds?:   *int | fn.#Fn
 					SpekeKeyProvider:              *{
 						CertificateArn?: *string | fn.#Fn
@@ -118,7 +118,7 @@ import (
 					StreamOrder?:           *("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 				} | fn.#If
 				SuggestedPresentationDelaySeconds?: *int | fn.#Fn
-				UtcTiming?:                         *string | fn.#Fn
+				UtcTiming?:                         *("HTTP-ISO" | "HTTP-HEAD" | "NONE") | fn.#Fn
 				UtcTimingUri?:                      *string | fn.#Fn
 			} | fn.#If
 			Description?: *string | fn.#Fn
@@ -300,7 +300,7 @@ import (
 				SecretsRoleArn:      *string | fn.#Fn
 			} | fn.#If
 			EgressAccessLogs?: *{
-				LogGroupName?: *string | fn.#Fn
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"\A\/aws\/MediaPackage\/[0-9a-zA-Z-_\/\.#]+\Z"#)) | fn.#Fn
 			} | fn.#If
 			Id:    *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A[0-9a-zA-Z-_]+\Z"#)) | fn.#Fn
 			Tags?: *[...{

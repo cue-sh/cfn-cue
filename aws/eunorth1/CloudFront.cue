@@ -219,7 +219,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Runtime: *string | fn.#Fn
 			} | fn.#If
 			FunctionMetadata?: *{
-				FunctionARN: *string | fn.#Fn
+				FunctionARN?: *string | fn.#Fn
 			} | fn.#If
 			Name: *string | fn.#Fn
 		}

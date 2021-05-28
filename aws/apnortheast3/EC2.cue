@@ -914,6 +914,23 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#TransitGatewayAttachment: {
+		Type: "AWS::EC2::TransitGatewayAttachment"
+		Properties: {
+			SubnetIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:     *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+			VpcId:            *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#TransitGatewayRoute: {
 		Type: "AWS::EC2::TransitGatewayRoute"
 		Properties: {

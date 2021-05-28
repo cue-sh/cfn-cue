@@ -1,6 +1,9 @@
 package usgoveast1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #CloudFormation: {
 	#CustomResource: {
@@ -45,6 +48,56 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			}] | fn.#If
 			TemplateURL:       *string | fn.#Fn
 			TimeoutInMinutes?: *int | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#StackSet: {
+		Type: "AWS::CloudFormation::StackSet"
+		Properties: {
+			AdministrationRoleARN?: *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+			AutoDeployment?:        *{
+				Enabled?:                      *bool | fn.#Fn
+				RetainStacksOnAccountRemoval?: *bool | fn.#Fn
+			} | fn.#If
+			CallAs?:               *("SELF" | "DELEGATED_ADMIN") | fn.#Fn
+			Capabilities?:         [...(*("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND") | fn.#Fn)] | (*("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND") | fn.#Fn)
+			Description?:          *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			ExecutionRoleName?:    *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			OperationPreferences?: *{
+				FailureToleranceCount?:      *int | fn.#Fn
+				FailureTolerancePercentage?: *int | fn.#Fn
+				MaxConcurrentCount?:         *int | fn.#Fn
+				MaxConcurrentPercentage?:    *int | fn.#Fn
+				RegionConcurrencyType?:      *("SEQUENTIAL" | "PARALLEL") | fn.#Fn
+				RegionOrder?:                [...(*(=~#"^[a-zA-Z0-9-]{1,128}$"#) | fn.#Fn)] | (*(=~#"^[a-zA-Z0-9-]{1,128}$"#) | fn.#Fn)
+			} | fn.#If
+			Parameters?: *[...{
+				ParameterKey:   *string | fn.#Fn
+				ParameterValue: *string | fn.#Fn
+			}] | fn.#If
+			PermissionModel:      *("SERVICE_MANAGED" | "SELF_MANAGED") | fn.#Fn
+			StackInstancesGroup?: *[...{
+				DeploymentTargets: *{
+					Accounts?:              [...(*(=~#"^[0-9]{12}$"#) | fn.#Fn)] | (*(=~#"^[0-9]{12}$"#) | fn.#Fn)
+					OrganizationalUnitIds?: [...(*(=~#"^(ou-[a-z0-9]{4,32}-[a-z0-9]{8,32}|r-[a-z0-9]{4,32})$"#) | fn.#Fn)] | (*(=~#"^(ou-[a-z0-9]{4,32}-[a-z0-9]{8,32}|r-[a-z0-9]{4,32})$"#) | fn.#Fn)
+				} | fn.#If
+				ParameterOverrides?: *[...{
+					ParameterKey:   *string | fn.#Fn
+					ParameterValue: *string | fn.#Fn
+				}] | fn.#If
+				Regions: [...(*(=~#"^[a-zA-Z0-9-]{1,128}$"#) | fn.#Fn)] | (*(=~#"^[a-zA-Z0-9-]{1,128}$"#) | fn.#Fn)
+			}] | fn.#If
+			StackSetName: *(=~#"^[a-zA-Z][a-zA-Z0-9\-]{0,127}$"#) | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TemplateBody?: *(strings.MinRunes(1) & strings.MaxRunes(51200)) | fn.#Fn
+			TemplateURL?:  *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

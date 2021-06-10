@@ -6,16 +6,17 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#Cluster: {
 		Type: "AWS::DAX::Cluster"
 		Properties: {
-			AvailabilityZones?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			ClusterName?:                *string | fn.#Fn
-			Description?:                *string | fn.#Fn
-			IAMRoleARN:                  *string | fn.#Fn
-			NodeType:                    *string | fn.#Fn
-			NotificationTopicARN?:       *string | fn.#Fn
-			ParameterGroupName?:         *string | fn.#Fn
-			PreferredMaintenanceWindow?: *string | fn.#Fn
-			ReplicationFactor:           *int | fn.#Fn
-			SSESpecification?:           *{
+			AvailabilityZones?:             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			ClusterEndpointEncryptionType?: *string | fn.#Fn
+			ClusterName?:                   *string | fn.#Fn
+			Description?:                   *string | fn.#Fn
+			IAMRoleARN:                     *string | fn.#Fn
+			NodeType:                       *string | fn.#Fn
+			NotificationTopicARN?:          *string | fn.#Fn
+			ParameterGroupName?:            *string | fn.#Fn
+			PreferredMaintenanceWindow?:    *string | fn.#Fn
+			ReplicationFactor:              *int | fn.#Fn
+			SSESpecification?:              *{
 				SSEEnabled?: *bool | fn.#Fn
 			} | fn.#If
 			SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)

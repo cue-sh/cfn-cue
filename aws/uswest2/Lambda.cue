@@ -110,7 +110,8 @@ import (
 	#Function: {
 		Type: "AWS::Lambda::Function"
 		Properties: {
-			Code: *{
+			Architectures?: [...(*("x86_64" | "arm64") | fn.#Fn)] | (*("x86_64" | "arm64") | fn.#Fn)
+			Code:           *{
 				ImageUri?:        *string | fn.#Fn
 				S3Bucket?:        *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[0-9A-Za-z\.\-_]*(?<!\.)$"#)) | fn.#Fn
 				S3Key?:           *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
@@ -133,7 +134,6 @@ import (
 			}] | fn.#If
 			FunctionName?: *string | fn.#Fn
 			Handler?:      *(=~#"^[^\s]+$"#) | fn.#Fn
-			Id?:           *string | fn.#Fn
 			ImageConfig?:  *{
 				Command?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				EntryPoint?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)

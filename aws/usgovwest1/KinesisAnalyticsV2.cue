@@ -88,8 +88,26 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						NamePrefix: *string | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
+				ZeppelinApplicationConfiguration?: *{
+					CatalogConfiguration?: *{
+						GlueDataCatalogConfiguration?: *{
+							DatabaseARN?: *string | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+					CustomArtifactsConfiguration?:     *{} | fn.#If
+					DeployAsApplicationConfiguration?: *{
+						S3ContentLocation: *{
+							BasePath:  *string | fn.#Fn
+							BucketARN: *string | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+					MonitoringConfiguration?: *{
+						LogLevel?: *string | fn.#Fn
+					} | fn.#If
+				} | fn.#If
 			} | fn.#If
 			ApplicationDescription?: *string | fn.#Fn
+			ApplicationMode?:        *string | fn.#Fn
 			ApplicationName?:        *string | fn.#Fn
 			RuntimeEnvironment:      *string | fn.#Fn
 			ServiceExecutionRole:    *string | fn.#Fn

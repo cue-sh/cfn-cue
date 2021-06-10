@@ -70,7 +70,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			AuthorizerType:                  *string | fn.#Fn
 			AuthorizerUri?:                  *string | fn.#Fn
 			EnableSimpleResponses?:          *bool | fn.#Fn
-			IdentitySource:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			IdentitySource?:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			IdentityValidationExpression?:   *string | fn.#Fn
 			JwtConfiguration?:               *{
 				Audience?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)

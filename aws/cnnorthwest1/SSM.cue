@@ -26,7 +26,9 @@ import (
 				} | fn.#If
 			} | fn.#If
 			Parameters?: *{
-				[string]: ParameterValues: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				[string]: *{
+					[string]: _
+				} | fn.#Fn
 			} | fn.#If
 			ScheduleExpression?: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			SyncCompliance?:     *("AUTO" | "MANUAL") | fn.#Fn

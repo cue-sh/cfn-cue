@@ -6,7 +6,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#EnvironmentEC2: {
 		Type: "AWS::Cloud9::EnvironmentEC2"
 		Properties: {
-			AutomaticStopTimeMinutes?: *int | fn.#Fn
+			AutomaticStopTimeMinutes?: *(>=0 & <=20160) | fn.#Fn
 			ConnectionType?:           *string | fn.#Fn
 			Description?:              *string | fn.#Fn
 			ImageId?:                  *string | fn.#Fn

@@ -867,7 +867,7 @@ func main() {
 	flag.Parse()
 
 	client := github.NewClient(nil)
-	master := &github.RepositoryContentGetOptions{Ref: "master"}
+	master := &github.RepositoryContentGetOptions{Ref: "main"}
 	_, dirContent, _, listErr := client.Repositories.GetContents(context.Background(), "aws-cloudformation", "cfn-python-lint", "src/cfnlint/data/CloudSpecs", master)
 	if listErr != nil {
 		fmt.Println(listErr)

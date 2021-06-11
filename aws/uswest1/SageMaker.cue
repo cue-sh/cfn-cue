@@ -64,6 +64,10 @@ import (
 				RepositoryUrl: *string | fn.#Fn
 				SecretArn?:    *string | fn.#Fn
 			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

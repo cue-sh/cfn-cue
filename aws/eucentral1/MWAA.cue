@@ -55,6 +55,7 @@ import (
 			PluginsS3Path?:                *(=~#".*"#) | fn.#Fn
 			RequirementsS3ObjectVersion?:  *string | fn.#Fn
 			RequirementsS3Path?:           *(=~#".*"#) | fn.#Fn
+			Schedulers?:                   *int | fn.#Fn
 			SourceBucketArn?:              *(strings.MinRunes(1) & strings.MaxRunes(1224) & (=~#"^arn:aws(-[a-z]+)?:s3:::[a-z0-9.\-]+$"#)) | fn.#Fn
 			Tags?:                         *{} | fn.#If
 			WebserverAccessMode?:          *("PRIVATE_ONLY" | "PUBLIC_ONLY") | fn.#Fn

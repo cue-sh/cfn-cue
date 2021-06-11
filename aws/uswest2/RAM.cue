@@ -8,6 +8,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			AllowExternalPrincipals?: *bool | fn.#Fn
 			Name:                     *string | fn.#Fn
+			PermissionArns?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			Principals?:              [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			ResourceArns?:            [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			Tags?:                    *[...{

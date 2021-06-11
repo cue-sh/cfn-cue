@@ -116,7 +116,6 @@ import (
 			}] | fn.#If
 			FunctionName?: *string | fn.#Fn
 			Handler?:      *(=~#"^[^\s]+$"#) | fn.#Fn
-			Id?:           *string | fn.#Fn
 			ImageConfig?:  *{
 				Command?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				EntryPoint?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -151,9 +150,8 @@ import (
 	#LayerVersion: {
 		Type: "AWS::Lambda::LayerVersion"
 		Properties: {
-			CompatibleArchitectures?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			CompatibleRuntimes?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Content:                  *{
+			CompatibleRuntimes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Content:             *{
 				S3Bucket:         *string | fn.#Fn
 				S3Key:            *string | fn.#Fn
 				S3ObjectVersion?: *string | fn.#Fn

@@ -15,11 +15,13 @@ import (
 				DurationInMinutes: *int | fn.#Fn
 				Targets?:          *[...{
 					ChannelTargetInfo?: *{
-						[string]: _
-					} | fn.#Fn
+						ChannelId:              *string | fn.#Fn
+						RetryIntervalInMinutes: *int | fn.#Fn
+					} | fn.#If
 					ContactTargetInfo?: *{
-						[string]: _
-					} | fn.#Fn
+						ContactId:   *string | fn.#Fn
+						IsEssential: *bool | fn.#Fn
+					} | fn.#If
 				}] | fn.#If
 			}] | fn.#If
 			Type: *("PERSONAL" | "CUSTOM" | "SERVICE" | "ESCALATION") | fn.#Fn

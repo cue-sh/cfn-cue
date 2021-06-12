@@ -279,9 +279,10 @@ import (
 	#NatGateway: {
 		Type: "AWS::EC2::NatGateway"
 		Properties: {
-			AllocationId: *string | fn.#Fn
-			SubnetId:     *string | fn.#Fn
-			Tags?:        *[...{
+			AllocationId?:     *string | fn.#Fn
+			ConnectivityType?: *string | fn.#Fn
+			SubnetId:          *string | fn.#Fn
+			Tags?:             *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -653,7 +654,6 @@ import (
 				Overrides?: *[...{
 					AvailabilityZone?: *(=~#"[a-z0-9-]+"#) | fn.#Fn
 					InstanceType?:     *string | fn.#Fn
-					Priority?:         *number | fn.#Fn
 					SpotPrice?:        *string | fn.#Fn
 					SubnetId?:         *string | fn.#Fn
 					WeightedCapacity?: *number | fn.#Fn

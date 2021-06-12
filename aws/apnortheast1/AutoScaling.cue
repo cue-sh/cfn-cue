@@ -9,6 +9,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			AutoScalingGroupName?:    *string | fn.#Fn
 			AvailabilityZones?:       [...(*(=~#"[a-z0-9-]+"#) | fn.#Fn)] | (*(=~#"[a-z0-9-]+"#) | fn.#Fn)
 			CapacityRebalance?:       *bool | fn.#Fn
+			Context?:                 *string | fn.#Fn
 			Cooldown?:                *string | fn.#Fn
 			DesiredCapacity?:         *string | fn.#Fn
 			HealthCheckGracePeriod?:  *int | fn.#Fn

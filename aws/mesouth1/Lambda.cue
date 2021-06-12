@@ -133,7 +133,6 @@ import (
 			}] | fn.#If
 			FunctionName?: *string | fn.#Fn
 			Handler?:      *(=~#"^[^\s]+$"#) | fn.#Fn
-			Id?:           *string | fn.#Fn
 			ImageConfig?:  *{
 				Command?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				EntryPoint?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)

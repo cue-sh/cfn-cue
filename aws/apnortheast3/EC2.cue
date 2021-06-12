@@ -477,9 +477,10 @@ import (
 	#NatGateway: {
 		Type: "AWS::EC2::NatGateway"
 		Properties: {
-			AllocationId: *string | fn.#Fn
-			SubnetId:     *string | fn.#Fn
-			Tags?:        *[...{
+			AllocationId?:     *string | fn.#Fn
+			ConnectivityType?: *string | fn.#Fn
+			SubnetId:          *string | fn.#Fn
+			Tags?:             *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

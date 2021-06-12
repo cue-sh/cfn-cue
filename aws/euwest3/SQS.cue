@@ -7,8 +7,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::SQS::Queue"
 		Properties: {
 			ContentBasedDeduplication?:     *bool | fn.#Fn
+			DeduplicationScope?:            *string | fn.#Fn
 			DelaySeconds?:                  *(>=0 & <=900) | fn.#Fn
 			FifoQueue?:                     *bool | fn.#Fn
+			FifoThroughputLimit?:           *string | fn.#Fn
 			KmsDataKeyReusePeriodSeconds?:  *(>=60 & <=86400) | fn.#Fn
 			KmsMasterKeyId?:                *string | fn.#Fn
 			MaximumMessageSize?:            *(>=1024 & <=262144) | fn.#Fn

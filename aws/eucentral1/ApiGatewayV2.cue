@@ -46,6 +46,51 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ApiGatewayManagedOverrides: {
+		Type: "AWS::ApiGatewayV2::ApiGatewayManagedOverrides"
+		Properties: {
+			ApiId:        *string | fn.#Fn
+			Integration?: *{
+				Description?:          *string | fn.#Fn
+				IntegrationMethod?:    *string | fn.#Fn
+				PayloadFormatVersion?: *string | fn.#Fn
+				TimeoutInMillis?:      *int | fn.#Fn
+			} | fn.#If
+			Route?: *{
+				AuthorizationScopes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				AuthorizationType?:   *string | fn.#Fn
+				AuthorizerId?:        *string | fn.#Fn
+				OperationName?:       *string | fn.#Fn
+				Target?:              *string | fn.#Fn
+			} | fn.#If
+			Stage?: *{
+				AccessLogSettings?: *{
+					DestinationArn?: *string | fn.#Fn
+					Format?:         *string | fn.#Fn
+				} | fn.#If
+				AutoDeploy?:           *bool | fn.#Fn
+				DefaultRouteSettings?: *{
+					DataTraceEnabled?:       *bool | fn.#Fn
+					DetailedMetricsEnabled?: *bool | fn.#Fn
+					LoggingLevel?:           *string | fn.#Fn
+					ThrottlingBurstLimit?:   *int | fn.#Fn
+					ThrottlingRateLimit?:    *number | fn.#Fn
+				} | fn.#If
+				Description?:   *string | fn.#Fn
+				RouteSettings?: *{
+					[string]: _
+				} | fn.#Fn
+				StageVariables?: *{
+					[string]: _
+				} | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ApiMapping: {
 		Type: "AWS::ApiGatewayV2::ApiMapping"
 		Properties: {
@@ -102,10 +147,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			DomainName:                *string | fn.#Fn
 			DomainNameConfigurations?: *[...{
-				CertificateArn?:  *string | fn.#Fn
-				CertificateName?: *string | fn.#Fn
-				EndpointType?:    *string | fn.#Fn
-				SecurityPolicy?:  *string | fn.#Fn
+				CertificateArn?:                      *string | fn.#Fn
+				CertificateName?:                     *string | fn.#Fn
+				EndpointType?:                        *string | fn.#Fn
+				OwnershipVerificationCertificateArn?: *string | fn.#Fn
+				SecurityPolicy?:                      *string | fn.#Fn
 			}] | fn.#If
 			MutualTlsAuthentication?: *{
 				TruststoreUri?:     *string | fn.#Fn
@@ -269,6 +315,22 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				[string]: _
 			} | fn.#Fn
 			Tags?: *{
+				[string]: _
+			} | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#VpcLink: {
+		Type: "AWS::ApiGatewayV2::VpcLink"
+		Properties: {
+			Name:              *string | fn.#Fn
+			SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SubnetIds:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:             *{
 				[string]: _
 			} | fn.#Fn
 		}

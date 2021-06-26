@@ -795,7 +795,6 @@ import (
 				Overrides?: *[...{
 					AvailabilityZone?: *(=~#"[a-z0-9-]+"#) | fn.#Fn
 					InstanceType?:     *string | fn.#Fn
-					Priority?:         *number | fn.#Fn
 					SpotPrice?:        *string | fn.#Fn
 					SubnetId?:         *string | fn.#Fn
 					WeightedCapacity?: *number | fn.#Fn

@@ -186,6 +186,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			CallbackURLs?:               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			ClientName?:                 *string | fn.#Fn
 			DefaultRedirectURI?:         *string | fn.#Fn
+			EnableTokenRevocation?:      *bool | fn.#Fn
 			ExplicitAuthFlows?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			GenerateSecret?:             *bool | fn.#Fn
 			IdTokenValidity?:            *int | fn.#Fn

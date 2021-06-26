@@ -18,11 +18,15 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			DBName:                            *string | fn.#Fn
 			ElasticIp?:                        *string | fn.#Fn
 			Encrypted?:                        *bool | fn.#Fn
-			HsmClientCertificateIdentifier?:   *string | fn.#Fn
-			HsmConfigurationIdentifier?:       *string | fn.#Fn
-			IamRoles?:                         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			KmsKeyId?:                         *string | fn.#Fn
-			LoggingProperties?:                *{
+			Endpoint?:                         *{
+				Address?: *string | fn.#Fn
+				Port?:    *string | fn.#Fn
+			} | fn.#If
+			HsmClientCertificateIdentifier?: *string | fn.#Fn
+			HsmConfigurationIdentifier?:     *string | fn.#Fn
+			IamRoles?:                       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			KmsKeyId?:                       *string | fn.#Fn
+			LoggingProperties?:              *{
 				BucketName:   *string | fn.#Fn
 				S3KeyPrefix?: *string | fn.#Fn
 			} | fn.#If

@@ -60,6 +60,33 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#PublicTypeVersion: {
+		Type: "AWS::CloudFormation::PublicTypeVersion"
+		Properties: {
+			Arn?:                 *(=~#"arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:[0-9]{12}:type/.+"#) | fn.#Fn
+			LogDeliveryBucket?:   *string | fn.#Fn
+			PublicVersionNumber?: *(strings.MinRunes(5) & strings.MaxRunes(64)) | fn.#Fn
+			Type?:                *("RESOURCE" | "MODULE") | fn.#Fn
+			TypeName?:            *(=~#"[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}(::MODULE){0,1}"#) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Publisher: {
+		Type: "AWS::CloudFormation::Publisher"
+		Properties: {
+			AcceptTermsAndConditions: *bool | fn.#Fn
+			ConnectionArn?:           *(=~#"arn:aws(-[w]+)*:.+:.+:[0-9]{12}:.+"#) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ResourceDefaultVersion: {
 		Type: "AWS::CloudFormation::ResourceDefaultVersion"
 		Properties: {
@@ -153,6 +180,29 @@ import (
 			}] | fn.#If
 			TemplateBody?: *(strings.MinRunes(1) & strings.MaxRunes(51200)) | fn.#Fn
 			TemplateURL?:  *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TypeActivation: {
+		Type: "AWS::CloudFormation::TypeActivation"
+		Properties: {
+			AutoUpdate?:       *bool | fn.#Fn
+			ExecutionRoleArn?: *string | fn.#Fn
+			LoggingConfig?:    *{
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[\.\-_/#A-Za-z0-9]+$"#)) | fn.#Fn
+				LogRoleArn?:   *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			} | fn.#If
+			MajorVersion?:  *(strings.MinRunes(1) & strings.MaxRunes(100000)) | fn.#Fn
+			PublicTypeArn?: *(=~#"arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/.+"#) | fn.#Fn
+			PublisherId?:   *(strings.MinRunes(1) & strings.MaxRunes(40) & (=~#"[0-9a-zA-Z]{40}"#)) | fn.#Fn
+			Type?:          *("RESOURCE" | "MODULE") | fn.#Fn
+			TypeName?:      *(=~#"[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}(::MODULE){0,1}"#) | fn.#Fn
+			TypeNameAlias?: *(strings.MinRunes(10) & strings.MaxRunes(204) & (=~#"[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}(::MODULE){0,1}"#)) | fn.#Fn
+			VersionBump?:   *("MAJOR" | "MINOR") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

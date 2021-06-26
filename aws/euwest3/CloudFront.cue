@@ -204,7 +204,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					AcmCertificateArn?:            *string | fn.#Fn
 					CloudFrontDefaultCertificate?: *bool | fn.#Fn
 					IamCertificateId?:             *string | fn.#Fn
-					MinimumProtocolVersion?:       *("SSLv3" | "TLSv1" | "TLSv1.1_2016" | "TLSv1.2_2018" | "TLSv1.2_2019" | "TLSv1_2016") | fn.#Fn
+					MinimumProtocolVersion?:       *("SSLv3" | "TLSv1" | "TLSv1.1_2016" | "TLSv1.2_2018" | "TLSv1.2_2019" | "TLSv1.2_2021" | "TLSv1_2016") | fn.#Fn
 					SslSupportMethod?:             *("sni-only" | "static-ip" | "vip") | fn.#Fn
 				} | fn.#If
 				WebACLId?: *string | fn.#Fn

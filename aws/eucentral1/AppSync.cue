@@ -102,7 +102,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::AppSync::GraphQLApi"
 		Properties: {
 			AdditionalAuthenticationProviders?: *[...{
-				AuthenticationType:   *string | fn.#Fn
+				AuthenticationType:      *string | fn.#Fn
+				LambdaAuthorizerConfig?: *{
+					AuthorizerResultTtlInSeconds?: *number | fn.#Fn
+					AuthorizerUri?:                *string | fn.#Fn
+					IdentityValidationExpression?: *string | fn.#Fn
+				} | fn.#If
 				OpenIDConnectConfig?: *{
 					AuthTTL?:  *number | fn.#Fn
 					ClientId?: *string | fn.#Fn
@@ -115,8 +120,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					UserPoolId?:       *string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
-			AuthenticationType: *("AMAZON_COGNITO_USER_POOLS" | "API_KEY" | "AWS_IAM" | "OPENID_CONNECT") | fn.#Fn
-			LogConfig?:         *{
+			AuthenticationType:      *("AMAZON_COGNITO_USER_POOLS" | "API_KEY" | "AWS_IAM" | "OPENID_CONNECT") | fn.#Fn
+			LambdaAuthorizerConfig?: *{
+				AuthorizerResultTtlInSeconds?: *number | fn.#Fn
+				AuthorizerUri?:                *string | fn.#Fn
+				IdentityValidationExpression?: *string | fn.#Fn
+			} | fn.#If
+			LogConfig?: *{
 				CloudWatchLogsRoleArn?: *string | fn.#Fn
 				ExcludeVerboseContent?: *bool | fn.#Fn
 				FieldLogLevel?:         *string | fn.#Fn

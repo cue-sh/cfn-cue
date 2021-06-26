@@ -208,12 +208,16 @@ import (
 	#Portal: {
 		Type: "AWS::IoTSiteWise::Portal"
 		Properties: {
-			PortalAuthMode?:    *string | fn.#Fn
-			PortalContactEmail: *string | fn.#Fn
-			PortalDescription?: *string | fn.#Fn
-			PortalName:         *string | fn.#Fn
-			RoleArn:            *string | fn.#Fn
-			Tags?:              *[...{
+			Alarms?: *{
+				[string]: _
+			} | fn.#Fn
+			NotificationSenderEmail?: *string | fn.#Fn
+			PortalAuthMode?:          *string | fn.#Fn
+			PortalContactEmail:       *string | fn.#Fn
+			PortalDescription?:       *string | fn.#Fn
+			PortalName:               *string | fn.#Fn
+			RoleArn:                  *string | fn.#Fn
+			Tags?:                    *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

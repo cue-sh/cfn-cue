@@ -42,6 +42,79 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#EC2Fleet: {
+		Type: "AWS::EC2::EC2Fleet"
+		Properties: {
+			ExcessCapacityTerminationPolicy?: *("termination" | "no-termination") | fn.#Fn
+			LaunchTemplateConfigs:            *[...{
+				LaunchTemplateSpecification?: *{
+					LaunchTemplateId?:   *string | fn.#Fn
+					LaunchTemplateName?: *(strings.MinRunes(3) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9\(\)\.\-/_]+"#)) | fn.#Fn
+					Version?:            *string | fn.#Fn
+				} | fn.#If
+				Overrides?: *[...{
+					AvailabilityZone?: *string | fn.#Fn
+					InstanceType?:     *("c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5a.12xlarge" | "c5a.16xlarge" | "c5a.24xlarge" | "c5a.2xlarge" | "c5a.4xlarge" | "c5a.8xlarge" | "c5a.large" | "c5a.xlarge" | "c5ad.12xlarge" | "c5ad.16xlarge" | "c5ad.24xlarge" | "c5ad.2xlarge" | "c5ad.4xlarge" | "c5ad.8xlarge" | "c5ad.large" | "c5ad.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "d2.2xlarge" | "d2.4xlarge" | "d2.8xlarge" | "d2.xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.metal" | "g4dn.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.metal" | "i3.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "x1.16xlarge" | "x1.32xlarge" | "x1e.16xlarge" | "x1e.2xlarge" | "x1e.32xlarge" | "x1e.4xlarge" | "x1e.8xlarge" | "x1e.xlarge") | fn.#Fn
+					MaxPrice?:         *string | fn.#Fn
+					Placement?:        *{
+						Affinity?:             *string | fn.#Fn
+						AvailabilityZone?:     *string | fn.#Fn
+						GroupName?:            *string | fn.#Fn
+						HostId?:               *string | fn.#Fn
+						HostResourceGroupArn?: *string | fn.#Fn
+						PartitionNumber?:      *int | fn.#Fn
+						SpreadDomain?:         *string | fn.#Fn
+						Tenancy?:              *string | fn.#Fn
+					} | fn.#If
+					Priority?:         *number | fn.#Fn
+					SubnetId?:         *string | fn.#Fn
+					WeightedCapacity?: *number | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
+			OnDemandOptions?: *{
+				AllocationStrategy?:         *("lowest-price" | "prioritized") | fn.#Fn
+				CapacityReservationOptions?: *{
+					UsageStrategy?: *("use-capacity-reservations-first") | fn.#Fn
+				} | fn.#If
+				MaxTotalPrice?:          *string | fn.#Fn
+				MinTargetCapacity?:      *int | fn.#Fn
+				SingleAvailabilityZone?: *bool | fn.#Fn
+				SingleInstanceType?:     *bool | fn.#Fn
+			} | fn.#If
+			ReplaceUnhealthyInstances?: *bool | fn.#Fn
+			SpotOptions?:               *{
+				AllocationStrategy?:           *("lowestPrice" | "diversified" | "capacityOptimized") | fn.#Fn
+				InstanceInterruptionBehavior?: *("hibernate" | "stop" | "terminate") | fn.#Fn
+				InstancePoolsToUseCount?:      *int | fn.#Fn
+				MaxTotalPrice?:                *string | fn.#Fn
+				MinTargetCapacity?:            *int | fn.#Fn
+				SingleAvailabilityZone?:       *bool | fn.#Fn
+				SingleInstanceType?:           *bool | fn.#Fn
+			} | fn.#If
+			TagSpecifications?: *[...{
+				ResourceType?: *("client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "internet-gateway" | "key-pair" | "launch-template" | "local-gateway-route-table-vpc-association" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "reserved-instances" | "route-table" | "security-group" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
+				Tags?:         *[...{
+					Key:   *string | fn.#Fn
+					Value: *string | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
+			TargetCapacitySpecification: *{
+				DefaultTargetCapacityType?: *("on-demand" | "spot") | fn.#Fn
+				OnDemandTargetCapacity?:    *int | fn.#Fn
+				SpotTargetCapacity?:        *int | fn.#Fn
+				TotalTargetCapacity:        *int | fn.#Fn
+			} | fn.#If
+			TerminateInstancesWithExpiration?: *bool | fn.#Fn
+			Type?:                             *("maintain" | "request" | "instant") | fn.#Fn
+			ValidFrom?:                        *string | fn.#Fn
+			ValidUntil?:                       *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#EIP: {
 		Type: "AWS::EC2::EIP"
 		Properties: {
@@ -471,7 +544,7 @@ import (
 				Cidr:         *(strings.MinRunes(1) & strings.MaxRunes(46)) | fn.#Fn
 				Description?: *string | fn.#Fn
 			}] | fn.#If
-			MaxEntries:     *(>=1 & <=1000) | fn.#Fn
+			MaxEntries:     *int | fn.#Fn
 			PrefixListName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			Tags?:          *[...{
 				Key:   *string | fn.#Fn

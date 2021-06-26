@@ -9,6 +9,7 @@ import (
 	#RepositoryAssociation: {
 		Type: "AWS::CodeGuruReviewer::RepositoryAssociation"
 		Properties: {
+			BucketName?:    *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^\S(.*\S)?$"#)) | fn.#Fn
 			ConnectionArn?: *(=~#"arn:aws(-[\w]+)*:.+:.+:[0-9]{12}:.+"#) | fn.#Fn
 			Name:           *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^\S[\w.-]*$"#)) | fn.#Fn
 			Owner?:         *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^\S(.*\S)?$"#)) | fn.#Fn

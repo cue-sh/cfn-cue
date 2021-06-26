@@ -12,6 +12,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Spec:              *{
 				GrpcRoute?: *{
 					Action: *{
+						Rewrite?: *{
+							Hostname?: *{
+								DefaultTargetHostname?: *string | fn.#Fn
+							} | fn.#If
+						} | fn.#If
 						Target: *{
 							VirtualService: *{
 								VirtualServiceName: *string | fn.#Fn
@@ -19,11 +24,41 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						} | fn.#If
 					} | fn.#If
 					Match: *{
+						Hostname?: *{
+							Exact?:  *string | fn.#Fn
+							Suffix?: *string | fn.#Fn
+						} | fn.#If
+						Metadata?: *[...{
+							Invert?: *bool | fn.#Fn
+							Match?:  *{
+								Exact?:  *string | fn.#Fn
+								Prefix?: *string | fn.#Fn
+								Range?:  *{
+									End:   *int | fn.#Fn
+									Start: *int | fn.#Fn
+								} | fn.#If
+								Regex?:  *string | fn.#Fn
+								Suffix?: *string | fn.#Fn
+							} | fn.#If
+							Name: *string | fn.#Fn
+						}] | fn.#If
 						ServiceName?: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				Http2Route?: *{
 					Action: *{
+						Rewrite?: *{
+							Hostname?: *{
+								DefaultTargetHostname?: *string | fn.#Fn
+							} | fn.#If
+							Path?: *{
+								Exact?: *string | fn.#Fn
+							} | fn.#If
+							Prefix?: *{
+								DefaultPrefix?: *string | fn.#Fn
+								Value?:         *string | fn.#Fn
+							} | fn.#If
+						} | fn.#If
 						Target: *{
 							VirtualService: *{
 								VirtualServiceName: *string | fn.#Fn
@@ -31,11 +66,52 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						} | fn.#If
 					} | fn.#If
 					Match: *{
-						Prefix: *string | fn.#Fn
+						Headers?: *[...{
+							Invert?: *bool | fn.#Fn
+							Match?:  *{
+								Exact?:  *string | fn.#Fn
+								Prefix?: *string | fn.#Fn
+								Range?:  *{
+									End:   *int | fn.#Fn
+									Start: *int | fn.#Fn
+								} | fn.#If
+								Regex?:  *string | fn.#Fn
+								Suffix?: *string | fn.#Fn
+							} | fn.#If
+							Name: *string | fn.#Fn
+						}] | fn.#If
+						Hostname?: *{
+							Exact?:  *string | fn.#Fn
+							Suffix?: *string | fn.#Fn
+						} | fn.#If
+						Method?: *string | fn.#Fn
+						Path?:   *{
+							Exact?: *string | fn.#Fn
+							Regex?: *string | fn.#Fn
+						} | fn.#If
+						Prefix?:          *string | fn.#Fn
+						QueryParameters?: *[...{
+							Match?: *{
+								Exact?: *string | fn.#Fn
+							} | fn.#If
+							Name: *string | fn.#Fn
+						}] | fn.#If
 					} | fn.#If
 				} | fn.#If
 				HttpRoute?: *{
 					Action: *{
+						Rewrite?: *{
+							Hostname?: *{
+								DefaultTargetHostname?: *string | fn.#Fn
+							} | fn.#If
+							Path?: *{
+								Exact?: *string | fn.#Fn
+							} | fn.#If
+							Prefix?: *{
+								DefaultPrefix?: *string | fn.#Fn
+								Value?:         *string | fn.#Fn
+							} | fn.#If
+						} | fn.#If
 						Target: *{
 							VirtualService: *{
 								VirtualServiceName: *string | fn.#Fn
@@ -43,7 +119,36 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						} | fn.#If
 					} | fn.#If
 					Match: *{
-						Prefix: *string | fn.#Fn
+						Headers?: *[...{
+							Invert?: *bool | fn.#Fn
+							Match?:  *{
+								Exact?:  *string | fn.#Fn
+								Prefix?: *string | fn.#Fn
+								Range?:  *{
+									End:   *int | fn.#Fn
+									Start: *int | fn.#Fn
+								} | fn.#If
+								Regex?:  *string | fn.#Fn
+								Suffix?: *string | fn.#Fn
+							} | fn.#If
+							Name: *string | fn.#Fn
+						}] | fn.#If
+						Hostname?: *{
+							Exact?:  *string | fn.#Fn
+							Suffix?: *string | fn.#Fn
+						} | fn.#If
+						Method?: *string | fn.#Fn
+						Path?:   *{
+							Exact?: *string | fn.#Fn
+							Regex?: *string | fn.#Fn
+						} | fn.#If
+						Prefix?:          *string | fn.#Fn
+						QueryParameters?: *[...{
+							Match?: *{
+								Exact?: *string | fn.#Fn
+							} | fn.#If
+							Name: *string | fn.#Fn
+						}] | fn.#If
 					} | fn.#If
 				} | fn.#If
 			} | fn.#If

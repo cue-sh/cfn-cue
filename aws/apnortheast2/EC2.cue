@@ -813,7 +813,7 @@ import (
 				Cidr:         *(strings.MinRunes(1) & strings.MaxRunes(46)) | fn.#Fn
 				Description?: *string | fn.#Fn
 			}] | fn.#If
-			MaxEntries:     *(>=1 & <=1000) | fn.#Fn
+			MaxEntries:     *int | fn.#Fn
 			PrefixListName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			Tags?:          *[...{
 				Key:   *string | fn.#Fn

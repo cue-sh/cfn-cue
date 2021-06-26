@@ -105,6 +105,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					Encrypted?:           *bool | fn.#Fn
 					Iops?:                *int | fn.#Fn
 					SnapshotId?:          *string | fn.#Fn
+					Throughput?:          *int | fn.#Fn
 					VolumeSize?:          *int | fn.#Fn
 					VolumeType?:          *("gp2" | "gp3" | "io1" | "io2" | "sc1" | "st1" | "standard") | fn.#Fn
 				} | fn.#If
@@ -208,6 +209,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			MinSize?:             *int | fn.#Fn
 			Recurrence?:          *string | fn.#Fn
 			StartTime?:           *string | fn.#Fn
+			TimeZone?:            *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

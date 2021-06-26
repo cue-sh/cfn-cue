@@ -33,6 +33,21 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#CarrierGateway: {
+		Type: "AWS::EC2::CarrierGateway"
+		Properties: {
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpcId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ClientVpnAuthorizationRule: {
 		Type: "AWS::EC2::ClientVpnAuthorizationRule"
 		Properties: {
@@ -162,6 +177,7 @@ import (
 	#EC2Fleet: {
 		Type: "AWS::EC2::EC2Fleet"
 		Properties: {
+			Context?:                         *string | fn.#Fn
 			ExcessCapacityTerminationPolicy?: *("termination" | "no-termination") | fn.#Fn
 			LaunchTemplateConfigs:            *[...{
 				LaunchTemplateSpecification?: *{
@@ -798,7 +814,7 @@ import (
 				Cidr:         *(strings.MinRunes(1) & strings.MaxRunes(46)) | fn.#Fn
 				Description?: *string | fn.#Fn
 			}] | fn.#If
-			MaxEntries:     *(>=1 & <=1000) | fn.#Fn
+			MaxEntries:     *int | fn.#Fn
 			PrefixListName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			Tags?:          *[...{
 				Key:   *string | fn.#Fn
@@ -933,6 +949,7 @@ import (
 		Type: "AWS::EC2::SpotFleet"
 		Properties: SpotFleetRequestConfigData: *{
 			AllocationStrategy?:              *("capacityOptimized" | "capacityOptimizedPrioritized" | "diversified" | "lowestPrice") | fn.#Fn
+			Context?:                         *string | fn.#Fn
 			ExcessCapacityTerminationPolicy?: *("Default" | "NoTermination" | "default" | "noTermination") | fn.#Fn
 			IamFleetRole:                     *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 			InstanceInterruptionBehavior?:    *("hibernate" | "stop" | "terminate") | fn.#Fn

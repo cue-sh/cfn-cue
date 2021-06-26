@@ -244,6 +244,7 @@ import (
 			} | fn.#If
 			RowLevelPermissionDataSet?: *{
 				Arn:              *string | fn.#Fn
+				FormatVersion?:   *string | fn.#Fn
 				Namespace?:       *(=~#"^[a-zA-Z0-9._-]*$"#) | fn.#Fn
 				PermissionPolicy: *("GRANT_ACCESS" | "DENY_ACCESS") | fn.#Fn
 			} | fn.#If

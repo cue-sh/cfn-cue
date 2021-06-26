@@ -9,10 +9,6 @@ import (
 	#Asset: {
 		Type: "AWS::MediaPackage::Asset"
 		Properties: {
-			EgressEndpoints?: *[...{
-				PackagingConfigurationId: *string | fn.#Fn
-				Url:                      *string | fn.#Fn
-			}] | fn.#If
 			Id:               *string | fn.#Fn
 			PackagingGroupId: *string | fn.#Fn
 			ResourceId?:      *string | fn.#Fn

@@ -99,7 +99,17 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Name: *string | fn.#Fn
 						}] | fn.#If
 						Method?: *string | fn.#Fn
-						Prefix:  *string | fn.#Fn
+						Path?:   *{
+							Exact?: *string | fn.#Fn
+							Regex?: *string | fn.#Fn
+						} | fn.#If
+						Prefix?:          *string | fn.#Fn
+						QueryParameters?: *[...{
+							Match?: *{
+								Exact?: *string | fn.#Fn
+							} | fn.#If
+							Name: *string | fn.#Fn
+						}] | fn.#If
 						Scheme?: *string | fn.#Fn
 					} | fn.#If
 					RetryPolicy?: *{
@@ -145,7 +155,17 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Name: *string | fn.#Fn
 						}] | fn.#If
 						Method?: *string | fn.#Fn
-						Prefix:  *string | fn.#Fn
+						Path?:   *{
+							Exact?: *string | fn.#Fn
+							Regex?: *string | fn.#Fn
+						} | fn.#If
+						Prefix?:          *string | fn.#Fn
+						QueryParameters?: *[...{
+							Match?: *{
+								Exact?: *string | fn.#Fn
+							} | fn.#If
+							Name: *string | fn.#Fn
+						}] | fn.#If
 						Scheme?: *string | fn.#Fn
 					} | fn.#If
 					RetryPolicy?: *{
@@ -402,7 +422,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						ServiceName:   *string | fn.#Fn
 					} | fn.#If
 					DNS?: *{
-						Hostname: *string | fn.#Fn
+						Hostname:      *string | fn.#Fn
+						ResponseType?: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 			} | fn.#If

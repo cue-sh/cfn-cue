@@ -86,6 +86,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Key?:    *string | fn.#Fn
 				Value?:  *string | fn.#Fn
 			}] | fn.#If
+			UpdateConfig?: *{
+				MaxUnavailable?:           *number | fn.#Fn
+				MaxUnavailablePercentage?: *number | fn.#Fn
+			} | fn.#If
 			Version?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

@@ -771,7 +771,7 @@ import (
 				Cidr:         *(strings.MinRunes(1) & strings.MaxRunes(46)) | fn.#Fn
 				Description?: *string | fn.#Fn
 			}] | fn.#If
-			MaxEntries:     *(>=1 & <=1000) | fn.#Fn
+			MaxEntries:     *int | fn.#Fn
 			PrefixListName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			Tags?:          *[...{
 				Key:   *string | fn.#Fn
@@ -1153,6 +1153,28 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGateway: {
+		Type: "AWS::EC2::TransitGateway"
+		Properties: {
+			AmazonSideAsn?:                *int | fn.#Fn
+			AutoAcceptSharedAttachments?:  *("disable" | "enable") | fn.#Fn
+			DefaultRouteTableAssociation?: *("disable" | "enable") | fn.#Fn
+			DefaultRouteTablePropagation?: *("disable" | "enable") | fn.#Fn
+			Description?:                  *string | fn.#Fn
+			DnsSupport?:                   *("disable" | "enable") | fn.#Fn
+			MulticastSupport?:             *string | fn.#Fn
+			Tags?:                         *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpnEcmpSupport?: *("disable" | "enable") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

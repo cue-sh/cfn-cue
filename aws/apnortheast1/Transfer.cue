@@ -17,14 +17,18 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			EndpointType?:            *string | fn.#Fn
 			IdentityProviderDetails?: *{
-				InvocationRole: *string | fn.#Fn
-				Url:            *string | fn.#Fn
+				DirectoryId?:    *string | fn.#Fn
+				InvocationRole?: *string | fn.#Fn
+				Url?:            *string | fn.#Fn
 			} | fn.#If
 			IdentityProviderType?: *string | fn.#Fn
 			LoggingRole?:          *string | fn.#Fn
-			Protocols?:            *[...{}] | fn.#If
-			SecurityPolicyName?:   *string | fn.#Fn
-			Tags?:                 *[...{
+			ProtocolDetails?:      *{
+				PassiveIp?: *string | fn.#Fn
+			} | fn.#If
+			Protocols?:          *[...{}] | fn.#If
+			SecurityPolicyName?: *string | fn.#Fn
+			Tags?:               *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

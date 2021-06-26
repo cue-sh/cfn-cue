@@ -61,7 +61,7 @@ import (
 				AllAwsRegions?: *bool | fn.#Fn
 				AwsRegions?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			}] | fn.#If
-			ConfigurationAggregatorName:    *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[\w\-]+"#)) | fn.#Fn
+			ConfigurationAggregatorName?:   *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[\w\-]+"#)) | fn.#Fn
 			OrganizationAggregationSource?: *{
 				AllAwsRegions?: *bool | fn.#Fn
 				AwsRegions?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)

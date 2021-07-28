@@ -18,6 +18,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			DBName:                            *string | fn.#Fn
 			ElasticIp?:                        *string | fn.#Fn
 			Encrypted?:                        *bool | fn.#Fn
+			EndpointAddress?:                  *string | fn.#Fn
+			EndpointPort?:                     *string | fn.#Fn
 			HsmClientCertificateIdentifier?:   *string | fn.#Fn
 			HsmConfigurationIdentifier?:       *string | fn.#Fn
 			IamRoles?:                         [...(*string | fn.#Fn)] | (*string | fn.#Fn)

@@ -94,12 +94,13 @@ import (
 				} | fn.#If
 			} | fn.#If
 			SourceAccessConfigurations?: *[...{
-				Type?: *("BASIC_AUTH" | "VPC_SUBNET" | "VPC_SECURITY_GROUP" | "SASL_SCRAM_512_AUTH" | "SASL_SCRAM_256_AUTH") | fn.#Fn
+				Type?: *("BASIC_AUTH" | "VPC_SUBNET" | "VPC_SECURITY_GROUP" | "SASL_SCRAM_512_AUTH" | "SASL_SCRAM_256_AUTH" | "VIRTUAL_HOST") | fn.#Fn
 				URI?:  *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
 			}] | fn.#If
-			StartingPosition?:        *(("AT_TIMESTAMP" | "LATEST" | "TRIM_HORIZON") & (strings.MinRunes(6) & strings.MaxRunes(12)) & (=~#"(LATEST|TRIM_HORIZON)+"#)) | fn.#Fn
-			Topics?:                  [...(*(strings.MinRunes(1) & strings.MaxRunes(249) & (=~#"^[^.]([a-zA-Z0-9\-_.]+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(249) & (=~#"^[^.]([a-zA-Z0-9\-_.]+)"#)) | fn.#Fn)
-			TumblingWindowInSeconds?: *int | fn.#Fn
+			StartingPosition?:          *(("AT_TIMESTAMP" | "LATEST" | "TRIM_HORIZON") & (strings.MinRunes(6) & strings.MaxRunes(12)) & (=~#"(LATEST|TRIM_HORIZON)+"#)) | fn.#Fn
+			StartingPositionTimestamp?: *number | fn.#Fn
+			Topics?:                    [...(*(strings.MinRunes(1) & strings.MaxRunes(249) & (=~#"^[^.]([a-zA-Z0-9\-_.]+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(249) & (=~#"^[^.]([a-zA-Z0-9\-_.]+)"#)) | fn.#Fn)
+			TumblingWindowInSeconds?:   *int | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -157,6 +158,39 @@ import (
 				SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SubnetIds?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#LayerVersion: {
+		Type: "AWS::Lambda::LayerVersion"
+		Properties: {
+			CompatibleRuntimes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Content:             *{
+				S3Bucket:         *string | fn.#Fn
+				S3Key:            *string | fn.#Fn
+				S3ObjectVersion?: *string | fn.#Fn
+			} | fn.#If
+			Description?: *string | fn.#Fn
+			LayerName?:   *string | fn.#Fn
+			LicenseInfo?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#LayerVersionPermission: {
+		Type: "AWS::Lambda::LayerVersionPermission"
+		Properties: {
+			Action:          *string | fn.#Fn
+			LayerVersionArn: *string | fn.#Fn
+			OrganizationId?: *string | fn.#Fn
+			Principal:       *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -96,6 +96,25 @@ import (
 	#Job: {
 		Type: "AWS::DataBrew::Job"
 		Properties: {
+			DataCatalogOutputs?: *[...{
+				CatalogId?:       *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+				DatabaseName:     *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+				DatabaseOptions?: *{
+					TableName:      *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+					TempDirectory?: *{
+						Bucket: *string | fn.#Fn
+						Key?:   *string | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				Overwrite?: *bool | fn.#Fn
+				S3Options?: *{
+					Location: *{
+						Bucket: *string | fn.#Fn
+						Key?:   *string | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				TableName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+			}] | fn.#If
 			DatasetName?:      *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			EncryptionKeyArn?: *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 			EncryptionMode?:   *("SSE-KMS" | "SSE-S3") | fn.#Fn

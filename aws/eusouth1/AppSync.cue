@@ -78,7 +78,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				RelationalDatabaseSourceType: *string | fn.#Fn
 			} | fn.#If
 			ServiceRoleArn?: *string | fn.#Fn
-			Type:            *string | fn.#Fn
+			Type:            *("AMAZON_DYNAMODB" | "AMAZON_ELASTICSEARCH" | "AWS_LAMBDA" | "HTTP" | "NONE" | "RELATIONAL_DATABASE") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -116,12 +116,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::AppSync::GraphQLApi"
 		Properties: {
 			AdditionalAuthenticationProviders?: *[...{
-				AuthenticationType:      *string | fn.#Fn
-				LambdaAuthorizerConfig?: *{
-					AuthorizerResultTtlInSeconds?: *number | fn.#Fn
-					AuthorizerUri?:                *string | fn.#Fn
-					IdentityValidationExpression?: *string | fn.#Fn
-				} | fn.#If
+				AuthenticationType:   *string | fn.#Fn
 				OpenIDConnectConfig?: *{
 					AuthTTL?:  *number | fn.#Fn
 					ClientId?: *string | fn.#Fn
@@ -134,13 +129,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					UserPoolId?:       *string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
-			AuthenticationType:      *string | fn.#Fn
-			LambdaAuthorizerConfig?: *{
-				AuthorizerResultTtlInSeconds?: *number | fn.#Fn
-				AuthorizerUri?:                *string | fn.#Fn
-				IdentityValidationExpression?: *string | fn.#Fn
-			} | fn.#If
-			LogConfig?: *{
+			AuthenticationType: *("AMAZON_COGNITO_USER_POOLS" | "API_KEY" | "AWS_IAM" | "OPENID_CONNECT") | fn.#Fn
+			LogConfig?:         *{
 				CloudWatchLogsRoleArn?: *string | fn.#Fn
 				ExcludeVerboseContent?: *bool | fn.#Fn
 				FieldLogLevel?:         *string | fn.#Fn
@@ -193,7 +183,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			DataSourceName?: *string | fn.#Fn
 			FieldName:       *string | fn.#Fn
-			Kind?:           *string | fn.#Fn
+			Kind?:           *("PIPELINE" | "UNIT") | fn.#Fn
 			PipelineConfig?: *{
 				Functions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If

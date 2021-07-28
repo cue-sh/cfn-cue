@@ -7,6 +7,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::QLDB::Ledger"
 		Properties: {
 			DeletionProtection?: *bool | fn.#Fn
+			KmsKey?:             *string | fn.#Fn
 			Name?:               *string | fn.#Fn
 			PermissionsMode:     *string | fn.#Fn
 			Tags?:               *[...{

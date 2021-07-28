@@ -77,12 +77,13 @@ import (
 				} | fn.#If
 			} | fn.#If
 			SourceAccessConfigurations?: *[...{
-				Type?: *("BASIC_AUTH" | "VPC_SUBNET" | "VPC_SECURITY_GROUP" | "SASL_SCRAM_512_AUTH" | "SASL_SCRAM_256_AUTH") | fn.#Fn
+				Type?: *("BASIC_AUTH" | "VPC_SUBNET" | "VPC_SECURITY_GROUP" | "SASL_SCRAM_512_AUTH" | "SASL_SCRAM_256_AUTH" | "VIRTUAL_HOST") | fn.#Fn
 				URI?:  *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
 			}] | fn.#If
-			StartingPosition?:        *(("AT_TIMESTAMP" | "LATEST" | "TRIM_HORIZON") & (strings.MinRunes(6) & strings.MaxRunes(12)) & (=~#"(LATEST|TRIM_HORIZON)+"#)) | fn.#Fn
-			Topics?:                  [...(*(strings.MinRunes(1) & strings.MaxRunes(249) & (=~#"^[^.]([a-zA-Z0-9\-_.]+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(249) & (=~#"^[^.]([a-zA-Z0-9\-_.]+)"#)) | fn.#Fn)
-			TumblingWindowInSeconds?: *int | fn.#Fn
+			StartingPosition?:          *(("AT_TIMESTAMP" | "LATEST" | "TRIM_HORIZON") & (strings.MinRunes(6) & strings.MaxRunes(12)) & (=~#"(LATEST|TRIM_HORIZON)+"#)) | fn.#Fn
+			StartingPositionTimestamp?: *number | fn.#Fn
+			Topics?:                    [...(*(strings.MinRunes(1) & strings.MaxRunes(249) & (=~#"^[^.]([a-zA-Z0-9\-_.]+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(249) & (=~#"^[^.]([a-zA-Z0-9\-_.]+)"#)) | fn.#Fn)
+			TumblingWindowInSeconds?:   *int | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

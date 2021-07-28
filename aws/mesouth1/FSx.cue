@@ -24,7 +24,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				WeeklyMaintenanceStartTime?:    *string | fn.#Fn
 			} | fn.#If
 			SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			StorageCapacity?:  *int | fn.#Fn
+			StorageCapacity?:  *(>=32 & <=65536) | fn.#Fn
 			StorageType?:      *string | fn.#Fn
 			SubnetIds:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			Tags?:             *[...{
@@ -32,13 +32,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			WindowsConfiguration?: *{
-				ActiveDirectoryId?:     *string | fn.#Fn
-				Aliases?:               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				AuditLogConfiguration?: *{
-					AuditLogDestination?:         *string | fn.#Fn
-					FileAccessAuditLogLevel:      *string | fn.#Fn
-					FileShareAccessAuditLogLevel: *string | fn.#Fn
-				} | fn.#If
+				ActiveDirectoryId?:                       *string | fn.#Fn
+				Aliases?:                                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				AutomaticBackupRetentionDays?:            *int | fn.#Fn
 				CopyTagsToBackups?:                       *bool | fn.#Fn
 				DailyAutomaticBackupStartTime?:           *string | fn.#Fn

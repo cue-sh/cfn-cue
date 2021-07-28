@@ -19,7 +19,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			CognitoStreams?: *{
 				RoleArn?:         *string | fn.#Fn
 				StreamName?:      *string | fn.#Fn
-				StreamingStatus?: *string | fn.#Fn
+				StreamingStatus?: *("DISABLED" | "ENABLED") | fn.#Fn
 			} | fn.#If
 			DeveloperProviderName?:     *string | fn.#Fn
 			IdentityPoolName?:          *string | fn.#Fn
@@ -74,8 +74,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 				UnusedAccountValidityDays?: *int | fn.#Fn
 			} | fn.#If
-			AliasAttributes?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			AutoVerifiedAttributes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			AliasAttributes?:        [...(*("email" | "phone_number" | "preferred_username") | fn.#Fn)] | (*("email" | "phone_number" | "preferred_username") | fn.#Fn)
+			AutoVerifiedAttributes?: [...(*("email" | "phone_number") | fn.#Fn)] | (*("email" | "phone_number") | fn.#Fn)
 			DeviceConfiguration?:    *{
 				ChallengeRequiredOnNewDevice?:     *bool | fn.#Fn
 				DeviceOnlyRememberedOnUserPrompt?: *bool | fn.#Fn
@@ -111,7 +111,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				UserMigration?:               *string | fn.#Fn
 				VerifyAuthChallengeResponse?: *string | fn.#Fn
 			} | fn.#If
-			MfaConfiguration?: *string | fn.#Fn
+			MfaConfiguration?: *("OFF" | "ON" | "OPTIONAL") | fn.#Fn
 			Policies?:         *{
 				PasswordPolicy?: *{
 					MinimumLength?:                 *int | fn.#Fn
@@ -123,7 +123,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 			} | fn.#If
 			Schema?: *[...{
-				AttributeDataType?:          *string | fn.#Fn
+				AttributeDataType?:          *("Boolean" | "DateTime" | "Number" | "String") | fn.#Fn
 				DeveloperOnlyAttribute?:     *bool | fn.#Fn
 				Mutable?:                    *bool | fn.#Fn
 				Name?:                       *string | fn.#Fn
@@ -139,7 +139,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			}] | fn.#If
 			SmsAuthenticationMessage?: *string | fn.#Fn
 			SmsConfiguration?:         *{
-				ExternalId?:   *string | fn.#Fn
+				ExternalId:    *string | fn.#Fn
 				SnsCallerArn?: *string | fn.#Fn
 			} | fn.#If
 			SmsVerificationMessage?: *string | fn.#Fn
@@ -150,7 +150,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			UserPoolTags?: *{
 				[string]: _
 			} | fn.#Fn
-			UsernameAttributes?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			UsernameAttributes?:    [...(*("email" | "phone_number") | fn.#Fn)] | (*("email" | "phone_number") | fn.#Fn)
 			UsernameConfiguration?: *{
 				CaseSensitive?: *bool | fn.#Fn
 			} | fn.#If
@@ -187,13 +187,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ClientName?:                 *string | fn.#Fn
 			DefaultRedirectURI?:         *string | fn.#Fn
 			EnableTokenRevocation?:      *bool | fn.#Fn
-			ExplicitAuthFlows?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			ExplicitAuthFlows?:          [...(*("ADMIN_NO_SRP_AUTH" | "ALLOW_ADMIN_USER_PASSWORD_AUTH" | "ALLOW_CUSTOM_AUTH" | "ALLOW_REFRESH_TOKEN_AUTH" | "ALLOW_USER_PASSWORD_AUTH" | "ALLOW_USER_SRP_AUTH" | "CUSTOM_AUTH_FLOW_ONLY" | "USER_PASSWORD_AUTH") | fn.#Fn)] | (*("ADMIN_NO_SRP_AUTH" | "ALLOW_ADMIN_USER_PASSWORD_AUTH" | "ALLOW_CUSTOM_AUTH" | "ALLOW_REFRESH_TOKEN_AUTH" | "ALLOW_USER_PASSWORD_AUTH" | "ALLOW_USER_SRP_AUTH" | "CUSTOM_AUTH_FLOW_ONLY" | "USER_PASSWORD_AUTH") | fn.#Fn)
 			GenerateSecret?:             *bool | fn.#Fn
 			IdTokenValidity?:            *int | fn.#Fn
 			LogoutURLs?:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			PreventUserExistenceErrors?: *string | fn.#Fn
 			ReadAttributes?:             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			RefreshTokenValidity?:       *int | fn.#Fn
+			RefreshTokenValidity?:       *(>=0 & <=3650) | fn.#Fn
 			SupportedIdentityProviders?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			TokenValidityUnits?:         *{
 				AccessToken?:  *string | fn.#Fn
@@ -353,9 +353,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ClientMetadata?: *{
 				[string]: _
 			} | fn.#Fn
-			DesiredDeliveryMediums?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			DesiredDeliveryMediums?: [...(*("EMAIL" | "SMS") | fn.#Fn)] | (*("EMAIL" | "SMS") | fn.#Fn)
 			ForceAliasCreation?:     *bool | fn.#Fn
-			MessageAction?:          *string | fn.#Fn
+			MessageAction?:          *("RESEND" | "SUPPRESS") | fn.#Fn
 			UserAttributes?:         *[...{
 				Name?:  *string | fn.#Fn
 				Value?: *string | fn.#Fn

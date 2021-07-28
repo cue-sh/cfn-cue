@@ -19,6 +19,20 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ApiKey: {
+		Type: "AWS::AppSync::ApiKey"
+		Properties: {
+			ApiId:        *string | fn.#Fn
+			ApiKeyId?:    *string | fn.#Fn
+			Description?: *string | fn.#Fn
+			Expires?:     *number | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#DataSource: {
 		Type: "AWS::AppSync::DataSource"
 		Properties: {
@@ -102,12 +116,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::AppSync::GraphQLApi"
 		Properties: {
 			AdditionalAuthenticationProviders?: *[...{
-				AuthenticationType:      *string | fn.#Fn
-				LambdaAuthorizerConfig?: *{
-					AuthorizerResultTtlInSeconds?: *number | fn.#Fn
-					AuthorizerUri?:                *string | fn.#Fn
-					IdentityValidationExpression?: *string | fn.#Fn
-				} | fn.#If
+				AuthenticationType:   *string | fn.#Fn
 				OpenIDConnectConfig?: *{
 					AuthTTL?:  *number | fn.#Fn
 					ClientId?: *string | fn.#Fn
@@ -120,13 +129,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					UserPoolId?:       *string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
-			AuthenticationType:      *("AMAZON_COGNITO_USER_POOLS" | "API_KEY" | "AWS_IAM" | "OPENID_CONNECT") | fn.#Fn
-			LambdaAuthorizerConfig?: *{
-				AuthorizerResultTtlInSeconds?: *number | fn.#Fn
-				AuthorizerUri?:                *string | fn.#Fn
-				IdentityValidationExpression?: *string | fn.#Fn
-			} | fn.#If
-			LogConfig?: *{
+			AuthenticationType: *("AMAZON_COGNITO_USER_POOLS" | "API_KEY" | "AWS_IAM" | "OPENID_CONNECT") | fn.#Fn
+			LogConfig?:         *{
 				CloudWatchLogsRoleArn?: *string | fn.#Fn
 				ExcludeVerboseContent?: *bool | fn.#Fn
 				FieldLogLevel?:         *string | fn.#Fn
@@ -149,6 +153,19 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				UserPoolId?:       *string | fn.#Fn
 			} | fn.#If
 			XrayEnabled?: *bool | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#GraphQLSchema: {
+		Type: "AWS::AppSync::GraphQLSchema"
+		Properties: {
+			ApiId:                 *string | fn.#Fn
+			Definition?:           *string | fn.#Fn
+			DefinitionS3Location?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

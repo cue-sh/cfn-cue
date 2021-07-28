@@ -39,7 +39,14 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			Description?: *string | fn.#Fn
 			Name:         *string | fn.#Fn
-			Tags?:        *[...{
+			Properties?:  *{
+				DnsProperties?: *{
+					SOA?: *{
+						TTL?: *number | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -56,7 +63,14 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			Description?: *string | fn.#Fn
 			Name:         *string | fn.#Fn
-			Tags?:        *[...{
+			Properties?:  *{
+				DnsProperties?: *{
+					SOA?: *{
+						TTL?: *number | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

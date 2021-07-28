@@ -323,10 +323,10 @@ import (
 				DestinationField?: *string | fn.#Fn
 				SourceFields:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				TaskProperties?:   *[...{
-					Key:   *("VALUE" | "VALUES" | "DATA_TYPE" | "UPPER_BOUND" | "LOWER_BOUND" | "SOURCE_DATA_TYPE" | "DESTINATION_DATA_TYPE" | "VALIDATION_ACTION" | "MASK_VALUE" | "MASK_LENGTH" | "TRUNCATE_LENGTH" | "MATH_OPERATION_FIELDS_ORDER" | "CONCAT_FORMAT" | "SUBFIELD_CATEGORY_MAP") | fn.#Fn
+					Key:   *("VALUE" | "VALUES" | "DATA_TYPE" | "UPPER_BOUND" | "LOWER_BOUND" | "SOURCE_DATA_TYPE" | "DESTINATION_DATA_TYPE" | "VALIDATION_ACTION" | "MASK_VALUE" | "MASK_LENGTH" | "TRUNCATE_LENGTH" | "MATH_OPERATION_FIELDS_ORDER" | "CONCAT_FORMAT" | "SUBFIELD_CATEGORY_MAP" | "EXCLUDE_SOURCE_FIELDS_LIST") | fn.#Fn
 					Value: *(=~#".+"#) | fn.#Fn
 				}] | fn.#If
-				TaskType: *("Arithmetic" | "Filter" | "Map" | "Mask" | "Merge" | "Truncate" | "Validate") | fn.#Fn
+				TaskType: *("Arithmetic" | "Filter" | "Map" | "Map_all" | "Mask" | "Merge" | "Truncate" | "Validate") | fn.#Fn
 			}] | fn.#If
 			TriggerConfig: *{
 				TriggerProperties?: *{

@@ -40,8 +40,22 @@ import (
 			DockerfileTemplateUri?:  *string | fn.#Fn
 			ImageOsVersionOverride?: *string | fn.#Fn
 			InstanceConfiguration?:  *{
-				[string]: _
-			} | fn.#Fn
+				BlockDeviceMappings?: *[...{
+					DeviceName?: *string | fn.#Fn
+					Ebs?:        *{
+						DeleteOnTermination?: *bool | fn.#Fn
+						Encrypted?:           *bool | fn.#Fn
+						Iops?:                *int | fn.#Fn
+						KmsKeyId?:            *string | fn.#Fn
+						SnapshotId?:          *string | fn.#Fn
+						VolumeSize?:          *int | fn.#Fn
+						VolumeType?:          *("standard" | "io1" | "io2" | "gp2" | "gp3" | "sc1" | "st1") | fn.#Fn
+					} | fn.#If
+					NoDevice?:    *string | fn.#Fn
+					VirtualName?: *string | fn.#Fn
+				}] | fn.#If
+				Image?: *string | fn.#Fn
+			} | fn.#If
 			KmsKeyId?:         *string | fn.#Fn
 			Name:              *string | fn.#Fn
 			ParentImage:       *string | fn.#Fn
@@ -146,6 +160,12 @@ import (
 	#ImageRecipe: {
 		Type: "AWS::ImageBuilder::ImageRecipe"
 		Properties: {
+			AdditionalInstanceConfiguration?: *{
+				SystemsManagerAgent?: *{
+					UninstallAfterBuild: *bool | fn.#Fn
+				} | fn.#If
+				UserDataOverride: *string | fn.#Fn
+			} | fn.#If
 			BlockDeviceMappings?: *[...{
 				DeviceName?: *string | fn.#Fn
 				Ebs?:        *{
@@ -162,6 +182,10 @@ import (
 			}] | fn.#If
 			Components: *[...{
 				ComponentArn?: *string | fn.#Fn
+				Parameters?:   *[...{
+					Name:  *string | fn.#Fn
+					Value: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				}] | fn.#If
 			}] | fn.#If
 			Description?: *string | fn.#Fn
 			Name:         *string | fn.#Fn

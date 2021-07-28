@@ -112,4 +112,28 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Webhook: {
+		Type: "AWS::CodePipeline::Webhook"
+		Properties: {
+			Authentication:              *("GITHUB_HMAC" | "IP" | "UNAUTHENTICATED") | fn.#Fn
+			AuthenticationConfiguration: *{
+				AllowedIPRange?: *string | fn.#Fn
+				SecretToken?:    *string | fn.#Fn
+			} | fn.#If
+			Filters: *[...{
+				JsonPath:     *string | fn.#Fn
+				MatchEquals?: *string | fn.#Fn
+			}] | fn.#If
+			Name?:                   *string | fn.#Fn
+			RegisterWithThirdParty?: *bool | fn.#Fn
+			TargetAction:            *string | fn.#Fn
+			TargetPipeline:          *string | fn.#Fn
+			TargetPipelineVersion:   *int | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

@@ -16,8 +16,8 @@ import (
 			ComplianceSeverity?:            *("CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "UNSPECIFIED") | fn.#Fn
 			DocumentVersion?:               *(=~#"([$]LATEST|[$]DEFAULT|^[1-9][0-9]*$)"#) | fn.#Fn
 			InstanceId?:                    *(=~#"(^i-(\w{8}|\w{17})$)|(^mi-\w{17}$)"#) | fn.#Fn
-			MaxConcurrency?:                *(strings.MinRunes(1) & strings.MaxRunes(7) & (=~#"^([1-9][0-9]*|[1-9][0-9]%|[1-9]%|100%)$"#)) | fn.#Fn
-			MaxErrors?:                     *(strings.MinRunes(1) & strings.MaxRunes(7) & (=~#"^([1-9][0-9]*|[0]|[1-9][0-9]%|[0-9]%|100%)$"#)) | fn.#Fn
+			MaxConcurrency?:                *(=~#"^([1-9][0-9]{0,6}|[1-9][0-9]%|[1-9]%|100%)$"#) | fn.#Fn
+			MaxErrors?:                     *(=~#"^([1-9][0-9]{0,6}|[0]|[1-9][0-9]%|[0-9]%|100%)$"#) | fn.#Fn
 			Name:                           *(=~#"^[a-zA-Z0-9_\-.:/]{3,200}$"#) | fn.#Fn
 			OutputLocation?:                *{
 				S3Location?: *{
@@ -51,12 +51,141 @@ import (
 			Content: *{
 				[string]: _
 			} | fn.#Fn
-			DocumentType?: *("ApplicationConfiguration" | "ApplicationConfigurationSchema" | "Automation" | "Automation.ChangeTemplate" | "Command" | "DeploymentStrategy" | "Package" | "Policy" | "Session") | fn.#Fn
+			DocumentType?: *("ApplicationConfiguration" | "ApplicationConfigurationSchema" | "Automation" | "Automation.ChangeTemplate" | "ChangeCalendar" | "CloudFormation" | "Command" | "DeploymentStrategy" | "Package" | "Policy" | "ProblemAnalysis" | "ProblemAnalysisTemplate" | "Session") | fn.#Fn
 			Name?:         *(=~#"^[a-zA-Z0-9_\-.]{3,128}$"#) | fn.#Fn
 			Tags?:         *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#MaintenanceWindow: {
+		Type: "AWS::SSM::MaintenanceWindow"
+		Properties: {
+			AllowUnassociatedTargets: *bool | fn.#Fn
+			Cutoff:                   *(>=0 & <=23) | fn.#Fn
+			Description?:             *string | fn.#Fn
+			Duration:                 *(>=1 & <=24) | fn.#Fn
+			EndDate?:                 *string | fn.#Fn
+			Name:                     *string | fn.#Fn
+			Schedule:                 *string | fn.#Fn
+			ScheduleOffset?:          *int | fn.#Fn
+			ScheduleTimezone?:        *string | fn.#Fn
+			StartDate?:               *string | fn.#Fn
+			Tags?:                    *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#MaintenanceWindowTarget: {
+		Type: "AWS::SSM::MaintenanceWindowTarget"
+		Properties: {
+			Description?:      *string | fn.#Fn
+			Name?:             *string | fn.#Fn
+			OwnerInformation?: *string | fn.#Fn
+			ResourceType:      *string | fn.#Fn
+			Targets:           *[...{
+				Key:    *string | fn.#Fn
+				Values: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			}] | fn.#If
+			WindowId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#MaintenanceWindowTask: {
+		Type: "AWS::SSM::MaintenanceWindowTask"
+		Properties: {
+			Description?: *string | fn.#Fn
+			LoggingInfo?: *{
+				Region:    *string | fn.#Fn
+				S3Bucket:  *string | fn.#Fn
+				S3Prefix?: *string | fn.#Fn
+			} | fn.#If
+			MaxConcurrency?: *string | fn.#Fn
+			MaxErrors?:      *string | fn.#Fn
+			Name?:           *string | fn.#Fn
+			Priority:        *int | fn.#Fn
+			ServiceRoleArn?: *string | fn.#Fn
+			Targets?:        *[...{
+				Key:    *string | fn.#Fn
+				Values: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			}] | fn.#If
+			TaskArn:                   *string | fn.#Fn
+			TaskInvocationParameters?: *{
+				MaintenanceWindowAutomationParameters?: *{
+					DocumentVersion?: *string | fn.#Fn
+					Parameters?:      *{
+						[string]: _
+					} | fn.#Fn
+				} | fn.#If
+				MaintenanceWindowLambdaParameters?: *{
+					ClientContext?: *string | fn.#Fn
+					Payload?:       *string | fn.#Fn
+					Qualifier?:     *string | fn.#Fn
+				} | fn.#If
+				MaintenanceWindowRunCommandParameters?: *{
+					Comment?:            *string | fn.#Fn
+					DocumentHash?:       *string | fn.#Fn
+					DocumentHashType?:   *string | fn.#Fn
+					NotificationConfig?: *{
+						NotificationArn:     *string | fn.#Fn
+						NotificationEvents?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						NotificationType?:   *string | fn.#Fn
+					} | fn.#If
+					OutputS3BucketName?: *string | fn.#Fn
+					OutputS3KeyPrefix?:  *string | fn.#Fn
+					Parameters?:         *{
+						[string]: _
+					} | fn.#Fn
+					ServiceRoleArn?: *string | fn.#Fn
+					TimeoutSeconds?: *int | fn.#Fn
+				} | fn.#If
+				MaintenanceWindowStepFunctionsParameters?: *{
+					Input?: *string | fn.#Fn
+					Name?:  *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			TaskParameters?: *{
+				[string]: _
+			} | fn.#Fn
+			TaskType: *string | fn.#Fn
+			WindowId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Parameter: {
+		Type: "AWS::SSM::Parameter"
+		Properties: {
+			AllowedPattern?: *string | fn.#Fn
+			DataType?:       *string | fn.#Fn
+			Description?:    *string | fn.#Fn
+			Name?:           *string | fn.#Fn
+			Policies?:       *string | fn.#Fn
+			Tags?:           *{
+				[string]: _
+			} | fn.#Fn
+			Tier?: *string | fn.#Fn
+			Type:  *string | fn.#Fn
+			Value: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -291,4 +291,37 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#StreamingDistribution: {
+		Type: "AWS::CloudFront::StreamingDistribution"
+		Properties: {
+			StreamingDistributionConfig: *{
+				Aliases?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				Comment:  *string | fn.#Fn
+				Enabled:  *bool | fn.#Fn
+				Logging?: *{
+					Bucket:  *string | fn.#Fn
+					Enabled: *bool | fn.#Fn
+					Prefix:  *string | fn.#Fn
+				} | fn.#If
+				PriceClass?: *("PriceClass_100" | "PriceClass_200" | "PriceClass_All") | fn.#Fn
+				S3Origin:    *{
+					DomainName:           *string | fn.#Fn
+					OriginAccessIdentity: *string | fn.#Fn
+				} | fn.#If
+				TrustedSigners: *{
+					AwsAccountNumbers?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Enabled:            *bool | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			Tags: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

@@ -113,4 +113,64 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#OrganizationConfigRule: {
+		Type: "AWS::Config::OrganizationConfigRule"
+		Properties: {
+			ExcludedAccounts?:               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			OrganizationConfigRuleName:      *string | fn.#Fn
+			OrganizationCustomRuleMetadata?: *{
+				Description?:                       *string | fn.#Fn
+				InputParameters?:                   *string | fn.#Fn
+				LambdaFunctionArn:                  *string | fn.#Fn
+				MaximumExecutionFrequency?:         *string | fn.#Fn
+				OrganizationConfigRuleTriggerTypes: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				ResourceIdScope?:                   *string | fn.#Fn
+				ResourceTypesScope?:                [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				TagKeyScope?:                       *string | fn.#Fn
+				TagValueScope?:                     *string | fn.#Fn
+			} | fn.#If
+			OrganizationManagedRuleMetadata?: *{
+				Description?:               *string | fn.#Fn
+				InputParameters?:           *string | fn.#Fn
+				MaximumExecutionFrequency?: *string | fn.#Fn
+				ResourceIdScope?:           *string | fn.#Fn
+				ResourceTypesScope?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				RuleIdentifier:             *string | fn.#Fn
+				TagKeyScope?:               *string | fn.#Fn
+				TagValueScope?:             *string | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#RemediationConfiguration: {
+		Type: "AWS::Config::RemediationConfiguration"
+		Properties: {
+			Automatic?:         *bool | fn.#Fn
+			ConfigRuleName:     *string | fn.#Fn
+			ExecutionControls?: *{
+				SsmControls?: *{
+					ConcurrentExecutionRatePercentage?: *int | fn.#Fn
+					ErrorPercentage?:                   *int | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			MaximumAutomaticAttempts?: *int | fn.#Fn
+			Parameters?:               *{
+				[string]: _
+			} | fn.#Fn
+			ResourceType?:        *string | fn.#Fn
+			RetryAttemptSeconds?: *int | fn.#Fn
+			TargetId:             *string | fn.#Fn
+			TargetType:           *string | fn.#Fn
+			TargetVersion?:       *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

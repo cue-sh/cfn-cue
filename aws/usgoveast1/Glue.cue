@@ -48,12 +48,12 @@ import (
 				ConnectionProperties?: *{
 					[string]: _
 				} | fn.#Fn
-				ConnectionType:                  *string | fn.#Fn
+				ConnectionType:                  *("CUSTOM" | "JDBC" | "KAFKA" | "MARKETPLACE" | "MONGODB" | "NETWORK" | "SFTP") | fn.#Fn
 				Description?:                    *string | fn.#Fn
 				MatchCriteria?:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Name?:                           *string | fn.#Fn
 				PhysicalConnectionRequirements?: *{
-					AvailabilityZone?:    *string | fn.#Fn
+					AvailabilityZone?:    *(=~#"[a-z0-9-]+"#) | fn.#Fn
 					SecurityGroupIdList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					SubnetId?:            *string | fn.#Fn
 				} | fn.#If
@@ -74,13 +74,16 @@ import (
 			DatabaseName?:                 *string | fn.#Fn
 			Description?:                  *string | fn.#Fn
 			Name?:                         *string | fn.#Fn
-			Role:                          *string | fn.#Fn
-			Schedule?:                     *{
+			RecrawlPolicy?:                *{
+				RecrawlBehavior?: *string | fn.#Fn
+			} | fn.#If
+			Role:      *string | fn.#Fn
+			Schedule?: *{
 				ScheduleExpression?: *string | fn.#Fn
 			} | fn.#If
 			SchemaChangePolicy?: *{
-				DeleteBehavior?: *string | fn.#Fn
-				UpdateBehavior?: *string | fn.#Fn
+				DeleteBehavior?: *("DELETE_FROM_DATABASE" | "DEPRECATE_IN_DATABASE" | "LOG") | fn.#Fn
+				UpdateBehavior?: *("LOG" | "UPDATE_IN_DATABASE") | fn.#Fn
 			} | fn.#If
 			TablePrefix?: *string | fn.#Fn
 			Tags?:        *{
@@ -212,7 +215,7 @@ import (
 			NotificationProperty?: *{
 				NotifyDelayAfter?: *int | fn.#Fn
 			} | fn.#If
-			NumberOfWorkers?:       *int | fn.#Fn
+			NumberOfWorkers?:       *(>=0 & <=299) | fn.#Fn
 			Role:                   *string | fn.#Fn
 			SecurityConfiguration?: *string | fn.#Fn
 			Tags?:                  *{
@@ -240,7 +243,7 @@ import (
 					TableName:       *string | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
-			MaxCapacity?:     *number | fn.#Fn
+			MaxCapacity?:     *(>=1 & <=100) | fn.#Fn
 			MaxRetries?:      *int | fn.#Fn
 			Name?:            *string | fn.#Fn
 			NumberOfWorkers?: *int | fn.#Fn
@@ -298,12 +301,12 @@ import (
 						[string]: _
 					} | fn.#Fn
 					SchemaReference?: *{
-						SchameVersionId?: *string | fn.#Fn
-						SchemaId?:        *{
+						SchemaId?: *{
 							RegistryName?: *string | fn.#Fn
 							SchemaArn?:    *string | fn.#Fn
 							SchemaName?:   *string | fn.#Fn
 						} | fn.#If
+						SchemaVersionId?:     *string | fn.#Fn
 						SchemaVersionNumber?: *int | fn.#Fn
 					} | fn.#If
 					SerdeInfo?: *{
@@ -467,12 +470,12 @@ import (
 						[string]: _
 					} | fn.#Fn
 					SchemaReference?: *{
-						SchameVersionId?: *string | fn.#Fn
-						SchemaId?:        *{
+						SchemaId?: *{
 							RegistryName?: *string | fn.#Fn
 							SchemaArn?:    *string | fn.#Fn
 							SchemaName?:   *string | fn.#Fn
 						} | fn.#If
+						SchemaVersionId?:     *string | fn.#Fn
 						SchemaVersionNumber?: *int | fn.#Fn
 					} | fn.#If
 					SerdeInfo?: *{
@@ -495,7 +498,7 @@ import (
 					}] | fn.#If
 					StoredAsSubDirectories?: *bool | fn.#Fn
 				} | fn.#If
-				TableType?:   *string | fn.#Fn
+				TableType?:   *("EXTERNAL_TABLE" | "VIRTUAL_VIEW") | fn.#Fn
 				TargetTable?: *{
 					CatalogId?:    *string | fn.#Fn
 					DatabaseName?: *string | fn.#Fn
@@ -533,17 +536,17 @@ import (
 					CrawlState?:      *string | fn.#Fn
 					CrawlerName?:     *string | fn.#Fn
 					JobName?:         *string | fn.#Fn
-					LogicalOperator?: *string | fn.#Fn
-					State?:           *string | fn.#Fn
+					LogicalOperator?: *("EQUALS") | fn.#Fn
+					State?:           *("SUCCEEDED" | "STOPPED" | "TIMEOUT" | "FAILED") | fn.#Fn
 				}] | fn.#If
-				Logical?: *string | fn.#Fn
+				Logical?: *("AND" | "ANY") | fn.#Fn
 			} | fn.#If
 			Schedule?:        *string | fn.#Fn
 			StartOnCreation?: *bool | fn.#Fn
 			Tags?:            *{
 				[string]: _
 			} | fn.#Fn
-			Type:          *string | fn.#Fn
+			Type:          *("CONDITIONAL" | "EVENT" | "ON_DEMAND" | "SCHEDULED") | fn.#Fn
 			WorkflowName?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

@@ -98,14 +98,14 @@ import (
 	#Domain: {
 		Type: "AWS::Amplify::Domain"
 		Properties: {
-			AppId:                          *string | fn.#Fn
-			AutoSubDomainCreationPatterns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			AutoSubDomainIAMRole?:          *string | fn.#Fn
-			DomainName:                     *string | fn.#Fn
+			AppId:                          *(strings.MinRunes(1) & strings.MaxRunes(20) & (=~#"d[a-z0-9]+"#)) | fn.#Fn
+			AutoSubDomainCreationPatterns?: [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(?s).+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(?s).+"#)) | fn.#Fn)
+			AutoSubDomainIAMRole?:          *(=~#"^$|^arn:.+:iam::\d{12}:role.+"#) | fn.#Fn
+			DomainName:                     *(=~#"^(((?!-)[A-Za-z0-9-]{0,62}[A-Za-z0-9])\.)+((?!-)[A-Za-z0-9-]{1,62}[A-Za-z0-9])(\.)?$"#) | fn.#Fn
 			EnableAutoSubDomain?:           *bool | fn.#Fn
 			SubDomainSettings:              *[...{
-				BranchName: *string | fn.#Fn
-				Prefix:     *string | fn.#Fn
+				BranchName: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"(?s).+"#)) | fn.#Fn
+				Prefix:     *(=~#"(?s).*"#) | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

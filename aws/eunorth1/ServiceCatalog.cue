@@ -6,6 +6,18 @@ import (
 )
 
 #ServiceCatalog: {
+	#AcceptedPortfolioShare: {
+		Type: "AWS::ServiceCatalog::AcceptedPortfolioShare"
+		Properties: {
+			AcceptLanguage?: *string | fn.#Fn
+			PortfolioId:     *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#CloudFormationProduct: {
 		Type: "AWS::ServiceCatalog::CloudFormationProduct"
 		Properties: {
@@ -151,6 +163,34 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#PortfolioProductAssociation: {
+		Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
+		Properties: {
+			AcceptLanguage?:    *string | fn.#Fn
+			PortfolioId:        *string | fn.#Fn
+			ProductId:          *string | fn.#Fn
+			SourcePortfolioId?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#PortfolioShare: {
+		Type: "AWS::ServiceCatalog::PortfolioShare"
+		Properties: {
+			AcceptLanguage?:  *string | fn.#Fn
+			AccountId:        *string | fn.#Fn
+			PortfolioId:      *string | fn.#Fn
+			ShareTagOptions?: *bool | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ResourceUpdateConstraint: {
 		Type: "AWS::ServiceCatalog::ResourceUpdateConstraint"
 		Properties: {
@@ -190,6 +230,25 @@ import (
 			ProductId:              *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}\Z"#)) | fn.#Fn
 			ProvisioningArtifactId: *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}\Z"#)) | fn.#Fn
 			ServiceActionId:        *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}\Z"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#StackSetConstraint: {
+		Type: "AWS::ServiceCatalog::StackSetConstraint"
+		Properties: {
+			AcceptLanguage?:      *string | fn.#Fn
+			AccountList:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			AdminRole:            *string | fn.#Fn
+			Description:          *string | fn.#Fn
+			ExecutionRole:        *string | fn.#Fn
+			PortfolioId:          *string | fn.#Fn
+			ProductId:            *string | fn.#Fn
+			RegionList:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			StackInstanceControl: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

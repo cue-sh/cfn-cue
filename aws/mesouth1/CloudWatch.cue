@@ -25,6 +25,7 @@ import (
 			InsufficientDataActions?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			MetricName?:                       *string | fn.#Fn
 			Metrics?:                          *[...{
+				AccountId?:  *string | fn.#Fn
 				Expression?: *string | fn.#Fn
 				Id:          *(=~#"^([a-z])([A-Za-z0-9\_]+)$"#) | fn.#Fn
 				Label?:      *string | fn.#Fn

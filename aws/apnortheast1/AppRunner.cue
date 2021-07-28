@@ -22,9 +22,9 @@ import (
 				UnhealthyThreshold?: *(>=1 & <=20) | fn.#Fn
 			} | fn.#If
 			InstanceConfiguration?: *{
-				Cpu?:             *("1024" | "2048") | fn.#Fn
+				Cpu?:             *(strings.MinRunes(4) & strings.MaxRunes(6) & (=~#"1024|2048|(1|2) vCPU"#)) | fn.#Fn
 				InstanceRoleArn?: *(strings.MinRunes(29) & strings.MaxRunes(102) & (=~#"arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):iam::[0-9]{12}:role/[\w+=,.@-]{1,64}"#)) | fn.#Fn
-				Memory?:          *("2048" | "3072" | "4096") | fn.#Fn
+				Memory?:          *(strings.MinRunes(4) & strings.MaxRunes(4) & (=~#"2048|3072|4096|(2|3|4) GB"#)) | fn.#Fn
 			} | fn.#If
 			ServiceName?:        *(strings.MinRunes(4) & strings.MaxRunes(40) & (=~#"[A-Za-z0-9][A-Za-z0-9-_]{3,39}"#)) | fn.#Fn
 			SourceConfiguration: *{
@@ -38,18 +38,18 @@ import (
 						CodeConfigurationValues?: *{
 							BuildCommand?:                *string | fn.#Fn
 							Port?:                        *string | fn.#Fn
-							Runtime:                      *("python3" | "nodejs12") | fn.#Fn
+							Runtime:                      *("PYTHON_3" | "NODEJS_12") | fn.#Fn
 							RuntimeEnvironmentVariables?: *[...{
 								Name?:  *string | fn.#Fn
 								Value?: *string | fn.#Fn
 							}] | fn.#If
 							StartCommand?: *string | fn.#Fn
 						} | fn.#If
-						ConfigurationSource: *("Repository" | "API") | fn.#Fn
+						ConfigurationSource: *("REPOSITORY" | "API") | fn.#Fn
 					} | fn.#If
 					RepositoryUrl:     *string | fn.#Fn
 					SourceCodeVersion: *{
-						Type:  *("Branch") | fn.#Fn
+						Type:  *("BRANCH") | fn.#Fn
 						Value: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If

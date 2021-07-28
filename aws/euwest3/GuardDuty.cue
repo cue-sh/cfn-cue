@@ -47,6 +47,21 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#IPSet: {
+		Type: "AWS::GuardDuty::IPSet"
+		Properties: {
+			Activate:   *bool | fn.#Fn
+			DetectorId: *string | fn.#Fn
+			Format:     *("ALIEN_VAULT" | "FIRE_EYE" | "OTX_CSV" | "PROOF_POINT" | "STIX" | "TXT") | fn.#Fn
+			Location:   *string | fn.#Fn
+			Name?:      *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Master: {
 		Type: "AWS::GuardDuty::Master"
 		Properties: {
@@ -69,6 +84,21 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			MemberId:                  *string | fn.#Fn
 			Message?:                  *string | fn.#Fn
 			Status?:                   *("Created" | "Disabled" | "Enabled" | "Invited" | "Removed" | "Resigned") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ThreatIntelSet: {
+		Type: "AWS::GuardDuty::ThreatIntelSet"
+		Properties: {
+			Activate:   *bool | fn.#Fn
+			DetectorId: *string | fn.#Fn
+			Format:     *("ALIEN_VAULT" | "FIRE_EYE" | "OTX_CSV" | "PROOF_POINT" | "STIX" | "TXT") | fn.#Fn
+			Location:   *string | fn.#Fn
+			Name?:      *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

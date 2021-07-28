@@ -19,8 +19,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ElasticIp?:                        *string | fn.#Fn
 			Encrypted?:                        *bool | fn.#Fn
 			Endpoint?:                         *{
-				[string]: _
-			} | fn.#Fn
+				Address?: *string | fn.#Fn
+				Port?:    *string | fn.#Fn
+			} | fn.#If
 			HsmClientCertificateIdentifier?: *string | fn.#Fn
 			HsmConfigurationIdentifier?:     *string | fn.#Fn
 			IamRoles?:                       [...(*string | fn.#Fn)] | (*string | fn.#Fn)

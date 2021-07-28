@@ -6,12 +6,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#Cluster: {
 		Type: "AWS::DAX::Cluster"
 		Properties: {
-			AvailabilityZones?:             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			AvailabilityZones?:             [...(*(=~#"[a-z0-9-]+"#) | fn.#Fn)] | (*(=~#"[a-z0-9-]+"#) | fn.#Fn)
 			ClusterEndpointEncryptionType?: *string | fn.#Fn
 			ClusterName?:                   *string | fn.#Fn
 			Description?:                   *string | fn.#Fn
 			IAMRoleARN:                     *string | fn.#Fn
-			NodeType:                       *string | fn.#Fn
+			NodeType:                       *("dax.r3.2xlarge" | "dax.r3.4xlarge" | "dax.r3.8xlarge" | "dax.r3.large" | "dax.r3.xlarge" | "dax.r4.16xlarge" | "dax.r4.2xlarge" | "dax.r4.4xlarge" | "dax.r4.8xlarge" | "dax.r4.large" | "dax.r4.xlarge" | "dax.r5.12xlarge" | "dax.r5.16xlarge" | "dax.r5.24xlarge" | "dax.r5.2xlarge" | "dax.r5.4xlarge" | "dax.r5.8xlarge" | "dax.r5.large" | "dax.r5.xlarge" | "dax.t2.medium" | "dax.t2.small" | "dax.t3.medium" | "dax.t3.small") | fn.#Fn
 			NotificationTopicARN?:          *string | fn.#Fn
 			ParameterGroupName?:            *string | fn.#Fn
 			PreferredMaintenanceWindow?:    *string | fn.#Fn

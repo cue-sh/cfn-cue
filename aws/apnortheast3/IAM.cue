@@ -131,6 +131,19 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ServiceLinkedRole: {
+		Type: "AWS::IAM::ServiceLinkedRole"
+		Properties: {
+			AWSServiceName: *string | fn.#Fn
+			CustomSuffix?:  *string | fn.#Fn
+			Description?:   *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#User: {
 		Type: "AWS::IAM::User"
 		Properties: {

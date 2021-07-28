@@ -78,13 +78,14 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Description?:   *string | fn.#Fn
 			Destination?:   *string | fn.#Fn
 			Encryption?:    *{
-				Algorithm: *("aes128" | "aes192" | "aes256") | fn.#Fn
-				KeyType?:  *("static-key") | fn.#Fn
-				RoleArn:   *string | fn.#Fn
-				SecretArn: *string | fn.#Fn
+				Algorithm?: *("aes128" | "aes192" | "aes256") | fn.#Fn
+				KeyType?:   *("static-key") | fn.#Fn
+				RoleArn:    *string | fn.#Fn
+				SecretArn:  *string | fn.#Fn
 			} | fn.#If
 			FlowArn:                 *string | fn.#Fn
 			MaxLatency?:             *int | fn.#Fn
+			MinLatency?:             *int | fn.#Fn
 			Name?:                   *string | fn.#Fn
 			Port?:                   *int | fn.#Fn
 			Protocol:                *("zixi-push" | "rtp-fec" | "rtp" | "zixi-pull" | "rist") | fn.#Fn

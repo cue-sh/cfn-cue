@@ -35,6 +35,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 				OrderBy?: *("ASC" | "DESC") | fn.#Fn
 			}] | fn.#If
+			EncryptionSpecification?: *{
+				EncryptionType:    *("AWS_OWNED_KMS_KEY" | "CUSTOMER_MANAGED_KMS_KEY") | fn.#Fn
+				KmsKeyIdentifier?: *string | fn.#Fn
+			} | fn.#If
 			KeyspaceName:        *(=~#"^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$"#) | fn.#Fn
 			PartitionKeyColumns: *[...{
 				ColumnName: *(=~#"^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$"#) | fn.#Fn

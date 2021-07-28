@@ -488,6 +488,7 @@ import (
 						StateMachineName:     *string | fn.#Fn
 					} | fn.#If
 					Timestream?: *{
+						BatchMode?:   *bool | fn.#Fn
 						DatabaseName: *string | fn.#Fn
 						Dimensions:   *[...{
 							Name:  *string | fn.#Fn
@@ -644,6 +645,7 @@ import (
 						StateMachineName:     *string | fn.#Fn
 					} | fn.#If
 					Timestream?: *{
+						BatchMode?:   *bool | fn.#Fn
 						DatabaseName: *string | fn.#Fn
 						Dimensions:   *[...{
 							Name:  *string | fn.#Fn

@@ -25,6 +25,7 @@ import (
 			InsufficientDataActions?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			MetricName?:                       *string | fn.#Fn
 			Metrics?:                          *[...{
+				AccountId?:  *string | fn.#Fn
 				Expression?: *string | fn.#Fn
 				Id:          *(=~#"^([a-z])([A-Za-z0-9\_]+)$"#) | fn.#Fn
 				Label?:      *string | fn.#Fn
@@ -52,6 +53,30 @@ import (
 			ThresholdMetricId?: *string | fn.#Fn
 			TreatMissingData?:  *("breaching" | "ignore" | "missing" | "notBreaching") | fn.#Fn
 			Unit?:              *("Bits" | "Bits/Second" | "Bytes" | "Bytes/Second" | "Count" | "Count/Second" | "Gigabits" | "Gigabits/Second" | "Gigabytes" | "Gigabytes/Second" | "Kilobits" | "Kilobits/Second" | "Kilobytes" | "Kilobytes/Second" | "Megabits" | "Megabits/Second" | "Megabytes" | "Megabytes/Second" | "Microseconds" | "Milliseconds" | "None" | "Percent" | "Seconds" | "Terabits" | "Terabits/Second" | "Terabytes" | "Terabytes/Second") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#AnomalyDetector: {
+		Type: "AWS::CloudWatch::AnomalyDetector"
+		Properties: {
+			Configuration?: *{
+				ExcludedTimeRanges?: *[...{
+					EndTime:   *string | fn.#Fn
+					StartTime: *string | fn.#Fn
+				}] | fn.#If
+				MetricTimeZone?: *string | fn.#Fn
+			} | fn.#If
+			Dimensions?: *[...{
+				Name:  *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			MetricName: *string | fn.#Fn
+			Namespace:  *string | fn.#Fn
+			Stat:       *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

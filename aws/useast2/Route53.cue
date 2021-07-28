@@ -28,7 +28,7 @@ import (
 				RequestInterval?:              *(>=10 & <=30) | fn.#Fn
 				ResourcePath?:                 *string | fn.#Fn
 				SearchString?:                 *string | fn.#Fn
-				Type:                          *("CALCULATED" | "CLOUDWATCH_METRIC" | "HTTP" | "HTTP_STR_MATCH" | "HTTPS" | "HTTPS_STR_MATCH" | "TCP") | fn.#Fn
+				Type:                          *("CALCULATED" | "CLOUDWATCH_METRIC" | "HTTP" | "HTTP_STR_MATCH" | "HTTPS" | "HTTPS_STR_MATCH" | "TCP" | "RECOVERY_CONTROL") | fn.#Fn
 			} | fn.#If
 			HealthCheckTags?: *[...{
 				Key:   *string | fn.#Fn

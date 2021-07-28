@@ -3,6 +3,22 @@ package apnortheast1
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #ServiceDiscovery: {
+	#HttpNamespace: {
+		Type: "AWS::ServiceDiscovery::HttpNamespace"
+		Properties: {
+			Description?: *string | fn.#Fn
+			Name:         *string | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Instance: {
 		Type: "AWS::ServiceDiscovery::Instance"
 		Properties: {
@@ -23,7 +39,14 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			Description?: *string | fn.#Fn
 			Name:         *string | fn.#Fn
-			Tags?:        *[...{
+			Properties?:  *{
+				DnsProperties?: *{
+					SOA?: *{
+						TTL?: *number | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -40,7 +63,14 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			Description?: *string | fn.#Fn
 			Name:         *string | fn.#Fn
-			Tags?:        *[...{
+			Properties?:  *{
+				DnsProperties?: *{
+					SOA?: *{
+						TTL?: *number | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

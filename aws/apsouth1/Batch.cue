@@ -251,4 +251,24 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#JobQueue: {
+		Type: "AWS::Batch::JobQueue"
+		Properties: {
+			ComputeEnvironmentOrder: *[...{
+				ComputeEnvironment: *string | fn.#Fn
+				Order:              *int | fn.#Fn
+			}] | fn.#If
+			JobQueueName?: *string | fn.#Fn
+			Priority:      *int | fn.#Fn
+			State?:        *string | fn.#Fn
+			Tags?:         *{
+				[string]: _
+			} | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

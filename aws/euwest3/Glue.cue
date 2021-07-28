@@ -74,8 +74,11 @@ import (
 			DatabaseName?:                 *string | fn.#Fn
 			Description?:                  *string | fn.#Fn
 			Name?:                         *string | fn.#Fn
-			Role:                          *string | fn.#Fn
-			Schedule?:                     *{
+			RecrawlPolicy?:                *{
+				RecrawlBehavior?: *string | fn.#Fn
+			} | fn.#If
+			Role:      *string | fn.#Fn
+			Schedule?: *{
 				ScheduleExpression?: *string | fn.#Fn
 			} | fn.#If
 			SchemaChangePolicy?: *{
@@ -138,6 +141,12 @@ import (
 		Properties: {
 			CatalogId:     *string | fn.#Fn
 			DatabaseInput: *{
+				CreateTableDefaultPermissions?: *[...{
+					Permissions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Principal?:   *{
+						DataLakePrincipalIdentifier?: *string | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
 				Description?: *string | fn.#Fn
 				LocationUri?: *string | fn.#Fn
 				Name?:        *string | fn.#Fn
@@ -298,12 +307,12 @@ import (
 						[string]: _
 					} | fn.#Fn
 					SchemaReference?: *{
-						SchameVersionId?: *string | fn.#Fn
-						SchemaId?:        *{
+						SchemaId?: *{
 							RegistryName?: *string | fn.#Fn
 							SchemaArn?:    *string | fn.#Fn
 							SchemaName?:   *string | fn.#Fn
 						} | fn.#If
+						SchemaVersionId?:     *string | fn.#Fn
 						SchemaVersionNumber?: *int | fn.#Fn
 					} | fn.#If
 					SerdeInfo?: *{
@@ -467,12 +476,12 @@ import (
 						[string]: _
 					} | fn.#Fn
 					SchemaReference?: *{
-						SchameVersionId?: *string | fn.#Fn
-						SchemaId?:        *{
+						SchemaId?: *{
 							RegistryName?: *string | fn.#Fn
 							SchemaArn?:    *string | fn.#Fn
 							SchemaName?:   *string | fn.#Fn
 						} | fn.#If
+						SchemaVersionId?:     *string | fn.#Fn
 						SchemaVersionNumber?: *int | fn.#Fn
 					} | fn.#If
 					SerdeInfo?: *{
@@ -543,7 +552,7 @@ import (
 			Tags?:            *{
 				[string]: _
 			} | fn.#Fn
-			Type:          *("CONDITIONAL" | "ON_DEMAND" | "SCHEDULED") | fn.#Fn
+			Type:          *("CONDITIONAL" | "EVENT" | "ON_DEMAND" | "SCHEDULED") | fn.#Fn
 			WorkflowName?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

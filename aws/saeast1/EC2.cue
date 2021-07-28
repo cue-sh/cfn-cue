@@ -6,6 +6,33 @@ import (
 )
 
 #EC2: {
+	#CapacityReservation: {
+		Type: "AWS::EC2::CapacityReservation"
+		Properties: {
+			AvailabilityZone:       *string | fn.#Fn
+			EbsOptimized?:          *bool | fn.#Fn
+			EndDate?:               *string | fn.#Fn
+			EndDateType?:           *("limited" | "unlimited") | fn.#Fn
+			EphemeralStorage?:      *bool | fn.#Fn
+			InstanceCount:          *int | fn.#Fn
+			InstanceMatchCriteria?: *("open" | "targeted") | fn.#Fn
+			InstancePlatform:       *("Linux with SQL Server Enterprise" | "Linux with SQL Server Standard" | "Linux with SQL Server Web" | "Linux/UNIX" | "Red Hat Enterprise Linux" | "SUSE Linux" | "Windows" | "Windows with SQL Server" | "Windows with SQL Server Enterprise" | "Windows with SQL Server Standard" | "Windows with SQL Server Web") | fn.#Fn
+			InstanceType:           *("c1.medium" | "c1.xlarge" | "c3.2xlarge" | "c3.4xlarge" | "c3.8xlarge" | "c3.large" | "c3.xlarge" | "c4.2xlarge" | "c4.4xlarge" | "c4.8xlarge" | "c4.large" | "c4.xlarge" | "c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5a.12xlarge" | "c5a.16xlarge" | "c5a.24xlarge" | "c5a.2xlarge" | "c5a.4xlarge" | "c5a.8xlarge" | "c5a.large" | "c5a.xlarge" | "c5ad.12xlarge" | "c5ad.16xlarge" | "c5ad.24xlarge" | "c5ad.2xlarge" | "c5ad.4xlarge" | "c5ad.8xlarge" | "c5ad.large" | "c5ad.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "c5n.18xlarge" | "c5n.2xlarge" | "c5n.4xlarge" | "c5n.9xlarge" | "c5n.large" | "c5n.metal" | "c5n.xlarge" | "c6g.12xlarge" | "c6g.16xlarge" | "c6g.2xlarge" | "c6g.4xlarge" | "c6g.8xlarge" | "c6g.large" | "c6g.medium" | "c6g.metal" | "c6g.xlarge" | "d2.2xlarge" | "d2.4xlarge" | "d2.8xlarge" | "d2.xlarge" | "g2.2xlarge" | "g2.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.metal" | "g4dn.xlarge" | "i2.2xlarge" | "i2.4xlarge" | "i2.8xlarge" | "i2.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.metal" | "i3.xlarge" | "i3en.12xlarge" | "i3en.24xlarge" | "i3en.2xlarge" | "i3en.3xlarge" | "i3en.6xlarge" | "i3en.large" | "i3en.metal" | "i3en.xlarge" | "inf1.24xlarge" | "inf1.2xlarge" | "inf1.6xlarge" | "inf1.xlarge" | "m1.large" | "m1.medium" | "m1.small" | "m1.xlarge" | "m2.2xlarge" | "m2.4xlarge" | "m2.xlarge" | "m3.2xlarge" | "m3.large" | "m3.medium" | "m3.xlarge" | "m4.10xlarge" | "m4.16xlarge" | "m4.2xlarge" | "m4.4xlarge" | "m4.large" | "m4.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5a.12xlarge" | "m5a.16xlarge" | "m5a.24xlarge" | "m5a.2xlarge" | "m5a.4xlarge" | "m5a.8xlarge" | "m5a.large" | "m5a.xlarge" | "m5ad.12xlarge" | "m5ad.16xlarge" | "m5ad.24xlarge" | "m5ad.2xlarge" | "m5ad.4xlarge" | "m5ad.8xlarge" | "m5ad.large" | "m5ad.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "m5zn.12xlarge" | "m5zn.2xlarge" | "m5zn.3xlarge" | "m5zn.6xlarge" | "m5zn.large" | "m5zn.metal" | "m5zn.xlarge" | "m6g.12xlarge" | "m6g.16xlarge" | "m6g.2xlarge" | "m6g.4xlarge" | "m6g.8xlarge" | "m6g.large" | "m6g.medium" | "m6g.metal" | "m6g.xlarge" | "r3.2xlarge" | "r3.4xlarge" | "r3.8xlarge" | "r3.large" | "r3.xlarge" | "r4.16xlarge" | "r4.2xlarge" | "r4.4xlarge" | "r4.8xlarge" | "r4.large" | "r4.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5a.12xlarge" | "r5a.16xlarge" | "r5a.24xlarge" | "r5a.2xlarge" | "r5a.4xlarge" | "r5a.8xlarge" | "r5a.large" | "r5a.xlarge" | "r5ad.12xlarge" | "r5ad.16xlarge" | "r5ad.24xlarge" | "r5ad.2xlarge" | "r5ad.4xlarge" | "r5ad.8xlarge" | "r5ad.large" | "r5ad.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "r5n.12xlarge" | "r5n.16xlarge" | "r5n.24xlarge" | "r5n.2xlarge" | "r5n.4xlarge" | "r5n.8xlarge" | "r5n.large" | "r5n.metal" | "r5n.xlarge" | "r6g.12xlarge" | "r6g.16xlarge" | "r6g.2xlarge" | "r6g.4xlarge" | "r6g.8xlarge" | "r6g.large" | "r6g.medium" | "r6g.metal" | "r6g.xlarge" | "t1.micro" | "t2.2xlarge" | "t2.large" | "t2.medium" | "t2.micro" | "t2.nano" | "t2.small" | "t2.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "t3a.2xlarge" | "t3a.large" | "t3a.medium" | "t3a.micro" | "t3a.nano" | "t3a.small" | "t3a.xlarge" | "t4g.2xlarge" | "t4g.large" | "t4g.medium" | "t4g.micro" | "t4g.nano" | "t4g.small" | "t4g.xlarge" | "u-12tb1.metal" | "u-6tb1.metal" | "u-9tb1.metal" | "x1.16xlarge" | "x1.32xlarge" | "x1e.16xlarge" | "x1e.2xlarge" | "x1e.32xlarge" | "x1e.4xlarge" | "x1e.8xlarge" | "x1e.xlarge") | fn.#Fn
+			TagSpecifications?:     *[...{
+				ResourceType?: *string | fn.#Fn
+				Tags?:         *[...{
+					Key:   *string | fn.#Fn
+					Value: *string | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
+			Tenancy?: *("dedicated" | "default") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ClientVpnAuthorizationRule: {
 		Type: "AWS::EC2::ClientVpnAuthorizationRule"
 		Properties: {
@@ -135,6 +162,7 @@ import (
 	#EC2Fleet: {
 		Type: "AWS::EC2::EC2Fleet"
 		Properties: {
+			Context?:                         *string | fn.#Fn
 			ExcessCapacityTerminationPolicy?: *("termination" | "no-termination") | fn.#Fn
 			LaunchTemplateConfigs:            *[...{
 				LaunchTemplateSpecification?: *{
@@ -553,7 +581,7 @@ import (
 				SecurityGroupIds?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SecurityGroups?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				TagSpecifications?: *[...{
-					ResourceType: *("client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "internet-gateway" | "key-pair" | "launch-template" | "local-gateway-route-table-vpc-association" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "reserved-instances" | "route-table" | "security-group" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
+					ResourceType: *("client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "instance-event-window" | "internet-gateway" | "key-pair" | "launch-template" | "local-gateway-route-table-vpc-association" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "reserved-instances" | "route-table" | "security-group" | "security-group-rule" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
 					Tags:         *[...{
 						Key:   *string | fn.#Fn
 						Value: *string | fn.#Fn
@@ -906,6 +934,7 @@ import (
 		Type: "AWS::EC2::SpotFleet"
 		Properties: SpotFleetRequestConfigData: *{
 			AllocationStrategy?:              *("capacityOptimized" | "capacityOptimizedPrioritized" | "diversified" | "lowestPrice") | fn.#Fn
+			Context?:                         *string | fn.#Fn
 			ExcessCapacityTerminationPolicy?: *("Default" | "NoTermination" | "default" | "noTermination") | fn.#Fn
 			IamFleetRole:                     *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 			InstanceInterruptionBehavior?:    *("hibernate" | "stop" | "terminate") | fn.#Fn
@@ -1163,18 +1192,21 @@ import (
 	#TransitGateway: {
 		Type: "AWS::EC2::TransitGateway"
 		Properties: {
-			AmazonSideAsn?:                *int | fn.#Fn
-			AutoAcceptSharedAttachments?:  *("disable" | "enable") | fn.#Fn
-			DefaultRouteTableAssociation?: *("disable" | "enable") | fn.#Fn
-			DefaultRouteTablePropagation?: *("disable" | "enable") | fn.#Fn
-			Description?:                  *string | fn.#Fn
-			DnsSupport?:                   *("disable" | "enable") | fn.#Fn
-			MulticastSupport?:             *string | fn.#Fn
-			Tags?:                         *[...{
+			AmazonSideAsn?:                  *int | fn.#Fn
+			AssociationDefaultRouteTableId?: *string | fn.#Fn
+			AutoAcceptSharedAttachments?:    *("disable" | "enable") | fn.#Fn
+			DefaultRouteTableAssociation?:   *("disable" | "enable") | fn.#Fn
+			DefaultRouteTablePropagation?:   *("disable" | "enable") | fn.#Fn
+			Description?:                    *string | fn.#Fn
+			DnsSupport?:                     *("disable" | "enable") | fn.#Fn
+			MulticastSupport?:               *string | fn.#Fn
+			PropagationDefaultRouteTableId?: *string | fn.#Fn
+			Tags?:                           *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			VpnEcmpSupport?: *("disable" | "enable") | fn.#Fn
+			TransitGatewayCidrBlocks?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			VpnEcmpSupport?:           *("disable" | "enable") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -1350,6 +1382,8 @@ import (
 		Properties: {
 			AmazonProvidedIpv6CidrBlock?: *bool | fn.#Fn
 			CidrBlock?:                   *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
+			Ipv6CidrBlock?:               *string | fn.#Fn
+			Ipv6Pool?:                    *string | fn.#Fn
 			VpcId:                        *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
@@ -1386,6 +1420,20 @@ import (
 			SubnetIds?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			VpcEndpointType?:   *("Gateway" | "GatewayLoadBalancer" | "Interface") | fn.#Fn
 			VpcId:              *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#VPCEndpointConnectionNotification: {
+		Type: "AWS::EC2::VPCEndpointConnectionNotification"
+		Properties: {
+			ConnectionEvents:          [...(*("Accept" | "Connect" | "Delete" | "Reject") | fn.#Fn)] | (*("Accept" | "Connect" | "Delete" | "Reject") | fn.#Fn)
+			ConnectionNotificationArn: *string | fn.#Fn
+			ServiceId?:                *string | fn.#Fn
+			VPCEndpointId?:            *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -3,6 +3,42 @@ package apsoutheast1
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #Cognito: {
+	#IdentityPool: {
+		Type: "AWS::Cognito::IdentityPool"
+		Properties: {
+			AllowClassicFlow?:              *bool | fn.#Fn
+			AllowUnauthenticatedIdentities: *bool | fn.#Fn
+			CognitoEvents?:                 *{
+				[string]: _
+			} | fn.#Fn
+			CognitoIdentityProviders?: *[...{
+				ClientId?:             *string | fn.#Fn
+				ProviderName?:         *string | fn.#Fn
+				ServerSideTokenCheck?: *bool | fn.#Fn
+			}] | fn.#If
+			CognitoStreams?: *{
+				RoleArn?:         *string | fn.#Fn
+				StreamName?:      *string | fn.#Fn
+				StreamingStatus?: *("DISABLED" | "ENABLED") | fn.#Fn
+			} | fn.#If
+			DeveloperProviderName?:     *string | fn.#Fn
+			IdentityPoolName?:          *string | fn.#Fn
+			OpenIdConnectProviderARNs?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			PushSync?:                  *{
+				ApplicationArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				RoleArn?:         *string | fn.#Fn
+			} | fn.#If
+			SamlProviderARNs?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SupportedLoginProviders?: *{
+				[string]: _
+			} | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#IdentityPoolRoleAttachment: {
 		Type: "AWS::Cognito::IdentityPoolRoleAttachment"
 		Properties: {
@@ -188,6 +224,21 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#UserPoolGroup: {
+		Type: "AWS::Cognito::UserPoolGroup"
+		Properties: {
+			Description?: *string | fn.#Fn
+			GroupName?:   *string | fn.#Fn
+			Precedence?:  *number | fn.#Fn
+			RoleArn?:     *string | fn.#Fn
+			UserPoolId:   *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#UserPoolIdentityProvider: {
 		Type: "AWS::Cognito::UserPoolIdentityProvider"
 		Properties: {
@@ -289,6 +340,45 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			CSS?:       *string | fn.#Fn
 			ClientId:   *string | fn.#Fn
 			UserPoolId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#UserPoolUser: {
+		Type: "AWS::Cognito::UserPoolUser"
+		Properties: {
+			ClientMetadata?: *{
+				[string]: _
+			} | fn.#Fn
+			DesiredDeliveryMediums?: [...(*("EMAIL" | "SMS") | fn.#Fn)] | (*("EMAIL" | "SMS") | fn.#Fn)
+			ForceAliasCreation?:     *bool | fn.#Fn
+			MessageAction?:          *("RESEND" | "SUPPRESS") | fn.#Fn
+			UserAttributes?:         *[...{
+				Name?:  *string | fn.#Fn
+				Value?: *string | fn.#Fn
+			}] | fn.#If
+			UserPoolId:      *string | fn.#Fn
+			Username?:       *string | fn.#Fn
+			ValidationData?: *[...{
+				Name?:  *string | fn.#Fn
+				Value?: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#UserPoolUserToGroupAttachment: {
+		Type: "AWS::Cognito::UserPoolUserToGroupAttachment"
+		Properties: {
+			GroupName:  *string | fn.#Fn
+			UserPoolId: *string | fn.#Fn
+			Username:   *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

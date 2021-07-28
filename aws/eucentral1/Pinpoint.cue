@@ -426,6 +426,25 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#EmailTemplate: {
+		Type: "AWS::Pinpoint::EmailTemplate"
+		Properties: {
+			DefaultSubstitutions?: *string | fn.#Fn
+			HtmlPart?:             *string | fn.#Fn
+			Subject:               *string | fn.#Fn
+			Tags?:                 *{
+				[string]: _
+			} | fn.#Fn
+			TemplateDescription?: *string | fn.#Fn
+			TemplateName:         *string | fn.#Fn
+			TextPart?:            *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#EventStream: {
 		Type: "AWS::Pinpoint::EventStream"
 		Properties: {
@@ -445,6 +464,67 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ApiKey:        *string | fn.#Fn
 			ApplicationId: *string | fn.#Fn
 			Enabled?:      *bool | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#PushTemplate: {
+		Type: "AWS::Pinpoint::PushTemplate"
+		Properties: {
+			ADM?: *{
+				Action?:            *string | fn.#Fn
+				Body?:              *string | fn.#Fn
+				ImageIconUrl?:      *string | fn.#Fn
+				ImageUrl?:          *string | fn.#Fn
+				SmallImageIconUrl?: *string | fn.#Fn
+				Sound?:             *string | fn.#Fn
+				Title?:             *string | fn.#Fn
+				Url?:               *string | fn.#Fn
+			} | fn.#If
+			APNS?: *{
+				Action?:   *string | fn.#Fn
+				Body?:     *string | fn.#Fn
+				MediaUrl?: *string | fn.#Fn
+				Sound?:    *string | fn.#Fn
+				Title?:    *string | fn.#Fn
+				Url?:      *string | fn.#Fn
+			} | fn.#If
+			Baidu?: *{
+				Action?:            *string | fn.#Fn
+				Body?:              *string | fn.#Fn
+				ImageIconUrl?:      *string | fn.#Fn
+				ImageUrl?:          *string | fn.#Fn
+				SmallImageIconUrl?: *string | fn.#Fn
+				Sound?:             *string | fn.#Fn
+				Title?:             *string | fn.#Fn
+				Url?:               *string | fn.#Fn
+			} | fn.#If
+			Default?: *{
+				Action?: *string | fn.#Fn
+				Body?:   *string | fn.#Fn
+				Sound?:  *string | fn.#Fn
+				Title?:  *string | fn.#Fn
+				Url?:    *string | fn.#Fn
+			} | fn.#If
+			DefaultSubstitutions?: *string | fn.#Fn
+			GCM?:                  *{
+				Action?:            *string | fn.#Fn
+				Body?:              *string | fn.#Fn
+				ImageIconUrl?:      *string | fn.#Fn
+				ImageUrl?:          *string | fn.#Fn
+				SmallImageIconUrl?: *string | fn.#Fn
+				Sound?:             *string | fn.#Fn
+				Title?:             *string | fn.#Fn
+				Url?:               *string | fn.#Fn
+			} | fn.#If
+			Tags?: *{
+				[string]: _
+			} | fn.#Fn
+			TemplateDescription?: *string | fn.#Fn
+			TemplateName:         *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -597,6 +677,23 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Tags?: *{
 				[string]: _
 			} | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#SmsTemplate: {
+		Type: "AWS::Pinpoint::SmsTemplate"
+		Properties: {
+			Body:                  *string | fn.#Fn
+			DefaultSubstitutions?: *string | fn.#Fn
+			Tags?:                 *{
+				[string]: _
+			} | fn.#Fn
+			TemplateDescription?: *string | fn.#Fn
+			TemplateName:         *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

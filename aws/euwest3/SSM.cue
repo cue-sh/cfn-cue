@@ -16,8 +16,8 @@ import (
 			ComplianceSeverity?:            *("CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "UNSPECIFIED") | fn.#Fn
 			DocumentVersion?:               *(=~#"([$]LATEST|[$]DEFAULT|^[1-9][0-9]*$)"#) | fn.#Fn
 			InstanceId?:                    *(=~#"(^i-(\w{8}|\w{17})$)|(^mi-\w{17}$)"#) | fn.#Fn
-			MaxConcurrency?:                *(strings.MinRunes(1) & strings.MaxRunes(7) & (=~#"^([1-9][0-9]*|[1-9][0-9]%|[1-9]%|100%)$"#)) | fn.#Fn
-			MaxErrors?:                     *(strings.MinRunes(1) & strings.MaxRunes(7) & (=~#"^([1-9][0-9]*|[0]|[1-9][0-9]%|[0-9]%|100%)$"#)) | fn.#Fn
+			MaxConcurrency?:                *(=~#"^([1-9][0-9]{0,6}|[1-9][0-9]%|[1-9]%|100%)$"#) | fn.#Fn
+			MaxErrors?:                     *(=~#"^([1-9][0-9]{0,6}|[0]|[1-9][0-9]%|[0-9]%|100%)$"#) | fn.#Fn
 			Name:                           *(=~#"^[a-zA-Z0-9_\-.:/]{3,200}$"#) | fn.#Fn
 			OutputLocation?:                *{
 				S3Location?: *{
@@ -56,8 +56,8 @@ import (
 			Content: *{
 				[string]: _
 			} | fn.#Fn
-			DocumentFormat?: *("YAML" | "JSON") | fn.#Fn
-			DocumentType?:   *("ApplicationConfiguration" | "ApplicationConfigurationSchema" | "Automation" | "Automation.ChangeTemplate" | "Command" | "DeploymentStrategy" | "Package" | "Policy" | "Session") | fn.#Fn
+			DocumentFormat?: *("YAML" | "JSON" | "TEXT") | fn.#Fn
+			DocumentType?:   *("ApplicationConfiguration" | "ApplicationConfigurationSchema" | "Automation" | "Automation.ChangeTemplate" | "ChangeCalendar" | "CloudFormation" | "Command" | "DeploymentStrategy" | "Package" | "Policy" | "ProblemAnalysis" | "ProblemAnalysisTemplate" | "Session") | fn.#Fn
 			Name?:           *(=~#"^[a-zA-Z0-9_\-.]{3,128}$"#) | fn.#Fn
 			Requires?:       *[...{
 				Name?:    *(=~#"^[a-zA-Z0-9_\-.:/]{3,200}$"#) | fn.#Fn
@@ -198,6 +198,54 @@ import (
 			Tier?: *string | fn.#Fn
 			Type:  *string | fn.#Fn
 			Value: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#PatchBaseline: {
+		Type: "AWS::SSM::PatchBaseline"
+		Properties: {
+			ApprovalRules?: *{
+				PatchRules?: *[...{
+					ApproveAfterDays?:  *int | fn.#Fn
+					ApproveUntilDate?:  *{} | fn.#If
+					ComplianceLevel?:   *string | fn.#Fn
+					EnableNonSecurity?: *bool | fn.#Fn
+					PatchFilterGroup?:  *{
+						PatchFilters?: *[...{
+							Key?:    *string | fn.#Fn
+							Values?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						}] | fn.#If
+					} | fn.#If
+				}] | fn.#If
+			} | fn.#If
+			ApprovedPatches?:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			ApprovedPatchesComplianceLevel?:   *string | fn.#Fn
+			ApprovedPatchesEnableNonSecurity?: *bool | fn.#Fn
+			Description?:                      *string | fn.#Fn
+			GlobalFilters?:                    *{
+				PatchFilters?: *[...{
+					Key?:    *string | fn.#Fn
+					Values?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				}] | fn.#If
+			} | fn.#If
+			Name:                   *string | fn.#Fn
+			OperatingSystem?:       *string | fn.#Fn
+			PatchGroups?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			RejectedPatches?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			RejectedPatchesAction?: *string | fn.#Fn
+			Sources?:               *[...{
+				Configuration?: *string | fn.#Fn
+				Name?:          *string | fn.#Fn
+				Products?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			}] | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

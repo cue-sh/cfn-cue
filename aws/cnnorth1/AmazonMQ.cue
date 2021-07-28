@@ -13,12 +13,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Id:       *string | fn.#Fn
 				Revision: *int | fn.#Fn
 			} | fn.#If
-			DeploymentMode:     *string | fn.#Fn
+			DeploymentMode:     *("ACTIVE_STANDBY_MULTI_AZ" | "CLUSTER_MULTI_AZ" | "SINGLE_INSTANCE") | fn.#Fn
 			EncryptionOptions?: *{
 				KmsKeyId?:      *string | fn.#Fn
 				UseAwsOwnedKey: *bool | fn.#Fn
 			} | fn.#If
-			EngineType:          *string | fn.#Fn
+			EngineType:          *("ACTIVEMQ" | "RABBITMQ") | fn.#Fn
 			EngineVersion:       *string | fn.#Fn
 			HostInstanceType:    *string | fn.#Fn
 			LdapServerMetadata?: *{
@@ -70,7 +70,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			AuthenticationStrategy?: *string | fn.#Fn
 			Data:                    *string | fn.#Fn
 			Description?:            *string | fn.#Fn
-			EngineType:              *string | fn.#Fn
+			EngineType:              *("ACTIVEMQ" | "RABBITMQ") | fn.#Fn
 			EngineVersion:           *string | fn.#Fn
 			Name:                    *string | fn.#Fn
 			Tags?:                   *[...{

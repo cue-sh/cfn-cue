@@ -23,6 +23,7 @@ import (
 				Schedule:            *string | fn.#Fn
 				ScheduledActionName: *string | fn.#Fn
 				StartTime?:          *time.Time | fn.#Fn
+				Timezone?:           *string | fn.#Fn
 			}] | fn.#If
 			ServiceNamespace: *string | fn.#Fn
 			SuspendedState?:  *{

@@ -12,7 +12,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 			} | fn.#If
 			Enable:                      *bool | fn.#Fn
-			FindingPublishingFrequency?: *string | fn.#Fn
+			FindingPublishingFrequency?: *("FIFTEEN_MINUTES" | "ONE_HOUR" | "SIX_HOURS") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -23,7 +23,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#Filter: {
 		Type: "AWS::GuardDuty::Filter"
 		Properties: {
-			Action:          *string | fn.#Fn
+			Action:          *("ARCHIVE" | "NOOP") | fn.#Fn
 			Description:     *string | fn.#Fn
 			DetectorId:      *string | fn.#Fn
 			FindingCriteria: *{
@@ -52,7 +52,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			Activate:   *bool | fn.#Fn
 			DetectorId: *string | fn.#Fn
-			Format:     *string | fn.#Fn
+			Format:     *("ALIEN_VAULT" | "FIRE_EYE" | "OTX_CSV" | "PROOF_POINT" | "STIX" | "TXT") | fn.#Fn
 			Location:   *string | fn.#Fn
 			Name?:      *string | fn.#Fn
 		}
@@ -83,7 +83,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Email:                     *string | fn.#Fn
 			MemberId:                  *string | fn.#Fn
 			Message?:                  *string | fn.#Fn
-			Status?:                   *string | fn.#Fn
+			Status?:                   *("Created" | "Disabled" | "Enabled" | "Invited" | "Removed" | "Resigned") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -96,7 +96,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			Activate:   *bool | fn.#Fn
 			DetectorId: *string | fn.#Fn
-			Format:     *string | fn.#Fn
+			Format:     *("ALIEN_VAULT" | "FIRE_EYE" | "OTX_CSV" | "PROOF_POINT" | "STIX" | "TXT") | fn.#Fn
 			Location:   *string | fn.#Fn
 			Name?:      *string | fn.#Fn
 		}

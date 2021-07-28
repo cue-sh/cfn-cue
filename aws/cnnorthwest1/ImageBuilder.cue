@@ -146,6 +146,9 @@ import (
 	#ImageRecipe: {
 		Type: "AWS::ImageBuilder::ImageRecipe"
 		Properties: {
+			AdditionalInstanceConfiguration?: *{
+				[string]: _
+			} | fn.#Fn
 			BlockDeviceMappings?: *[...{
 				DeviceName?: *string | fn.#Fn
 				Ebs?:        *{
@@ -162,6 +165,10 @@ import (
 			}] | fn.#If
 			Components: *[...{
 				ComponentArn?: *string | fn.#Fn
+				Parameters?:   *[...{
+					Name:  *string | fn.#Fn
+					Value: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				}] | fn.#If
 			}] | fn.#If
 			Description?: *string | fn.#Fn
 			Name:         *string | fn.#Fn

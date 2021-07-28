@@ -156,4 +156,46 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ReportGroup: {
+		Type: "AWS::CodeBuild::ReportGroup"
+		Properties: {
+			DeleteReports?: *bool | fn.#Fn
+			ExportConfig:   *{
+				ExportConfigType: *string | fn.#Fn
+				S3Destination?:   *{
+					Bucket:              *string | fn.#Fn
+					BucketOwner?:        *string | fn.#Fn
+					EncryptionDisabled?: *bool | fn.#Fn
+					EncryptionKey?:      *string | fn.#Fn
+					Packaging?:          *string | fn.#Fn
+					Path?:               *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			Name?: *string | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			Type: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#SourceCredential: {
+		Type: "AWS::CodeBuild::SourceCredential"
+		Properties: {
+			AuthType:   *string | fn.#Fn
+			ServerType: *string | fn.#Fn
+			Token:      *string | fn.#Fn
+			Username?:  *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

@@ -81,7 +81,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			SecretId:   *string | fn.#Fn
 			TargetId:   *string | fn.#Fn
-			TargetType: *string | fn.#Fn
+			TargetType: *("AWS::DocDB::DBCluster" | "AWS::DocDB::DBInstance" | "AWS::RDS::DBCluster" | "AWS::RDS::DBInstance" | "AWS::Redshift::Cluster") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

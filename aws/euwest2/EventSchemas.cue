@@ -3,6 +3,22 @@ package euwest2
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #EventSchemas: {
+	#Discoverer: {
+		Type: "AWS::EventSchemas::Discoverer"
+		Properties: {
+			Description?: *string | fn.#Fn
+			SourceArn:    *string | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Registry: {
 		Type: "AWS::EventSchemas::Registry"
 		Properties: {

@@ -10,11 +10,8 @@ import (
 	#AccessPoint: {
 		Type: "AWS::S3::AccessPoint"
 		Properties: {
-			Bucket:         *(strings.MinRunes(3) & strings.MaxRunes(255)) | fn.#Fn
-			CreationDate?:  *string | fn.#Fn
-			Name?:          *(strings.MinRunes(3) & strings.MaxRunes(50) & (=~#"^[a-z0-9]([a-z0-9\-]*[a-z0-9])?$"#)) | fn.#Fn
-			NetworkOrigin?: *("Internet" | "VPC") | fn.#Fn
-			Policy?:        *{
+			Bucket:  *(strings.MinRunes(3) & strings.MaxRunes(255)) | fn.#Fn
+			Policy?: *{
 				[string]: _
 			} | fn.#Fn
 			PolicyStatus?: *{

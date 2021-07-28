@@ -9,10 +9,6 @@ import (
 	#Asset: {
 		Type: "AWS::MediaPackage::Asset"
 		Properties: {
-			EgressEndpoints?: *[...{
-				PackagingConfigurationId: *string | fn.#Fn
-				Url:                      *string | fn.#Fn
-			}] | fn.#If
 			Id:               *string | fn.#Fn
 			PackagingGroupId: *string | fn.#Fn
 			ResourceId?:      *string | fn.#Fn
@@ -34,11 +30,11 @@ import (
 		Properties: {
 			Description?:      *string | fn.#Fn
 			EgressAccessLogs?: *{
-				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"\A\/aws\/MediaPackage\/[0-9a-zA-Z-_\/\.#]+\Z"#)) | fn.#Fn
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A^(\/aws\/MediaPackage\/)[a-zA-Z0-9_-]+\Z"#)) | fn.#Fn
 			} | fn.#If
 			Id:                 *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A[0-9a-zA-Z-_]+\Z"#)) | fn.#Fn
 			IngressAccessLogs?: *{
-				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"\A\/aws\/MediaPackage\/[0-9a-zA-Z-_\/\.#]+\Z"#)) | fn.#Fn
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"\A^(\/aws\/MediaPackage\/)[a-zA-Z0-9_-]+\Z"#)) | fn.#Fn
 			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn

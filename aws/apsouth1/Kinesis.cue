@@ -10,7 +10,7 @@ import (
 		Type: "AWS::Kinesis::Stream"
 		Properties: {
 			Name?:                 *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9_.-]+$"#)) | fn.#Fn
-			RetentionPeriodHours?: *(>=1 & <=168) | fn.#Fn
+			RetentionPeriodHours?: *(>=1 & <=8760) | fn.#Fn
 			ShardCount:            *(>=1 & <=100000) | fn.#Fn
 			StreamEncryption?:     *{
 				EncryptionType: *("KMS") | fn.#Fn

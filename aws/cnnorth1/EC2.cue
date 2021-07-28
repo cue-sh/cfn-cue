@@ -45,6 +45,7 @@ import (
 	#EC2Fleet: {
 		Type: "AWS::EC2::EC2Fleet"
 		Properties: {
+			Context?:                         *string | fn.#Fn
 			ExcessCapacityTerminationPolicy?: *("termination" | "no-termination") | fn.#Fn
 			LaunchTemplateConfigs:            *[...{
 				LaunchTemplateSpecification?: *{
@@ -451,7 +452,7 @@ import (
 				SecurityGroupIds?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SecurityGroups?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				TagSpecifications?: *[...{
-					ResourceType: *("client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "internet-gateway" | "key-pair" | "launch-template" | "local-gateway-route-table-vpc-association" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "reserved-instances" | "route-table" | "security-group" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
+					ResourceType: *("client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "instance-event-window" | "internet-gateway" | "key-pair" | "launch-template" | "local-gateway-route-table-vpc-association" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "reserved-instances" | "route-table" | "security-group" | "security-group-rule" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
 					Tags:         *[...{
 						Key:   *string | fn.#Fn
 						Value: *string | fn.#Fn
@@ -718,6 +719,7 @@ import (
 		Type: "AWS::EC2::SpotFleet"
 		Properties: SpotFleetRequestConfigData: *{
 			AllocationStrategy?:              *("capacityOptimized" | "capacityOptimizedPrioritized" | "diversified" | "lowestPrice") | fn.#Fn
+			Context?:                         *string | fn.#Fn
 			ExcessCapacityTerminationPolicy?: *("Default" | "NoTermination" | "default" | "noTermination") | fn.#Fn
 			IamFleetRole:                     *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 			InstanceInterruptionBehavior?:    *("hibernate" | "stop" | "terminate") | fn.#Fn
@@ -972,6 +974,98 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#TransitGateway: {
+		Type: "AWS::EC2::TransitGateway"
+		Properties: {
+			AmazonSideAsn?:                *int | fn.#Fn
+			AutoAcceptSharedAttachments?:  *("disable" | "enable") | fn.#Fn
+			DefaultRouteTableAssociation?: *("disable" | "enable") | fn.#Fn
+			DefaultRouteTablePropagation?: *("disable" | "enable") | fn.#Fn
+			Description?:                  *string | fn.#Fn
+			DnsSupport?:                   *("disable" | "enable") | fn.#Fn
+			MulticastSupport?:             *string | fn.#Fn
+			Tags?:                         *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpnEcmpSupport?: *("disable" | "enable") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayAttachment: {
+		Type: "AWS::EC2::TransitGatewayAttachment"
+		Properties: {
+			SubnetIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:     *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+			VpcId:            *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayRoute: {
+		Type: "AWS::EC2::TransitGatewayRoute"
+		Properties: {
+			Blackhole?:                  *bool | fn.#Fn
+			DestinationCidrBlock?:       *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$"#) | fn.#Fn
+			TransitGatewayAttachmentId?: *string | fn.#Fn
+			TransitGatewayRouteTableId:  *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayRouteTable: {
+		Type: "AWS::EC2::TransitGatewayRouteTable"
+		Properties: {
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayRouteTableAssociation: {
+		Type: "AWS::EC2::TransitGatewayRouteTableAssociation"
+		Properties: {
+			TransitGatewayAttachmentId: *string | fn.#Fn
+			TransitGatewayRouteTableId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayRouteTablePropagation: {
+		Type: "AWS::EC2::TransitGatewayRouteTablePropagation"
+		Properties: {
+			TransitGatewayAttachmentId: *string | fn.#Fn
+			TransitGatewayRouteTableId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#VPC: {
 		Type: "AWS::EC2::VPC"
 		Properties: {
@@ -995,6 +1089,8 @@ import (
 		Properties: {
 			AmazonProvidedIpv6CidrBlock?: *bool | fn.#Fn
 			CidrBlock?:                   *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
+			Ipv6CidrBlock?:               *string | fn.#Fn
+			Ipv6Pool?:                    *string | fn.#Fn
 			VpcId:                        *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

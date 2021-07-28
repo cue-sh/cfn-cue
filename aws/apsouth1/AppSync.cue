@@ -19,6 +19,20 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ApiKey: {
+		Type: "AWS::AppSync::ApiKey"
+		Properties: {
+			ApiId:        *string | fn.#Fn
+			ApiKeyId?:    *string | fn.#Fn
+			Description?: *string | fn.#Fn
+			Expires?:     *number | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#DataSource: {
 		Type: "AWS::AppSync::DataSource"
 		Properties: {
@@ -139,6 +153,19 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				UserPoolId?:       *string | fn.#Fn
 			} | fn.#If
 			XrayEnabled?: *bool | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#GraphQLSchema: {
+		Type: "AWS::AppSync::GraphQLSchema"
+		Properties: {
+			ApiId:                 *string | fn.#Fn
+			Definition?:           *string | fn.#Fn
+			DefinitionS3Location?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

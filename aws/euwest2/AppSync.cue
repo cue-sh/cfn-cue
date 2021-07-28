@@ -19,6 +19,99 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ApiKey: {
+		Type: "AWS::AppSync::ApiKey"
+		Properties: {
+			ApiId:        *string | fn.#Fn
+			ApiKeyId?:    *string | fn.#Fn
+			Description?: *string | fn.#Fn
+			Expires?:     *number | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DataSource: {
+		Type: "AWS::AppSync::DataSource"
+		Properties: {
+			ApiId:           *string | fn.#Fn
+			Description?:    *string | fn.#Fn
+			DynamoDBConfig?: *{
+				AwsRegion:        *string | fn.#Fn
+				DeltaSyncConfig?: *{
+					BaseTableTTL:       *string | fn.#Fn
+					DeltaSyncTableName: *string | fn.#Fn
+					DeltaSyncTableTTL:  *string | fn.#Fn
+				} | fn.#If
+				TableName:             *string | fn.#Fn
+				UseCallerCredentials?: *bool | fn.#Fn
+				Versioned?:            *bool | fn.#Fn
+			} | fn.#If
+			ElasticsearchConfig?: *{
+				AwsRegion: *string | fn.#Fn
+				Endpoint:  *string | fn.#Fn
+			} | fn.#If
+			HttpConfig?: *{
+				AuthorizationConfig?: *{
+					AuthorizationType: *string | fn.#Fn
+					AwsIamConfig?:     *{
+						SigningRegion?:      *string | fn.#Fn
+						SigningServiceName?: *string | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				Endpoint: *string | fn.#Fn
+			} | fn.#If
+			LambdaConfig?: *{
+				LambdaFunctionArn: *string | fn.#Fn
+			} | fn.#If
+			Name:                      *string | fn.#Fn
+			RelationalDatabaseConfig?: *{
+				RdsHttpEndpointConfig?: *{
+					AwsRegion:           *string | fn.#Fn
+					AwsSecretStoreArn:   *string | fn.#Fn
+					DatabaseName?:       *string | fn.#Fn
+					DbClusterIdentifier: *string | fn.#Fn
+					Schema?:             *string | fn.#Fn
+				} | fn.#If
+				RelationalDatabaseSourceType: *string | fn.#Fn
+			} | fn.#If
+			ServiceRoleArn?: *string | fn.#Fn
+			Type:            *("AMAZON_DYNAMODB" | "AMAZON_ELASTICSEARCH" | "AWS_LAMBDA" | "HTTP" | "NONE" | "RELATIONAL_DATABASE") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#FunctionConfiguration: {
+		Type: "AWS::AppSync::FunctionConfiguration"
+		Properties: {
+			ApiId:                              *string | fn.#Fn
+			DataSourceName:                     *string | fn.#Fn
+			Description?:                       *string | fn.#Fn
+			FunctionVersion:                    *string | fn.#Fn
+			Name:                               *string | fn.#Fn
+			RequestMappingTemplate?:            *string | fn.#Fn
+			RequestMappingTemplateS3Location?:  *string | fn.#Fn
+			ResponseMappingTemplate?:           *string | fn.#Fn
+			ResponseMappingTemplateS3Location?: *string | fn.#Fn
+			SyncConfig?:                        *{
+				ConflictDetection:            *string | fn.#Fn
+				ConflictHandler?:             *string | fn.#Fn
+				LambdaConflictHandlerConfig?: *{
+					LambdaConflictHandlerArn?: *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#GraphQLApi: {
 		Type: "AWS::AppSync::GraphQLApi"
 		Properties: {
@@ -60,6 +153,52 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				UserPoolId?:       *string | fn.#Fn
 			} | fn.#If
 			XrayEnabled?: *bool | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#GraphQLSchema: {
+		Type: "AWS::AppSync::GraphQLSchema"
+		Properties: {
+			ApiId:                 *string | fn.#Fn
+			Definition?:           *string | fn.#Fn
+			DefinitionS3Location?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Resolver: {
+		Type: "AWS::AppSync::Resolver"
+		Properties: {
+			ApiId:          *string | fn.#Fn
+			CachingConfig?: *{
+				CachingKeys?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				Ttl?:         *number | fn.#Fn
+			} | fn.#If
+			DataSourceName?: *string | fn.#Fn
+			FieldName:       *string | fn.#Fn
+			Kind?:           *("PIPELINE" | "UNIT") | fn.#Fn
+			PipelineConfig?: *{
+				Functions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			RequestMappingTemplate?:            *string | fn.#Fn
+			RequestMappingTemplateS3Location?:  *string | fn.#Fn
+			ResponseMappingTemplate?:           *string | fn.#Fn
+			ResponseMappingTemplateS3Location?: *string | fn.#Fn
+			SyncConfig?:                        *{
+				ConflictDetection:            *string | fn.#Fn
+				ConflictHandler?:             *string | fn.#Fn
+				LambdaConflictHandlerConfig?: *{
+					LambdaConflictHandlerArn?: *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			TypeName: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

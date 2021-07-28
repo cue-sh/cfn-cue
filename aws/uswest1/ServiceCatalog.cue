@@ -191,6 +191,21 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ResourceUpdateConstraint: {
+		Type: "AWS::ServiceCatalog::ResourceUpdateConstraint"
+		Properties: {
+			AcceptLanguage?:               *string | fn.#Fn
+			Description?:                  *string | fn.#Fn
+			PortfolioId:                   *string | fn.#Fn
+			ProductId:                     *string | fn.#Fn
+			TagUpdateOnProvisionedProduct: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ServiceAction: {
 		Type: "AWS::ServiceCatalog::ServiceAction"
 		Properties: {

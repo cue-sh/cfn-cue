@@ -143,4 +143,33 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#StackUserAssociation: {
+		Type: "AWS::AppStream::StackUserAssociation"
+		Properties: {
+			AuthenticationType:     *string | fn.#Fn
+			SendEmailNotification?: *bool | fn.#Fn
+			StackName:              *string | fn.#Fn
+			UserName:               *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#User: {
+		Type: "AWS::AppStream::User"
+		Properties: {
+			AuthenticationType: *string | fn.#Fn
+			FirstName?:         *string | fn.#Fn
+			LastName?:          *string | fn.#Fn
+			MessageAction?:     *string | fn.#Fn
+			UserName:           *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

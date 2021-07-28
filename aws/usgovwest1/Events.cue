@@ -3,6 +3,18 @@ package usgovwest1
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #Events: {
+	#EventBus: {
+		Type: "AWS::Events::EventBus"
+		Properties: {
+			EventSourceName?: *string | fn.#Fn
+			Name:             *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#EventBusPolicy: {
 		Type: "AWS::Events::EventBusPolicy"
 		Properties: {

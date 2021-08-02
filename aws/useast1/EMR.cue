@@ -20,7 +20,7 @@ import (
 				Name?:    *string | fn.#Fn
 				Version?: *string | fn.#Fn
 			}] | fn.#If
-			AutoScalingRole?:  *string | fn.#Fn
+			AutoScalingRole?:  *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 			BootstrapActions?: *[...{
 				Name:                  *string | fn.#Fn
 				ScriptBootstrapAction: *{
@@ -244,7 +244,7 @@ import (
 			ReleaseLabel?:          *string | fn.#Fn
 			ScaleDownBehavior?:     *string | fn.#Fn
 			SecurityConfiguration?: *string | fn.#Fn
-			ServiceRole:            *string | fn.#Fn
+			ServiceRole:            *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 			StepConcurrencyLevel?:  *int | fn.#Fn
 			Steps?:                 *[...{
 				ActionOnFailure?: *string | fn.#Fn

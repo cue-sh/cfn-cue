@@ -115,6 +115,17 @@ import (
 				} | fn.#If
 				TableName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			}] | fn.#If
+			DatabaseOutputs?: *[...{
+				DatabaseOptions: *{
+					TableName:      *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+					TempDirectory?: *{
+						Bucket: *string | fn.#Fn
+						Key?:   *string | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				DatabaseOutputMode?: *("NEW_TABLE") | fn.#Fn
+				GlueConnectionName:  *string | fn.#Fn
+			}] | fn.#If
 			DatasetName?:      *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			EncryptionKeyArn?: *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 			EncryptionMode?:   *("SSE-KMS" | "SSE-S3") | fn.#Fn
@@ -145,6 +156,32 @@ import (
 				Overwrite?:        *bool | fn.#Fn
 				PartitionColumns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			}] | fn.#If
+			ProfileConfiguration?: *{
+				ColumnStatisticsConfigurations?: *[...{
+					Selectors?: *[...{
+						Name?:  *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+						Regex?: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+					}] | fn.#If
+					Statistics: *{
+						IncludedStatistics?: [...(*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z\_]+$"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z\_]+$"#)) | fn.#Fn)
+						Overrides?:          *[...{
+							Parameters: *{} | fn.#If
+							Statistic:  *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z\_]+$"#)) | fn.#Fn
+						}] | fn.#If
+					} | fn.#If
+				}] | fn.#If
+				DatasetStatisticsConfiguration?: *{
+					IncludedStatistics?: [...(*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z\_]+$"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z\_]+$"#)) | fn.#Fn)
+					Overrides?:          *[...{
+						Parameters: *{} | fn.#If
+						Statistic:  *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z\_]+$"#)) | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
+				ProfileColumns?: *[...{
+					Name?:  *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+					Regex?: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+				}] | fn.#If
+			} | fn.#If
 			ProjectName?: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			Recipe?:      *{
 				[string]: _

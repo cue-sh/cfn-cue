@@ -2,7 +2,7 @@ package euwest2
 
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
-#ResourceSpecificationVersion: "39.7.0"
+#ResourceSpecificationVersion: "39.8.0"
 #Template: {
 	AWSTemplateFormatVersion?: "2010-09-09"
 	Description?:              string

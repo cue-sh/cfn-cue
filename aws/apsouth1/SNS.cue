@@ -1,6 +1,9 @@
 package apsouth1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #SNS: {
 	#Subscription: {
@@ -43,7 +46,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			TopicName?: *string | fn.#Fn
+			TopicName?: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

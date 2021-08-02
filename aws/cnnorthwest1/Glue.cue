@@ -45,7 +45,7 @@ import (
 		Properties: {
 			CatalogId:       *string | fn.#Fn
 			ConnectionInput: *{
-				ConnectionProperties?: *{
+				ConnectionProperties: *{
 					[string]: _
 				} | fn.#Fn
 				ConnectionType:                  *("CUSTOM" | "JDBC" | "KAFKA" | "MARKETPLACE" | "MONGODB" | "NETWORK" | "SFTP") | fn.#Fn
@@ -74,11 +74,8 @@ import (
 			DatabaseName?:                 *string | fn.#Fn
 			Description?:                  *string | fn.#Fn
 			Name?:                         *string | fn.#Fn
-			RecrawlPolicy?:                *{
-				RecrawlBehavior?: *string | fn.#Fn
-			} | fn.#If
-			Role:      *string | fn.#Fn
-			Schedule?: *{
+			Role:                          *string | fn.#Fn
+			Schedule?:                     *{
 				ScheduleExpression?: *string | fn.#Fn
 			} | fn.#If
 			SchemaChangePolicy?: *{
@@ -103,9 +100,8 @@ import (
 					Path?:           *string | fn.#Fn
 				}] | fn.#If
 				S3Targets?: *[...{
-					ConnectionName?: *string | fn.#Fn
-					Exclusions?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					Path?:           *string | fn.#Fn
+					Exclusions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Path?:       *string | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
 		}
@@ -141,22 +137,12 @@ import (
 		Properties: {
 			CatalogId:     *string | fn.#Fn
 			DatabaseInput: *{
-				CreateTableDefaultPermissions?: *[...{
-					Permissions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					Principal?:   *{
-						DataLakePrincipalIdentifier?: *string | fn.#Fn
-					} | fn.#If
-				}] | fn.#If
 				Description?: *string | fn.#Fn
 				LocationUri?: *string | fn.#Fn
 				Name?:        *string | fn.#Fn
 				Parameters?:  *{
 					[string]: _
 				} | fn.#Fn
-				TargetDatabase?: *{
-					CatalogId?:    *string | fn.#Fn
-					DatabaseName?: *string | fn.#Fn
-				} | fn.#If
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -260,15 +246,6 @@ import (
 					Parameters?:      *{
 						[string]: _
 					} | fn.#Fn
-					SchemaReference?: *{
-						SchemaId?: *{
-							RegistryName?: *string | fn.#Fn
-							SchemaArn?:    *string | fn.#Fn
-							SchemaName?:   *string | fn.#Fn
-						} | fn.#If
-						SchemaVersionId?:     *string | fn.#Fn
-						SchemaVersionNumber?: *int | fn.#Fn
-					} | fn.#If
 					SerdeInfo?: *{
 						Name?:       *string | fn.#Fn
 						Parameters?: *{
@@ -429,15 +406,6 @@ import (
 					Parameters?:      *{
 						[string]: _
 					} | fn.#Fn
-					SchemaReference?: *{
-						SchemaId?: *{
-							RegistryName?: *string | fn.#Fn
-							SchemaArn?:    *string | fn.#Fn
-							SchemaName?:   *string | fn.#Fn
-						} | fn.#If
-						SchemaVersionId?:     *string | fn.#Fn
-						SchemaVersionNumber?: *int | fn.#Fn
-					} | fn.#If
 					SerdeInfo?: *{
 						Name?:       *string | fn.#Fn
 						Parameters?: *{
@@ -458,12 +426,7 @@ import (
 					}] | fn.#If
 					StoredAsSubDirectories?: *bool | fn.#Fn
 				} | fn.#If
-				TableType?:   *("EXTERNAL_TABLE" | "VIRTUAL_VIEW") | fn.#Fn
-				TargetTable?: *{
-					CatalogId?:    *string | fn.#Fn
-					DatabaseName?: *string | fn.#Fn
-					Name?:         *string | fn.#Fn
-				} | fn.#If
+				TableType?:        *("EXTERNAL_TABLE" | "VIRTUAL_VIEW") | fn.#Fn
 				ViewExpandedText?: *string | fn.#Fn
 				ViewOriginalText?: *string | fn.#Fn
 			} | fn.#If

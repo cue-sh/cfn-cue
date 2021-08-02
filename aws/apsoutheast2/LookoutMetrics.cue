@@ -10,8 +10,15 @@ import (
 		Type: "AWS::LookoutMetrics::Alert"
 		Properties: {
 			Action: *{
-				[string]: _
-			} | fn.#Fn
+				LambdaConfiguration?: *{
+					LambdaArn: *(=~#"arn:([a-z\d-]+):.*:.*:.*:.+"#) | fn.#Fn
+					RoleArn:   *(=~#"arn:([a-z\d-]+):.*:.*:.*:.+"#) | fn.#Fn
+				} | fn.#If
+				SNSConfiguration?: *{
+					RoleArn:     *(=~#"arn:([a-z\d-]+):.*:.*:.*:.+"#) | fn.#Fn
+					SnsTopicArn: *(=~#"arn:([a-z\d-]+):.*:.*:.*:.+"#) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 			AlertDescription?:         *(=~#".*\S.*"#) | fn.#Fn
 			AlertName?:                *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9\-_]*"#)) | fn.#Fn
 			AlertSensitivityThreshold: *int | fn.#Fn
@@ -27,8 +34,8 @@ import (
 		Type: "AWS::LookoutMetrics::AnomalyDetector"
 		Properties: {
 			AnomalyDetectorConfig: *{
-				[string]: _
-			} | fn.#Fn
+				AnomalyDetectorFrequency: *("PT5M" | "PT10M" | "PT1H" | "P1D") | fn.#Fn
+			} | fn.#If
 			AnomalyDetectorDescription?: *(=~#".*\S.*"#) | fn.#Fn
 			AnomalyDetectorName?:        *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9][a-zA-Z0-9\-_]*"#)) | fn.#Fn
 			KmsKeyArn?:                  *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:aws.*:kms:.*:[0-9]{12}:key/.*"#)) | fn.#Fn

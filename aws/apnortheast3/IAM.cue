@@ -119,7 +119,7 @@ import (
 				} | fn.#Fn
 				PolicyName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9+=,.@\-_]+$"#)) | fn.#Fn
 			}] | fn.#If
-			RoleName?: *string | fn.#Fn
+			RoleName?: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 			Tags?:     *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

@@ -122,7 +122,7 @@ import (
 			DeadLetterConfig?:     *{
 				TargetArn?: *(=~#"^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"#) | fn.#Fn
 			} | fn.#If
-			Description?: *string | fn.#Fn
+			Description?: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			Environment?: *{
 				Variables?: *{
 					[string]: *string | fn.#Fn
@@ -132,8 +132,8 @@ import (
 				Arn:            *(=~#"^arn:aws[a-zA-Z-]*:elasticfilesystem:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\d{1}:\d{12}:access-point/fsap-[a-f0-9]{17}$"#) | fn.#Fn
 				LocalMountPath: *(=~#"^/mnt/[a-zA-Z0-9-_.]+$"#) | fn.#Fn
 			}] | fn.#If
-			FunctionName?: *string | fn.#Fn
-			Handler?:      *(=~#"^[^\s]+$"#) | fn.#Fn
+			FunctionName?: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			Handler?:      *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[^\s]+$"#)) | fn.#Fn
 			ImageConfig?:  *{
 				Command?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				EntryPoint?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -175,7 +175,7 @@ import (
 				S3ObjectVersion?: *string | fn.#Fn
 			} | fn.#If
 			Description?: *string | fn.#Fn
-			LayerName?:   *string | fn.#Fn
+			LayerName?:   *(strings.MinRunes(1) & strings.MaxRunes(140)) | fn.#Fn
 			LicenseInfo?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

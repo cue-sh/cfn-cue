@@ -85,7 +85,8 @@ import (
 							}] | fn.#If
 							Window: *{
 								Tumbling?: *{
-									Interval: *("1w" | "1d" | "1h" | "15m" | "5m" | "1m") | fn.#Fn
+									Interval: *string | fn.#Fn
+									Offset?:  *string | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 						} | fn.#If
@@ -134,7 +135,8 @@ import (
 						}] | fn.#If
 						Window: *{
 							Tumbling?: *{
-								Interval: *("1w" | "1d" | "1h" | "15m" | "5m" | "1m") | fn.#Fn
+								Interval: *string | fn.#Fn
+								Offset?:  *string | fn.#Fn
 							} | fn.#If
 						} | fn.#If
 					} | fn.#If

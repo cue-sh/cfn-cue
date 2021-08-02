@@ -163,19 +163,20 @@ import (
 			}] | fn.#If
 			Name?:    *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9\s+=._:@/-]+$"#)) | fn.#Fn
 			Options?: *{
-				Atime?:                *("NONE" | "BEST_EFFORT") | fn.#Fn
-				BytesPerSecond?:       *int | fn.#Fn
-				Gid?:                  *("NONE" | "INT_VALUE" | "NAME" | "BOTH") | fn.#Fn
-				LogLevel?:             *("OFF" | "BASIC" | "TRANSFER") | fn.#Fn
-				Mtime?:                *("NONE" | "PRESERVE") | fn.#Fn
-				OverwriteMode?:        *("ALWAYS" | "NEVER") | fn.#Fn
-				PosixPermissions?:     *("NONE" | "PRESERVE") | fn.#Fn
-				PreserveDeletedFiles?: *("PRESERVE" | "REMOVE") | fn.#Fn
-				PreserveDevices?:      *("NONE" | "PRESERVE") | fn.#Fn
-				TaskQueueing?:         *("ENABLED" | "DISABLED") | fn.#Fn
-				TransferMode?:         *("CHANGED" | "ALL") | fn.#Fn
-				Uid?:                  *("NONE" | "INT_VALUE" | "NAME" | "BOTH") | fn.#Fn
-				VerifyMode?:           *("POINT_IN_TIME_CONSISTENT" | "ONLY_FILES_TRANSFERRED" | "NONE") | fn.#Fn
+				Atime?:                       *("NONE" | "BEST_EFFORT") | fn.#Fn
+				BytesPerSecond?:              *int | fn.#Fn
+				Gid?:                         *("NONE" | "INT_VALUE" | "NAME" | "BOTH") | fn.#Fn
+				LogLevel?:                    *("OFF" | "BASIC" | "TRANSFER") | fn.#Fn
+				Mtime?:                       *("NONE" | "PRESERVE") | fn.#Fn
+				OverwriteMode?:               *("ALWAYS" | "NEVER") | fn.#Fn
+				PosixPermissions?:            *("NONE" | "PRESERVE") | fn.#Fn
+				PreserveDeletedFiles?:        *("PRESERVE" | "REMOVE") | fn.#Fn
+				PreserveDevices?:             *("NONE" | "PRESERVE") | fn.#Fn
+				SecurityDescriptorCopyFlags?: *("NONE" | "OWNER_DACL" | "OWNER_DACL_SACL") | fn.#Fn
+				TaskQueueing?:                *("ENABLED" | "DISABLED") | fn.#Fn
+				TransferMode?:                *("CHANGED" | "ALL") | fn.#Fn
+				Uid?:                         *("NONE" | "INT_VALUE" | "NAME" | "BOTH") | fn.#Fn
+				VerifyMode?:                  *("POINT_IN_TIME_CONSISTENT" | "ONLY_FILES_TRANSFERRED" | "NONE") | fn.#Fn
 			} | fn.#If
 			Schedule?: *{
 				ScheduleExpression: *(=~#"^[a-zA-Z0-9\ \_\*\?\,\|\^\-\/\#\s\(\)\+]*$"#) | fn.#Fn

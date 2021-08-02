@@ -129,7 +129,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					UserPoolId?:       *string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
-			AuthenticationType: *("AMAZON_COGNITO_USER_POOLS" | "API_KEY" | "AWS_IAM" | "OPENID_CONNECT") | fn.#Fn
+			AuthenticationType: *("AMAZON_COGNITO_USER_POOLS" | "API_KEY" | "AWS_IAM" | "AWS_LAMBDA" | "OPENID_CONNECT") | fn.#Fn
 			LogConfig?:         *{
 				CloudWatchLogsRoleArn?: *string | fn.#Fn
 				ExcludeVerboseContent?: *bool | fn.#Fn

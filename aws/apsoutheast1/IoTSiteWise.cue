@@ -86,6 +86,7 @@ import (
 							Window: *{
 								Tumbling?: *{
 									Interval: *string | fn.#Fn
+									Offset?:  *string | fn.#Fn
 								} | fn.#If
 							} | fn.#If
 						} | fn.#If
@@ -135,6 +136,7 @@ import (
 						Window: *{
 							Tumbling?: *{
 								Interval: *string | fn.#Fn
+								Offset?:  *string | fn.#Fn
 							} | fn.#If
 						} | fn.#If
 					} | fn.#If

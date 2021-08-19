@@ -1,9 +1,6 @@
 package apnortheast3
 
-import (
-	"github.com/cue-sh/cfn-cue/aws/fn"
-	"strings"
-)
+import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #Glue: {
 	#Classifier: {
@@ -48,12 +45,12 @@ import (
 				ConnectionProperties?: *{
 					[string]: _
 				} | fn.#Fn
-				ConnectionType:                  *string | fn.#Fn
+				ConnectionType:                  *("CUSTOM" | "JDBC" | "KAFKA" | "MARKETPLACE" | "MONGODB" | "NETWORK" | "SFTP") | fn.#Fn
 				Description?:                    *string | fn.#Fn
 				MatchCriteria?:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Name?:                           *string | fn.#Fn
 				PhysicalConnectionRequirements?: *{
-					AvailabilityZone?:    *string | fn.#Fn
+					AvailabilityZone?:    *(=~#"[a-z0-9-]+"#) | fn.#Fn
 					SecurityGroupIdList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					SubnetId?:            *string | fn.#Fn
 				} | fn.#If
@@ -74,13 +71,16 @@ import (
 			DatabaseName?:                 *string | fn.#Fn
 			Description?:                  *string | fn.#Fn
 			Name?:                         *string | fn.#Fn
-			Role:                          *string | fn.#Fn
-			Schedule?:                     *{
+			RecrawlPolicy?:                *{
+				RecrawlBehavior?: *string | fn.#Fn
+			} | fn.#If
+			Role:      *string | fn.#Fn
+			Schedule?: *{
 				ScheduleExpression?: *string | fn.#Fn
 			} | fn.#If
 			SchemaChangePolicy?: *{
-				DeleteBehavior?: *string | fn.#Fn
-				UpdateBehavior?: *string | fn.#Fn
+				DeleteBehavior?: *("DELETE_FROM_DATABASE" | "DEPRECATE_IN_DATABASE" | "LOG") | fn.#Fn
+				UpdateBehavior?: *("LOG" | "UPDATE_IN_DATABASE") | fn.#Fn
 			} | fn.#If
 			TablePrefix?: *string | fn.#Fn
 			Tags?:        *{
@@ -138,6 +138,12 @@ import (
 		Properties: {
 			CatalogId:     *string | fn.#Fn
 			DatabaseInput: *{
+				CreateTableDefaultPermissions?: *[...{
+					Permissions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Principal?:   *{
+						DataLakePrincipalIdentifier?: *string | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
 				Description?: *string | fn.#Fn
 				LocationUri?: *string | fn.#Fn
 				Name?:        *string | fn.#Fn
@@ -212,7 +218,7 @@ import (
 			NotificationProperty?: *{
 				NotifyDelayAfter?: *int | fn.#Fn
 			} | fn.#If
-			NumberOfWorkers?:       *int | fn.#Fn
+			NumberOfWorkers?:       *(>=0 & <=299) | fn.#Fn
 			Role:                   *string | fn.#Fn
 			SecurityConfiguration?: *string | fn.#Fn
 			Tags?:                  *{
@@ -240,7 +246,7 @@ import (
 					TableName:       *string | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
-			MaxCapacity?:     *number | fn.#Fn
+			MaxCapacity?:     *(>=1 & <=100) | fn.#Fn
 			MaxRetries?:      *int | fn.#Fn
 			Name?:            *string | fn.#Fn
 			NumberOfWorkers?: *int | fn.#Fn
@@ -298,12 +304,12 @@ import (
 						[string]: _
 					} | fn.#Fn
 					SchemaReference?: *{
-						SchameVersionId?: *string | fn.#Fn
-						SchemaId?:        *{
+						SchemaId?: *{
 							RegistryName?: *string | fn.#Fn
 							SchemaArn?:    *string | fn.#Fn
 							SchemaName?:   *string | fn.#Fn
 						} | fn.#If
+						SchemaVersionId?:     *string | fn.#Fn
 						SchemaVersionNumber?: *int | fn.#Fn
 					} | fn.#If
 					SerdeInfo?: *{
@@ -329,78 +335,6 @@ import (
 				Values: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 			TableName: *string | fn.#Fn
-		}
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#Registry: {
-		Type: "AWS::Glue::Registry"
-		Properties: {
-			Description?: *string | fn.#Fn
-			Name:         *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
-			Tags?:        *[...{
-				Key:   *string | fn.#Fn
-				Value: *string | fn.#Fn
-			}] | fn.#If
-		}
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#Schema: {
-		Type: "AWS::Glue::Schema"
-		Properties: {
-			CheckpointVersion?: *{
-				IsLatest?:      *bool | fn.#Fn
-				VersionNumber?: *(>=1 & <=100000) | fn.#Fn
-			} | fn.#If
-			Compatibility: *("NONE" | "DISABLED" | "BACKWARD" | "BACKWARD_ALL" | "FORWARD" | "FORWARD_ALL" | "FULL" | "FULL_ALL") | fn.#Fn
-			DataFormat:    *("AVRO" | "JSON") | fn.#Fn
-			Description?:  *string | fn.#Fn
-			Name:          *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
-			Registry?:     *{
-				Arn?:  *(=~#"arn:(aws|aws-us-gov|aws-cn):glue:.*"#) | fn.#Fn
-				Name?: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
-			} | fn.#If
-			SchemaDefinition: *(strings.MinRunes(1) & strings.MaxRunes(170000)) | fn.#Fn
-			Tags?:            *[...{
-				Key:   *string | fn.#Fn
-				Value: *string | fn.#Fn
-			}] | fn.#If
-		}
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#SchemaVersion: {
-		Type: "AWS::Glue::SchemaVersion"
-		Properties: {
-			Schema: *{
-				RegistryName?: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
-				SchemaArn?:    *(=~#"arn:(aws|aws-us-gov|aws-cn):glue:.*"#) | fn.#Fn
-				SchemaName?:   *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
-			} | fn.#If
-			SchemaDefinition: *(strings.MinRunes(1) & strings.MaxRunes(170000)) | fn.#Fn
-		}
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#SchemaVersionMetadata: {
-		Type: "AWS::Glue::SchemaVersionMetadata"
-		Properties: {
-			Key:             *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-			SchemaVersionId: *(=~#"[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"#) | fn.#Fn
-			Value:           *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -467,12 +401,12 @@ import (
 						[string]: _
 					} | fn.#Fn
 					SchemaReference?: *{
-						SchameVersionId?: *string | fn.#Fn
-						SchemaId?:        *{
+						SchemaId?: *{
 							RegistryName?: *string | fn.#Fn
 							SchemaArn?:    *string | fn.#Fn
 							SchemaName?:   *string | fn.#Fn
 						} | fn.#If
+						SchemaVersionId?:     *string | fn.#Fn
 						SchemaVersionNumber?: *int | fn.#Fn
 					} | fn.#If
 					SerdeInfo?: *{
@@ -495,7 +429,7 @@ import (
 					}] | fn.#If
 					StoredAsSubDirectories?: *bool | fn.#Fn
 				} | fn.#If
-				TableType?:   *string | fn.#Fn
+				TableType?:   *("EXTERNAL_TABLE" | "VIRTUAL_VIEW") | fn.#Fn
 				TargetTable?: *{
 					CatalogId?:    *string | fn.#Fn
 					DatabaseName?: *string | fn.#Fn
@@ -533,17 +467,17 @@ import (
 					CrawlState?:      *string | fn.#Fn
 					CrawlerName?:     *string | fn.#Fn
 					JobName?:         *string | fn.#Fn
-					LogicalOperator?: *string | fn.#Fn
-					State?:           *string | fn.#Fn
+					LogicalOperator?: *("EQUALS") | fn.#Fn
+					State?:           *("SUCCEEDED" | "STOPPED" | "TIMEOUT" | "FAILED") | fn.#Fn
 				}] | fn.#If
-				Logical?: *string | fn.#Fn
+				Logical?: *("AND" | "ANY") | fn.#Fn
 			} | fn.#If
 			Schedule?:        *string | fn.#Fn
 			StartOnCreation?: *bool | fn.#Fn
 			Tags?:            *{
 				[string]: _
 			} | fn.#Fn
-			Type:          *string | fn.#Fn
+			Type:          *("CONDITIONAL" | "EVENT" | "ON_DEMAND" | "SCHEDULED") | fn.#Fn
 			WorkflowName?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

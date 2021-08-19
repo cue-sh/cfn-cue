@@ -32,8 +32,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			WindowsConfiguration?: *{
-				ActiveDirectoryId?:                       *string | fn.#Fn
-				Aliases?:                                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				ActiveDirectoryId?:     *string | fn.#Fn
+				Aliases?:               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				AuditLogConfiguration?: *{
+					AuditLogDestination?:         *string | fn.#Fn
+					FileAccessAuditLogLevel:      *string | fn.#Fn
+					FileShareAccessAuditLogLevel: *string | fn.#Fn
+				} | fn.#If
 				AutomaticBackupRetentionDays?:            *int | fn.#Fn
 				CopyTagsToBackups?:                       *bool | fn.#Fn
 				DailyAutomaticBackupStartTime?:           *string | fn.#Fn

@@ -41,6 +41,20 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#PreparedStatement: {
+		Type: "AWS::Athena::PreparedStatement"
+		Properties: {
+			Description?:   *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			QueryStatement: *(strings.MinRunes(1) & strings.MaxRunes(262144)) | fn.#Fn
+			StatementName:  *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			WorkGroup:      *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#WorkGroup: {
 		Type: "AWS::Athena::WorkGroup"
 		Properties: {

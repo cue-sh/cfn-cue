@@ -48,8 +48,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						Times?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					} | fn.#If
 					CrossRegionCopyRules?: *[...{
-						CmkArn?:     *string | fn.#Fn
-						CopyTags?:   *bool | fn.#Fn
+						CmkArn?:        *string | fn.#Fn
+						CopyTags?:      *bool | fn.#Fn
+						DeprecateRule?: *{
+							Interval:     *int | fn.#Fn
+							IntervalUnit: *string | fn.#Fn
+						} | fn.#If
 						Encrypted:   *bool | fn.#Fn
 						RetainRule?: *{
 							Interval:     *int | fn.#Fn
@@ -58,6 +62,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						Target?:       *string | fn.#Fn
 						TargetRegion?: *string | fn.#Fn
 					}] | fn.#If
+					DeprecateRule?: *{
+						Count?:        *int | fn.#Fn
+						Interval?:     *int | fn.#Fn
+						IntervalUnit?: *string | fn.#Fn
+					} | fn.#If
 					FastRestoreRule?: *{
 						AvailabilityZones?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 						Count?:             *int | fn.#Fn

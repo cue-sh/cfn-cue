@@ -73,6 +73,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			Name?:                   *string | fn.#Fn
 			QueuedTimeoutInMinutes?: *(>=5 & <=480) | fn.#Fn
+			ResourceAccessRole?:     *string | fn.#Fn
 			SecondaryArtifacts?:     *[...{
 				ArtifactIdentifier?:   *string | fn.#Fn
 				EncryptionDisabled?:   *bool | fn.#Fn
@@ -144,7 +145,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				}]] | fn.#If
 				Webhook?: *bool | fn.#Fn
 			} | fn.#If
-			VpcConfig?: *{
+			Visibility?: *string | fn.#Fn
+			VpcConfig?:  *{
 				SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Subnets?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				VpcId?:            *string | fn.#Fn

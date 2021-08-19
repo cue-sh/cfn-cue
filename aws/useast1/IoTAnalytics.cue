@@ -139,6 +139,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					KeyPrefix?: *string | fn.#Fn
 					RoleArn:    *string | fn.#Fn
 				} | fn.#If
+				IotSiteWiseMultiLayerStorage?: *{
+					CustomerManagedS3Storage: *{
+						Bucket:     *string | fn.#Fn
+						KeyPrefix?: *string | fn.#Fn
+					} | fn.#If
+				} | fn.#If
 				ServiceManagedS3?: *{} | fn.#If
 			} | fn.#If
 			FileFormatConfiguration?: *{

@@ -74,9 +74,11 @@ import (
 	#Endpoint: {
 		Type: "AWS::S3Outposts::Endpoint"
 		Properties: {
-			OutpostId:       *(=~#"^(op-[a-f0-9]{17}|\d{12}|ec2)$"#) | fn.#Fn
-			SecurityGroupId: *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^sg-([0-9a-f]{8}|[0-9a-f]{17})$"#)) | fn.#Fn
-			SubnetId:        *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^subnet-([0-9a-f]{8}|[0-9a-f]{17})$"#)) | fn.#Fn
+			AccessType?:            *("CustomerOwnedIp" | "Private") | fn.#Fn
+			CustomerOwnedIpv4Pool?: *(=~#"^ipv4pool-coip-([0-9a-f]{17})$"#) | fn.#Fn
+			OutpostId:              *(=~#"^(op-[a-f0-9]{17}|\d{12}|ec2)$"#) | fn.#Fn
+			SecurityGroupId:        *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^sg-([0-9a-f]{8}|[0-9a-f]{17})$"#)) | fn.#Fn
+			SubnetId:               *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^subnet-([0-9a-f]{8}|[0-9a-f]{17})$"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

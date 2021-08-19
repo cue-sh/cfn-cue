@@ -377,7 +377,10 @@ import (
 				} | fn.#Fn
 				Image?:       *string | fn.#Fn
 				ImageConfig?: *{
-					RepositoryAccessMode: *string | fn.#Fn
+					RepositoryAccessMode:  *string | fn.#Fn
+					RepositoryAuthConfig?: *{
+						RepositoryCredentialsProviderArn: *string | fn.#Fn
+					} | fn.#If
 				} | fn.#If
 				Mode?:             *string | fn.#Fn
 				ModelDataUrl?:     *string | fn.#Fn
@@ -399,7 +402,10 @@ import (
 				} | fn.#Fn
 				Image?:       *string | fn.#Fn
 				ImageConfig?: *{
-					RepositoryAccessMode: *string | fn.#Fn
+					RepositoryAccessMode:  *string | fn.#Fn
+					RepositoryAuthConfig?: *{
+						RepositoryCredentialsProviderArn: *string | fn.#Fn
+					} | fn.#If
 				} | fn.#If
 				Mode?:             *string | fn.#Fn
 				ModelDataUrl?:     *string | fn.#Fn

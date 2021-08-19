@@ -195,9 +195,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				TruststoreUri?:     *string | fn.#Fn
 				TruststoreVersion?: *string | fn.#Fn
 			} | fn.#If
-			RegionalCertificateArn?: *string | fn.#Fn
-			SecurityPolicy?:         *string | fn.#Fn
-			Tags?:                   *[...{
+			OwnershipVerificationCertificateArn?: *string | fn.#Fn
+			RegionalCertificateArn?:              *string | fn.#Fn
+			SecurityPolicy?:                      *string | fn.#Fn
+			Tags?:                                *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

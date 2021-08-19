@@ -143,7 +143,7 @@ import (
 			} | fn.#If
 			Outputs?: *[...{
 				CompressionFormat?: *("GZIP" | "LZ4" | "SNAPPY" | "BZIP2" | "DEFLATE" | "LZO" | "BROTLI" | "ZSTD" | "ZLIB") | fn.#Fn
-				Format?:            *("CSV" | "JSON" | "PARQUET" | "GLUEPARQUET" | "AVRO" | "ORC" | "XML") | fn.#Fn
+				Format?:            *("CSV" | "JSON" | "PARQUET" | "GLUEPARQUET" | "AVRO" | "ORC" | "XML" | "TABLEAUHYPER") | fn.#Fn
 				FormatOptions?:     *{
 					Csv?: *{
 						Delimiter?: *(strings.MinRunes(1) & strings.MaxRunes(1)) | fn.#Fn

@@ -74,8 +74,11 @@ import (
 			DatabaseName?:                 *string | fn.#Fn
 			Description?:                  *string | fn.#Fn
 			Name?:                         *string | fn.#Fn
-			Role:                          *string | fn.#Fn
-			Schedule?:                     *{
+			RecrawlPolicy?:                *{
+				RecrawlBehavior?: *string | fn.#Fn
+			} | fn.#If
+			Role:      *string | fn.#Fn
+			Schedule?: *{
 				ScheduleExpression?: *string | fn.#Fn
 			} | fn.#If
 			SchemaChangePolicy?: *{
@@ -254,7 +257,14 @@ import (
 			Tags?:            *{
 				[string]: _
 			} | fn.#Fn
-			Timeout?:            *int | fn.#Fn
+			Timeout?:             *int | fn.#Fn
+			TransformEncryption?: *{
+				MLUserDataEncryption?: *{
+					KmsKeyId?:                *string | fn.#Fn
+					MLUserDataEncryptionMode: *string | fn.#Fn
+				} | fn.#If
+				TaskRunSecurityConfigurationName?: *string | fn.#Fn
+			} | fn.#If
 			TransformParameters: *{
 				FindMatchesParameters?: *{
 					AccuracyCostTradeoff?:    *number | fn.#Fn
@@ -296,6 +306,15 @@ import (
 					Parameters?:      *{
 						[string]: _
 					} | fn.#Fn
+					SchemaReference?: *{
+						SchemaId?: *{
+							RegistryName?: *string | fn.#Fn
+							SchemaArn?:    *string | fn.#Fn
+							SchemaName?:   *string | fn.#Fn
+						} | fn.#If
+						SchemaVersionId?:     *string | fn.#Fn
+						SchemaVersionNumber?: *int | fn.#Fn
+					} | fn.#If
 					SerdeInfo?: *{
 						Name?:       *string | fn.#Fn
 						Parameters?: *{
@@ -456,6 +475,15 @@ import (
 					Parameters?:      *{
 						[string]: _
 					} | fn.#Fn
+					SchemaReference?: *{
+						SchemaId?: *{
+							RegistryName?: *string | fn.#Fn
+							SchemaArn?:    *string | fn.#Fn
+							SchemaName?:   *string | fn.#Fn
+						} | fn.#If
+						SchemaVersionId?:     *string | fn.#Fn
+						SchemaVersionNumber?: *int | fn.#Fn
+					} | fn.#If
 					SerdeInfo?: *{
 						Name?:       *string | fn.#Fn
 						Parameters?: *{

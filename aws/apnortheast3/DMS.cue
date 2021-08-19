@@ -35,8 +35,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ServiceAccessRoleArn?:    *string | fn.#Fn
 			} | fn.#If
 			EndpointIdentifier?:        *string | fn.#Fn
-			EndpointType:               *string | fn.#Fn
-			EngineName:                 *string | fn.#Fn
+			EndpointType:               *("source" | "target") | fn.#Fn
+			EngineName:                 *("aurora-postgresql" | "aurora" | "azuredb" | "db2" | "docdb" | "dynamodb" | "elasticsearch" | "kafka" | "kinesis" | "mariadb" | "mongodb" | "mysql" | "neptune" | "oracle" | "postgres" | "redshift" | "s3" | "sqlserver" | "sybase") | fn.#Fn
 			ExtraConnectionAttributes?: *string | fn.#Fn
 			IbmDb2Settings?:            *{
 				SecretsManagerAccessRoleArn?: *string | fn.#Fn
@@ -111,7 +111,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ServiceAccessRoleArn?:    *string | fn.#Fn
 			} | fn.#If
 			ServerName?:     *string | fn.#Fn
-			SslMode?:        *string | fn.#Fn
+			SslMode?:        *("none" | "require" | "verify-ca" | "verify-full") | fn.#Fn
 			SybaseSettings?: *{
 				SecretsManagerAccessRoleArn?: *string | fn.#Fn
 				SecretsManagerSecretId?:      *string | fn.#Fn
@@ -154,7 +154,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			AllocatedStorage?:                 *int | fn.#Fn
 			AllowMajorVersionUpgrade?:         *bool | fn.#Fn
 			AutoMinorVersionUpgrade?:          *bool | fn.#Fn
-			AvailabilityZone?:                 *string | fn.#Fn
+			AvailabilityZone?:                 *(=~#"[a-z0-9-]+"#) | fn.#Fn
 			EngineVersion?:                    *string | fn.#Fn
 			KmsKeyId?:                         *string | fn.#Fn
 			MultiAZ?:                          *bool | fn.#Fn

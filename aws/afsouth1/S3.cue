@@ -11,6 +11,7 @@ import (
 		Type: "AWS::S3::AccessPoint"
 		Properties: {
 			Bucket:  *(strings.MinRunes(3) & strings.MaxRunes(255)) | fn.#Fn
+			Name?:   *(strings.MinRunes(3) & strings.MaxRunes(50) & (=~#"^[a-z0-9]([a-z0-9\-]*[a-z0-9])?$"#)) | fn.#Fn
 			Policy?: *{
 				[string]: _
 			} | fn.#Fn

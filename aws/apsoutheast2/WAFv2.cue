@@ -25,6 +25,38 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#LoggingConfiguration: {
+		Type: "AWS::WAFv2::LoggingConfiguration"
+		Properties: {
+			LogDestinationConfigs: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			LoggingFilter?:        *{
+				[string]: _
+			} | fn.#Fn
+			RedactedFields?: *[...{
+				JsonBody?: *{
+					[string]: _
+				} | fn.#Fn
+				Method?: *{
+					[string]: _
+				} | fn.#Fn
+				QueryString?: *{
+					[string]: _
+				} | fn.#Fn
+				SingleHeader?: *{
+					[string]: _
+				} | fn.#Fn
+				UriPath?: *{
+					[string]: _
+				} | fn.#Fn
+			}] | fn.#If
+			ResourceArn: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#RegexPatternSet: {
 		Type: "AWS::WAFv2::RegexPatternSet"
 		Properties: {

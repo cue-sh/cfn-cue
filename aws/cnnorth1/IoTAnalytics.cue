@@ -121,12 +121,29 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#Datastore: {
 		Type: "AWS::IoTAnalytics::Datastore"
 		Properties: {
-			DatastoreName?:    *string | fn.#Fn
+			DatastoreName?:       *string | fn.#Fn
+			DatastorePartitions?: *{
+				Partitions?: *[...{
+					Partition?: *{
+						AttributeName: *string | fn.#Fn
+					} | fn.#If
+					TimestampPartition?: *{
+						AttributeName:    *string | fn.#Fn
+						TimestampFormat?: *string | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
+			} | fn.#If
 			DatastoreStorage?: *{
 				CustomerManagedS3?: *{
 					Bucket:     *string | fn.#Fn
 					KeyPrefix?: *string | fn.#Fn
 					RoleArn:    *string | fn.#Fn
+				} | fn.#If
+				IotSiteWiseMultiLayerStorage?: *{
+					CustomerManagedS3Storage: *{
+						Bucket:     *string | fn.#Fn
+						KeyPrefix?: *string | fn.#Fn
+					} | fn.#If
 				} | fn.#If
 				ServiceManagedS3?: *{} | fn.#If
 			} | fn.#If

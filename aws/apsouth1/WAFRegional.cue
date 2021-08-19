@@ -93,7 +93,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Predicates?: *[...{
 				DataId:  *string | fn.#Fn
 				Negated: *bool | fn.#Fn
-				Type:    *string | fn.#Fn
+				Type:    *("ByteMatch" | "GeoMatch" | "IPMatch" | "RegexMatch" | "SizeConstraint" | "SqlInjectionMatch" | "XssMatch") | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

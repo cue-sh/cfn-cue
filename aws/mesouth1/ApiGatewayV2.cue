@@ -115,7 +115,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			AuthorizerType:                  *string | fn.#Fn
 			AuthorizerUri?:                  *string | fn.#Fn
 			EnableSimpleResponses?:          *bool | fn.#Fn
-			IdentitySource:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			IdentitySource?:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			IdentityValidationExpression?:   *string | fn.#Fn
 			JwtConfiguration?:               *{
 				Audience?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -147,10 +147,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			DomainName:                *string | fn.#Fn
 			DomainNameConfigurations?: *[...{
-				CertificateArn?:  *string | fn.#Fn
-				CertificateName?: *string | fn.#Fn
-				EndpointType?:    *string | fn.#Fn
-				SecurityPolicy?:  *string | fn.#Fn
+				CertificateArn?:                      *string | fn.#Fn
+				CertificateName?:                     *string | fn.#Fn
+				EndpointType?:                        *string | fn.#Fn
+				OwnershipVerificationCertificateArn?: *string | fn.#Fn
+				SecurityPolicy?:                      *string | fn.#Fn
 			}] | fn.#If
 			MutualTlsAuthentication?: *{
 				TruststoreUri?:     *string | fn.#Fn

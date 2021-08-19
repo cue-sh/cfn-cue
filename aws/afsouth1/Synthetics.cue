@@ -41,6 +41,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SubnetIds:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				VpcId?:           *string | fn.#Fn
 			} | fn.#If
+			VisualReference?: *{
+				BaseCanaryRunId:  *string | fn.#Fn
+				BaseScreenshots?: *[...{
+					IgnoreCoordinates?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					ScreenshotName:     *string | fn.#Fn
+				}] | fn.#If
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

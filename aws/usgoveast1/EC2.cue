@@ -174,7 +174,7 @@ import (
 			} | fn.#If
 			ReplaceUnhealthyInstances?: *bool | fn.#Fn
 			SpotOptions?:               *{
-				AllocationStrategy?:           *("lowestPrice" | "diversified" | "capacityOptimized") | fn.#Fn
+				AllocationStrategy?:           *("lowestPrice" | "diversified" | "capacityOptimized" | "capacityOptimizedPrioritized") | fn.#Fn
 				InstanceInterruptionBehavior?: *("hibernate" | "stop" | "terminate") | fn.#Fn
 				InstancePoolsToUseCount?:      *int | fn.#Fn
 				MaxTotalPrice?:                *string | fn.#Fn

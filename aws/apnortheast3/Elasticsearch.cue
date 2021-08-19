@@ -42,6 +42,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				VolumeType?: *string | fn.#Fn
 			} | fn.#If
 			ElasticsearchClusterConfig?: *{
+				ColdStorageOptions?: *{
+					Enabled?: *bool | fn.#Fn
+				} | fn.#If
 				DedicatedMasterCount?:   *int | fn.#Fn
 				DedicatedMasterEnabled?: *bool | fn.#Fn
 				DedicatedMasterType?:    *string | fn.#Fn

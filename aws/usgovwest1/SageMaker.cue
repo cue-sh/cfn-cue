@@ -65,6 +65,19 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#EndpointConfig: {
 		Type: "AWS::SageMaker::EndpointConfig"
 		Properties: {
+			AsyncInferenceConfig?: *{
+				ClientConfig?: *{
+					MaxConcurrentInvocationsPerInstance?: *int | fn.#Fn
+				} | fn.#If
+				OutputConfig: *{
+					KmsKeyId?:           *string | fn.#Fn
+					NotificationConfig?: *{
+						ErrorTopic?:   *string | fn.#Fn
+						SuccessTopic?: *string | fn.#Fn
+					} | fn.#If
+					S3OutputPath: *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 			DataCaptureConfig?: *{
 				CaptureContentTypeHeader?: *{
 					CsvContentTypes?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)

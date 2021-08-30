@@ -530,6 +530,7 @@ import (
 					Name:                *(=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 					ScopeDownStatement?: *_#Statement | fn.#If
 					VendorName:          *string | fn.#Fn
+					Version?:            *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[\w#:\.\-/]+$"#)) | fn.#Fn
 				} | fn.#If
 				NotStatement?: *{
 					Statement: *_#Statement | fn.#If

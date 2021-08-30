@@ -1,16 +1,19 @@
 package apnortheast2
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #CodeStarNotifications: {
 	#NotificationRule: {
 		Type: "AWS::CodeStarNotifications::NotificationRule"
 		Properties: {
-			DetailType:   *string | fn.#Fn
-			EventTypeIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Name:         *string | fn.#Fn
-			Resource:     *string | fn.#Fn
-			Status?:      *string | fn.#Fn
+			DetailType:   *("BASIC" | "FULL") | fn.#Fn
+			EventTypeIds: [...(*(strings.MinRunes(1) & strings.MaxRunes(200)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(200)) | fn.#Fn)
+			Name:         *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"[A-Za-z0-9\-_ ]+$"#)) | fn.#Fn
+			Resource:     *(=~#"^arn:aws[^:\s]*:[^:\s]*:[^:\s]*:[0-9]{12}:[^\s]+$"#) | fn.#Fn
+			Status?:      *("ENABLED" | "DISABLED") | fn.#Fn
 			Tags?:        *{
 				[string]: _
 			} | fn.#Fn

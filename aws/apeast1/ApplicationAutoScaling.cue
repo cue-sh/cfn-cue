@@ -71,7 +71,7 @@ import (
 				} | fn.#If
 				DisableScaleIn?:                *bool | fn.#Fn
 				PredefinedMetricSpecification?: *{
-					PredefinedMetricType: *("ALBRequestCountPerTarget" | "AppStreamAverageCapacityUtilization" | "CassandraReadCapacityUtilization" | "CassandraWriteCapacityUtilization" | "ComprehendInferenceUtilization" | "DynamoDBReadCapacityUtilization" | "DynamoDBWriteCapacityUtilization" | "EC2SpotFleetRequestAverageCPUUtilization" | "EC2SpotFleetRequestAverageNetworkIn" | "EC2SpotFleetRequestAverageNetworkOut" | "ECSServiceAverageCPUUtilization" | "ECSServiceAverageMemoryUtilization" | "KafkaBrokerStorageUtilization" | "LambdaProvisionedConcurrencyUtilization" | "RDSReaderAverageCPUUtilization" | "RDSReaderAverageDatabaseConnections" | "SageMakerVariantInvocationsPerInstance") | fn.#Fn
+					PredefinedMetricType: *("ALBRequestCountPerTarget" | "AppStreamAverageCapacityUtilization" | "CassandraReadCapacityUtilization" | "CassandraWriteCapacityUtilization" | "ComprehendInferenceUtilization" | "DynamoDBReadCapacityUtilization" | "DynamoDBWriteCapacityUtilization" | "EC2SpotFleetRequestAverageCPUUtilization" | "EC2SpotFleetRequestAverageNetworkIn" | "EC2SpotFleetRequestAverageNetworkOut" | "ECSServiceAverageCPUUtilization" | "ECSServiceAverageMemoryUtilization" | "ElastiCacheDatabaseMemoryUsageCountedForEvictPercentage" | "ElastiCachePrimaryEngineCPUUtilization" | "ElastiCacheReplicaEngineCPUUtilization" | "KafkaBrokerStorageUtilization" | "LambdaProvisionedConcurrencyUtilization" | "RDSReaderAverageCPUUtilization" | "RDSReaderAverageDatabaseConnections" | "SageMakerVariantInvocationsPerInstance") | fn.#Fn
 					ResourceLabel?:       *string | fn.#Fn
 				} | fn.#If
 				ScaleInCooldown?:  *int | fn.#Fn

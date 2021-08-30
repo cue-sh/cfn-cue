@@ -161,15 +161,36 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#ScalingPolicy: {
 		Type: "AWS::AutoScaling::ScalingPolicy"
 		Properties: {
-			AdjustmentType?:          *("ChangeInCapacity" | "ExactCapacity" | "PercentChangeInCapacity") | fn.#Fn
-			AutoScalingGroupName:     *string | fn.#Fn
-			Cooldown?:                *string | fn.#Fn
-			EstimatedInstanceWarmup?: *int | fn.#Fn
-			MetricAggregationType?:   *("Average" | "Maximum" | "Minimum") | fn.#Fn
-			MinAdjustmentMagnitude?:  *int | fn.#Fn
-			PolicyType?:              *("SimpleScaling" | "StepScaling" | "TargetTrackingScaling") | fn.#Fn
-			ScalingAdjustment?:       *int | fn.#Fn
-			StepAdjustments?:         *[...{
+			AdjustmentType?:                 *("ChangeInCapacity" | "ExactCapacity" | "PercentChangeInCapacity") | fn.#Fn
+			AutoScalingGroupName:            *string | fn.#Fn
+			Cooldown?:                       *string | fn.#Fn
+			EstimatedInstanceWarmup?:        *int | fn.#Fn
+			MetricAggregationType?:          *("Average" | "Maximum" | "Minimum") | fn.#Fn
+			MinAdjustmentMagnitude?:         *int | fn.#Fn
+			PolicyType?:                     *("SimpleScaling" | "StepScaling" | "TargetTrackingScaling") | fn.#Fn
+			PredictiveScalingConfiguration?: *{
+				MaxCapacityBreachBehavior?: *string | fn.#Fn
+				MaxCapacityBuffer?:         *int | fn.#Fn
+				MetricSpecifications:       *[...{
+					PredefinedLoadMetricSpecification?: *{
+						PredefinedMetricType: *string | fn.#Fn
+						ResourceLabel?:       *string | fn.#Fn
+					} | fn.#If
+					PredefinedMetricPairSpecification?: *{
+						PredefinedMetricType: *string | fn.#Fn
+						ResourceLabel?:       *string | fn.#Fn
+					} | fn.#If
+					PredefinedScalingMetricSpecification?: *{
+						PredefinedMetricType: *string | fn.#Fn
+						ResourceLabel?:       *string | fn.#Fn
+					} | fn.#If
+					TargetValue: *number | fn.#Fn
+				}] | fn.#If
+				Mode?:                 *string | fn.#Fn
+				SchedulingBufferTime?: *int | fn.#Fn
+			} | fn.#If
+			ScalingAdjustment?: *int | fn.#Fn
+			StepAdjustments?:   *[...{
 				MetricIntervalLowerBound?: *number | fn.#Fn
 				MetricIntervalUpperBound?: *number | fn.#Fn
 				ScalingAdjustment:         *int | fn.#Fn

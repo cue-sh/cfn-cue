@@ -7,8 +7,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::Redshift::Cluster"
 		Properties: {
 			AllowVersionUpgrade?:              *bool | fn.#Fn
+			AquaConfigurationStatus?:          *string | fn.#Fn
 			AutomatedSnapshotRetentionPeriod?: *int | fn.#Fn
 			AvailabilityZone?:                 *string | fn.#Fn
+			AvailabilityZoneRelocation?:       *bool | fn.#Fn
+			AvailabilityZoneRelocationStatus?: *string | fn.#Fn
+			Classic?:                          *bool | fn.#Fn
 			ClusterIdentifier?:                *string | fn.#Fn
 			ClusterParameterGroupName?:        *string | fn.#Fn
 			ClusterSecurityGroups?:            [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -16,12 +20,19 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ClusterType:                       *("multi-node" | "single-node") | fn.#Fn
 			ClusterVersion?:                   *("1.0") | fn.#Fn
 			DBName:                            *string | fn.#Fn
+			DeferMaintenance?:                 *bool | fn.#Fn
+			DeferMaintenanceDuration?:         *int | fn.#Fn
+			DeferMaintenanceEndTime?:          *string | fn.#Fn
+			DeferMaintenanceIdentifier?:       *string | fn.#Fn
+			DeferMaintenanceStartTime?:        *string | fn.#Fn
+			DestinationRegion?:                *string | fn.#Fn
 			ElasticIp?:                        *string | fn.#Fn
 			Encrypted?:                        *bool | fn.#Fn
 			Endpoint?:                         *{
 				Address?: *string | fn.#Fn
 				Port?:    *string | fn.#Fn
 			} | fn.#If
+			EnhancedVpcRouting?:             *bool | fn.#Fn
 			HsmClientCertificateIdentifier?: *string | fn.#Fn
 			HsmConfigurationIdentifier?:     *string | fn.#Fn
 			IamRoles?:                       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -30,17 +41,25 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				BucketName:   *string | fn.#Fn
 				S3KeyPrefix?: *string | fn.#Fn
 			} | fn.#If
-			MasterUserPassword:          *string | fn.#Fn
-			MasterUsername:              *string | fn.#Fn
-			NodeType:                    *("dc2.8xlarge" | "dc2.large" | "ds2.8xlarge" | "ds2.xlarge" | "ra3.16xlarge" | "ra3.4xlarge" | "ra3.xlplus") | fn.#Fn
-			NumberOfNodes?:              *(>=1 & <=100) | fn.#Fn
-			OwnerAccount?:               *string | fn.#Fn
-			Port?:                       *int | fn.#Fn
-			PreferredMaintenanceWindow?: *string | fn.#Fn
-			PubliclyAccessible?:         *bool | fn.#Fn
-			SnapshotClusterIdentifier?:  *string | fn.#Fn
-			SnapshotIdentifier?:         *string | fn.#Fn
-			Tags?:                       *[...{
+			MaintenanceTrackName?:          *string | fn.#Fn
+			ManualSnapshotRetentionPeriod?: *int | fn.#Fn
+			MasterUserPassword:             *string | fn.#Fn
+			MasterUsername:                 *string | fn.#Fn
+			NodeType:                       *("dc2.8xlarge" | "dc2.large" | "ds2.8xlarge" | "ds2.xlarge" | "ra3.16xlarge" | "ra3.4xlarge" | "ra3.xlplus") | fn.#Fn
+			NumberOfNodes?:                 *(>=1 & <=100) | fn.#Fn
+			OwnerAccount?:                  *string | fn.#Fn
+			Port?:                          *int | fn.#Fn
+			PreferredMaintenanceWindow?:    *string | fn.#Fn
+			PubliclyAccessible?:            *bool | fn.#Fn
+			ResourceAction?:                *string | fn.#Fn
+			RevisionTarget?:                *string | fn.#Fn
+			RotateEncryptionKey?:           *bool | fn.#Fn
+			SnapshotClusterIdentifier?:     *string | fn.#Fn
+			SnapshotCopyGrantName?:         *string | fn.#Fn
+			SnapshotCopyManual?:            *bool | fn.#Fn
+			SnapshotCopyRetentionPeriod?:   *int | fn.#Fn
+			SnapshotIdentifier?:            *string | fn.#Fn
+			Tags?:                          *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

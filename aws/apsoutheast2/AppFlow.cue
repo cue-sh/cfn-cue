@@ -292,7 +292,11 @@ import (
 						Object: *(=~#"\S+"#) | fn.#Fn
 					} | fn.#If
 					Veeva?: *{
-						Object: *(=~#"\S+"#) | fn.#Fn
+						DocumentType?:       *(=~#"[\s\w_-]+"#) | fn.#Fn
+						IncludeAllVersions?: *bool | fn.#Fn
+						IncludeRenditions?:  *bool | fn.#Fn
+						IncludeSourceFiles?: *bool | fn.#Fn
+						Object:              *(=~#"\S+"#) | fn.#Fn
 					} | fn.#If
 					Zendesk?: *{
 						Object: *(=~#"\S+"#) | fn.#Fn
@@ -333,6 +337,7 @@ import (
 					DataPullMode?:      *("Incremental" | "Complete") | fn.#Fn
 					ScheduleEndTime?:   *number | fn.#Fn
 					ScheduleExpression: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+					ScheduleOffset?:    *number | fn.#Fn
 					ScheduleStartTime?: *number | fn.#Fn
 					TimeZone?:          *string | fn.#Fn
 				} | fn.#If

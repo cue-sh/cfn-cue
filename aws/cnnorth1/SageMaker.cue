@@ -329,7 +329,9 @@ import (
 							S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 						} | fn.#If
 					} | fn.#If
-					Environment?:               *{} | fn.#If
+					Environment?: *{
+						[string]: *string | fn.#Fn
+					} | fn.#If
 					MonitoringAppSpecification: *{
 						ContainerArguments?:              [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
 						ContainerEntrypoint?:             [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)

@@ -45,7 +45,7 @@ import (
 		Type: "AWS::Athena::WorkGroup"
 		Properties: {
 			Description?:           *string | fn.#Fn
-			Name:                   *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9._-]{1,128}"#)) | fn.#Fn
+			Name:                   *(=~#"[a-zA-Z0-9._-]{1,128}"#) | fn.#Fn
 			RecursiveDeleteOption?: *bool | fn.#Fn
 			State?:                 *("ENABLED" | "DISABLED") | fn.#Fn
 			Tags?:                  *[...{

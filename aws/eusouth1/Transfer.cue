@@ -32,6 +32,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
+			WorkflowDetails?: *{
+				OnUpload: *[...{
+					ExecutionRole: *string | fn.#Fn
+					WorkflowId:    *string | fn.#Fn
+				}] | fn.#If
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -23,7 +23,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			DeferMaintenance?:                 *bool | fn.#Fn
 			DeferMaintenanceDuration?:         *int | fn.#Fn
 			DeferMaintenanceEndTime?:          *string | fn.#Fn
-			DeferMaintenanceIdentifier?:       *string | fn.#Fn
 			DeferMaintenanceStartTime?:        *string | fn.#Fn
 			DestinationRegion?:                *string | fn.#Fn
 			ElasticIp?:                        *string | fn.#Fn

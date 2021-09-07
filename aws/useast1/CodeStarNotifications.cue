@@ -18,8 +18,8 @@ import (
 				[string]: _
 			} | fn.#Fn
 			Targets: *[...{
-				TargetAddress?: *string | fn.#Fn
-				TargetType?:    *string | fn.#Fn
+				TargetAddress: *string | fn.#Fn
+				TargetType:    *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

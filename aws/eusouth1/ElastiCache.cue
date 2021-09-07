@@ -16,17 +16,17 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Engine:                     *string | fn.#Fn
 			EngineVersion?:             *string | fn.#Fn
 			LogDeliveryConfigurations?: *[...{
-				DestinationDetails?: *{
+				DestinationDetails: *{
 					CloudWatchLogsDetails?: *{
-						LogGroup?: *string | fn.#Fn
+						LogGroup: *string | fn.#Fn
 					} | fn.#If
 					KinesisFirehoseDetails?: *{
-						DeliveryStream?: *string | fn.#Fn
+						DeliveryStream: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				DestinationType?: *string | fn.#Fn
-				LogFormat?:       *string | fn.#Fn
-				LogType?:         *string | fn.#Fn
+				DestinationType: *string | fn.#Fn
+				LogFormat:       *string | fn.#Fn
+				LogType:         *string | fn.#Fn
 			}] | fn.#If
 			NotificationTopicArn?:       *string | fn.#Fn
 			NumCacheNodes:               *int | fn.#Fn
@@ -85,17 +85,17 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			GlobalReplicationGroupId?:  *string | fn.#Fn
 			KmsKeyId?:                  *string | fn.#Fn
 			LogDeliveryConfigurations?: *[...{
-				DestinationDetails?: *{
+				DestinationDetails: *{
 					CloudWatchLogsDetails?: *{
-						LogGroup?: *string | fn.#Fn
+						LogGroup: *string | fn.#Fn
 					} | fn.#If
 					KinesisFirehoseDetails?: *{
-						DeliveryStream?: *string | fn.#Fn
+						DeliveryStream: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				DestinationType?: *string | fn.#Fn
-				LogFormat?:       *string | fn.#Fn
-				LogType?:         *string | fn.#Fn
+				DestinationType: *string | fn.#Fn
+				LogFormat:       *string | fn.#Fn
+				LogType:         *string | fn.#Fn
 			}] | fn.#If
 			MultiAZEnabled?:         *bool | fn.#Fn
 			NodeGroupConfiguration?: *[...{

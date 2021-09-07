@@ -224,6 +224,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			HealthCheckProtocol?:        *string | fn.#Fn
 			HealthCheckTimeoutSeconds?:  *(>=2 & <=120) | fn.#Fn
 			HealthyThresholdCount?:      *(>=2 & <=10) | fn.#Fn
+			IpAddressType?:              *string | fn.#Fn
 			Matcher?:                    *{
 				GrpcCode?: *string | fn.#Fn
 				HttpCode?: *string | fn.#Fn

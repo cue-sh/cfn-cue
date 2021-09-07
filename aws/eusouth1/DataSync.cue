@@ -161,6 +161,10 @@ import (
 				FilterType?: *("SIMPLE_PATTERN" & (=~#"^[A-Z0-9_]+$"#)) | fn.#Fn
 				Value?:      *(=~#"^[^\x00]+$"#) | fn.#Fn
 			}] | fn.#If
+			Includes?: *[...{
+				FilterType?: *("SIMPLE_PATTERN" & (=~#"^[A-Z0-9_]+$"#)) | fn.#Fn
+				Value?:      *(=~#"^[^\x00]+$"#) | fn.#Fn
+			}] | fn.#If
 			Name?:    *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9\s+=._:@/-]+$"#)) | fn.#Fn
 			Options?: *{
 				Atime?:                       *("NONE" | "BEST_EFFORT") | fn.#Fn

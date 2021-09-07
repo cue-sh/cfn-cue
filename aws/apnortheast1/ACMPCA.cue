@@ -163,6 +163,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					S3BucketName?:     *string | fn.#Fn
 					S3ObjectAcl?:      *string | fn.#Fn
 				} | fn.#If
+				OcspConfiguration?: *{
+					Enabled?:         *bool | fn.#Fn
+					OcspCustomCname?: *string | fn.#Fn
+				} | fn.#If
 			} | fn.#If
 			SigningAlgorithm: *string | fn.#Fn
 			Subject:          *{

@@ -6,9 +6,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#Discoverer: {
 		Type: "AWS::EventSchemas::Discoverer"
 		Properties: {
-			Description?: *string | fn.#Fn
-			SourceArn:    *string | fn.#Fn
-			Tags?:        *[...{
+			CrossAccount?: *bool | fn.#Fn
+			Description?:  *string | fn.#Fn
+			SourceArn:     *string | fn.#Fn
+			Tags?:         *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

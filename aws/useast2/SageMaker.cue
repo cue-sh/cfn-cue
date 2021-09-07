@@ -79,9 +79,11 @@ import (
 		Type: "AWS::SageMaker::DataQualityJobDefinition"
 		Properties: {
 			DataQualityAppSpecification: *{
-				ContainerArguments?:              [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-				ContainerEntrypoint?:             [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-				Environment?:                     *{} | fn.#If
+				ContainerArguments?:  [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				ContainerEntrypoint?: [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				Environment?:         *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
 				ImageUri:                         *(=~#".*"#) | fn.#Fn
 				PostAnalyticsProcessorSourceUri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 				RecordPreprocessorSourceUri?:     *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
@@ -456,8 +458,10 @@ import (
 			} | fn.#If
 			ModelBiasAppSpecification: *{
 				ConfigUri:    *(=~#".*"#) | fn.#Fn
-				Environment?: *{} | fn.#If
-				ImageUri:     *(=~#".*"#) | fn.#Fn
+				Environment?: *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
+				ImageUri: *(=~#".*"#) | fn.#Fn
 			} | fn.#If
 			ModelBiasBaselineConfig?: *{
 				BaseliningJobName?:   *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
@@ -529,8 +533,10 @@ import (
 			} | fn.#If
 			ModelExplainabilityAppSpecification: *{
 				ConfigUri:    *(=~#".*"#) | fn.#Fn
-				Environment?: *{} | fn.#If
-				ImageUri:     *(=~#".*"#) | fn.#Fn
+				Environment?: *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
+				ImageUri: *(=~#".*"#) | fn.#Fn
 			} | fn.#If
 			ModelExplainabilityBaselineConfig?: *{
 				BaseliningJobName?:   *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
@@ -614,9 +620,11 @@ import (
 				} | fn.#If
 			} | fn.#If
 			ModelQualityAppSpecification: *{
-				ContainerArguments?:              [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-				ContainerEntrypoint?:             [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-				Environment?:                     *{} | fn.#If
+				ContainerArguments?:  [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				ContainerEntrypoint?: [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				Environment?:         *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
 				ImageUri:                         *(=~#".*"#) | fn.#Fn
 				PostAnalyticsProcessorSourceUri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 				ProblemType:                      *("BinaryClassification" | "MulticlassClassification" | "Regression") | fn.#Fn
@@ -702,7 +710,9 @@ import (
 							S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 						} | fn.#If
 					} | fn.#If
-					Environment?:               *{} | fn.#If
+					Environment?: *{
+						[string]: *string | fn.#Fn
+					} | fn.#If
 					MonitoringAppSpecification: *{
 						ContainerArguments?:              [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
 						ContainerEntrypoint?:             [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)

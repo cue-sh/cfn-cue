@@ -324,4 +324,38 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#MultiRegionAccessPoint: {
+		Type: "AWS::S3::MultiRegionAccessPoint"
+		Properties: {
+			Name?:                           *(strings.MinRunes(3) & strings.MaxRunes(50) & (=~#"^[a-z0-9][-a-z0-9]{1,48}[a-z0-9]$"#)) | fn.#Fn
+			PublicAccessBlockConfiguration?: *{
+				BlockPublicAcls?:       *bool | fn.#Fn
+				BlockPublicPolicy?:     *bool | fn.#Fn
+				IgnorePublicAcls?:      *bool | fn.#Fn
+				RestrictPublicBuckets?: *bool | fn.#Fn
+			} | fn.#If
+			Regions: *[...{
+				Bucket: *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[a-z0-9][a-z0-9//.//-]*[a-z0-9]$"#)) | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#MultiRegionAccessPointPolicy: {
+		Type: "AWS::S3::MultiRegionAccessPointPolicy"
+		Properties: {
+			MrapName: *(strings.MinRunes(3) & strings.MaxRunes(50) & (=~#"^[a-z0-9][-a-z0-9]{1,48}[a-z0-9]$"#)) | fn.#Fn
+			Policy:   *{
+				[string]: _
+			} | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

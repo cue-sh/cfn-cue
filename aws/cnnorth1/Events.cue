@@ -65,6 +65,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					Arn?: *string | fn.#Fn
 				} | fn.#If
 				EcsParameters?: *{
+					CapacityProviderStrategy?: *[...{
+						Base?:            *int | fn.#Fn
+						CapacityProvider: *string | fn.#Fn
+						Weight?:          *int | fn.#Fn
+					}] | fn.#If
+					EnableECSManagedTags?: *bool | fn.#Fn
+					EnableExecuteCommand?: *bool | fn.#Fn
 					Group?:                *string | fn.#Fn
 					LaunchType?:           *string | fn.#Fn
 					NetworkConfiguration?: *{
@@ -74,7 +81,21 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Subnets:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 						} | fn.#If
 					} | fn.#If
-					PlatformVersion?:  *string | fn.#Fn
+					PlacementConstraints?: *[...{
+						Expression?: *string | fn.#Fn
+						Type?:       *string | fn.#Fn
+					}] | fn.#If
+					PlacementStrategies?: *[...{
+						Field?: *string | fn.#Fn
+						Type?:  *string | fn.#Fn
+					}] | fn.#If
+					PlatformVersion?: *string | fn.#Fn
+					PropagateTags?:   *string | fn.#Fn
+					ReferenceId?:     *string | fn.#Fn
+					TagList?:         *[...{
+						Key:   *string | fn.#Fn
+						Value: *string | fn.#Fn
+					}] | fn.#If
 					TaskCount?:        *int | fn.#Fn
 					TaskDefinitionArn: *string | fn.#Fn
 				} | fn.#If

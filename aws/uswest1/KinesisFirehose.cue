@@ -36,7 +36,7 @@ import (
 							ParameterName:  *string | fn.#Fn
 							ParameterValue: *string | fn.#Fn
 						}] | fn.#If
-						Type: *("Lambda") | fn.#Fn
+						Type: *("RecordDeAggregation" | "Lambda" | "MetadataExtraction" | "AppendDelimiterToRecord") | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
 				RetryOptions?: *{
@@ -134,6 +134,12 @@ import (
 						VersionId?:    *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
+				DynamicPartitioningConfiguration?: *{
+					Enabled?:      *bool | fn.#Fn
+					RetryOptions?: *{
+						DurationInSeconds?: *int | fn.#Fn
+					} | fn.#If
+				} | fn.#If
 				EncryptionConfiguration?: *{
 					KMSEncryptionConfig?: *{
 						AWSKMSKeyARN: *string | fn.#Fn
@@ -149,7 +155,7 @@ import (
 							ParameterName:  *string | fn.#Fn
 							ParameterValue: *string | fn.#Fn
 						}] | fn.#If
-						Type: *("Lambda") | fn.#Fn
+						Type: *("RecordDeAggregation" | "Lambda" | "MetadataExtraction" | "AppendDelimiterToRecord") | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
 				RoleARN:                *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"arn:.*"#)) | fn.#Fn
@@ -199,7 +205,7 @@ import (
 							ParameterName:  *string | fn.#Fn
 							ParameterValue: *string | fn.#Fn
 						}] | fn.#If
-						Type: *("Lambda") | fn.#Fn
+						Type: *("RecordDeAggregation" | "Lambda" | "MetadataExtraction" | "AppendDelimiterToRecord") | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
 				RequestConfiguration?: *{
@@ -261,7 +267,7 @@ import (
 							ParameterName:  *string | fn.#Fn
 							ParameterValue: *string | fn.#Fn
 						}] | fn.#If
-						Type: *("Lambda") | fn.#Fn
+						Type: *("RecordDeAggregation" | "Lambda" | "MetadataExtraction" | "AppendDelimiterToRecord") | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
 				RetryOptions?: *{
@@ -354,7 +360,7 @@ import (
 							ParameterName:  *string | fn.#Fn
 							ParameterValue: *string | fn.#Fn
 						}] | fn.#If
-						Type: *("Lambda") | fn.#Fn
+						Type: *("RecordDeAggregation" | "Lambda" | "MetadataExtraction" | "AppendDelimiterToRecord") | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
 				RetryOptions?: *{

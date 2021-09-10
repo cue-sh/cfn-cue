@@ -37,7 +37,7 @@ import (
 			HealthCheckPath?:            *string | fn.#Fn
 			HealthCheckPort?:            *(>=-1 & <=65535) | fn.#Fn
 			HealthCheckProtocol?:        *("TCP" | "HTTP" | "HTTPS") | fn.#Fn
-			ListenerArn:                 *(=~#"^arn:aws:(\w+)::(\d{12}):(accelerator)/([0-9a-f-]+)/listener/([0-9a-f-]+)$"#) | fn.#Fn
+			ListenerArn:                 *string | fn.#Fn
 			PortOverrides?:              *[...{
 				EndpointPort: *int | fn.#Fn
 				ListenerPort: *int | fn.#Fn

@@ -438,18 +438,20 @@ import (
 	#Studio: {
 		Type: "AWS::EMR::Studio"
 		Properties: {
-			AuthMode:              *("SSO" | "IAM") | fn.#Fn
-			DefaultS3Location:     *(strings.MinRunes(6) & strings.MaxRunes(10280) & (=~#"^s3://.*"#)) | fn.#Fn
-			Description?:          *string | fn.#Fn
-			EngineSecurityGroupId: *(strings.MinRunes(4) & strings.MaxRunes(256) & (=~#"^sg-[a-zA-Z0-9\-._]+$"#)) | fn.#Fn
-			Name:                  *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[a-zA-Z0-9_-]+"#)) | fn.#Fn
-			ServiceRole:           *(=~#"^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$"#) | fn.#Fn
-			SubnetIds:             [...(*(=~#"^(subnet-[a-f0-9]{13})|(subnet-[a-f0-9]{8})\Z"#) | fn.#Fn)] | (*(=~#"^(subnet-[a-f0-9]{13})|(subnet-[a-f0-9]{8})\Z"#) | fn.#Fn)
-			Tags?:                 *[...{
+			AuthMode:                    *("SSO" | "IAM") | fn.#Fn
+			DefaultS3Location:           *(strings.MinRunes(6) & strings.MaxRunes(10280) & (=~#"^s3://.*"#)) | fn.#Fn
+			Description?:                *string | fn.#Fn
+			EngineSecurityGroupId:       *(strings.MinRunes(4) & strings.MaxRunes(256) & (=~#"^sg-[a-zA-Z0-9\-._]+$"#)) | fn.#Fn
+			IdpAuthUrl?:                 *(=~#"^https://[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])(:[0-9]*)*([?/#].*)?$"#) | fn.#Fn
+			IdpRelayStateParameterName?: *string | fn.#Fn
+			Name:                        *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[a-zA-Z0-9_-]+"#)) | fn.#Fn
+			ServiceRole:                 *(=~#"^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$"#) | fn.#Fn
+			SubnetIds:                   [...(*(=~#"^(subnet-[a-f0-9]{13})|(subnet-[a-f0-9]{8})\Z"#) | fn.#Fn)] | (*(=~#"^(subnet-[a-f0-9]{13})|(subnet-[a-f0-9]{8})\Z"#) | fn.#Fn)
+			Tags?:                       *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			UserRole:                 *(=~#"^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$"#) | fn.#Fn
+			UserRole?:                *(=~#"^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$"#) | fn.#Fn
 			VpcId:                    *(=~#"^(vpc-[0-9a-f]{8}|vpc-[0-9a-f]{17})$"#) | fn.#Fn
 			WorkspaceSecurityGroupId: *(=~#"^sg-[a-zA-Z0-9\-._]+$"#) | fn.#Fn
 		}

@@ -140,6 +140,32 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#FleetMetric: {
+		Type: "AWS::IoT::FleetMetric"
+		Properties: {
+			AggregationField?: *string | fn.#Fn
+			AggregationType?:  *{
+				Name:   *string | fn.#Fn
+				Values: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			Description?:  *string | fn.#Fn
+			IndexName?:    *string | fn.#Fn
+			MetricName:    *string | fn.#Fn
+			Period?:       *int | fn.#Fn
+			QueryString?:  *string | fn.#Fn
+			QueryVersion?: *string | fn.#Fn
+			Tags?:         *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			Unit?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#MitigationAction: {
 		Type: "AWS::IoT::MitigationAction"
 		Properties: {

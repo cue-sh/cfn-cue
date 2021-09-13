@@ -23,8 +23,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::ServiceDiscovery::Instance"
 		Properties: {
 			InstanceAttributes: *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 			InstanceId?: *string | fn.#Fn
 			ServiceId:   *string | fn.#Fn
 		}
@@ -58,29 +58,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
-	#PublicDnsNamespace: {
-		Type: "AWS::ServiceDiscovery::PublicDnsNamespace"
-		Properties: {
-			Description?: *string | fn.#Fn
-			Name:         *string | fn.#Fn
-			Properties?:  *{
-				DnsProperties?: *{
-					SOA?: *{
-						TTL?: *number | fn.#Fn
-					} | fn.#If
-				} | fn.#If
-			} | fn.#If
-			Tags?: *[...{
-				Key:   *string | fn.#Fn
-				Value: *string | fn.#Fn
-			}] | fn.#If
-		}
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
 	#Service: {
 		Type: "AWS::ServiceDiscovery::Service"
 		Properties: {
@@ -88,7 +65,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			DnsConfig?:   *{
 				DnsRecords: *[...{
 					TTL:  *number | fn.#Fn
-					Type: *string | fn.#Fn
+					Type: *("A" | "AAAA" | "CNAME" | "SRV") | fn.#Fn
 				}] | fn.#If
 				NamespaceId?:   *string | fn.#Fn
 				RoutingPolicy?: *string | fn.#Fn
@@ -96,7 +73,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			HealthCheckConfig?: *{
 				FailureThreshold?: *number | fn.#Fn
 				ResourcePath?:     *string | fn.#Fn
-				Type:              *string | fn.#Fn
+				Type:              *("HTTP" | "HTTPS" | "TCP") | fn.#Fn
 			} | fn.#If
 			HealthCheckCustomConfig?: *{
 				FailureThreshold?: *number | fn.#Fn

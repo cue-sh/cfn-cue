@@ -2,7 +2,7 @@ package cnnorth1
 
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
-#ResourceSpecificationVersion: "41.0.0"
+#ResourceSpecificationVersion: "41.1.0"
 #Template: {
 	AWSTemplateFormatVersion?: "2010-09-09"
 	Description?:              string

@@ -11,8 +11,8 @@ import (
 		Properties: {
 			Name?: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[a-zA-Z0-9_\-]{1,255}$"#)) | fn.#Fn
 			Tags?: *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -28,8 +28,8 @@ import (
 			GreengrassGroupId: *(strings.MinRunes(1) & strings.MaxRunes(1224)) | fn.#Fn
 			Name?:             *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			Tags?:             *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -96,8 +96,8 @@ import (
 				S3Key:        *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 			}] | fn.#If
 			Tags?: *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

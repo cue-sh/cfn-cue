@@ -210,8 +210,11 @@ import (
 			InstanceTypes?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			KeyPair?:            *string | fn.#Fn
 			Logging?:            *{
-				[string]: _
-			} | fn.#Fn
+				S3Logs?: *{
+					S3BucketName?: *string | fn.#Fn
+					S3KeyPrefix?:  *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 			Name:          *string | fn.#Fn
 			ResourceTags?: *{
 				[string]: *string | fn.#Fn

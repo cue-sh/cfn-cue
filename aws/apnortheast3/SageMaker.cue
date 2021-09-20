@@ -1,6 +1,9 @@
 package apnortheast3
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #SageMaker: {
 	#CodeRepository: {
@@ -11,6 +14,78 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Branch?:       *string | fn.#Fn
 				RepositoryUrl: *string | fn.#Fn
 				SecretArn?:    *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DataQualityJobDefinition: {
+		Type: "AWS::SageMaker::DataQualityJobDefinition"
+		Properties: {
+			DataQualityAppSpecification: *{
+				ContainerArguments?:  [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				ContainerEntrypoint?: [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				Environment?:         *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
+				ImageUri:                         *(=~#".*"#) | fn.#Fn
+				PostAnalyticsProcessorSourceUri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				RecordPreprocessorSourceUri?:     *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+			} | fn.#If
+			DataQualityBaselineConfig?: *{
+				BaseliningJobName?:   *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
+				ConstraintsResource?: *{
+					S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				} | fn.#If
+				StatisticsResource?: *{
+					S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			DataQualityJobInput: *{
+				EndpointInput: *{
+					EndpointName:            *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+					LocalPath:               *(=~#".*"#) | fn.#Fn
+					S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+					S3InputMode?:            *("Pipe" | "File") | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			DataQualityJobOutputConfig: *{
+				KmsKeyId?:         *(=~#".*"#) | fn.#Fn
+				MonitoringOutputs: *[...{
+					S3Output: *{
+						LocalPath:     *(=~#".*"#) | fn.#Fn
+						S3UploadMode?: *("Continuous" | "EndOfJob") | fn.#Fn
+						S3Uri:         *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
+			} | fn.#If
+			JobDefinitionName?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+			JobResources:       *{
+				ClusterConfig: *{
+					InstanceCount:   *(>=1 & <=100) | fn.#Fn
+					InstanceType:    *string | fn.#Fn
+					VolumeKmsKeyId?: *string | fn.#Fn
+					VolumeSizeInGB:  *(>=1 & <=16384) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			NetworkConfig?: *{
+				EnableInterContainerTrafficEncryption?: *bool | fn.#Fn
+				EnableNetworkIsolation?:                *bool | fn.#Fn
+				VpcConfig?:                             *{
+					SecurityGroupIds: [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+					Subnets:          [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+				} | fn.#If
+			} | fn.#If
+			RoleArn:            *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
+			StoppingCondition?: *{
+				MaxRuntimeInSeconds: *(>=1 & <=86400) | fn.#Fn
 			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
@@ -167,6 +242,321 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SecurityGroupIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Subnets:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ModelBiasJobDefinition: {
+		Type: "AWS::SageMaker::ModelBiasJobDefinition"
+		Properties: {
+			JobDefinitionName?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+			JobResources:       *{
+				ClusterConfig: *{
+					InstanceCount:   *(>=1 & <=100) | fn.#Fn
+					InstanceType:    *string | fn.#Fn
+					VolumeKmsKeyId?: *string | fn.#Fn
+					VolumeSizeInGB:  *(>=1 & <=16384) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			ModelBiasAppSpecification: *{
+				ConfigUri:    *(=~#".*"#) | fn.#Fn
+				Environment?: *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
+				ImageUri: *(=~#".*"#) | fn.#Fn
+			} | fn.#If
+			ModelBiasBaselineConfig?: *{
+				BaseliningJobName?:   *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
+				ConstraintsResource?: *{
+					S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			ModelBiasJobInput: *{
+				EndpointInput: *{
+					EndTimeOffset?:                 *(strings.MinRunes(1) & strings.MaxRunes(15) & (=~#"^.?P.*"#)) | fn.#Fn
+					EndpointName:                   *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+					FeaturesAttribute?:             *string | fn.#Fn
+					InferenceAttribute?:            *string | fn.#Fn
+					LocalPath:                      *(=~#".*"#) | fn.#Fn
+					ProbabilityAttribute?:          *string | fn.#Fn
+					ProbabilityThresholdAttribute?: *number | fn.#Fn
+					S3DataDistributionType?:        *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+					S3InputMode?:                   *("Pipe" | "File") | fn.#Fn
+					StartTimeOffset?:               *(strings.MinRunes(1) & strings.MaxRunes(15) & (=~#"^.?P.*"#)) | fn.#Fn
+				} | fn.#If
+				GroundTruthS3Input: *{
+					S3Uri: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			ModelBiasJobOutputConfig: *{
+				KmsKeyId?:         *(=~#".*"#) | fn.#Fn
+				MonitoringOutputs: *[...{
+					S3Output: *{
+						LocalPath:     *(=~#".*"#) | fn.#Fn
+						S3UploadMode?: *("Continuous" | "EndOfJob") | fn.#Fn
+						S3Uri:         *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
+			} | fn.#If
+			NetworkConfig?: *{
+				EnableInterContainerTrafficEncryption?: *bool | fn.#Fn
+				EnableNetworkIsolation?:                *bool | fn.#Fn
+				VpcConfig?:                             *{
+					SecurityGroupIds: [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+					Subnets:          [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+				} | fn.#If
+			} | fn.#If
+			RoleArn:            *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
+			StoppingCondition?: *{
+				MaxRuntimeInSeconds: *(>=1 & <=86400) | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ModelExplainabilityJobDefinition: {
+		Type: "AWS::SageMaker::ModelExplainabilityJobDefinition"
+		Properties: {
+			JobDefinitionName?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+			JobResources:       *{
+				ClusterConfig: *{
+					InstanceCount:   *(>=1 & <=100) | fn.#Fn
+					InstanceType:    *string | fn.#Fn
+					VolumeKmsKeyId?: *string | fn.#Fn
+					VolumeSizeInGB:  *(>=1 & <=16384) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			ModelExplainabilityAppSpecification: *{
+				ConfigUri:    *(=~#".*"#) | fn.#Fn
+				Environment?: *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
+				ImageUri: *(=~#".*"#) | fn.#Fn
+			} | fn.#If
+			ModelExplainabilityBaselineConfig?: *{
+				BaseliningJobName?:   *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
+				ConstraintsResource?: *{
+					S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			ModelExplainabilityJobInput: *{
+				EndpointInput: *{
+					EndpointName:            *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+					FeaturesAttribute?:      *string | fn.#Fn
+					InferenceAttribute?:     *string | fn.#Fn
+					LocalPath:               *(=~#".*"#) | fn.#Fn
+					ProbabilityAttribute?:   *string | fn.#Fn
+					S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+					S3InputMode?:            *("Pipe" | "File") | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			ModelExplainabilityJobOutputConfig: *{
+				KmsKeyId?:         *(=~#".*"#) | fn.#Fn
+				MonitoringOutputs: *[...{
+					S3Output: *{
+						LocalPath:     *(=~#".*"#) | fn.#Fn
+						S3UploadMode?: *("Continuous" | "EndOfJob") | fn.#Fn
+						S3Uri:         *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
+			} | fn.#If
+			NetworkConfig?: *{
+				EnableInterContainerTrafficEncryption?: *bool | fn.#Fn
+				EnableNetworkIsolation?:                *bool | fn.#Fn
+				VpcConfig?:                             *{
+					SecurityGroupIds: [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+					Subnets:          [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+				} | fn.#If
+			} | fn.#If
+			RoleArn:            *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
+			StoppingCondition?: *{
+				MaxRuntimeInSeconds: *(>=1 & <=86400) | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ModelQualityJobDefinition: {
+		Type: "AWS::SageMaker::ModelQualityJobDefinition"
+		Properties: {
+			JobDefinitionName?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+			JobResources:       *{
+				ClusterConfig: *{
+					InstanceCount:   *(>=1 & <=100) | fn.#Fn
+					InstanceType:    *string | fn.#Fn
+					VolumeKmsKeyId?: *string | fn.#Fn
+					VolumeSizeInGB:  *(>=1 & <=16384) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			ModelQualityAppSpecification: *{
+				ContainerArguments?:  [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				ContainerEntrypoint?: [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				Environment?:         *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
+				ImageUri:                         *(=~#".*"#) | fn.#Fn
+				PostAnalyticsProcessorSourceUri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				ProblemType:                      *("BinaryClassification" | "MulticlassClassification" | "Regression") | fn.#Fn
+				RecordPreprocessorSourceUri?:     *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+			} | fn.#If
+			ModelQualityBaselineConfig?: *{
+				BaseliningJobName?:   *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
+				ConstraintsResource?: *{
+					S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			ModelQualityJobInput: *{
+				EndpointInput: *{
+					EndTimeOffset?:                 *(strings.MinRunes(1) & strings.MaxRunes(15) & (=~#"^.?P.*"#)) | fn.#Fn
+					EndpointName:                   *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+					InferenceAttribute?:            *string | fn.#Fn
+					LocalPath:                      *(=~#".*"#) | fn.#Fn
+					ProbabilityAttribute?:          *string | fn.#Fn
+					ProbabilityThresholdAttribute?: *number | fn.#Fn
+					S3DataDistributionType?:        *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+					S3InputMode?:                   *("Pipe" | "File") | fn.#Fn
+					StartTimeOffset?:               *(strings.MinRunes(1) & strings.MaxRunes(15) & (=~#"^.?P.*"#)) | fn.#Fn
+				} | fn.#If
+				GroundTruthS3Input: *{
+					S3Uri: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			ModelQualityJobOutputConfig: *{
+				KmsKeyId?:         *(=~#".*"#) | fn.#Fn
+				MonitoringOutputs: *[...{
+					S3Output: *{
+						LocalPath:     *(=~#".*"#) | fn.#Fn
+						S3UploadMode?: *("Continuous" | "EndOfJob") | fn.#Fn
+						S3Uri:         *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
+			} | fn.#If
+			NetworkConfig?: *{
+				EnableInterContainerTrafficEncryption?: *bool | fn.#Fn
+				EnableNetworkIsolation?:                *bool | fn.#Fn
+				VpcConfig?:                             *{
+					SecurityGroupIds: [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+					Subnets:          [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+				} | fn.#If
+			} | fn.#If
+			RoleArn:            *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
+			StoppingCondition?: *{
+				MaxRuntimeInSeconds: *(>=1 & <=86400) | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#MonitoringSchedule: {
+		Type: "AWS::SageMaker::MonitoringSchedule"
+		Properties: {
+			EndpointName?:                   *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+			FailureReason?:                  *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			LastMonitoringExecutionSummary?: *{
+				CreationTime:              *string | fn.#Fn
+				EndpointName?:             *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+				FailureReason?:            *string | fn.#Fn
+				LastModifiedTime:          *string | fn.#Fn
+				MonitoringExecutionStatus: *("Pending" | "Completed" | "CompletedWithViolations" | "InProgress" | "Failed" | "Stopping" | "Stopped") | fn.#Fn
+				MonitoringScheduleName:    *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+				ProcessingJobArn?:         *(=~#"aws[a-z\-]*:sagemaker:[a-z0-9\-]*:[0-9]{12}:processing-job/.*"#) | fn.#Fn
+				ScheduledTime:             *string | fn.#Fn
+			} | fn.#If
+			MonitoringScheduleConfig: *{
+				MonitoringJobDefinition?: *{
+					BaselineConfig?: *{
+						ConstraintsResource?: *{
+							S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+						} | fn.#If
+						StatisticsResource?: *{
+							S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+					Environment?: *{
+						[string]: *string | fn.#Fn
+					} | fn.#If
+					MonitoringAppSpecification: *{
+						ContainerArguments?:              [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+						ContainerEntrypoint?:             [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+						ImageUri:                         *(=~#".*"#) | fn.#Fn
+						PostAnalyticsProcessorSourceUri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+						RecordPreprocessorSourceUri?:     *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+					MonitoringInputs: *[...{
+						EndpointInput: *{
+							EndpointName:            *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
+							LocalPath:               *(=~#".*"#) | fn.#Fn
+							S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+							S3InputMode?:            *("Pipe" | "File") | fn.#Fn
+						} | fn.#If
+					}] | fn.#If
+					MonitoringOutputConfig: *{
+						KmsKeyId?:         *(=~#".*"#) | fn.#Fn
+						MonitoringOutputs: *[...{
+							S3Output: *{
+								LocalPath:     *(=~#".*"#) | fn.#Fn
+								S3UploadMode?: *("Continuous" | "EndOfJob") | fn.#Fn
+								S3Uri:         *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+							} | fn.#If
+						}] | fn.#If
+					} | fn.#If
+					MonitoringResources: *{
+						ClusterConfig: *{
+							InstanceCount:   *(>=1 & <=100) | fn.#Fn
+							InstanceType:    *string | fn.#Fn
+							VolumeKmsKeyId?: *string | fn.#Fn
+							VolumeSizeInGB:  *(>=1 & <=16384) | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+					NetworkConfig?: *{
+						EnableInterContainerTrafficEncryption?: *bool | fn.#Fn
+						EnableNetworkIsolation?:                *bool | fn.#Fn
+						VpcConfig?:                             *{
+							SecurityGroupIds: [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+							Subnets:          [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+						} | fn.#If
+					} | fn.#If
+					RoleArn:            *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
+					StoppingCondition?: *{
+						MaxRuntimeInSeconds: *(>=1 & <=86400) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				MonitoringJobDefinitionName?: *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
+				MonitoringType?:              *("DataQuality" | "ModelQuality" | "ModelBias" | "ModelExplainability") | fn.#Fn
+				ScheduleConfig?:              *{
+					ScheduleExpression: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			MonitoringScheduleName:    *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+			MonitoringScheduleStatus?: *("Pending" | "Failed" | "Scheduled" | "Stopped") | fn.#Fn
+			Tags?:                     *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

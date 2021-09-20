@@ -66,7 +66,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			LambdaConfig?: *{
 				LambdaFunctionArn: *string | fn.#Fn
 			} | fn.#If
-			Name:                      *string | fn.#Fn
+			Name:                     *string | fn.#Fn
+			OpenSearchServiceConfig?: *{
+				AwsRegion: *string | fn.#Fn
+				Endpoint:  *string | fn.#Fn
+			} | fn.#If
 			RelationalDatabaseConfig?: *{
 				RdsHttpEndpointConfig?: *{
 					AwsRegion:           *string | fn.#Fn

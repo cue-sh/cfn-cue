@@ -77,8 +77,9 @@ import (
 		Type: "AWS::RoboMaker::SimulationApplication"
 		Properties: {
 			CurrentRevisionId?: *string | fn.#Fn
+			Environment?:       *string | fn.#Fn
 			Name?:              *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[a-zA-Z0-9_\-]*"#)) | fn.#Fn
-			RenderingEngine:    *{
+			RenderingEngine?:   *{
 				Name:    *("OGRE") | fn.#Fn
 				Version: *(=~#"1.x"#) | fn.#Fn
 			} | fn.#If
@@ -90,7 +91,7 @@ import (
 				Name:    *("Gazebo" | "RosbagPlay") | fn.#Fn
 				Version: *("7" | "9" | "11" | "Kinetic" | "Melodic" | "Dashing" | "Foxy") | fn.#Fn
 			} | fn.#If
-			Sources: *[...{
+			Sources?: *[...{
 				Architecture: *("X86_64" | "ARM64" | "ARMHF") | fn.#Fn
 				S3Bucket:     *(=~#"[a-z0-9][a-z0-9.\-]*[a-z0-9]"#) | fn.#Fn
 				S3Key:        *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn

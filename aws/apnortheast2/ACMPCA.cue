@@ -211,4 +211,18 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Permission: {
+		Type: "AWS::ACMPCA::Permission"
+		Properties: {
+			Actions:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			CertificateAuthorityArn: *string | fn.#Fn
+			Principal:               *string | fn.#Fn
+			SourceAccount?:          *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

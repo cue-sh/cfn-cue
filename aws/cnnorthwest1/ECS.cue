@@ -41,6 +41,19 @@ import (
 				Name?:  *string | fn.#Fn
 				Value?: *string | fn.#Fn
 			}] | fn.#If
+			Configuration?: *{
+				ExecuteCommandConfiguration?: *{
+					KmsKeyId?:         *string | fn.#Fn
+					LogConfiguration?: *{
+						CloudWatchEncryptionEnabled?: *bool | fn.#Fn
+						CloudWatchLogGroupName?:      *string | fn.#Fn
+						S3BucketName?:                *string | fn.#Fn
+						S3EncryptionEnabled?:         *bool | fn.#Fn
+						S3KeyPrefix?:                 *string | fn.#Fn
+					} | fn.#If
+					Logging?: *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 			DefaultCapacityProviderStrategy?: *[...{
 				Base?:             *int | fn.#Fn
 				CapacityProvider?: *string | fn.#Fn

@@ -148,9 +148,10 @@ import (
 				LogFilePrefix?:         *string | fn.#Fn
 			} | fn.#If
 			MetricsConfigurations?: *[...{
-				Id:          *string | fn.#Fn
-				Prefix?:     *string | fn.#Fn
-				TagFilters?: *[...{
+				AccessPointArn?: *string | fn.#Fn
+				Id:              *string | fn.#Fn
+				Prefix?:         *string | fn.#Fn
+				TagFilters?:     *[...{
 					Key:   *string | fn.#Fn
 					Value: *string | fn.#Fn
 				}] | fn.#If

@@ -485,6 +485,13 @@ import (
 					Lambda?: *{
 						FunctionArn?: *string | fn.#Fn
 					} | fn.#If
+					OpenSearch?: *{
+						Endpoint: *string | fn.#Fn
+						Id:       *string | fn.#Fn
+						Index:    *string | fn.#Fn
+						RoleArn:  *string | fn.#Fn
+						Type:     *string | fn.#Fn
+					} | fn.#If
 					Republish?: *{
 						Qos?:    *int | fn.#Fn
 						RoleArn: *string | fn.#Fn
@@ -641,6 +648,13 @@ import (
 					} | fn.#If
 					Lambda?: *{
 						FunctionArn?: *string | fn.#Fn
+					} | fn.#If
+					OpenSearch?: *{
+						Endpoint: *string | fn.#Fn
+						Id:       *string | fn.#Fn
+						Index:    *string | fn.#Fn
+						RoleArn:  *string | fn.#Fn
+						Type:     *string | fn.#Fn
 					} | fn.#If
 					Republish?: *{
 						Qos?:    *int | fn.#Fn

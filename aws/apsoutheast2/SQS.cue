@@ -17,7 +17,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			MessageRetentionPeriod?:        *(>=60 & <=1209600) | fn.#Fn
 			QueueName?:                     *string | fn.#Fn
 			ReceiveMessageWaitTimeSeconds?: *(>=0 & <=20) | fn.#Fn
-			RedrivePolicy?:                 *{
+			RedriveAllowPolicy?:            *{
+				[string]: _
+			} | fn.#Fn
+			RedrivePolicy?: *{
 				[string]: _
 			} | fn.#Fn
 			Tags?: *[...{

@@ -49,7 +49,7 @@ import (
 						Destination: *{
 							BucketAccountId?: *string | fn.#Fn
 							BucketArn:        *string | fn.#Fn
-							Format:           *string | fn.#Fn
+							Format:           *("CSV" | "ORC" | "Parquet") | fn.#Fn
 							Prefix?:          *string | fn.#Fn
 						} | fn.#If
 						OutputSchemaVersion: *string | fn.#Fn
@@ -65,15 +65,15 @@ import (
 					BucketKeyEnabled?:              *bool | fn.#Fn
 					ServerSideEncryptionByDefault?: *{
 						KMSMasterKeyID?: *string | fn.#Fn
-						SSEAlgorithm:    *("AES256" | "aws:kms") | fn.#Fn
+						SSEAlgorithm:    *("aws:kms" | "AES256") | fn.#Fn
 					} | fn.#If
 				}] | fn.#If
 			} | fn.#If
-			BucketName?:        *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[a-z0-9][a-z0-9.-]*[a-z0-9]$"#)) | fn.#Fn
+			BucketName?:        *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[a-z0-9][a-z0-9//.//-]*[a-z0-9]$"#)) | fn.#Fn
 			CorsConfiguration?: *{
 				CorsRules: *[...{
 					AllowedHeaders?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					AllowedMethods:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					AllowedMethods:  [...(*("GET" | "PUT" | "HEAD" | "POST" | "DELETE") | fn.#Fn)] | (*("GET" | "PUT" | "HEAD" | "POST" | "DELETE") | fn.#Fn)
 					AllowedOrigins:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					ExposedHeaders?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					Id?:             *string | fn.#Fn
@@ -83,13 +83,13 @@ import (
 			IntelligentTieringConfigurations?: *[...{
 				Id:          *string | fn.#Fn
 				Prefix?:     *string | fn.#Fn
-				Status:      *string | fn.#Fn
+				Status:      *("Disabled" | "Enabled") | fn.#Fn
 				TagFilters?: *[...{
 					Key:   *string | fn.#Fn
 					Value: *string | fn.#Fn
 				}] | fn.#If
 				Tierings: *[...{
-					AccessTier: *string | fn.#Fn
+					AccessTier: *("ARCHIVE_ACCESS" | "DEEP_ARCHIVE_ACCESS") | fn.#Fn
 					Days:       *int | fn.#Fn
 				}] | fn.#If
 			}] | fn.#If
@@ -97,13 +97,13 @@ import (
 				Destination: *{
 					BucketAccountId?: *string | fn.#Fn
 					BucketArn:        *string | fn.#Fn
-					Format:           *string | fn.#Fn
+					Format:           *("CSV" | "ORC" | "Parquet") | fn.#Fn
 					Prefix?:          *string | fn.#Fn
 				} | fn.#If
 				Enabled:                *bool | fn.#Fn
-				Id:                     *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z0-9-_.]+$"#)) | fn.#Fn
+				Id:                     *string | fn.#Fn
 				IncludedObjectVersions: *("All" | "Current") | fn.#Fn
-				OptionalFields?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				OptionalFields?:        [...(*("Size" | "LastModifiedDate" | "StorageClass" | "ETag" | "IsMultipartUploaded" | "ReplicationStatus" | "EncryptionStatus" | "ObjectLockRetainUntilDate" | "ObjectLockMode" | "ObjectLockLegalHoldStatus" | "IntelligentTieringAccessTier" | "BucketKeyStatus") | fn.#Fn)] | (*("Size" | "LastModifiedDate" | "StorageClass" | "ETag" | "IsMultipartUploaded" | "ReplicationStatus" | "EncryptionStatus" | "ObjectLockRetainUntilDate" | "ObjectLockMode" | "ObjectLockLegalHoldStatus" | "IntelligentTieringAccessTier" | "BucketKeyStatus") | fn.#Fn)
 				Prefix?:                *string | fn.#Fn
 				ScheduleFrequency:      *("Daily" | "Weekly") | fn.#Fn
 			}] | fn.#If
@@ -112,33 +112,33 @@ import (
 					AbortIncompleteMultipartUpload?: *{
 						DaysAfterInitiation: *int | fn.#Fn
 					} | fn.#If
-					ExpirationDate?:                    *time.Time | fn.#Fn
+					ExpirationDate?:                    *(=~#"^([0-2]\d{3})-(0[0-9]|1[0-2])-([0-2]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-6]\d)((\.\d{3})?)Z$"#) | fn.#Fn
 					ExpirationInDays?:                  *int | fn.#Fn
 					ExpiredObjectDeleteMarker?:         *bool | fn.#Fn
 					Id?:                                *string | fn.#Fn
 					NoncurrentVersionExpirationInDays?: *int | fn.#Fn
 					NoncurrentVersionTransition?:       *{
-						StorageClass:     *string | fn.#Fn
+						StorageClass:     *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
 						TransitionInDays: *int | fn.#Fn
 					} | fn.#If
 					NoncurrentVersionTransitions?: *[...{
-						StorageClass:     *string | fn.#Fn
+						StorageClass:     *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
 						TransitionInDays: *int | fn.#Fn
 					}] | fn.#If
 					Prefix?:     *string | fn.#Fn
-					Status:      *string | fn.#Fn
+					Status:      *("Enabled" | "Disabled") | fn.#Fn
 					TagFilters?: *[...{
 						Key:   *string | fn.#Fn
 						Value: *string | fn.#Fn
 					}] | fn.#If
 					Transition?: *{
-						StorageClass:      *string | fn.#Fn
-						TransitionDate?:   *time.Time | fn.#Fn
+						StorageClass:      *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
+						TransitionDate?:   *(=~#"^([0-2]\d{3})-(0[0-9]|1[0-2])-([0-2]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-6]\d)((\.\d{3})?)Z$"#) | fn.#Fn
 						TransitionInDays?: *int | fn.#Fn
 					} | fn.#If
 					Transitions?: *[...{
-						StorageClass:      *string | fn.#Fn
-						TransitionDate?:   *time.Time | fn.#Fn
+						StorageClass:      *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
+						TransitionDate?:   *(=~#"^([0-2]\d{3})-(0[0-9]|1[0-2])-([0-2]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-6]\d)((\.\d{3})?)Z$"#) | fn.#Fn
 						TransitionInDays?: *int | fn.#Fn
 					}] | fn.#If
 				}] | fn.#If
@@ -182,7 +182,7 @@ import (
 					Queue: *string | fn.#Fn
 				}] | fn.#If
 				TopicConfigurations?: *[...{
-					Event:   *("s3:ObjectCreated:*" | "s3:ObjectCreated:CompleteMultipartUpload" | "s3:ObjectCreated:Copy" | "s3:ObjectCreated:Post" | "s3:ObjectCreated:Put" | "s3:ObjectRemoved:*" | "s3:ObjectRemoved:Delete" | "s3:ObjectRemoved:DeleteMarkerCreated" | "s3:ObjectRestore:*" | "s3:ObjectRestore:Completed" | "s3:ObjectRestore:Post" | "s3:ReducedRedundancyLostObject" | "s3:Replication:*" | "s3:Replication:OperationFailedReplication" | "s3:Replication:OperationMissedThreshold" | "s3:Replication:OperationNotTracked" | "s3:Replication:OperationReplicatedAfterThreshold") | fn.#Fn
+					Event:   *string | fn.#Fn
 					Filter?: *{
 						S3Key: *{
 							Rules: *[...{
@@ -199,7 +199,7 @@ import (
 				Rule?:              *{
 					DefaultRetention?: *{
 						Days?:  *int | fn.#Fn
-						Mode?:  *string | fn.#Fn
+						Mode?:  *("COMPLIANCE" | "GOVERNANCE") | fn.#Fn
 						Years?: *int | fn.#Fn
 					} | fn.#If
 				} | fn.#If
@@ -207,7 +207,7 @@ import (
 			ObjectLockEnabled?: *bool | fn.#Fn
 			OwnershipControls?: *{
 				Rules: *[...{
-					ObjectOwnership?: *string | fn.#Fn
+					ObjectOwnership?: *("ObjectWriter" | "BucketOwnerPreferred") | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
 			PublicAccessBlockConfiguration?: *{
@@ -220,7 +220,7 @@ import (
 				Role:  *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 				Rules: *[...{
 					DeleteMarkerReplication?: *{
-						Status?: *string | fn.#Fn
+						Status?: *("Disabled" | "Enabled") | fn.#Fn
 					} | fn.#If
 					Destination: *{
 						AccessControlTranslation?: *{
@@ -235,15 +235,15 @@ import (
 							EventThreshold?: *{
 								Minutes: *int | fn.#Fn
 							} | fn.#If
-							Status: *string | fn.#Fn
+							Status: *("Disabled" | "Enabled") | fn.#Fn
 						} | fn.#If
 						ReplicationTime?: *{
-							Status: *string | fn.#Fn
+							Status: *("Disabled" | "Enabled") | fn.#Fn
 							Time:   *{
 								Minutes: *int | fn.#Fn
 							} | fn.#If
 						} | fn.#If
-						StorageClass?: *string | fn.#Fn
+						StorageClass?: *("DEEP_ARCHIVE" | "GLACIER" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "REDUCED_REDUNDANCY" | "STANDARD" | "STANDARD_IA") | fn.#Fn
 					} | fn.#If
 					Filter?: *{
 						And?: *{
@@ -264,13 +264,13 @@ import (
 					Priority?:                *int | fn.#Fn
 					SourceSelectionCriteria?: *{
 						ReplicaModifications?: *{
-							Status: *string | fn.#Fn
+							Status: *("Enabled" | "Disabled") | fn.#Fn
 						} | fn.#If
 						SseKmsEncryptedObjects?: *{
-							Status: *string | fn.#Fn
+							Status: *("Disabled" | "Enabled") | fn.#Fn
 						} | fn.#If
 					} | fn.#If
-					Status: *string | fn.#Fn
+					Status: *("Disabled" | "Enabled") | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
 			Tags?: *[...{
@@ -291,7 +291,7 @@ import (
 					RedirectRule: *{
 						HostName?:             *string | fn.#Fn
 						HttpRedirectCode?:     *string | fn.#Fn
-						Protocol?:             *string | fn.#Fn
+						Protocol?:             *("http" | "https") | fn.#Fn
 						ReplaceKeyPrefixWith?: *string | fn.#Fn
 						ReplaceKeyWith?:       *string | fn.#Fn
 					} | fn.#If

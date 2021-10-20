@@ -40,7 +40,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Tags?:        *{
 				[string]: _
 			} | fn.#Fn
-			Type: *string | fn.#Fn
+			Type:            *string | fn.#Fn
+			UnmanagedvCpus?: *int | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -237,7 +238,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					OnStatusReason?: *string | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
-			Tags?: *{
+			SchedulingPriority?: *int | fn.#Fn
+			Tags?:               *{
 				[string]: _
 			} | fn.#Fn
 			Timeout?: *{
@@ -258,10 +260,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ComputeEnvironment: *string | fn.#Fn
 				Order:              *int | fn.#Fn
 			}] | fn.#If
-			JobQueueName?: *string | fn.#Fn
-			Priority:      *int | fn.#Fn
-			State?:        *string | fn.#Fn
-			Tags?:         *{
+			JobQueueName?:        *string | fn.#Fn
+			Priority:             *int | fn.#Fn
+			SchedulingPolicyArn?: *string | fn.#Fn
+			State?:               *string | fn.#Fn
+			Tags?:                *{
 				[string]: _
 			} | fn.#Fn
 		}

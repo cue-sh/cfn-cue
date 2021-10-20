@@ -25,6 +25,10 @@ import (
 					Region:     *(=~#"[0-9a-z-]{2,25}"#) | fn.#Fn
 					RegistryId: *(=~#"^[0-9]{12}$"#) | fn.#Fn
 				}] | fn.#If
+				RepositoryFilters?: *[...{
+					Filter:     *(=~#"^(?:[a-z0-9]+(?:[._-][a-z0-9]*)*/)*[a-z0-9]*(?:[._-][a-z0-9]*)*$"#) | fn.#Fn
+					FilterType: *("PREFIX_MATCH") | fn.#Fn
+				}] | fn.#If
 			}] | fn.#If
 		} | fn.#If
 		DependsOn?:           string | [...string]

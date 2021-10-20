@@ -91,4 +91,126 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#GameServerGroup: {
+		Type: "AWS::GameLift::GameServerGroup"
+		Properties: {
+			AutoScalingPolicy?: *{
+				EstimatedInstanceWarmup?:    *number | fn.#Fn
+				TargetTrackingConfiguration: *{
+					TargetValue: *number | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			BalancingStrategy?:          *("SPOT_ONLY" | "SPOT_PREFERRED" | "ON_DEMAND_ONLY") | fn.#Fn
+			DeleteOption?:               *("SAFE_DELETE" | "FORCE_DELETE" | "RETAIN") | fn.#Fn
+			GameServerGroupName:         *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9-\.]+"#)) | fn.#Fn
+			GameServerProtectionPolicy?: *("NO_PROTECTION" | "FULL_PROTECTION") | fn.#Fn
+			InstanceDefinitions:         *[...{
+				InstanceType:      *string | fn.#Fn
+				WeightedCapacity?: *(=~#"^[\u0031-\u0039][\u0030-\u0039]{0,2}$"#) | fn.#Fn
+			}] | fn.#If
+			LaunchTemplate: *{
+				LaunchTemplateId?:   *string | fn.#Fn
+				LaunchTemplateName?: *string | fn.#Fn
+				Version?:            *string | fn.#Fn
+			} | fn.#If
+			MaxSize?: *number | fn.#Fn
+			MinSize?: *number | fn.#Fn
+			RoleArn:  *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:.*:role\/[\w+=,.@-]+"#)) | fn.#Fn
+			Tags?:    *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpcSubnets?: [...(*(strings.MinRunes(15) & strings.MaxRunes(24) & (=~#"^subnet-[0-9a-z]+$"#)) | fn.#Fn)] | (*(strings.MinRunes(15) & strings.MaxRunes(24) & (=~#"^subnet-[0-9a-z]+$"#)) | fn.#Fn)
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#GameSessionQueue: {
+		Type: "AWS::GameLift::GameSessionQueue"
+		Properties: {
+			CustomEventData?: *string | fn.#Fn
+			Destinations?:    *[...{
+				DestinationArn?: *string | fn.#Fn
+			}] | fn.#If
+			FilterConfiguration?: *{
+				AllowedLocations?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			Name:                   *string | fn.#Fn
+			NotificationTarget?:    *string | fn.#Fn
+			PlayerLatencyPolicies?: *[...{
+				MaximumIndividualPlayerLatencyMilliseconds?: *int | fn.#Fn
+				PolicyDurationSeconds?:                      *int | fn.#Fn
+			}] | fn.#If
+			PriorityConfiguration?: *{
+				LocationOrder?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				PriorityOrder?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			TimeoutInSeconds?: *int | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#MatchmakingConfiguration: {
+		Type: "AWS::GameLift::MatchmakingConfiguration"
+		Properties: {
+			AcceptanceRequired:        *bool | fn.#Fn
+			AcceptanceTimeoutSeconds?: *int | fn.#Fn
+			AdditionalPlayerCount?:    *int | fn.#Fn
+			BackfillMode?:             *string | fn.#Fn
+			CustomEventData?:          *string | fn.#Fn
+			Description?:              *string | fn.#Fn
+			FlexMatchMode?:            *string | fn.#Fn
+			GameProperties?:           *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			GameSessionData?:      *string | fn.#Fn
+			GameSessionQueueArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Name:                  *string | fn.#Fn
+			NotificationTarget?:   *string | fn.#Fn
+			RequestTimeoutSeconds: *int | fn.#Fn
+			RuleSetName:           *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#MatchmakingRuleSet: {
+		Type: "AWS::GameLift::MatchmakingRuleSet"
+		Properties: {
+			Name:        *string | fn.#Fn
+			RuleSetBody: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Script: {
+		Type: "AWS::GameLift::Script"
+		Properties: {
+			Name?:           *string | fn.#Fn
+			StorageLocation: *{
+				Bucket:         *string | fn.#Fn
+				Key:            *string | fn.#Fn
+				ObjectVersion?: *string | fn.#Fn
+				RoleArn:        *string | fn.#Fn
+			} | fn.#If
+			Version?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

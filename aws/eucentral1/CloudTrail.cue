@@ -14,7 +14,7 @@ import (
 			EnableLogFileValidation?:   *bool | fn.#Fn
 			EventSelectors?:            *[...{
 				DataResources?: *[...{
-					Type:    *("AWS::Lambda::Function" | "AWS::S3::Object") | fn.#Fn
+					Type:    *("AWS::Lambda::Function" | "AWS::S3::Object" | "AWS::DynamoDB::Table" | "AWS::S3Outposts::Object" | "AWS::ManagedBlockchain::Node" | "AWS::S3ObjectLambda::AccessPoint" | "AWS::EC2::Snapshot" | "AWS::S3::AccessPoint" | "AWS::DynamoDB::Stream") | fn.#Fn
 					Values?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				}] | fn.#If
 				ExcludeManagementEventSources?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)

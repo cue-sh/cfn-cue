@@ -410,6 +410,7 @@ import (
 				}] | fn.#If
 				MetadataOptions?: *{
 					HttpEndpoint?:            *string | fn.#Fn
+					HttpProtocolIpv6?:        *string | fn.#Fn
 					HttpPutResponseHopLimit?: *int | fn.#Fn
 					HttpTokens?:              *string | fn.#Fn
 				} | fn.#If

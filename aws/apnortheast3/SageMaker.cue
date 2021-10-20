@@ -393,6 +393,25 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ModelPackageGroup: {
+		Type: "AWS::SageMaker::ModelPackageGroup"
+		Properties: {
+			ModelPackageGroupDescription?: *string | fn.#Fn
+			ModelPackageGroupName:         *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+			ModelPackageGroupPolicy?:      *{
+				[string]: _
+			} | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ModelQualityJobDefinition: {
 		Type: "AWS::SageMaker::ModelQualityJobDefinition"
 		Properties: {

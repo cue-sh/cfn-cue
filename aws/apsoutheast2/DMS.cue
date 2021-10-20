@@ -36,7 +36,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			EndpointIdentifier?:        *string | fn.#Fn
 			EndpointType:               *("source" | "target") | fn.#Fn
-			EngineName:                 *("aurora-postgresql" | "aurora" | "azuredb" | "db2" | "docdb" | "dynamodb" | "elasticsearch" | "kafka" | "kinesis" | "mariadb" | "mongodb" | "mysql" | "neptune" | "oracle" | "postgres" | "redshift" | "s3" | "sqlserver" | "sybase") | fn.#Fn
+			EngineName:                 *string | fn.#Fn
 			ExtraConnectionAttributes?: *string | fn.#Fn
 			IbmDb2Settings?:            *{
 				SecretsManagerAccessRoleArn?: *string | fn.#Fn

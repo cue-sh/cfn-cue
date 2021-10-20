@@ -38,7 +38,7 @@ import (
 				Actions:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Principal: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			}] | fn.#If
-			SourceEntity?: *{
+			SourceEntity: *{
 				SourceTemplate?: *{
 					Arn:               *string | fn.#Fn
 					DataSetReferences: *[...{
@@ -98,7 +98,7 @@ import (
 				Actions:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Principal: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			}] | fn.#If
-			SourceEntity?: *{
+			SourceEntity: *{
 				SourceTemplate?: *{
 					Arn:               *string | fn.#Fn
 					DataSetReferences: *[...{
@@ -266,6 +266,9 @@ import (
 				AmazonElasticsearchParameters?: *{
 					Domain: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 				} | fn.#If
+				AmazonOpenSearchParameters?: *{
+					Domain: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+				} | fn.#If
 				AthenaParameters?: *{
 					WorkGroup?: *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 				} | fn.#If
@@ -346,6 +349,9 @@ import (
 				CredentialPair?: *{
 					AlternateDataSourceParameters?: *[...{
 						AmazonElasticsearchParameters?: *{
+							Domain: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+						} | fn.#If
+						AmazonOpenSearchParameters?: *{
 							Domain: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 						} | fn.#If
 						AthenaParameters?: *{
@@ -429,6 +435,9 @@ import (
 			DataSourceId?:         *string | fn.#Fn
 			DataSourceParameters?: *{
 				AmazonElasticsearchParameters?: *{
+					Domain: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+				} | fn.#If
+				AmazonOpenSearchParameters?: *{
 					Domain: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 				} | fn.#If
 				AthenaParameters?: *{
@@ -521,7 +530,7 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			Type?:                    *("ADOBE_ANALYTICS" | "AMAZON_ELASTICSEARCH" | "ATHENA" | "AURORA" | "AURORA_POSTGRESQL" | "AWS_IOT_ANALYTICS" | "GITHUB" | "JIRA" | "MARIADB" | "MYSQL" | "ORACLE" | "POSTGRESQL" | "PRESTO" | "REDSHIFT" | "S3" | "SALESFORCE" | "SERVICENOW" | "SNOWFLAKE" | "SPARK" | "SQLSERVER" | "TERADATA" | "TWITTER" | "TIMESTREAM") | fn.#Fn
+			Type?:                    *("ADOBE_ANALYTICS" | "AMAZON_ELASTICSEARCH" | "AMAZON_OPENSEARCH" | "ATHENA" | "AURORA" | "AURORA_POSTGRESQL" | "AWS_IOT_ANALYTICS" | "GITHUB" | "JIRA" | "MARIADB" | "MYSQL" | "ORACLE" | "POSTGRESQL" | "PRESTO" | "REDSHIFT" | "S3" | "SALESFORCE" | "SERVICENOW" | "SNOWFLAKE" | "SPARK" | "SQLSERVER" | "TERADATA" | "TWITTER" | "TIMESTREAM") | fn.#Fn
 			VpcConnectionProperties?: *{
 				VpcConnectionArn: *string | fn.#Fn
 			} | fn.#If

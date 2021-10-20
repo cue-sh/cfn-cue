@@ -111,7 +111,7 @@ import (
 			GameServerProtectionPolicy?: *("NO_PROTECTION" | "FULL_PROTECTION") | fn.#Fn
 			InstanceDefinitions:         *[...{
 				InstanceType:      *string | fn.#Fn
-				WeightedCapacity?: *string | fn.#Fn
+				WeightedCapacity?: *(=~#"^[\u0031-\u0039][\u0030-\u0039]{0,2}$"#) | fn.#Fn
 			}] | fn.#If
 			LaunchTemplate: *{
 				LaunchTemplateId?:   *string | fn.#Fn

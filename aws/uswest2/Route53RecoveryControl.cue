@@ -8,7 +8,13 @@ import (
 #Route53RecoveryControl: {
 	#Cluster: {
 		Type: "AWS::Route53RecoveryControl::Cluster"
-		Properties: Name?: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+		Properties: {
+			Name?: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
@@ -20,6 +26,10 @@ import (
 		Properties: {
 			ClusterArn?: *string | fn.#Fn
 			Name:        *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			Tags?:       *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -59,6 +69,10 @@ import (
 				Threshold: *int | fn.#Fn
 				Type:      *("AND" | "OR" | "ATLEAST") | fn.#Fn
 			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

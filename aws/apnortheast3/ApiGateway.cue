@@ -228,19 +228,19 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			ApiKeyRequired?:      *bool | fn.#Fn
 			AuthorizationScopes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			AuthorizationType?:   *string | fn.#Fn
+			AuthorizationType?:   *("NONE" | "AWS_IAM" | "CUSTOM" | "COGNITO_USER_POOLS") | fn.#Fn
 			AuthorizerId?:        *string | fn.#Fn
 			HttpMethod:           *string | fn.#Fn
 			Integration?:         *{
 				CacheKeyParameters?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				CacheNamespace?:        *string | fn.#Fn
 				ConnectionId?:          *string | fn.#Fn
-				ConnectionType?:        *string | fn.#Fn
-				ContentHandling?:       *string | fn.#Fn
+				ConnectionType?:        *("INTERNET" | "VPC_LINK") | fn.#Fn
+				ContentHandling?:       *("CONVERT_TO_BINARY" | "CONVERT_TO_TEXT") | fn.#Fn
 				Credentials?:           *string | fn.#Fn
 				IntegrationHttpMethod?: *string | fn.#Fn
 				IntegrationResponses?:  *[...{
-					ContentHandling?:    *string | fn.#Fn
+					ContentHandling?:    *("CONVERT_TO_BINARY" | "CONVERT_TO_TEXT") | fn.#Fn
 					ResponseParameters?: *{
 						[string]: *string | fn.#Fn
 					} | fn.#If
@@ -250,15 +250,15 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					SelectionPattern?: *string | fn.#Fn
 					StatusCode:        *string | fn.#Fn
 				}] | fn.#If
-				PassthroughBehavior?: *string | fn.#Fn
+				PassthroughBehavior?: *("WHEN_NO_MATCH" | "WHEN_NO_TEMPLATES" | "NEVER") | fn.#Fn
 				RequestParameters?:   *{
 					[string]: *string | fn.#Fn
 				} | fn.#If
 				RequestTemplates?: *{
 					[string]: *string | fn.#Fn
 				} | fn.#If
-				TimeoutInMillis?: *int | fn.#Fn
-				Type?:            *string | fn.#Fn
+				TimeoutInMillis?: *(>=50 & <=29000) | fn.#Fn
+				Type?:            *("AWS" | "AWS_PROXY" | "HTTP" | "HTTP_PROXY" | "MOCK") | fn.#Fn
 				Uri?:             *string | fn.#Fn
 			} | fn.#If
 			MethodResponses?: *[...{

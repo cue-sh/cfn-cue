@@ -28,6 +28,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 				Tls?: *{
 					CertificateAuthorityArnList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Enabled?:                     *bool | fn.#Fn
+				} | fn.#If
+				Unauthenticated?: *{
+					Enabled: *bool | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			ClusterName:        *string | fn.#Fn

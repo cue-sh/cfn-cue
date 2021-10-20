@@ -1,6 +1,9 @@
 package eucentral1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #Backup: {
 	#BackupPlan: {
@@ -80,14 +83,62 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			EncryptionKeyArn?:  *string | fn.#Fn
 			LockConfiguration?: *{
-				changeableForDays?: *number | fn.#Fn
-				maxRetentionDays?:  *number | fn.#Fn
-				minRetentionDays?:  *number | fn.#Fn
+				ChangeableForDays?: *number | fn.#Fn
+				MaxRetentionDays?:  *number | fn.#Fn
+				MinRetentionDays:   *number | fn.#Fn
 			} | fn.#If
 			Notifications?: *{
 				BackupVaultEvents: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SNSTopicArn:       *string | fn.#Fn
 			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Framework: {
+		Type: "AWS::Backup::Framework"
+		Properties: {
+			FrameworkControls: *[...{
+				ControlInputParameters?: *[...{
+					ParameterName:  *string | fn.#Fn
+					ParameterValue: *string | fn.#Fn
+				}] | fn.#If
+				ControlName:   *string | fn.#Fn
+				ControlScope?: *{
+					[string]: _
+				} | fn.#Fn
+			}] | fn.#If
+			FrameworkDescription?: *string | fn.#Fn
+			FrameworkName?:        *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[a-zA-Z][_a-zA-Z0-9]*"#)) | fn.#Fn
+			FrameworkTags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ReportPlan: {
+		Type: "AWS::Backup::ReportPlan"
+		Properties: {
+			ReportDeliveryChannel: *{
+				[string]: _
+			} | fn.#Fn
+			ReportPlanDescription?: *(=~#".*\S.*"#) | fn.#Fn
+			ReportPlanName?:        *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[a-zA-Z][_a-zA-Z0-9]*"#)) | fn.#Fn
+			ReportPlanTags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			ReportSetting: *{
+				[string]: _
+			} | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

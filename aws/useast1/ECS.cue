@@ -319,7 +319,11 @@ import (
 				Type?: *("APPMESH") | fn.#Fn
 			} | fn.#If
 			RequiresCompatibilities?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Tags?:                    *[...{
+			RuntimePlatform?:         *{
+				CpuArchitecture?:       *string | fn.#Fn
+				OperatingSystemFamily?: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

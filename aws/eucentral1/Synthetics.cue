@@ -6,6 +6,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#Canary: {
 		Type: "AWS::Synthetics::Canary"
 		Properties: {
+			ArtifactConfig?: *{
+				S3Encryption?: *{
+					[string]: _
+				} | fn.#Fn
+			} | fn.#If
 			ArtifactS3Location: *(=~#"^(s3|S3)://"#) | fn.#Fn
 			Code:               *{
 				Handler:          *string | fn.#Fn

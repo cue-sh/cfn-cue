@@ -94,7 +94,8 @@ import (
 	#Function: {
 		Type: "AWS::Lambda::Function"
 		Properties: {
-			Code: *{
+			Architectures?: [...(*("x86_64" | "arm64") | fn.#Fn)] | (*("x86_64" | "arm64") | fn.#Fn)
+			Code:           *{
 				ImageUri?:        *string | fn.#Fn
 				S3Bucket?:        *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[0-9A-Za-z\.\-_]*(?<!\.)$"#)) | fn.#Fn
 				S3Key?:           *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
@@ -151,8 +152,9 @@ import (
 	#LayerVersion: {
 		Type: "AWS::Lambda::LayerVersion"
 		Properties: {
-			CompatibleRuntimes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Content:             *{
+			CompatibleArchitectures?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			CompatibleRuntimes?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Content:                  *{
 				S3Bucket:         *string | fn.#Fn
 				S3Key:            *string | fn.#Fn
 				S3ObjectVersion?: *string | fn.#Fn

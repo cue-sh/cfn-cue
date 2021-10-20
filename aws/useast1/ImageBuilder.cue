@@ -162,9 +162,9 @@ import (
 		Properties: {
 			AdditionalInstanceConfiguration?: *{
 				SystemsManagerAgent?: *{
-					UninstallAfterBuild: *bool | fn.#Fn
+					UninstallAfterBuild?: *bool | fn.#Fn
 				} | fn.#If
-				UserDataOverride: *string | fn.#Fn
+				UserDataOverride?: *string | fn.#Fn
 			} | fn.#If
 			BlockDeviceMappings?: *[...{
 				DeviceName?: *string | fn.#Fn

@@ -73,6 +73,7 @@ import (
 		Properties: {
 			Description?:           *string | fn.#Fn
 			KmsKeyId?:              *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+			PositionFiltering?:     *("TimeBased" | "DistanceBased") | fn.#Fn
 			PricingPlan:            *("RequestBasedUsage" | "MobileAssetTracking" | "MobileAssetManagement") | fn.#Fn
 			PricingPlanDataSource?: *string | fn.#Fn
 			TrackerName:            *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[-._\w]+$"#)) | fn.#Fn

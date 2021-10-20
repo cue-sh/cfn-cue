@@ -134,7 +134,7 @@ import (
 					}
 					Version: string | *"2012-10-17"
 				} | fn.#Fn
-				PolicyName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9+=,.@\-_]+$"#)) | fn.#Fn
+				PolicyName: *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 			}] | fn.#If
 			RoleName?: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 			Tags?:     *[...{

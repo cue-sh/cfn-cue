@@ -187,6 +187,7 @@ import (
 					}] | fn.#If
 				} | fn.#If
 				ServiceNowConfiguration?: *{
+					AuthenticationType?:            *("HTTP_BASIC" | "OAUTH2") | fn.#Fn
 					HostUrl:                        *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(?!(^(https?|ftp|file):\/\/))[a-z0-9-]+(\.service-now\.com)$"#)) | fn.#Fn
 					KnowledgeArticleConfiguration?: *{
 						CrawlAttachments?:              *bool | fn.#Fn
@@ -198,6 +199,7 @@ import (
 							DateFieldFormat?:    *(strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
 							IndexFieldName:      *(strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
 						}] | fn.#If
+						FilterQuery?:                   *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 						IncludeAttachmentFilePatterns?: [...(*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
 					} | fn.#If
 					SecretArn:                    *(strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
@@ -225,15 +227,60 @@ import (
 						DateFieldFormat?:    *(strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
 						IndexFieldName:      *(strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
 					}] | fn.#If
-					InclusionPatterns?: [...(*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
-					SecretArn:          *(strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
-					SharePointVersion:  *("SHAREPOINT_ONLINE") | fn.#Fn
-					Urls:               [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file)://([^\s]*)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file)://([^\s]*)"#)) | fn.#Fn)
-					UseChangeLog?:      *bool | fn.#Fn
-					VpcConfiguration?:  *{
+					InclusionPatterns?:    [...(*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					SecretArn:             *(strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
+					SharePointVersion:     *("SHAREPOINT_ONLINE" | "SHAREPOINT_2013" | "SHAREPOINT_2016") | fn.#Fn
+					SslCertificateS3Path?: *{
+						Bucket: *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"[a-z0-9][\.\-a-z0-9]{1,61}[a-z0-9]"#)) | fn.#Fn
+						Key:    *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+					} | fn.#If
+					Urls:              [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file)://([^\s]*)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file)://([^\s]*)"#)) | fn.#Fn)
+					UseChangeLog?:     *bool | fn.#Fn
+					VpcConfiguration?: *{
 						SecurityGroupIds: [...(*(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[\-0-9a-zA-Z]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[\-0-9a-zA-Z]+"#)) | fn.#Fn)
 						SubnetIds:        [...(*(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[\-0-9a-zA-Z]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[\-0-9a-zA-Z]+"#)) | fn.#Fn)
 					} | fn.#If
+				} | fn.#If
+				WebCrawlerConfiguration?: *{
+					AuthenticationConfiguration?: *{
+						BasicAuthentication?: *[...{
+							Credentials: *(strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
+							Host:        *(strings.MinRunes(1) & strings.MaxRunes(253) & (=~#"([^\s]*)"#)) | fn.#Fn
+							Port:        *(>=1 & <=65535) | fn.#Fn
+						}] | fn.#If
+					} | fn.#If
+					CrawlDepth?:                       *(>=1 & <=10) | fn.#Fn
+					MaxContentSizePerPageInMegaBytes?: *number | fn.#Fn
+					MaxLinksPerPage?:                  *(>=1 & <=1000) | fn.#Fn
+					MaxUrlsPerMinuteCrawlRate?:        *(>=1 & <=300) | fn.#Fn
+					ProxyConfiguration?:               *{
+						Credentials?: *(strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
+						Host:         *(strings.MinRunes(1) & strings.MaxRunes(253) & (=~#"([^\s]*)"#)) | fn.#Fn
+						Port:         *(>=1 & <=65535) | fn.#Fn
+					} | fn.#If
+					UrlExclusionPatterns?: [...(*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					UrlInclusionPatterns?: [...(*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					Urls:                  *{
+						SeedUrlConfiguration?: *{
+							SeedUrls:        [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?)://([^\s]*)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?)://([^\s]*)"#)) | fn.#Fn)
+							WebCrawlerMode?: *("HOST_ONLY" | "SUBDOMAINS" | "EVERYTHING") | fn.#Fn
+						} | fn.#If
+						SiteMapsConfiguration?: *{
+							SiteMaps: [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?):\/\/([^\s]*)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?):\/\/([^\s]*)"#)) | fn.#Fn)
+						} | fn.#If
+					} | fn.#If
+				} | fn.#If
+				WorkDocsConfiguration?: *{
+					CrawlComments?:     *bool | fn.#Fn
+					ExclusionPatterns?: [...(*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					FieldMappings?:     *[...{
+						DataSourceFieldName: *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+						DateFieldFormat?:    *(strings.MinRunes(4) & strings.MaxRunes(40)) | fn.#Fn
+						IndexFieldName:      *(strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+					}] | fn.#If
+					InclusionPatterns?: [...(*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn)
+					OrganizationId:     *(strings.MinRunes(12) & strings.MaxRunes(12) & (=~#"d-[0-9a-fA-F]{10}"#)) | fn.#Fn
+					UseChangeLog?:      *bool | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			Description?: *(strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
@@ -245,7 +292,7 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			Type: *("S3" | "SHAREPOINT" | "SALESFORCE" | "ONEDRIVE" | "SERVICENOW" | "DATABASE" | "CUSTOM" | "CONFLUENCE" | "GOOGLEDRIVE") | fn.#Fn
+			Type: *("S3" | "SHAREPOINT" | "SALESFORCE" | "ONEDRIVE" | "SERVICENOW" | "DATABASE" | "CUSTOM" | "CONFLUENCE" | "GOOGLEDRIVE" | "WEBCRAWLER" | "WORKDOCS") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

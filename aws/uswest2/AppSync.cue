@@ -82,7 +82,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				RelationalDatabaseSourceType: *string | fn.#Fn
 			} | fn.#If
 			ServiceRoleArn?: *string | fn.#Fn
-			Type:            *("AMAZON_DYNAMODB" | "AMAZON_ELASTICSEARCH" | "AWS_LAMBDA" | "HTTP" | "NONE" | "RELATIONAL_DATABASE") | fn.#Fn
+			Type:            *("AMAZON_DYNAMODB" | "AMAZON_ELASTICSEARCH" | "AMAZON_OPENSEARCH_SERVICE" | "AWS_LAMBDA" | "HTTP" | "NONE" | "RELATIONAL_DATABASE") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

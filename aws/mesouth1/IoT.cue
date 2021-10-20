@@ -190,6 +190,37 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#JobTemplate: {
+		Type: "AWS::IoT::JobTemplate"
+		Properties: {
+			AbortConfig?: *{
+				[string]: _
+			} | fn.#Fn
+			Description:                 *string | fn.#Fn
+			Document?:                   *string | fn.#Fn
+			DocumentSource?:             *(strings.MinRunes(1) & strings.MaxRunes(1350)) | fn.#Fn
+			JobArn?:                     *string | fn.#Fn
+			JobExecutionsRolloutConfig?: *{
+				[string]: _
+			} | fn.#Fn
+			JobTemplateId:       *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"[a-zA-Z0-9_-]+"#)) | fn.#Fn
+			PresignedUrlConfig?: *{
+				[string]: _
+			} | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TimeoutConfig?: *{
+				[string]: _
+			} | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#MitigationAction: {
 		Type: "AWS::IoT::MitigationAction"
 		Properties: {
@@ -509,6 +540,13 @@ import (
 					Lambda?: *{
 						FunctionArn?: *string | fn.#Fn
 					} | fn.#If
+					OpenSearch?: *{
+						Endpoint: *string | fn.#Fn
+						Id:       *string | fn.#Fn
+						Index:    *string | fn.#Fn
+						RoleArn:  *string | fn.#Fn
+						Type:     *string | fn.#Fn
+					} | fn.#If
 					Republish?: *{
 						Qos?:    *int | fn.#Fn
 						RoleArn: *string | fn.#Fn
@@ -665,6 +703,13 @@ import (
 					} | fn.#If
 					Lambda?: *{
 						FunctionArn?: *string | fn.#Fn
+					} | fn.#If
+					OpenSearch?: *{
+						Endpoint: *string | fn.#Fn
+						Id:       *string | fn.#Fn
+						Index:    *string | fn.#Fn
+						RoleArn:  *string | fn.#Fn
+						Type:     *string | fn.#Fn
 					} | fn.#If
 					Republish?: *{
 						Qos?:    *int | fn.#Fn

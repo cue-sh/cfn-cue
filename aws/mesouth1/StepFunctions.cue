@@ -9,10 +9,10 @@ import (
 	#Activity: {
 		Type: "AWS::StepFunctions::Activity"
 		Properties: {
-			Name:  *string | fn.#Fn
+			Name:  *(strings.MinRunes(1) & strings.MaxRunes(80)) | fn.#Fn
 			Tags?: *[...{
-				Key:   *string | fn.#Fn
-				Value: *string | fn.#Fn
+				Key:   *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				Value: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

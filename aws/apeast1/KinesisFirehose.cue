@@ -9,6 +9,64 @@ import (
 	#DeliveryStream: {
 		Type: "AWS::KinesisFirehose::DeliveryStream"
 		Properties: {
+			AmazonopensearchserviceDestinationConfiguration?: *{
+				BufferingHints?: *{
+					IntervalInSeconds?: *int | fn.#Fn
+					SizeInMBs?:         *int | fn.#Fn
+				} | fn.#If
+				CloudWatchLoggingOptions?: *{
+					Enabled?:       *bool | fn.#Fn
+					LogGroupName?:  *string | fn.#Fn
+					LogStreamName?: *string | fn.#Fn
+				} | fn.#If
+				ClusterEndpoint?:         *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"https:.*"#)) | fn.#Fn
+				DomainARN?:               *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"arn:.*"#)) | fn.#Fn
+				IndexName:                *(strings.MinRunes(1) & strings.MaxRunes(80)) | fn.#Fn
+				IndexRotationPeriod?:     *("NoRotation" | "OneHour" | "OneDay" | "OneWeek" | "OneMonth") | fn.#Fn
+				ProcessingConfiguration?: *{
+					Enabled?:    *bool | fn.#Fn
+					Processors?: *[...{
+						Parameters?: *[...{
+							ParameterName:  *string | fn.#Fn
+							ParameterValue: *string | fn.#Fn
+						}] | fn.#If
+						Type: *("RecordDeAggregation" | "Lambda" | "MetadataExtraction" | "AppendDelimiterToRecord") | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
+				RetryOptions?: *{
+					DurationInSeconds?: *int | fn.#Fn
+				} | fn.#If
+				RoleARN:         *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"arn:.*"#)) | fn.#Fn
+				S3BackupMode?:   *("FailedDocumentsOnly" | "AllDocuments") | fn.#Fn
+				S3Configuration: *{
+					BucketARN:       *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"arn:.*"#)) | fn.#Fn
+					BufferingHints?: *{
+						IntervalInSeconds?: *int | fn.#Fn
+						SizeInMBs?:         *int | fn.#Fn
+					} | fn.#If
+					CloudWatchLoggingOptions?: *{
+						Enabled?:       *bool | fn.#Fn
+						LogGroupName?:  *string | fn.#Fn
+						LogStreamName?: *string | fn.#Fn
+					} | fn.#If
+					CompressionFormat?:       *("UNCOMPRESSED" | "GZIP" | "ZIP" | "Snappy" | "HADOOP_SNAPPY") | fn.#Fn
+					EncryptionConfiguration?: *{
+						KMSEncryptionConfig?: *{
+							AWSKMSKeyARN: *string | fn.#Fn
+						} | fn.#If
+						NoEncryptionConfig?: *("NoEncryption") | fn.#Fn
+					} | fn.#If
+					ErrorOutputPrefix?: *string | fn.#Fn
+					Prefix?:            *string | fn.#Fn
+					RoleARN:            *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"arn:.*"#)) | fn.#Fn
+				} | fn.#If
+				TypeName?:         *string | fn.#Fn
+				VpcConfiguration?: *{
+					RoleARN:          *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"arn:.*"#)) | fn.#Fn
+					SecurityGroupIds: [...(*(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)
+					SubnetIds:        [...(*(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)
+				} | fn.#If
+			} | fn.#If
 			DeliveryStreamEncryptionConfigurationInput?: *{
 				KeyARN?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"arn:.*"#)) | fn.#Fn
 				KeyType: *("AWS_OWNED_CMK" | "CUSTOMER_MANAGED_CMK") | fn.#Fn

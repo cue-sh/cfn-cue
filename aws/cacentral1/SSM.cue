@@ -122,8 +122,9 @@ import (
 	#MaintenanceWindowTask: {
 		Type: "AWS::SSM::MaintenanceWindowTask"
 		Properties: {
-			Description?: *string | fn.#Fn
-			LoggingInfo?: *{
+			CutoffBehavior?: *string | fn.#Fn
+			Description?:    *string | fn.#Fn
+			LoggingInfo?:    *{
 				Region:    *string | fn.#Fn
 				S3Bucket:  *string | fn.#Fn
 				S3Prefix?: *string | fn.#Fn

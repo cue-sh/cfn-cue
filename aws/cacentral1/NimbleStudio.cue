@@ -1,6 +1,9 @@
 package cacentral1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #NimbleStudio: {
 	#LaunchProfile: {
@@ -8,13 +11,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			Description?:                  *string | fn.#Fn
 			Ec2SubnetIds:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			LaunchProfileProtocolVersions: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Name:                          *string | fn.#Fn
+			LaunchProfileProtocolVersions: [...(*(=~#"^2021\-03\-31$"#) | fn.#Fn)] | (*(=~#"^2021\-03\-31$"#) | fn.#Fn)
+			Name:                          *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 			StreamConfiguration:           *{
-				ClipboardMode:              *string | fn.#Fn
-				Ec2InstanceTypes:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				MaxSessionLengthInMinutes?: *number | fn.#Fn
-				StreamingImageIds:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				ClipboardMode:              *("ENABLED" | "DISABLED") | fn.#Fn
+				Ec2InstanceTypes:           [...(*("g4dn.xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge") | fn.#Fn)] | (*("g4dn.xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge") | fn.#Fn)
+				MaxSessionLengthInMinutes?: *(>=1 & <=690) | fn.#Fn
+				StreamingImageIds:          [...(*(=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn)] | (*(=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn)
 			} | fn.#If
 			StudioComponentIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			StudioId:           *string | fn.#Fn
@@ -32,7 +35,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::NimbleStudio::StreamingImage"
 		Properties: {
 			Description?: *string | fn.#Fn
-			Ec2ImageId:   *string | fn.#Fn
+			Ec2ImageId:   *(=~#"^ami-[0-9A-z]+$"#) | fn.#Fn
 			Name:         *string | fn.#Fn
 			StudioId:     *string | fn.#Fn
 			Tags?:        *{
@@ -51,10 +54,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			AdminRoleArn:                   *string | fn.#Fn
 			DisplayName:                    *string | fn.#Fn
 			StudioEncryptionConfiguration?: *{
-				KeyArn?: *string | fn.#Fn
-				KeyType: *string | fn.#Fn
+				KeyArn?: *(=~#"^arn:.*"#) | fn.#Fn
+				KeyType: *("AWS_OWNED_KEY" | "CUSTOMER_MANAGED_KEY") | fn.#Fn
 			} | fn.#If
-			StudioName: *string | fn.#Fn
+			StudioName: *(strings.MinRunes(3) & strings.MaxRunes(64) & (=~#"^[a-z0-9]*$"#)) | fn.#Fn
 			Tags?:      *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
@@ -72,11 +75,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Configuration?: *{
 				ActiveDirectoryConfiguration?: *{
 					ComputerAttributes?: *[...{
-						Name?:  *string | fn.#Fn
-						Value?: *string | fn.#Fn
+						Name?:  *(strings.MinRunes(1) & strings.MaxRunes(40)) | fn.#Fn
+						Value?: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 					}] | fn.#If
 					DirectoryId?:                         *string | fn.#Fn
-					OrganizationalUnitDistinguishedName?: *string | fn.#Fn
+					OrganizationalUnitDistinguishedName?: *(strings.MinRunes(1) & strings.MaxRunes(2000)) | fn.#Fn
 				} | fn.#If
 				ComputeFarmConfiguration?: *{
 					ActiveDirectoryUser?: *string | fn.#Fn
@@ -88,30 +91,30 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SharedFileSystemConfiguration?: *{
 					Endpoint?:          *string | fn.#Fn
 					FileSystemId?:      *string | fn.#Fn
-					LinuxMountPoint?:   *string | fn.#Fn
+					LinuxMountPoint?:   *(=~#"^(/?|(\$HOME)?(/[^/\n\s\\]+)*)$"#) | fn.#Fn
 					ShareName?:         *string | fn.#Fn
-					WindowsMountDrive?: *string | fn.#Fn
+					WindowsMountDrive?: *(=~#"^[A-Z]$"#) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			Description?:           *string | fn.#Fn
 			Ec2SecurityGroupIds?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			InitializationScripts?: *[...{
-				LaunchProfileProtocolVersion?: *string | fn.#Fn
-				Platform?:                     *string | fn.#Fn
-				RunContext?:                   *string | fn.#Fn
-				Script?:                       *string | fn.#Fn
+				LaunchProfileProtocolVersion?: *(=~#"^2021\-03\-31$"#) | fn.#Fn
+				Platform?:                     *("LINUX" | "WINDOWS") | fn.#Fn
+				RunContext?:                   *("SYSTEM_INITIALIZATION" | "USER_INITIALIZATION") | fn.#Fn
+				Script?:                       *(strings.MinRunes(1) & strings.MaxRunes(5120)) | fn.#Fn
 			}] | fn.#If
 			Name:              *string | fn.#Fn
 			ScriptParameters?: *[...{
-				Key?:   *string | fn.#Fn
-				Value?: *string | fn.#Fn
+				Key?:   *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z_][a-zA-Z0-9_]+$"#)) | fn.#Fn
+				Value?: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			}] | fn.#If
 			StudioId: *string | fn.#Fn
-			Subtype?: *string | fn.#Fn
+			Subtype?: *("AWS_MANAGED_MICROSOFT_AD" | "AMAZON_FSX_FOR_WINDOWS" | "AMAZON_FSX_FOR_LUSTRE" | "CUSTOM") | fn.#Fn
 			Tags?:    *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
-			Type: *string | fn.#Fn
+			Type: *("ACTIVE_DIRECTORY" | "SHARED_FILE_SYSTEM" | "COMPUTE_FARM" | "LICENSE_SERVICE" | "CUSTOM") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

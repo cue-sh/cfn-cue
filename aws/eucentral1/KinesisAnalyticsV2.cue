@@ -121,7 +121,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ApplicationDescription?: *string | fn.#Fn
 			ApplicationMode?:        *string | fn.#Fn
 			ApplicationName?:        *string | fn.#Fn
-			RuntimeEnvironment:      *("FLINK-1_11" | "FLINK-1_6" | "FLINK-1_8" | "SQL-1_0" | "ZEPPELIN-FLINK-1_0") | fn.#Fn
+			RuntimeEnvironment:      *("FLINK-1_11" | "FLINK-1_13" | "FLINK-1_6" | "FLINK-1_8" | "SQL-1_0" | "ZEPPELIN-FLINK-1_0" | "ZEPPELIN-FLINK-2_0") | fn.#Fn
 			ServiceExecutionRole:    *string | fn.#Fn
 			Tags?:                   *[...{
 				Key:   *string | fn.#Fn

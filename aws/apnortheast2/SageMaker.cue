@@ -750,6 +750,7 @@ import (
 			KmsKeyId?:                   *string | fn.#Fn
 			LifecycleConfigName?:        *string | fn.#Fn
 			NotebookInstanceName?:       *string | fn.#Fn
+			PlatformIdentifier?:         *string | fn.#Fn
 			RoleArn:                     *string | fn.#Fn
 			RootAccess?:                 *string | fn.#Fn
 			SecurityGroupIds?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)

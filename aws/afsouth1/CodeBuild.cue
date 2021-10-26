@@ -19,6 +19,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			BadgeEnabled?:     *bool | fn.#Fn
 			BuildBatchConfig?: *{
+				BatchReportMode?:  *string | fn.#Fn
 				CombineArtifacts?: *bool | fn.#Fn
 				Restrictions?:     *{
 					ComputeTypesAllowed?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)

@@ -48,6 +48,7 @@ import (
 						Iops?:                *int | fn.#Fn
 						KmsKeyId?:            *string | fn.#Fn
 						SnapshotId?:          *string | fn.#Fn
+						Throughput?:          *int | fn.#Fn
 						VolumeSize?:          *int | fn.#Fn
 						VolumeType?:          *("standard" | "io1" | "io2" | "gp2" | "gp3" | "sc1" | "st1") | fn.#Fn
 					} | fn.#If
@@ -174,6 +175,7 @@ import (
 					Iops?:                *int | fn.#Fn
 					KmsKeyId?:            *string | fn.#Fn
 					SnapshotId?:          *string | fn.#Fn
+					Throughput?:          *int | fn.#Fn
 					VolumeSize?:          *int | fn.#Fn
 					VolumeType?:          *("standard" | "io1" | "io2" | "gp2" | "gp3" | "sc1" | "st1") | fn.#Fn
 				} | fn.#If
@@ -205,7 +207,11 @@ import (
 	#InfrastructureConfiguration: {
 		Type: "AWS::ImageBuilder::InfrastructureConfiguration"
 		Properties: {
-			Description?:        *string | fn.#Fn
+			Description?:             *string | fn.#Fn
+			InstanceMetadataOptions?: *{
+				HttpPutResponseHopLimit?: *int | fn.#Fn
+				HttpTokens?:              *("required" | "optional") | fn.#Fn
+			} | fn.#If
 			InstanceProfileName: *string | fn.#Fn
 			InstanceTypes?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			KeyPair?:            *string | fn.#Fn

@@ -33,10 +33,24 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						AlgorithmControl?: *string | fn.#Fn
 						TargetLkfs?:       *number | fn.#Fn
 					} | fn.#If
-					AudioSelectorName?: *string | fn.#Fn
-					AudioType?:         *string | fn.#Fn
-					AudioTypeControl?:  *string | fn.#Fn
-					CodecSettings?:     *{
+					AudioSelectorName?:         *string | fn.#Fn
+					AudioType?:                 *string | fn.#Fn
+					AudioTypeControl?:          *string | fn.#Fn
+					AudioWatermarkingSettings?: *{
+						NielsenWatermarksSettings?: *{
+							NielsenCbetSettings?: *{
+								CbetCheckDigitString?: *string | fn.#Fn
+								CbetStepaside?:        *string | fn.#Fn
+								Csid?:                 *string | fn.#Fn
+							} | fn.#If
+							NielsenDistributionType?: *string | fn.#Fn
+							NielsenNaesIiNwSettings?: *{
+								CheckDigitString?: *string | fn.#Fn
+								Sid?:              *number | fn.#Fn
+							} | fn.#If
+						} | fn.#If
+					} | fn.#If
+					CodecSettings?: *{
 						AacSettings?: *{
 							Bitrate?:         *number | fn.#Fn
 							CodingMode?:      *string | fn.#Fn
@@ -210,7 +224,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						TtmlDestinationSettings?:               *{
 							StyleControl?: *string | fn.#Fn
 						} | fn.#If
-						WebvttDestinationSettings?: *{} | fn.#If
+						WebvttDestinationSettings?: *{
+							StyleControl?: *string | fn.#Fn
+						} | fn.#If
 					} | fn.#If
 					LanguageCode?:        *string | fn.#Fn
 					LanguageDescription?: *string | fn.#Fn
@@ -787,6 +803,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					AudioSelectors?: *[...{
 						Name?:             *string | fn.#Fn
 						SelectorSettings?: *{
+							AudioHlsRenditionSelection?: *{
+								GroupId?: *string | fn.#Fn
+								Name?:    *string | fn.#Fn
+							} | fn.#If
 							AudioLanguageSelection?: *{
 								LanguageCode?:            *string | fn.#Fn
 								LanguageSelectionPolicy?: *string | fn.#Fn
@@ -810,7 +830,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							} | fn.#If
 							AribSourceSettings?:   *{} | fn.#If
 							DvbSubSourceSettings?: *{
-								Pid?: *int | fn.#Fn
+								OcrLanguage?: *string | fn.#Fn
+								Pid?:         *int | fn.#Fn
 							} | fn.#If
 							EmbeddedSourceSettings?: *{
 								Convert608To708?:        *string | fn.#Fn
@@ -823,7 +844,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 								Source608ChannelNumber?: *int | fn.#Fn
 							} | fn.#If
 							Scte27SourceSettings?: *{
-								Pid?: *int | fn.#Fn
+								OcrLanguage?: *string | fn.#Fn
+								Pid?:         *int | fn.#Fn
 							} | fn.#If
 							TeletextSourceSettings?: *{
 								OutputRectangle?: *{
@@ -846,6 +868,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							BufferSegments?: *int | fn.#Fn
 							Retries?:        *int | fn.#Fn
 							RetryInterval?:  *int | fn.#Fn
+							Scte35Source?:   *string | fn.#Fn
 						} | fn.#If
 						ServerValidation?: *string | fn.#Fn
 					} | fn.#If

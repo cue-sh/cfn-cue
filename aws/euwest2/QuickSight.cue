@@ -38,7 +38,7 @@ import (
 				Actions:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Principal: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			}] | fn.#If
-			SourceEntity?: *{
+			SourceEntity: *{
 				SourceTemplate?: *{
 					Arn:               *string | fn.#Fn
 					DataSetReferences: *[...{
@@ -98,7 +98,7 @@ import (
 				Actions:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Principal: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			}] | fn.#If
-			SourceEntity?: *{
+			SourceEntity: *{
 				SourceTemplate?: *{
 					Arn:               *string | fn.#Fn
 					DataSetReferences: *[...{
@@ -550,7 +550,7 @@ import (
 				Actions:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Principal: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			}] | fn.#If
-			SourceEntity?: *{
+			SourceEntity: *{
 				SourceAnalysis?: *{
 					Arn:               *string | fn.#Fn
 					DataSetReferences: *[...{

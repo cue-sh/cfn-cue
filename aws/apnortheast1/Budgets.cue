@@ -86,7 +86,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			ExecutionRoleArn: *string | fn.#Fn
 			NotificationType: *("ACTUAL" | "FORECASTED") | fn.#Fn
-			Subscribers?:     *[...{
+			Subscribers:      *[...{
 				Address: *string | fn.#Fn
 				Type:    *("SNS" | "EMAIL") | fn.#Fn
 			}] | fn.#If

@@ -35,12 +35,7 @@ import (
 		Properties: {
 			Description?:   *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^.*$"#)) | fn.#Fn
 			FirewallPolicy: *{
-				StatefulDefaultActions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				StatefulEngineOptions?:  *{
-					RuleOrder?: *string | fn.#Fn
-				} | fn.#If
 				StatefulRuleGroupReferences?: *[...{
-					Priority?:   *int | fn.#Fn
 					ResourceArn: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^(arn:aws.*)$"#)) | fn.#Fn
 				}] | fn.#If
 				StatelessCustomActions?: *[...{
@@ -168,9 +163,6 @@ import (
 							} | fn.#If
 						}] | fn.#If
 					} | fn.#If
-				} | fn.#If
-				StatefulRuleOptions?: *{
-					RuleOrder?: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			RuleGroupName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9-]+$"#)) | fn.#Fn

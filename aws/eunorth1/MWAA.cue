@@ -51,13 +51,15 @@ import (
 				SecurityGroupIds?: [...(*(strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^sg-[a-zA-Z0-9\-._]+$"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^sg-[a-zA-Z0-9\-._]+$"#)) | fn.#Fn)
 				SubnetIds?:        [...(*(=~#"^subnet-[a-zA-Z0-9\-._]+$"#) | fn.#Fn)] | (*(=~#"^subnet-[a-zA-Z0-9\-._]+$"#) | fn.#Fn)
 			} | fn.#If
-			PluginsS3ObjectVersion?:       *string | fn.#Fn
-			PluginsS3Path?:                *(=~#".*"#) | fn.#Fn
-			RequirementsS3ObjectVersion?:  *string | fn.#Fn
-			RequirementsS3Path?:           *(=~#".*"#) | fn.#Fn
-			Schedulers?:                   *int | fn.#Fn
-			SourceBucketArn?:              *(strings.MinRunes(1) & strings.MaxRunes(1224) & (=~#"^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:s3:::[a-z0-9.\-]+$"#)) | fn.#Fn
-			Tags?:                         *{} | fn.#If
+			PluginsS3ObjectVersion?:      *string | fn.#Fn
+			PluginsS3Path?:               *(=~#".*"#) | fn.#Fn
+			RequirementsS3ObjectVersion?: *string | fn.#Fn
+			RequirementsS3Path?:          *(=~#".*"#) | fn.#Fn
+			Schedulers?:                  *int | fn.#Fn
+			SourceBucketArn?:             *(strings.MinRunes(1) & strings.MaxRunes(1224) & (=~#"^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:s3:::[a-z0-9.\-]+$"#)) | fn.#Fn
+			Tags?:                        *{
+				[string]: _
+			} | fn.#Fn
 			WebserverAccessMode?:          *("PRIVATE_ONLY" | "PUBLIC_ONLY") | fn.#Fn
 			WeeklyMaintenanceWindowStart?: *(=~#"(MON|TUE|WED|THU|FRI|SAT|SUN):([01]\d|2[0-3]):(00|30)"#) | fn.#Fn
 		}

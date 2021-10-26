@@ -39,6 +39,7 @@ import (
 			}] | fn.#If
 			ResourceType:              *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^([^\s]*)$"#)) | fn.#Fn
 			ResourceTypeList?:         [...(*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^([^\s]*)$"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^([^\s]*)$"#)) | fn.#Fn)
+			ResourcesCleanUp?:         *bool | fn.#Fn
 			SecurityServicePolicyData: *{
 				[string]: _
 			} | fn.#Fn

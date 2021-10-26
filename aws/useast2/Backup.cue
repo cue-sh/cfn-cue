@@ -55,12 +55,16 @@ import (
 		Properties: {
 			BackupPlanId:    *string | fn.#Fn
 			BackupSelection: *{
+				Conditions?: *{
+					[string]: _
+				} | fn.#Fn
 				IamRoleArn:  *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 				ListOfTags?: *[...{
 					ConditionKey:   *string | fn.#Fn
 					ConditionType:  *string | fn.#Fn
 					ConditionValue: *string | fn.#Fn
 				}] | fn.#If
+				NotResources?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Resources?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SelectionName: *string | fn.#Fn
 			} | fn.#If

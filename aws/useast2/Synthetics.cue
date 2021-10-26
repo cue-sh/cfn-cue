@@ -8,8 +8,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			ArtifactConfig?: *{
 				S3Encryption?: *{
-					[string]: _
-				} | fn.#Fn
+					EncryptionMode?: *string | fn.#Fn
+					KmsKeyArn?:      *string | fn.#Fn
+				} | fn.#If
 			} | fn.#If
 			ArtifactS3Location: *(=~#"^(s3|S3)://"#) | fn.#Fn
 			Code:               *{

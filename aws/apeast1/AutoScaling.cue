@@ -15,6 +15,7 @@ import (
 			Context?:                 *string | fn.#Fn
 			Cooldown?:                *string | fn.#Fn
 			DesiredCapacity?:         *string | fn.#Fn
+			DesiredCapacityType?:     *string | fn.#Fn
 			HealthCheckGracePeriod?:  *int | fn.#Fn
 			HealthCheckType?:         *("EC2" | "ELB") | fn.#Fn
 			InstanceId?:              *string | fn.#Fn
@@ -57,6 +58,53 @@ import (
 						Version:             *string | fn.#Fn
 					} | fn.#If
 					Overrides?: *[...{
+						InstanceRequirements?: *{
+							AcceleratorCount?: *{
+								Max?: *int | fn.#Fn
+								Min?: *int | fn.#Fn
+							} | fn.#If
+							AcceleratorManufacturers?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							AcceleratorNames?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							AcceleratorTotalMemoryMiB?: *{
+								Max?: *int | fn.#Fn
+								Min?: *int | fn.#Fn
+							} | fn.#If
+							AcceleratorTypes?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							BareMetal?:                *string | fn.#Fn
+							BaselineEbsBandwidthMbps?: *{
+								Max?: *int | fn.#Fn
+								Min?: *int | fn.#Fn
+							} | fn.#If
+							BurstablePerformance?:  *string | fn.#Fn
+							CpuManufacturers?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							ExcludedInstanceTypes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							InstanceGenerations?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							LocalStorage?:          *string | fn.#Fn
+							LocalStorageTypes?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							MemoryGiBPerVCpu?:      *{
+								Max?: *int | fn.#Fn
+								Min?: *int | fn.#Fn
+							} | fn.#If
+							MemoryMiB?: *{
+								Max?: *int | fn.#Fn
+								Min?: *int | fn.#Fn
+							} | fn.#If
+							NetworkInterfaceCount?: *{
+								Max?: *int | fn.#Fn
+								Min?: *int | fn.#Fn
+							} | fn.#If
+							OnDemandMaxPricePercentageOverLowestPrice?: *int | fn.#Fn
+							RequireHibernateSupport?:                   *bool | fn.#Fn
+							SpotMaxPricePercentageOverLowestPrice?:     *int | fn.#Fn
+							TotalLocalStorageGB?:                       *{
+								Max?: *int | fn.#Fn
+								Min?: *int | fn.#Fn
+							} | fn.#If
+							VCpuCount?: *{
+								Max?: *int | fn.#Fn
+								Min?: *int | fn.#Fn
+							} | fn.#If
+						} | fn.#If
 						InstanceType?:                *string | fn.#Fn
 						LaunchTemplateSpecification?: *{
 							LaunchTemplateId?:   *string | fn.#Fn

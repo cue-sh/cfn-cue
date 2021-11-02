@@ -33,6 +33,39 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#CapacityReservationFleet: {
+		Type: "AWS::EC2::CapacityReservationFleet"
+		Properties: {
+			AllocationStrategy?:         *string | fn.#Fn
+			EndDate?:                    *string | fn.#Fn
+			InstanceMatchCriteria?:      *("open") | fn.#Fn
+			InstanceTypeSpecifications?: *[...{
+				AvailabilityZone?:   *string | fn.#Fn
+				AvailabilityZoneId?: *string | fn.#Fn
+				EbsOptimized?:       *bool | fn.#Fn
+				InstancePlatform?:   *string | fn.#Fn
+				InstanceType?:       *string | fn.#Fn
+				Priority?:           *int | fn.#Fn
+				Weight?:             *number | fn.#Fn
+			}] | fn.#If
+			NoRemoveEndDate?:   *bool | fn.#Fn
+			RemoveEndDate?:     *bool | fn.#Fn
+			TagSpecifications?: *[...{
+				ResourceType?: *string | fn.#Fn
+				Tags?:         *[...{
+					Key:   *string | fn.#Fn
+					Value: *string | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
+			Tenancy?:             *("default") | fn.#Fn
+			TotalTargetCapacity?: *(>=1 & <=25000) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ClientVpnAuthorizationRule: {
 		Type: "AWS::EC2::ClientVpnAuthorizationRule"
 		Properties: {
@@ -171,10 +204,57 @@ import (
 					Version?:            *string | fn.#Fn
 				} | fn.#If
 				Overrides?: *[...{
-					AvailabilityZone?: *string | fn.#Fn
-					InstanceType?:     *("c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5a.12xlarge" | "c5a.16xlarge" | "c5a.24xlarge" | "c5a.2xlarge" | "c5a.4xlarge" | "c5a.8xlarge" | "c5a.large" | "c5a.xlarge" | "c5ad.12xlarge" | "c5ad.16xlarge" | "c5ad.24xlarge" | "c5ad.2xlarge" | "c5ad.4xlarge" | "c5ad.8xlarge" | "c5ad.large" | "c5ad.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "c5n.18xlarge" | "c5n.2xlarge" | "c5n.4xlarge" | "c5n.9xlarge" | "c5n.large" | "c5n.metal" | "c5n.xlarge" | "c6g.12xlarge" | "c6g.16xlarge" | "c6g.2xlarge" | "c6g.4xlarge" | "c6g.8xlarge" | "c6g.large" | "c6g.medium" | "c6g.metal" | "c6g.xlarge" | "d2.2xlarge" | "d2.4xlarge" | "d2.8xlarge" | "d2.xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.metal" | "g4dn.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.metal" | "i3.xlarge" | "i3en.12xlarge" | "i3en.24xlarge" | "i3en.2xlarge" | "i3en.3xlarge" | "i3en.6xlarge" | "i3en.large" | "i3en.metal" | "i3en.xlarge" | "inf1.24xlarge" | "inf1.2xlarge" | "inf1.6xlarge" | "inf1.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5a.12xlarge" | "m5a.16xlarge" | "m5a.24xlarge" | "m5a.2xlarge" | "m5a.4xlarge" | "m5a.8xlarge" | "m5a.large" | "m5a.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "m6g.12xlarge" | "m6g.16xlarge" | "m6g.2xlarge" | "m6g.4xlarge" | "m6g.8xlarge" | "m6g.large" | "m6g.medium" | "m6g.metal" | "m6g.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5a.12xlarge" | "r5a.16xlarge" | "r5a.24xlarge" | "r5a.2xlarge" | "r5a.4xlarge" | "r5a.8xlarge" | "r5a.large" | "r5a.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "r6g.12xlarge" | "r6g.16xlarge" | "r6g.2xlarge" | "r6g.4xlarge" | "r6g.8xlarge" | "r6g.large" | "r6g.medium" | "r6g.metal" | "r6g.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "t3a.2xlarge" | "t3a.large" | "t3a.medium" | "t3a.micro" | "t3a.nano" | "t3a.small" | "t3a.xlarge" | "t4g.2xlarge" | "t4g.large" | "t4g.medium" | "t4g.micro" | "t4g.nano" | "t4g.small" | "t4g.xlarge" | "u-6tb1.112xlarge" | "u-6tb1.56xlarge") | fn.#Fn
-					MaxPrice?:         *string | fn.#Fn
-					Placement?:        *{
+					AvailabilityZone?:     *string | fn.#Fn
+					InstanceRequirements?: *{
+						AcceleratorCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						AcceleratorManufacturers?:  [...(*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)] | (*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)
+						AcceleratorNames?:          [...(*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)] | (*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)
+						AcceleratorTotalMemoryMiB?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+						BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
+						BaselineEbsBandwidthMbps?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						BurstablePerformance?:  *("included" | "required" | "excluded") | fn.#Fn
+						CpuManufacturers?:      [...(*("intel" | "amd" | "amazon-web-services") | fn.#Fn)] | (*("intel" | "amd" | "amazon-web-services") | fn.#Fn)
+						ExcludedInstanceTypes?: [...(*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)
+						InstanceGenerations?:   [...(*("current" | "previous") | fn.#Fn)] | (*("current" | "previous") | fn.#Fn)
+						LocalStorage?:          *("included" | "required" | "excluded") | fn.#Fn
+						LocalStorageTypes?:     [...(*("hdd" | "ssd") | fn.#Fn)] | (*("hdd" | "ssd") | fn.#Fn)
+						MemoryGiBPerVCpu?:      *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
+						} | fn.#If
+						MemoryMiB?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						NetworkInterfaceCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						OnDemandMaxPricePercentageOverLowestPrice?: *int | fn.#Fn
+						RequireHibernateSupport?:                   *bool | fn.#Fn
+						SpotMaxPricePercentageOverLowestPrice?:     *int | fn.#Fn
+						TotalLocalStorageGB?:                       *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
+						} | fn.#If
+						VCpuCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+					InstanceType?: *("c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5a.12xlarge" | "c5a.16xlarge" | "c5a.24xlarge" | "c5a.2xlarge" | "c5a.4xlarge" | "c5a.8xlarge" | "c5a.large" | "c5a.xlarge" | "c5ad.12xlarge" | "c5ad.16xlarge" | "c5ad.24xlarge" | "c5ad.2xlarge" | "c5ad.4xlarge" | "c5ad.8xlarge" | "c5ad.large" | "c5ad.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "c5n.18xlarge" | "c5n.2xlarge" | "c5n.4xlarge" | "c5n.9xlarge" | "c5n.large" | "c5n.metal" | "c5n.xlarge" | "c6g.12xlarge" | "c6g.16xlarge" | "c6g.2xlarge" | "c6g.4xlarge" | "c6g.8xlarge" | "c6g.large" | "c6g.medium" | "c6g.metal" | "c6g.xlarge" | "d2.2xlarge" | "d2.4xlarge" | "d2.8xlarge" | "d2.xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.metal" | "g4dn.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.metal" | "i3.xlarge" | "i3en.12xlarge" | "i3en.24xlarge" | "i3en.2xlarge" | "i3en.3xlarge" | "i3en.6xlarge" | "i3en.large" | "i3en.metal" | "i3en.xlarge" | "inf1.24xlarge" | "inf1.2xlarge" | "inf1.6xlarge" | "inf1.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5a.12xlarge" | "m5a.16xlarge" | "m5a.24xlarge" | "m5a.2xlarge" | "m5a.4xlarge" | "m5a.8xlarge" | "m5a.large" | "m5a.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "m6g.12xlarge" | "m6g.16xlarge" | "m6g.2xlarge" | "m6g.4xlarge" | "m6g.8xlarge" | "m6g.large" | "m6g.medium" | "m6g.metal" | "m6g.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5a.12xlarge" | "r5a.16xlarge" | "r5a.24xlarge" | "r5a.2xlarge" | "r5a.4xlarge" | "r5a.8xlarge" | "r5a.large" | "r5a.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "r6g.12xlarge" | "r6g.16xlarge" | "r6g.2xlarge" | "r6g.4xlarge" | "r6g.8xlarge" | "r6g.large" | "r6g.medium" | "r6g.metal" | "r6g.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "t3a.2xlarge" | "t3a.large" | "t3a.medium" | "t3a.micro" | "t3a.nano" | "t3a.small" | "t3a.xlarge" | "t4g.2xlarge" | "t4g.large" | "t4g.medium" | "t4g.micro" | "t4g.nano" | "t4g.small" | "t4g.xlarge" | "u-6tb1.112xlarge" | "u-6tb1.56xlarge") | fn.#Fn
+					MaxPrice?:     *string | fn.#Fn
+					Placement?:    *{
 						Affinity?:             *string | fn.#Fn
 						AvailabilityZone?:     *string | fn.#Fn
 						GroupName?:            *string | fn.#Fn
@@ -220,6 +300,7 @@ import (
 				DefaultTargetCapacityType?: *("on-demand" | "spot") | fn.#Fn
 				OnDemandTargetCapacity?:    *int | fn.#Fn
 				SpotTargetCapacity?:        *int | fn.#Fn
+				TargetCapacityUnitType?:    *("vcpu" | "memory-mib" | "units") | fn.#Fn
 				TotalTargetCapacity:        *int | fn.#Fn
 			} | fn.#If
 			TerminateInstancesWithExpiration?: *bool | fn.#Fn
@@ -929,11 +1010,58 @@ import (
 				IamInstanceProfile?: *{
 					Arn?: *string | fn.#Fn
 				} | fn.#If
-				ImageId:      *string | fn.#Fn
-				InstanceType: *("c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5a.12xlarge" | "c5a.16xlarge" | "c5a.24xlarge" | "c5a.2xlarge" | "c5a.4xlarge" | "c5a.8xlarge" | "c5a.large" | "c5a.xlarge" | "c5ad.12xlarge" | "c5ad.16xlarge" | "c5ad.24xlarge" | "c5ad.2xlarge" | "c5ad.4xlarge" | "c5ad.8xlarge" | "c5ad.large" | "c5ad.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "c5n.18xlarge" | "c5n.2xlarge" | "c5n.4xlarge" | "c5n.9xlarge" | "c5n.large" | "c5n.metal" | "c5n.xlarge" | "c6g.12xlarge" | "c6g.16xlarge" | "c6g.2xlarge" | "c6g.4xlarge" | "c6g.8xlarge" | "c6g.large" | "c6g.medium" | "c6g.metal" | "c6g.xlarge" | "d2.2xlarge" | "d2.4xlarge" | "d2.8xlarge" | "d2.xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.metal" | "g4dn.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.metal" | "i3.xlarge" | "i3en.12xlarge" | "i3en.24xlarge" | "i3en.2xlarge" | "i3en.3xlarge" | "i3en.6xlarge" | "i3en.large" | "i3en.metal" | "i3en.xlarge" | "inf1.24xlarge" | "inf1.2xlarge" | "inf1.6xlarge" | "inf1.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5a.12xlarge" | "m5a.16xlarge" | "m5a.24xlarge" | "m5a.2xlarge" | "m5a.4xlarge" | "m5a.8xlarge" | "m5a.large" | "m5a.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "m6g.12xlarge" | "m6g.16xlarge" | "m6g.2xlarge" | "m6g.4xlarge" | "m6g.8xlarge" | "m6g.large" | "m6g.medium" | "m6g.metal" | "m6g.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5a.12xlarge" | "r5a.16xlarge" | "r5a.24xlarge" | "r5a.2xlarge" | "r5a.4xlarge" | "r5a.8xlarge" | "r5a.large" | "r5a.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "r6g.12xlarge" | "r6g.16xlarge" | "r6g.2xlarge" | "r6g.4xlarge" | "r6g.8xlarge" | "r6g.large" | "r6g.medium" | "r6g.metal" | "r6g.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "t3a.2xlarge" | "t3a.large" | "t3a.medium" | "t3a.micro" | "t3a.nano" | "t3a.small" | "t3a.xlarge" | "t4g.2xlarge" | "t4g.large" | "t4g.medium" | "t4g.micro" | "t4g.nano" | "t4g.small" | "t4g.xlarge" | "u-6tb1.112xlarge" | "u-6tb1.56xlarge") | fn.#Fn
-				KernelId?:    *string | fn.#Fn
-				KeyName?:     *string | fn.#Fn
-				Monitoring?:  *{
+				ImageId:               *string | fn.#Fn
+				InstanceRequirements?: *{
+					AcceleratorCount?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					AcceleratorManufacturers?:  [...(*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)] | (*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)
+					AcceleratorNames?:          [...(*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)] | (*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)
+					AcceleratorTotalMemoryMiB?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+					BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
+					BaselineEbsBandwidthMbps?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					BurstablePerformance?:  *("included" | "required" | "excluded") | fn.#Fn
+					CpuManufacturers?:      [...(*("intel" | "amd" | "amazon-web-services") | fn.#Fn)] | (*("intel" | "amd" | "amazon-web-services") | fn.#Fn)
+					ExcludedInstanceTypes?: [...(*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)
+					InstanceGenerations?:   [...(*("current" | "previous") | fn.#Fn)] | (*("current" | "previous") | fn.#Fn)
+					LocalStorage?:          *("included" | "required" | "excluded") | fn.#Fn
+					LocalStorageTypes?:     [...(*("hdd" | "ssd") | fn.#Fn)] | (*("hdd" | "ssd") | fn.#Fn)
+					MemoryGiBPerVCpu?:      *{
+						Max?: *number | fn.#Fn
+						Min?: *number | fn.#Fn
+					} | fn.#If
+					MemoryMiB?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					NetworkInterfaceCount?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					OnDemandMaxPricePercentageOverLowestPrice?: *int | fn.#Fn
+					RequireHibernateSupport?:                   *bool | fn.#Fn
+					SpotMaxPricePercentageOverLowestPrice?:     *int | fn.#Fn
+					TotalLocalStorageGB?:                       *{
+						Max?: *number | fn.#Fn
+						Min?: *number | fn.#Fn
+					} | fn.#If
+					VCpuCount?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				InstanceType?: *("c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5a.12xlarge" | "c5a.16xlarge" | "c5a.24xlarge" | "c5a.2xlarge" | "c5a.4xlarge" | "c5a.8xlarge" | "c5a.large" | "c5a.xlarge" | "c5ad.12xlarge" | "c5ad.16xlarge" | "c5ad.24xlarge" | "c5ad.2xlarge" | "c5ad.4xlarge" | "c5ad.8xlarge" | "c5ad.large" | "c5ad.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "c5n.18xlarge" | "c5n.2xlarge" | "c5n.4xlarge" | "c5n.9xlarge" | "c5n.large" | "c5n.metal" | "c5n.xlarge" | "c6g.12xlarge" | "c6g.16xlarge" | "c6g.2xlarge" | "c6g.4xlarge" | "c6g.8xlarge" | "c6g.large" | "c6g.medium" | "c6g.metal" | "c6g.xlarge" | "d2.2xlarge" | "d2.4xlarge" | "d2.8xlarge" | "d2.xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.metal" | "g4dn.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.metal" | "i3.xlarge" | "i3en.12xlarge" | "i3en.24xlarge" | "i3en.2xlarge" | "i3en.3xlarge" | "i3en.6xlarge" | "i3en.large" | "i3en.metal" | "i3en.xlarge" | "inf1.24xlarge" | "inf1.2xlarge" | "inf1.6xlarge" | "inf1.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5a.12xlarge" | "m5a.16xlarge" | "m5a.24xlarge" | "m5a.2xlarge" | "m5a.4xlarge" | "m5a.8xlarge" | "m5a.large" | "m5a.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "m6g.12xlarge" | "m6g.16xlarge" | "m6g.2xlarge" | "m6g.4xlarge" | "m6g.8xlarge" | "m6g.large" | "m6g.medium" | "m6g.metal" | "m6g.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5a.12xlarge" | "r5a.16xlarge" | "r5a.24xlarge" | "r5a.2xlarge" | "r5a.4xlarge" | "r5a.8xlarge" | "r5a.large" | "r5a.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "r6g.12xlarge" | "r6g.16xlarge" | "r6g.2xlarge" | "r6g.4xlarge" | "r6g.8xlarge" | "r6g.large" | "r6g.medium" | "r6g.metal" | "r6g.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "t3a.2xlarge" | "t3a.large" | "t3a.medium" | "t3a.micro" | "t3a.nano" | "t3a.small" | "t3a.xlarge" | "t4g.2xlarge" | "t4g.large" | "t4g.medium" | "t4g.micro" | "t4g.nano" | "t4g.small" | "t4g.xlarge" | "u-6tb1.112xlarge" | "u-6tb1.56xlarge") | fn.#Fn
+				KernelId?:     *string | fn.#Fn
+				KeyName?:      *string | fn.#Fn
+				Monitoring?:   *{
 					Enabled?: *bool | fn.#Fn
 				} | fn.#If
 				NetworkInterfaces?: *[...{
@@ -982,7 +1110,54 @@ import (
 					Version:             *string | fn.#Fn
 				} | fn.#If
 				Overrides?: *[...{
-					AvailabilityZone?: *(=~#"[a-z0-9-]+"#) | fn.#Fn
+					AvailabilityZone?:     *(=~#"[a-z0-9-]+"#) | fn.#Fn
+					InstanceRequirements?: *{
+						AcceleratorCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						AcceleratorManufacturers?:  [...(*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)] | (*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)
+						AcceleratorNames?:          [...(*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)] | (*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)
+						AcceleratorTotalMemoryMiB?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+						BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
+						BaselineEbsBandwidthMbps?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						BurstablePerformance?:  *("included" | "required" | "excluded") | fn.#Fn
+						CpuManufacturers?:      [...(*("intel" | "amd" | "amazon-web-services") | fn.#Fn)] | (*("intel" | "amd" | "amazon-web-services") | fn.#Fn)
+						ExcludedInstanceTypes?: [...(*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)
+						InstanceGenerations?:   [...(*("current" | "previous") | fn.#Fn)] | (*("current" | "previous") | fn.#Fn)
+						LocalStorage?:          *("included" | "required" | "excluded") | fn.#Fn
+						LocalStorageTypes?:     [...(*("hdd" | "ssd") | fn.#Fn)] | (*("hdd" | "ssd") | fn.#Fn)
+						MemoryGiBPerVCpu?:      *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
+						} | fn.#If
+						MemoryMiB?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						NetworkInterfaceCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						OnDemandMaxPricePercentageOverLowestPrice?: *int | fn.#Fn
+						RequireHibernateSupport?:                   *bool | fn.#Fn
+						SpotMaxPricePercentageOverLowestPrice?:     *int | fn.#Fn
+						TotalLocalStorageGB?:                       *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
+						} | fn.#If
+						VCpuCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+					} | fn.#If
 					InstanceType?:     *string | fn.#Fn
 					SpotPrice?:        *string | fn.#Fn
 					SubnetId?:         *string | fn.#Fn
@@ -1007,12 +1182,13 @@ import (
 			ReplaceUnhealthyInstances?:  *bool | fn.#Fn
 			SpotMaintenanceStrategies?:  *{
 				CapacityRebalance?: *{
-					ReplacementStrategy?: *("launch") | fn.#Fn
+					ReplacementStrategy?: *("launch" | "launch-before-terminate") | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			SpotMaxTotalPrice?:                *string | fn.#Fn
 			SpotPrice?:                        *string | fn.#Fn
 			TargetCapacity:                    *int | fn.#Fn
+			TargetCapacityUnitType?:           *("vcpu" | "memory-mib" | "units") | fn.#Fn
 			TerminateInstancesWithExpiration?: *bool | fn.#Fn
 			Type?:                             *("maintain" | "request") | fn.#Fn
 			ValidFrom?:                        *string | fn.#Fn

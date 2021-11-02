@@ -10,9 +10,15 @@ import (
 		Type: "AWS::Connect::HoursOfOperation"
 		Properties: {
 			Config: *[...{
-				Day:       *("SUNDAY" | "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY") | fn.#Fn
-				EndTime:   *string | fn.#Fn
-				StartTime: *string | fn.#Fn
+				Day:     *("SUNDAY" | "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY") | fn.#Fn
+				EndTime: *{
+					Hours:   *int | fn.#Fn
+					Minutes: *int | fn.#Fn
+				} | fn.#If
+				StartTime: *{
+					Hours:   *int | fn.#Fn
+					Minutes: *int | fn.#Fn
+				} | fn.#If
 			}] | fn.#If
 			Description?: *(strings.MinRunes(1) & strings.MaxRunes(250)) | fn.#Fn
 			InstanceArn:  *(=~#"^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$"#) | fn.#Fn

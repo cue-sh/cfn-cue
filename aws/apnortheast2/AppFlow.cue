@@ -145,7 +145,7 @@ import (
 				} | fn.#If
 			} | fn.#If
 			ConnectorProfileName: *(=~#"[\w/!@#+=.-]+"#) | fn.#Fn
-			ConnectorType:        *("Salesforce" | "Singular" | "Slack" | "Redshift" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva") | fn.#Fn
+			ConnectorType:        *("Salesforce" | "Singular" | "Slack" | "Redshift" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "SAPOData" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva") | fn.#Fn
 			KMSArn?:              *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:aws:kms:.*:[0-9]+:.*"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
@@ -160,7 +160,7 @@ import (
 			Description?:              *(=~#"[\w!@#\-.?,\s]*"#) | fn.#Fn
 			DestinationFlowConfigList: *[...{
 				ConnectorProfileName?:          *(=~#"[\w/!@#+=.-]+"#) | fn.#Fn
-				ConnectorType:                  *("Salesforce" | "Singular" | "Slack" | "Redshift" | "S3" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva" | "EventBridge" | "Upsolver" | "LookoutMetrics") | fn.#Fn
+				ConnectorType:                  *("SAPOData" | "Salesforce" | "Singular" | "Slack" | "Redshift" | "S3" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva" | "EventBridge" | "Upsolver" | "LookoutMetrics") | fn.#Fn
 				DestinationConnectorProperties: *{
 					EventBridge?: *{
 						ErrorHandlingConfig?: *{
@@ -247,7 +247,7 @@ import (
 			KMSArn?:          *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:aws:kms:.*:[0-9]+:.*"#)) | fn.#Fn
 			SourceFlowConfig: *{
 				ConnectorProfileName?:  *(=~#"[\w/!@#+=.-]+"#) | fn.#Fn
-				ConnectorType:          *("Salesforce" | "Singular" | "Slack" | "Redshift" | "S3" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva" | "EventBridge" | "Upsolver" | "LookoutMetrics") | fn.#Fn
+				ConnectorType:          *("SAPOData" | "Salesforce" | "Singular" | "Slack" | "Redshift" | "S3" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva" | "EventBridge" | "Upsolver" | "LookoutMetrics") | fn.#Fn
 				IncrementalPullConfig?: *{
 					DatetimeTypeFieldName?: *string | fn.#Fn
 				} | fn.#If

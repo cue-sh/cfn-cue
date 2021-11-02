@@ -30,19 +30,33 @@ import (
 		Properties: {
 			EncryptionConfig?: *[...{
 				Provider?: *{
-					KeyArn?: *string | fn.#Fn
-				} | fn.#If
+					[string]: _
+				} | fn.#Fn
 				Resources?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			}] | fn.#If
 			KubernetesNetworkConfig?: *{
 				ServiceIpv4Cidr?: *string | fn.#Fn
 			} | fn.#If
+			Logging?: *{
+				ClusterLogging?: *{
+					EnabledTypes?: *[...{
+						Type?: *string | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
+			} | fn.#If
 			Name?:              *string | fn.#Fn
 			ResourcesVpcConfig: *{
-				SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				SubnetIds:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				EndpointPrivateAccess?: *bool | fn.#Fn
+				EndpointPublicAccess?:  *bool | fn.#Fn
+				PublicAccessCidrs?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SecurityGroupIds?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SubnetIds:              [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
-			RoleArn:  *string | fn.#Fn
+			RoleArn: *string | fn.#Fn
+			Tags?:   *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 			Version?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

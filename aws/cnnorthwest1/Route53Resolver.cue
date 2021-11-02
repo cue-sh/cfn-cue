@@ -1,8 +1,23 @@
 package cnnorthwest1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #Route53Resolver: {
+	#ResolverConfig: {
+		Type: "AWS::Route53Resolver::ResolverConfig"
+		Properties: {
+			AutodefinedReverseFlag: *("DISABLE") | fn.#Fn
+			ResourceId:             *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ResolverEndpoint: {
 		Type: "AWS::Route53Resolver::ResolverEndpoint"
 		Properties: {
@@ -27,10 +42,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#ResolverRule: {
 		Type: "AWS::Route53Resolver::ResolverRule"
 		Properties: {
-			DomainName:          *string | fn.#Fn
+			DomainName:          *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			Name?:               *string | fn.#Fn
-			ResolverEndpointId?: *string | fn.#Fn
-			RuleType:            *("FORWARD" | "RECURSIVE" | "SYSTEM") | fn.#Fn
+			ResolverEndpointId?: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			RuleType:            *("FORWARD" | "SYSTEM" | "RECURSIVE") | fn.#Fn
 			Tags?:               *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

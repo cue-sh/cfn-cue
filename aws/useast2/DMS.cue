@@ -43,13 +43,32 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SecretsManagerSecretId?:      *string | fn.#Fn
 			} | fn.#If
 			KafkaSettings?: *{
-				Broker?: *string | fn.#Fn
-				Topic?:  *string | fn.#Fn
+				Broker?:                      *string | fn.#Fn
+				IncludeControlDetails?:       *bool | fn.#Fn
+				IncludeNullAndEmpty?:         *bool | fn.#Fn
+				IncludeTableAlterOperations?: *bool | fn.#Fn
+				IncludeTransactionDetails?:   *bool | fn.#Fn
+				NoHexPrefix?:                 *bool | fn.#Fn
+				PartitionIncludeSchemaTable?: *bool | fn.#Fn
+				SaslPassword?:                *string | fn.#Fn
+				SaslUserName?:                *string | fn.#Fn
+				SecurityProtocol?:            *string | fn.#Fn
+				SslCaCertificateArn?:         *string | fn.#Fn
+				SslClientCertificateArn?:     *string | fn.#Fn
+				SslClientKeyArn?:             *string | fn.#Fn
+				SslClientKeyPassword?:        *string | fn.#Fn
+				Topic?:                       *string | fn.#Fn
 			} | fn.#If
 			KinesisSettings?: *{
-				MessageFormat?:        *string | fn.#Fn
-				ServiceAccessRoleArn?: *string | fn.#Fn
-				StreamArn?:            *string | fn.#Fn
+				IncludeControlDetails?:       *bool | fn.#Fn
+				IncludeNullAndEmpty?:         *bool | fn.#Fn
+				IncludeTableAlterOperations?: *bool | fn.#Fn
+				IncludeTransactionDetails?:   *bool | fn.#Fn
+				MessageFormat?:               *string | fn.#Fn
+				NoHexPrefix?:                 *bool | fn.#Fn
+				PartitionIncludeSchemaTable?: *bool | fn.#Fn
+				ServiceAccessRoleArn?:        *string | fn.#Fn
+				StreamArn?:                   *string | fn.#Fn
 			} | fn.#If
 			KmsKeyId?:                   *string | fn.#Fn
 			MicrosoftSqlServerSettings?: *{
@@ -95,6 +114,15 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			PostgreSqlSettings?: *{
 				SecretsManagerAccessRoleArn?: *string | fn.#Fn
 				SecretsManagerSecretId?:      *string | fn.#Fn
+			} | fn.#If
+			RedisSettings?: *{
+				AuthPassword?:        *string | fn.#Fn
+				AuthType?:            *string | fn.#Fn
+				AuthUserName?:        *string | fn.#Fn
+				Port?:                *number | fn.#Fn
+				ServerName?:          *string | fn.#Fn
+				SslCaCertificateArn?: *string | fn.#Fn
+				SslSecurityProtocol?: *string | fn.#Fn
 			} | fn.#If
 			RedshiftSettings?: *{
 				SecretsManagerAccessRoleArn?: *string | fn.#Fn

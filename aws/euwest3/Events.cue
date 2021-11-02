@@ -25,7 +25,7 @@ import (
 	#Archive: {
 		Type: "AWS::Events::Archive"
 		Properties: {
-			ArchiveName?:  *string | fn.#Fn
+			ArchiveName?:  *(strings.MinRunes(1) & strings.MaxRunes(48)) | fn.#Fn
 			Description?:  *string | fn.#Fn
 			EventPattern?: *{
 				[string]: _

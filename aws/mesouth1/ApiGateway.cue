@@ -45,7 +45,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			AuthorizerUri?:                *string | fn.#Fn
 			IdentitySource?:               *string | fn.#Fn
 			IdentityValidationExpression?: *string | fn.#Fn
-			Name?:                         *string | fn.#Fn
+			Name:                          *string | fn.#Fn
 			ProviderARNs?:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			RestApiId:                     *string | fn.#Fn
 			Type:                          *("COGNITO_USER_POOLS" | "REQUEST" | "TOKEN") | fn.#Fn

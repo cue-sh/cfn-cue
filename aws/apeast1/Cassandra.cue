@@ -35,6 +35,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 				OrderBy?: *("ASC" | "DESC") | fn.#Fn
 			}] | fn.#If
+			DefaultTimeToLive?:       *int | fn.#Fn
 			EncryptionSpecification?: *{
 				EncryptionType:    *("AWS_OWNED_KMS_KEY" | "CUSTOMER_MANAGED_KMS_KEY") | fn.#Fn
 				KmsKeyIdentifier?: *string | fn.#Fn

@@ -229,6 +229,70 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						Title?:             *string | fn.#Fn
 						Url?:               *string | fn.#Fn
 					} | fn.#If
+					InAppMessage?: *{
+						Content?: *[...{
+							BackgroundColor?: *string | fn.#Fn
+							BodyConfig?:      *{
+								Alignment?: *string | fn.#Fn
+								Body?:      *string | fn.#Fn
+								TextColor?: *string | fn.#Fn
+							} | fn.#If
+							HeaderConfig?: *{
+								Alignment?: *string | fn.#Fn
+								Header?:    *string | fn.#Fn
+								TextColor?: *string | fn.#Fn
+							} | fn.#If
+							ImageUrl?:   *string | fn.#Fn
+							PrimaryBtn?: *{
+								Android?: *{
+									ButtonAction?: *string | fn.#Fn
+									Link?:         *string | fn.#Fn
+								} | fn.#If
+								DefaultConfig?: *{
+									BackgroundColor?: *string | fn.#Fn
+									BorderRadius?:    *int | fn.#Fn
+									ButtonAction?:    *string | fn.#Fn
+									Link?:            *string | fn.#Fn
+									Text?:            *string | fn.#Fn
+									TextColor?:       *string | fn.#Fn
+								} | fn.#If
+								IOS?: *{
+									ButtonAction?: *string | fn.#Fn
+									Link?:         *string | fn.#Fn
+								} | fn.#If
+								Web?: *{
+									ButtonAction?: *string | fn.#Fn
+									Link?:         *string | fn.#Fn
+								} | fn.#If
+							} | fn.#If
+							SecondaryBtn?: *{
+								Android?: *{
+									ButtonAction?: *string | fn.#Fn
+									Link?:         *string | fn.#Fn
+								} | fn.#If
+								DefaultConfig?: *{
+									BackgroundColor?: *string | fn.#Fn
+									BorderRadius?:    *int | fn.#Fn
+									ButtonAction?:    *string | fn.#Fn
+									Link?:            *string | fn.#Fn
+									Text?:            *string | fn.#Fn
+									TextColor?:       *string | fn.#Fn
+								} | fn.#If
+								IOS?: *{
+									ButtonAction?: *string | fn.#Fn
+									Link?:         *string | fn.#Fn
+								} | fn.#If
+								Web?: *{
+									ButtonAction?: *string | fn.#Fn
+									Link?:         *string | fn.#Fn
+								} | fn.#If
+							} | fn.#If
+						}] | fn.#If
+						CustomConfig?: *{
+							[string]: _
+						} | fn.#Fn
+						Layout?: *string | fn.#Fn
+					} | fn.#If
 					SMSMessage?: *{
 						Body?:              *string | fn.#Fn
 						EntityId?:          *string | fn.#Fn
@@ -281,6 +345,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Daily?:             *int | fn.#Fn
 				MaximumDuration?:   *int | fn.#Fn
 				MessagesPerSecond?: *int | fn.#Fn
+				Session?:           *int | fn.#Fn
 				Total?:             *int | fn.#Fn
 			} | fn.#If
 			MessageConfiguration: *{
@@ -360,6 +425,70 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					Title?:             *string | fn.#Fn
 					Url?:               *string | fn.#Fn
 				} | fn.#If
+				InAppMessage?: *{
+					Content?: *[...{
+						BackgroundColor?: *string | fn.#Fn
+						BodyConfig?:      *{
+							Alignment?: *string | fn.#Fn
+							Body?:      *string | fn.#Fn
+							TextColor?: *string | fn.#Fn
+						} | fn.#If
+						HeaderConfig?: *{
+							Alignment?: *string | fn.#Fn
+							Header?:    *string | fn.#Fn
+							TextColor?: *string | fn.#Fn
+						} | fn.#If
+						ImageUrl?:   *string | fn.#Fn
+						PrimaryBtn?: *{
+							Android?: *{
+								ButtonAction?: *string | fn.#Fn
+								Link?:         *string | fn.#Fn
+							} | fn.#If
+							DefaultConfig?: *{
+								BackgroundColor?: *string | fn.#Fn
+								BorderRadius?:    *int | fn.#Fn
+								ButtonAction?:    *string | fn.#Fn
+								Link?:            *string | fn.#Fn
+								Text?:            *string | fn.#Fn
+								TextColor?:       *string | fn.#Fn
+							} | fn.#If
+							IOS?: *{
+								ButtonAction?: *string | fn.#Fn
+								Link?:         *string | fn.#Fn
+							} | fn.#If
+							Web?: *{
+								ButtonAction?: *string | fn.#Fn
+								Link?:         *string | fn.#Fn
+							} | fn.#If
+						} | fn.#If
+						SecondaryBtn?: *{
+							Android?: *{
+								ButtonAction?: *string | fn.#Fn
+								Link?:         *string | fn.#Fn
+							} | fn.#If
+							DefaultConfig?: *{
+								BackgroundColor?: *string | fn.#Fn
+								BorderRadius?:    *int | fn.#Fn
+								ButtonAction?:    *string | fn.#Fn
+								Link?:            *string | fn.#Fn
+								Text?:            *string | fn.#Fn
+								TextColor?:       *string | fn.#Fn
+							} | fn.#If
+							IOS?: *{
+								ButtonAction?: *string | fn.#Fn
+								Link?:         *string | fn.#Fn
+							} | fn.#If
+							Web?: *{
+								ButtonAction?: *string | fn.#Fn
+								Link?:         *string | fn.#Fn
+							} | fn.#If
+						} | fn.#If
+					}] | fn.#If
+					CustomConfig?: *{
+						[string]: _
+					} | fn.#Fn
+					Layout?: *string | fn.#Fn
+				} | fn.#If
 				SMSMessage?: *{
 					Body?:              *string | fn.#Fn
 					EntityId?:          *string | fn.#Fn
@@ -369,8 +498,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					TemplateId?:        *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			Name:     *string | fn.#Fn
-			Schedule: *{
+			Name:      *string | fn.#Fn
+			Priority?: *int | fn.#Fn
+			Schedule:  *{
 				EndTime?:     *string | fn.#Fn
 				EventFilter?: *{
 					Dimensions?: *{

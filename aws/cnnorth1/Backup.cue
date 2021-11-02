@@ -52,12 +52,16 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			BackupPlanId:    *string | fn.#Fn
 			BackupSelection: *{
+				Conditions?: *{
+					[string]: _
+				} | fn.#Fn
 				IamRoleArn:  *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 				ListOfTags?: *[...{
 					ConditionKey:   *string | fn.#Fn
 					ConditionType:  *string | fn.#Fn
 					ConditionValue: *string | fn.#Fn
 				}] | fn.#If
+				NotResources?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Resources?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SelectionName: *string | fn.#Fn
 			} | fn.#If
@@ -78,8 +82,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			BackupVaultTags?: *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
-			EncryptionKeyArn?: *string | fn.#Fn
-			Notifications?:    *{
+			EncryptionKeyArn?:  *string | fn.#Fn
+			LockConfiguration?: *{
+				ChangeableForDays?: *number | fn.#Fn
+				MaxRetentionDays?:  *number | fn.#Fn
+				MinRetentionDays:   *number | fn.#Fn
+			} | fn.#If
+			Notifications?: *{
 				BackupVaultEvents: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SNSTopicArn:       *string | fn.#Fn
 			} | fn.#If

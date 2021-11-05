@@ -30,20 +30,34 @@ import (
 		Properties: {
 			EncryptionConfig?: *[...{
 				Provider?: *{
-					KeyArn?: *string | fn.#Fn
-				} | fn.#If
+					[string]: _
+				} | fn.#Fn
 				Resources?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			}] | fn.#If
 			KubernetesNetworkConfig?: *{
 				ServiceIpv4Cidr?: *string | fn.#Fn
 			} | fn.#If
-			Name?:              *string | fn.#Fn
-			ResourcesVpcConfig: *{
-				SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				SubnetIds:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Logging?: *{
+				ClusterLogging?: *{
+					EnabledTypes?: *[...{
+						Type?: *("api" | "audit" | "authenticator" | "controllerManager" | "scheduler") | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
 			} | fn.#If
-			RoleArn:  *string | fn.#Fn
-			Version?: *string | fn.#Fn
+			Name?:              *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[0-9A-Za-z][A-Za-z0-9\-_]*"#)) | fn.#Fn
+			ResourcesVpcConfig: *{
+				EndpointPrivateAccess?: *bool | fn.#Fn
+				EndpointPublicAccess?:  *bool | fn.#Fn
+				PublicAccessCidrs?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SecurityGroupIds?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SubnetIds:              [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			RoleArn: *string | fn.#Fn
+			Tags?:   *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			Version?: *(=~#"1\.\d\d"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

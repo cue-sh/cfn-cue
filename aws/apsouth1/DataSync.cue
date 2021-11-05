@@ -65,6 +65,38 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#LocationHDFS: {
+		Type: "AWS::DataSync::LocationHDFS"
+		Properties: {
+			AgentArns:          [...(*(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$"#) | fn.#Fn)] | (*(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$"#) | fn.#Fn)
+			AuthenticationType: *("SIMPLE" | "KERBEROS") | fn.#Fn
+			BlockSize?:         *(>=1048576 & <=1073741824) | fn.#Fn
+			KerberosKeytab?:    *string | fn.#Fn
+			KerberosKrb5Conf?:  *string | fn.#Fn
+			KerberosPrincipal?: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^.+$"#)) | fn.#Fn
+			KmsKeyProviderUri?: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^kms:\/\/http[s]?@(([a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9\-]*[A-Za-z0-9])(;(([a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9\-]*[A-Za-z0-9]))*:[0-9]{1,5}\/kms$"#)) | fn.#Fn
+			NameNodes:          *[...{
+				Hostname: *(=~#"^(([a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9\-]*[A-Za-z0-9])$"#) | fn.#Fn
+				Port:     *(>=1 & <=65536) | fn.#Fn
+			}] | fn.#If
+			QopConfiguration?: *{
+				DataTransferProtection?: *("AUTHENTICATION" | "INTEGRITY" | "PRIVACY" | "DISABLED") | fn.#Fn
+				RpcProtection?:          *("AUTHENTICATION" | "INTEGRITY" | "PRIVACY" | "DISABLED") | fn.#Fn
+			} | fn.#If
+			ReplicationFactor?: *(>=1 & <=512) | fn.#Fn
+			SimpleUser?:        *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[_.A-Za-z0-9][-_.A-Za-z0-9]*$"#)) | fn.#Fn
+			Subdirectory?:      *string | fn.#Fn
+			Tags?:              *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#LocationNFS: {
 		Type: "AWS::DataSync::LocationNFS"
 		Properties: {

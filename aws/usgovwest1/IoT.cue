@@ -287,6 +287,19 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ResourceSpecificLogging: {
+		Type: "AWS::IoT::ResourceSpecificLogging"
+		Properties: {
+			LogLevel:   *("ERROR" | "WARN" | "INFO" | "DEBUG" | "DISABLED") | fn.#Fn
+			TargetName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9:_-]+"#)) | fn.#Fn
+			TargetType: *("THING_GROUP") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ScheduledAudit: {
 		Type: "AWS::IoT::ScheduledAudit"
 		Properties: {

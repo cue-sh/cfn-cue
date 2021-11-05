@@ -124,6 +124,19 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Logging: {
+		Type: "AWS::IoT::Logging"
+		Properties: {
+			AccountId:       *(strings.MinRunes(12) & strings.MaxRunes(12) & (=~#"^[0-9]{12}$"#)) | fn.#Fn
+			DefaultLogLevel: *("ERROR" | "WARN" | "INFO" | "DEBUG" | "DISABLED") | fn.#Fn
+			RoleArn:         *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Policy: {
 		Type: "AWS::IoT::Policy"
 		Properties: {
@@ -169,6 +182,19 @@ import (
 			}] | fn.#If
 			TemplateBody:  *string | fn.#Fn
 			TemplateName?: *(strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[0-9A-Za-z_-]+$"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ResourceSpecificLogging: {
+		Type: "AWS::IoT::ResourceSpecificLogging"
+		Properties: {
+			LogLevel:   *("ERROR" | "WARN" | "INFO" | "DEBUG" | "DISABLED") | fn.#Fn
+			TargetName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9:_-]+"#)) | fn.#Fn
+			TargetType: *("THING_GROUP") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

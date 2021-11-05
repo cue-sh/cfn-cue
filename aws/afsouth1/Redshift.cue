@@ -135,4 +135,25 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#EventSubscription: {
+		Type: "AWS::Redshift::EventSubscription"
+		Properties: {
+			Enabled?:         *bool | fn.#Fn
+			EventCategories?: [...(*("configuration" | "management" | "monitoring" | "security" | "pending") | fn.#Fn)] | (*("configuration" | "management" | "monitoring" | "security" | "pending") | fn.#Fn)
+			Severity?:        *("ERROR" | "INFO") | fn.#Fn
+			SnsTopicArn?:     *string | fn.#Fn
+			SourceIds?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SourceType?:      *("cluster" | "cluster-parameter-group" | "cluster-security-group" | "cluster-snapshot" | "scheduled-action") | fn.#Fn
+			SubscriptionName: *(=~#"^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,255}$"#) | fn.#Fn
+			Tags?:            *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

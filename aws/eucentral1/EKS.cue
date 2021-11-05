@@ -40,11 +40,11 @@ import (
 			Logging?: *{
 				ClusterLogging?: *{
 					EnabledTypes?: *[...{
-						Type?: *string | fn.#Fn
+						Type?: *("api" | "audit" | "authenticator" | "controllerManager" | "scheduler") | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
 			} | fn.#If
-			Name?:              *string | fn.#Fn
+			Name?:              *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[0-9A-Za-z][A-Za-z0-9\-_]*"#)) | fn.#Fn
 			ResourcesVpcConfig: *{
 				EndpointPrivateAccess?: *bool | fn.#Fn
 				EndpointPublicAccess?:  *bool | fn.#Fn
@@ -57,7 +57,7 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			Version?: *string | fn.#Fn
+			Version?: *(=~#"1\.\d\d"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

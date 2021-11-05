@@ -52,6 +52,14 @@ import (
 						Password: *(=~#"\S+"#) | fn.#Fn
 						Username: *(=~#"\S+"#) | fn.#Fn
 					} | fn.#If
+					SAPOData?: *{
+						BasicAuthCredentials?: *{
+							[string]: _
+						} | fn.#Fn
+						OAuthCredentials?: *{
+							[string]: _
+						} | fn.#Fn
+					} | fn.#If
 					Salesforce?: *{
 						AccessToken?:           *(=~#"\S+"#) | fn.#Fn
 						ClientCredentialsArn?:  *(=~#"arn:aws:secretsmanager:.*:[0-9]+:.*"#) | fn.#Fn
@@ -116,6 +124,19 @@ import (
 						BucketPrefix?: *string | fn.#Fn
 						DatabaseUrl:   *(=~#"\S+"#) | fn.#Fn
 						RoleArn:       *(=~#"arn:aws:iam:.*:[0-9]+:.*"#) | fn.#Fn
+					} | fn.#If
+					SAPOData?: *{
+						ApplicationHostUrl?:     *(=~#"^(https?)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]"#) | fn.#Fn
+						ApplicationServicePath?: *(=~#"\S+"#) | fn.#Fn
+						ClientNumber?:           *(strings.MinRunes(3) & strings.MaxRunes(3) & (=~#"^\d{3}$"#)) | fn.#Fn
+						LogonLanguage?:          *(=~#"^[a-zA-Z0-9_]*$"#) | fn.#Fn
+						OAuthProperties?:        *{
+							AuthCodeUrl?: *(=~#"^(https?)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]"#) | fn.#Fn
+							OAuthScopes?: [...(*(=~#"[/\w]*"#) | fn.#Fn)] | (*(=~#"[/\w]*"#) | fn.#Fn)
+							TokenUrl?:    *(=~#"^(https?)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]"#) | fn.#Fn
+						} | fn.#If
+						PortNumber?:             *(>=1 & <=65535) | fn.#Fn
+						PrivateLinkServiceName?: *(=~#"\S+"#) | fn.#Fn
 					} | fn.#If
 					Salesforce?: *{
 						InstanceUrl?:          *(=~#"\S+"#) | fn.#Fn
@@ -271,8 +292,14 @@ import (
 						Object: *(=~#"\S+"#) | fn.#Fn
 					} | fn.#If
 					S3?: *{
-						BucketName:   *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
-						BucketPrefix: *string | fn.#Fn
+						BucketName:           *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
+						BucketPrefix:         *string | fn.#Fn
+						S3InputFormatConfig?: *{
+							S3InputFileType?: *("CSV" | "JSON") | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+					SAPOData?: *{
+						ObjectPath: *(=~#"\S+"#) | fn.#Fn
 					} | fn.#If
 					Salesforce?: *{
 						EnableDynamicFieldUpdate?: *bool | fn.#Fn
@@ -316,6 +343,7 @@ import (
 					InforNexus?:      *("PROJECTION" | "BETWEEN" | "EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP") | fn.#Fn
 					Marketo?:         *("PROJECTION" | "LESS_THAN" | "GREATER_THAN" | "BETWEEN" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP") | fn.#Fn
 					S3?:              *("PROJECTION" | "LESS_THAN" | "GREATER_THAN" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP") | fn.#Fn
+					SAPOData?:        *("PROJECTION" | "LESS_THAN" | "CONTAINS" | "GREATER_THAN" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP") | fn.#Fn
 					Salesforce?:      *("PROJECTION" | "LESS_THAN" | "CONTAINS" | "GREATER_THAN" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP") | fn.#Fn
 					ServiceNow?:      *("PROJECTION" | "LESS_THAN" | "CONTAINS" | "GREATER_THAN" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP") | fn.#Fn
 					Singular?:        *("PROJECTION" | "EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP") | fn.#Fn

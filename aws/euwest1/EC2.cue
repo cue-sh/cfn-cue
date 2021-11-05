@@ -284,10 +284,16 @@ import (
 				AllocationStrategy?:           *("lowestPrice" | "diversified" | "capacityOptimized" | "capacityOptimizedPrioritized") | fn.#Fn
 				InstanceInterruptionBehavior?: *("hibernate" | "stop" | "terminate") | fn.#Fn
 				InstancePoolsToUseCount?:      *int | fn.#Fn
-				MaxTotalPrice?:                *string | fn.#Fn
-				MinTargetCapacity?:            *int | fn.#Fn
-				SingleAvailabilityZone?:       *bool | fn.#Fn
-				SingleInstanceType?:           *bool | fn.#Fn
+				MaintenanceStrategies?:        *{
+					CapacityRebalance?: *{
+						ReplacementStrategy?: *("launch" | "launch-before-terminate") | fn.#Fn
+						TerminationDelay?:    *int | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				MaxTotalPrice?:          *string | fn.#Fn
+				MinTargetCapacity?:      *int | fn.#Fn
+				SingleAvailabilityZone?: *bool | fn.#Fn
+				SingleInstanceType?:     *bool | fn.#Fn
 			} | fn.#If
 			TagSpecifications?: *[...{
 				ResourceType?: *("client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "internet-gateway" | "key-pair" | "launch-template" | "local-gateway-route-table-vpc-association" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "reserved-instances" | "route-table" | "security-group" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
@@ -1212,6 +1218,7 @@ import (
 			SpotMaintenanceStrategies?:  *{
 				CapacityRebalance?: *{
 					ReplacementStrategy?: *("launch" | "launch-before-terminate") | fn.#Fn
+					TerminationDelay?:    *int | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			SpotMaxTotalPrice?:                *string | fn.#Fn
@@ -1486,6 +1493,9 @@ import (
 	#TransitGatewayPeeringAttachment: {
 		Type: "AWS::EC2::TransitGatewayPeeringAttachment"
 		Properties: {
+			Options?: *{
+				DynamicRouting?: *string | fn.#Fn
+			} | fn.#If
 			PeerAccountId:        *string | fn.#Fn
 			PeerRegion:           *string | fn.#Fn
 			PeerTransitGatewayId: *string | fn.#Fn
@@ -1664,6 +1674,7 @@ import (
 			AcceptanceRequired?:      *bool | fn.#Fn
 			GatewayLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			NetworkLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			PayerResponsibility?:     *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

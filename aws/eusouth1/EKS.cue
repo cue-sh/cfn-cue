@@ -37,13 +37,13 @@ import (
 			KubernetesNetworkConfig?: *{
 				ServiceIpv4Cidr?: *string | fn.#Fn
 			} | fn.#If
-			Name?:              *string | fn.#Fn
+			Name?:              *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[0-9A-Za-z][A-Za-z0-9\-_]*"#)) | fn.#Fn
 			ResourcesVpcConfig: *{
 				SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SubnetIds:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 			RoleArn:  *string | fn.#Fn
-			Version?: *string | fn.#Fn
+			Version?: *(=~#"1\.\d\d"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

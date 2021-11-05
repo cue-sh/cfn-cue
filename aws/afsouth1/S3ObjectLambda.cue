@@ -9,7 +9,7 @@ import (
 	#AccessPoint: {
 		Type: "AWS::S3ObjectLambda::AccessPoint"
 		Properties: {
-			Name:                       *(strings.MinRunes(3) & strings.MaxRunes(45) & (=~#"^[a-z0-9]([a-z0-9\-]*[a-z0-9])?$"#)) | fn.#Fn
+			Name?:                      *(strings.MinRunes(3) & strings.MaxRunes(45) & (=~#"^[a-z0-9]([a-z0-9\-]*[a-z0-9])?$"#)) | fn.#Fn
 			ObjectLambdaConfiguration?: *{
 				AllowedFeatures?:             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				CloudWatchMetricsEnabled?:    *bool | fn.#Fn

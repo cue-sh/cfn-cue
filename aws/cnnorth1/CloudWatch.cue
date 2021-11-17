@@ -74,9 +74,9 @@ import (
 				Name:  *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			MetricName: *string | fn.#Fn
-			Namespace:  *string | fn.#Fn
-			Stat:       *string | fn.#Fn
+			MetricName?: *string | fn.#Fn
+			Namespace?:  *string | fn.#Fn
+			Stat?:       *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

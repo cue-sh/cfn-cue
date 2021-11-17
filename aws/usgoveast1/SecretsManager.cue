@@ -22,13 +22,15 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::SecretsManager::RotationSchedule"
 		Properties: {
 			HostedRotationLambda?: *{
-				KmsKeyArn?:             *string | fn.#Fn
-				MasterSecretArn?:       *string | fn.#Fn
-				MasterSecretKmsKeyArn?: *string | fn.#Fn
-				RotationLambdaName?:    *string | fn.#Fn
-				RotationType:           *string | fn.#Fn
-				VpcSecurityGroupIds?:   *string | fn.#Fn
-				VpcSubnetIds?:          *string | fn.#Fn
+				KmsKeyArn?:                *string | fn.#Fn
+				MasterSecretArn?:          *string | fn.#Fn
+				MasterSecretKmsKeyArn?:    *string | fn.#Fn
+				RotationLambdaName?:       *string | fn.#Fn
+				RotationType:              *string | fn.#Fn
+				SuperuserSecretArn?:       *string | fn.#Fn
+				SuperuserSecretKmsKeyArn?: *string | fn.#Fn
+				VpcSecurityGroupIds?:      *string | fn.#Fn
+				VpcSubnetIds?:             *string | fn.#Fn
 			} | fn.#If
 			RotationLambdaARN?: *string | fn.#Fn
 			RotationRules?:     *{

@@ -285,8 +285,11 @@ import (
 				InstanceInterruptionBehavior?: *("hibernate" | "stop" | "terminate") | fn.#Fn
 				InstancePoolsToUseCount?:      *int | fn.#Fn
 				MaintenanceStrategies?:        *{
-					[string]: _
-				} | fn.#Fn
+					CapacityRebalance?: *{
+						ReplacementStrategy?: *("launch" | "launch-before-terminate") | fn.#Fn
+						TerminationDelay?:    *int | fn.#Fn
+					} | fn.#If
+				} | fn.#If
 				MaxTotalPrice?:          *string | fn.#Fn
 				MinTargetCapacity?:      *int | fn.#Fn
 				SingleAvailabilityZone?: *bool | fn.#Fn
@@ -1671,6 +1674,7 @@ import (
 			AcceptanceRequired?:      *bool | fn.#Fn
 			GatewayLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			NetworkLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			PayerResponsibility?:     *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

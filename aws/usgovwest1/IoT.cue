@@ -197,6 +197,19 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Logging: {
+		Type: "AWS::IoT::Logging"
+		Properties: {
+			AccountId:       *(strings.MinRunes(12) & strings.MaxRunes(12) & (=~#"^[0-9]{12}$"#)) | fn.#Fn
+			DefaultLogLevel: *("ERROR" | "WARN" | "INFO" | "DEBUG" | "DISABLED") | fn.#Fn
+			RoleArn:         *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#MitigationAction: {
 		Type: "AWS::IoT::MitigationAction"
 		Properties: {

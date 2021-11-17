@@ -229,9 +229,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Comment: *string | fn.#Fn
 				Runtime: *string | fn.#Fn
 			} | fn.#If
-			FunctionMetadata?: *{
-				FunctionARN?: *string | fn.#Fn
-			} | fn.#If
 			Name: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

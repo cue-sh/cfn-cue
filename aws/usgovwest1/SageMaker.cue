@@ -40,6 +40,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Type:  *string | fn.#Fn
 							Value: *int | fn.#Fn
 						} | fn.#If
+						LinearStepSize?: *{
+							Type:  *string | fn.#Fn
+							Value: *int | fn.#Fn
+						} | fn.#If
 						Type:                   *string | fn.#Fn
 						WaitIntervalInSeconds?: *int | fn.#Fn
 					} | fn.#If
@@ -51,6 +55,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				VariantPropertyType?: *string | fn.#Fn
 			}] | fn.#If
 			RetainAllVariantProperties?: *bool | fn.#Fn
+			RetainDeploymentConfig?:     *bool | fn.#Fn
 			Tags?:                       *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

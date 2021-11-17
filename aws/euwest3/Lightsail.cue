@@ -95,11 +95,7 @@ import (
 			} | fn.#If
 			InstanceName: *(strings.MinRunes(1) & strings.MaxRunes(254) & (=~#"^[a-zA-Z0-9][\w\-.]*[a-zA-Z0-9]$"#)) | fn.#Fn
 			KeyPairName?: *string | fn.#Fn
-			Location?:    *{
-				AvailabilityZone?: *string | fn.#Fn
-				RegionName?:       *string | fn.#Fn
-			} | fn.#If
-			Networking?: *{
+			Networking?:  *{
 				MonthlyTransfer?: *{
 					GbPerMonthAllocated?: *string | fn.#Fn
 				} | fn.#If
@@ -115,10 +111,6 @@ import (
 					Protocol?:        *string | fn.#Fn
 					ToPort?:          *int | fn.#Fn
 				}] | fn.#If
-			} | fn.#If
-			State?: *{
-				Code?: *int | fn.#Fn
-				Name?: *string | fn.#Fn
 			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn

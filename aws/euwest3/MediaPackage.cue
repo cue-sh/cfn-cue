@@ -228,7 +228,7 @@ import (
 					} | fn.#If
 				} | fn.#If
 				IncludeEncoderConfigurationInSegments?: *bool | fn.#Fn
-				PeriodTriggers?:                        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				PeriodTriggers?:                        [...(*("ADS") | fn.#Fn)] | (*("ADS") | fn.#Fn)
 				SegmentDurationSeconds?:                *int | fn.#Fn
 				SegmentTemplateFormat?:                 *("NUMBER_WITH_TIMELINE" | "TIME_WITH_TIMELINE" | "NUMBER_WITH_DURATION") | fn.#Fn
 			} | fn.#If

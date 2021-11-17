@@ -55,7 +55,7 @@ import (
 					OrderedBy?: *("LAST_MODIFIED_DATE") | fn.#Fn
 				} | fn.#If
 				LastModifiedDateCondition?: *{
-					Expression: *(strings.MinRunes(4) & strings.MaxRunes(1024) & (=~#"^[&lt;&gt;0-9A-Za-z_:)(!= ]+$"#)) | fn.#Fn
+					Expression: *(strings.MinRunes(4) & strings.MaxRunes(1024) & (=~#"^[><0-9A-Za-z_.,:)(!= ]+$"#)) | fn.#Fn
 					ValuesMap:  *[...{
 						Value:          *string | fn.#Fn
 						ValueReference: *(strings.MinRunes(2) & strings.MaxRunes(128) & (=~#"^:[A-Za-z0-9_]+$"#)) | fn.#Fn
@@ -70,7 +70,7 @@ import (
 							TimezoneOffset?: *(strings.MinRunes(1) & strings.MaxRunes(6) & (=~#"^(Z|[-+](\d|\d{2}|\d{2}:?\d{2}))$"#)) | fn.#Fn
 						} | fn.#If
 						Filter?: *{
-							Expression: *(strings.MinRunes(4) & strings.MaxRunes(1024) & (=~#"^[&lt;&gt;0-9A-Za-z_:)(!= ]+$"#)) | fn.#Fn
+							Expression: *(strings.MinRunes(4) & strings.MaxRunes(1024) & (=~#"^[><0-9A-Za-z_.,:)(!= ]+$"#)) | fn.#Fn
 							ValuesMap:  *[...{
 								Value:          *string | fn.#Fn
 								ValueReference: *(strings.MinRunes(2) & strings.MaxRunes(128) & (=~#"^:[A-Za-z0-9_]+$"#)) | fn.#Fn

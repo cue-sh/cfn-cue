@@ -1,25 +1,22 @@
 package eucentral1
 
-import (
-	"github.com/cue-sh/cfn-cue/aws/fn"
-	"strings"
-)
+import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #IoTAnalytics: {
 	#Channel: {
 		Type: "AWS::IoTAnalytics::Channel"
 		Properties: {
-			ChannelName:     *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9_]+"#)) | fn.#Fn
+			ChannelName?:    *string | fn.#Fn
 			ChannelStorage?: *{
 				CustomerManagedS3?: *{
-					Bucket:     *(strings.MinRunes(3) & strings.MaxRunes(255) & (=~#"[a-zA-Z0-9.\-_]*"#)) | fn.#Fn
-					KeyPrefix?: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[a-zA-Z0-9!_.*'()/{}:-]*/"#)) | fn.#Fn
-					RoleArn:    *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+					Bucket:     *string | fn.#Fn
+					KeyPrefix?: *string | fn.#Fn
+					RoleArn:    *string | fn.#Fn
 				} | fn.#If
 				ServiceManagedS3?: *{} | fn.#If
 			} | fn.#If
 			RetentionPeriod?: *{
-				NumberOfDays?: *(>=1 & <=2147483647) | fn.#Fn
+				NumberOfDays?: *int | fn.#Fn
 				Unlimited?:    *bool | fn.#Fn
 			} | fn.#If
 			Tags?: *[...{
@@ -47,11 +44,11 @@ import (
 					} | fn.#If
 					Variables?: *[...{
 						DatasetContentVersionValue?: *{
-							DatasetName: *string | fn.#Fn
+							DatasetName?: *string | fn.#Fn
 						} | fn.#If
 						DoubleValue?:        *number | fn.#Fn
 						OutputFileUriValue?: *{
-							FileName: *string | fn.#Fn
+							FileName?: *string | fn.#Fn
 						} | fn.#If
 						StringValue?: *string | fn.#Fn
 						VariableName: *string | fn.#Fn
@@ -85,7 +82,7 @@ import (
 				} | fn.#If
 				EntryName?: *string | fn.#Fn
 			}] | fn.#If
-			DatasetName:    *string | fn.#Fn
+			DatasetName?:   *string | fn.#Fn
 			LateDataRules?: *[...{
 				RuleConfiguration: *{
 					DeltaTimeSessionWindowConfiguration?: *{
@@ -143,7 +140,7 @@ import (
 					RoleArn:    *string | fn.#Fn
 				} | fn.#If
 				IotSiteWiseMultiLayerStorage?: *{
-					CustomerManagedS3Storage?: *{
+					CustomerManagedS3Storage: *{
 						Bucket:     *string | fn.#Fn
 						KeyPrefix?: *string | fn.#Fn
 					} | fn.#If
@@ -181,65 +178,65 @@ import (
 		Properties: {
 			PipelineActivities: *[...{
 				AddAttributes?: *{
-					Attributes: *{
-						[string]: *string | fn.#Fn
-					} | fn.#If
-					Name:  *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					Next?: *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+					Attributes?: *{
+						[string]: _
+					} | fn.#Fn
+					Name?: *string | fn.#Fn
+					Next?: *string | fn.#Fn
 				} | fn.#If
 				Channel?: *{
-					ChannelName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9_]+"#)) | fn.#Fn
-					Name:        *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					Next?:       *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+					ChannelName?: *string | fn.#Fn
+					Name?:        *string | fn.#Fn
+					Next?:        *string | fn.#Fn
 				} | fn.#If
 				Datastore?: *{
-					DatastoreName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9_]+"#)) | fn.#Fn
-					Name:          *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+					DatastoreName?: *string | fn.#Fn
+					Name?:          *string | fn.#Fn
 				} | fn.#If
 				DeviceRegistryEnrich?: *{
-					Attribute: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
-					Name:      *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					Next?:     *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					RoleArn:   *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
-					ThingName: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+					Attribute?: *string | fn.#Fn
+					Name?:      *string | fn.#Fn
+					Next?:      *string | fn.#Fn
+					RoleArn?:   *string | fn.#Fn
+					ThingName?: *string | fn.#Fn
 				} | fn.#If
 				DeviceShadowEnrich?: *{
-					Attribute: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
-					Name:      *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					Next?:     *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					RoleArn:   *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
-					ThingName: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+					Attribute?: *string | fn.#Fn
+					Name?:      *string | fn.#Fn
+					Next?:      *string | fn.#Fn
+					RoleArn?:   *string | fn.#Fn
+					ThingName?: *string | fn.#Fn
 				} | fn.#If
 				Filter?: *{
-					Filter: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
-					Name:   *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					Next?:  *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+					Filter?: *string | fn.#Fn
+					Name?:   *string | fn.#Fn
+					Next?:   *string | fn.#Fn
 				} | fn.#If
 				Lambda?: *{
-					BatchSize:  *(>=1 & <=1000) | fn.#Fn
-					LambdaName: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"[a-zA-Z0-9_-]+"#)) | fn.#Fn
-					Name:       *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					Next?:      *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+					BatchSize?:  *int | fn.#Fn
+					LambdaName?: *string | fn.#Fn
+					Name?:       *string | fn.#Fn
+					Next?:       *string | fn.#Fn
 				} | fn.#If
 				Math?: *{
-					Attribute: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
-					Math:      *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
-					Name:      *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					Next?:     *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+					Attribute?: *string | fn.#Fn
+					Math?:      *string | fn.#Fn
+					Name?:      *string | fn.#Fn
+					Next?:      *string | fn.#Fn
 				} | fn.#If
 				RemoveAttributes?: *{
-					Attributes: [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-					Name:       *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					Next?:      *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+					Attributes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Name?:       *string | fn.#Fn
+					Next?:       *string | fn.#Fn
 				} | fn.#If
 				SelectAttributes?: *{
-					Attributes: [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-					Name:       *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
-					Next?:      *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+					Attributes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Name?:       *string | fn.#Fn
+					Next?:       *string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
-			PipelineName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9_]+"#)) | fn.#Fn
-			Tags?:        *[...{
+			PipelineName?: *string | fn.#Fn
+			Tags?:         *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

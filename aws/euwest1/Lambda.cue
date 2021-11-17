@@ -79,8 +79,11 @@ import (
 					Destination?: *(strings.MinRunes(12) & strings.MaxRunes(1024) & (=~#"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)"#)) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			Enabled?:                        *bool | fn.#Fn
-			EventSourceArn?:                 *(strings.MinRunes(12) & strings.MaxRunes(1024) & (=~#"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)"#)) | fn.#Fn
+			Enabled?:        *bool | fn.#Fn
+			EventSourceArn?: *(strings.MinRunes(12) & strings.MaxRunes(1024) & (=~#"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)"#)) | fn.#Fn
+			FilterCriteria?: *{
+				[string]: _
+			} | fn.#Fn
 			FunctionName:                    *(strings.MinRunes(1) & strings.MaxRunes(140) & (=~#"(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\d{1}:)?(\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\$LATEST|[a-zA-Z0-9-_]+))?"#)) | fn.#Fn
 			FunctionResponseTypes?:          [...(*("ReportBatchItemFailures") | fn.#Fn)] | (*("ReportBatchItemFailures") | fn.#Fn)
 			MaximumBatchingWindowInSeconds?: *(>=0 & <=300) | fn.#Fn
@@ -94,7 +97,7 @@ import (
 				} | fn.#If
 			} | fn.#If
 			SourceAccessConfigurations?: *[...{
-				Type?: *("BASIC_AUTH" | "VPC_SUBNET" | "VPC_SECURITY_GROUP" | "SASL_SCRAM_512_AUTH" | "SASL_SCRAM_256_AUTH" | "VIRTUAL_HOST") | fn.#Fn
+				Type?: *("BASIC_AUTH" | "VPC_SUBNET" | "VPC_SECURITY_GROUP" | "SASL_SCRAM_512_AUTH" | "SASL_SCRAM_256_AUTH" | "VIRTUAL_HOST" | "CLIENT_CERTIFICATE_TLS_AUTH" | "SERVER_ROOT_CA_CERTIFICATE") | fn.#Fn
 				URI?:  *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
 			}] | fn.#If
 			StartingPosition?:          *(("AT_TIMESTAMP" | "LATEST" | "TRIM_HORIZON") & (strings.MinRunes(6) & strings.MaxRunes(12)) & (=~#"(LATEST|TRIM_HORIZON)+"#)) | fn.#Fn

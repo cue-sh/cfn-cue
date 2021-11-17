@@ -274,4 +274,26 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#SchedulingPolicy: {
+		Type: "AWS::Batch::SchedulingPolicy"
+		Properties: {
+			FairsharePolicy?: *{
+				ComputeReservation?: *number | fn.#Fn
+				ShareDecaySeconds?:  *number | fn.#Fn
+				ShareDistribution?:  *[...{
+					ShareIdentifier?: *string | fn.#Fn
+					WeightFactor?:    *number | fn.#Fn
+				}] | fn.#If
+			} | fn.#If
+			Name?: *string | fn.#Fn
+			Tags?: *{
+				[string]: *string | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

@@ -24,31 +24,27 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			ACLName:                  *(=~#"[a-zA-Z][a-zA-Z0-9\-]*"#) | fn.#Fn
 			AutoMinorVersionUpgrade?: *bool | fn.#Fn
-			ClusterEndpoint?:         *{
-				Address?: *string | fn.#Fn
-				Port?:    *int | fn.#Fn
-			} | fn.#If
-			ClusterName:             *(=~#"[a-z][a-z0-9\-]*"#) | fn.#Fn
-			Description?:            *string | fn.#Fn
-			EngineVersion?:          *string | fn.#Fn
-			FinalSnapshotName?:      *string | fn.#Fn
-			KmsKeyId?:               *string | fn.#Fn
-			MaintenanceWindow?:      *string | fn.#Fn
-			NodeType:                *string | fn.#Fn
-			NumReplicasPerShard?:    *int | fn.#Fn
-			NumShards?:              *int | fn.#Fn
-			ParameterGroupName?:     *string | fn.#Fn
-			Port?:                   *int | fn.#Fn
-			SecurityGroupIds?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SnapshotArns?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SnapshotName?:           *string | fn.#Fn
-			SnapshotRetentionLimit?: *int | fn.#Fn
-			SnapshotWindow?:         *string | fn.#Fn
-			SnsTopicArn?:            *string | fn.#Fn
-			SnsTopicStatus?:         *string | fn.#Fn
-			SubnetGroupName?:        *string | fn.#Fn
-			TLSEnabled?:             *bool | fn.#Fn
-			Tags?:                   *[...{
+			ClusterName:              *(=~#"[a-z][a-z0-9\-]*"#) | fn.#Fn
+			Description?:             *string | fn.#Fn
+			EngineVersion?:           *string | fn.#Fn
+			FinalSnapshotName?:       *string | fn.#Fn
+			KmsKeyId?:                *string | fn.#Fn
+			MaintenanceWindow?:       *string | fn.#Fn
+			NodeType:                 *string | fn.#Fn
+			NumReplicasPerShard?:     *int | fn.#Fn
+			NumShards?:               *int | fn.#Fn
+			ParameterGroupName?:      *string | fn.#Fn
+			Port?:                    *int | fn.#Fn
+			SecurityGroupIds?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SnapshotArns?:            [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SnapshotName?:            *string | fn.#Fn
+			SnapshotRetentionLimit?:  *int | fn.#Fn
+			SnapshotWindow?:          *string | fn.#Fn
+			SnsTopicArn?:             *string | fn.#Fn
+			SnsTopicStatus?:          *string | fn.#Fn
+			SubnetGroupName?:         *string | fn.#Fn
+			TLSEnabled?:              *bool | fn.#Fn
+			Tags?:                    *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

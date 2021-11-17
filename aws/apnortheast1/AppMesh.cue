@@ -151,6 +151,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						}] | fn.#If
 					} | fn.#If
 				} | fn.#If
+				Priority?: *int | fn.#Fn
 			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn

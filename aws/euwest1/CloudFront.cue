@@ -76,16 +76,17 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						IncludeBody?:      *bool | fn.#Fn
 						LambdaFunctionARN: *string | fn.#Fn
 					}] | fn.#If
-					MaxTTL?:                *number | fn.#Fn
-					MinTTL?:                *number | fn.#Fn
-					OriginRequestPolicyId?: *string | fn.#Fn
-					PathPattern:            *string | fn.#Fn
-					RealtimeLogConfigArn?:  *string | fn.#Fn
-					SmoothStreaming?:       *bool | fn.#Fn
-					TargetOriginId:         *string | fn.#Fn
-					TrustedKeyGroups?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					TrustedSigners?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					ViewerProtocolPolicy:   *("allow-all" | "https-only" | "redirect-to-https") | fn.#Fn
+					MaxTTL?:                  *number | fn.#Fn
+					MinTTL?:                  *number | fn.#Fn
+					OriginRequestPolicyId?:   *string | fn.#Fn
+					PathPattern:              *string | fn.#Fn
+					RealtimeLogConfigArn?:    *string | fn.#Fn
+					ResponseHeadersPolicyId?: *string | fn.#Fn
+					SmoothStreaming?:         *bool | fn.#Fn
+					TargetOriginId:           *string | fn.#Fn
+					TrustedKeyGroups?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					TrustedSigners?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					ViewerProtocolPolicy:     *("allow-all" | "https-only" | "redirect-to-https") | fn.#Fn
 				}] | fn.#If
 				Comment?:              *string | fn.#Fn
 				CustomErrorResponses?: *[...{
@@ -126,15 +127,16 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						IncludeBody?:      *bool | fn.#Fn
 						LambdaFunctionARN: *string | fn.#Fn
 					}] | fn.#If
-					MaxTTL?:                *number | fn.#Fn
-					MinTTL?:                *number | fn.#Fn
-					OriginRequestPolicyId?: *string | fn.#Fn
-					RealtimeLogConfigArn?:  *string | fn.#Fn
-					SmoothStreaming?:       *bool | fn.#Fn
-					TargetOriginId:         *string | fn.#Fn
-					TrustedKeyGroups?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					TrustedSigners?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					ViewerProtocolPolicy:   *("allow-all" | "https-only" | "redirect-to-https") | fn.#Fn
+					MaxTTL?:                  *number | fn.#Fn
+					MinTTL?:                  *number | fn.#Fn
+					OriginRequestPolicyId?:   *string | fn.#Fn
+					RealtimeLogConfigArn?:    *string | fn.#Fn
+					ResponseHeadersPolicyId?: *string | fn.#Fn
+					SmoothStreaming?:         *bool | fn.#Fn
+					TargetOriginId:           *string | fn.#Fn
+					TrustedKeyGroups?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					TrustedSigners?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					ViewerProtocolPolicy:     *("allow-all" | "https-only" | "redirect-to-https") | fn.#Fn
 				} | fn.#If
 				DefaultRootObject?: *string | fn.#Fn
 				Enabled:            *bool | fn.#Fn
@@ -228,9 +230,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			FunctionConfig: *{
 				Comment: *string | fn.#Fn
 				Runtime: *string | fn.#Fn
-			} | fn.#If
-			FunctionMetadata?: *{
-				FunctionARN?: *string | fn.#Fn
 			} | fn.#If
 			Name: *string | fn.#Fn
 		}

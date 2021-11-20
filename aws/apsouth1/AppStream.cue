@@ -3,6 +3,76 @@ package apsouth1
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #AppStream: {
+	#AppBlock: {
+		Type: "AWS::AppStream::AppBlock"
+		Properties: {
+			Description?:       *string | fn.#Fn
+			DisplayName?:       *string | fn.#Fn
+			Name:               *string | fn.#Fn
+			SetupScriptDetails: *{
+				ExecutableParameters?: *string | fn.#Fn
+				ExecutablePath:        *string | fn.#Fn
+				ScriptS3Location:      *{
+					S3Bucket: *string | fn.#Fn
+					S3Key:    *string | fn.#Fn
+				} | fn.#If
+				TimeoutInSeconds: *int | fn.#Fn
+			} | fn.#If
+			SourceS3Location: *{
+				S3Bucket: *string | fn.#Fn
+				S3Key:    *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Application: {
+		Type: "AWS::AppStream::Application"
+		Properties: {
+			AppBlockArn:         *string | fn.#Fn
+			AttributesToDelete?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Description?:        *string | fn.#Fn
+			DisplayName?:        *string | fn.#Fn
+			IconS3Location:      *{
+				S3Bucket: *string | fn.#Fn
+				S3Key:    *string | fn.#Fn
+			} | fn.#If
+			InstanceFamilies:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			LaunchParameters?: *string | fn.#Fn
+			LaunchPath:        *string | fn.#Fn
+			Name:              *string | fn.#Fn
+			Platforms:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:             *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			WorkingDirectory?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ApplicationFleetAssociation: {
+		Type: "AWS::AppStream::ApplicationFleetAssociation"
+		Properties: {
+			ApplicationArn: *string | fn.#Fn
+			FleetName:      *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#DirectoryConfig: {
 		Type: "AWS::AppStream::DirectoryConfig"
 		Properties: {
@@ -22,7 +92,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#Fleet: {
 		Type: "AWS::AppStream::Fleet"
 		Properties: {
-			ComputeCapacity: *{
+			ComputeCapacity?: *{
 				DesiredInstances: *int | fn.#Fn
 			} | fn.#If
 			Description?:                *string | fn.#Fn
@@ -39,14 +109,17 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ImageArn?:                       *string | fn.#Fn
 			ImageName?:                      *string | fn.#Fn
 			InstanceType:                    *("stream.compute.2xlarge" | "stream.compute.4xlarge" | "stream.compute.8xlarge" | "stream.compute.large" | "stream.compute.xlarge" | "stream.graphics-desktop.2xlarge" | "stream.graphics.g4dn.12xlarge" | "stream.graphics.g4dn.16xlarge" | "stream.graphics.g4dn.2xlarge" | "stream.graphics.g4dn.4xlarge" | "stream.graphics.g4dn.8xlarge" | "stream.graphics.g4dn.xlarge" | "stream.memory.2xlarge" | "stream.memory.4xlarge" | "stream.memory.8xlarge" | "stream.memory.large" | "stream.memory.xlarge" | "stream.memory.z1d.12xlarge" | "stream.memory.z1d.2xlarge" | "stream.memory.z1d.3xlarge" | "stream.memory.z1d.6xlarge" | "stream.memory.z1d.large" | "stream.memory.z1d.xlarge" | "stream.standard.large" | "stream.standard.medium" | "stream.standard.small") | fn.#Fn
+			MaxConcurrentSessions?:          *int | fn.#Fn
 			MaxUserDurationInSeconds?:       *(>=600 & <=360000) | fn.#Fn
 			Name:                            *string | fn.#Fn
+			Platform?:                       *string | fn.#Fn
 			StreamView?:                     *string | fn.#Fn
 			Tags?:                           *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			VpcConfig?: *{
+			UsbDeviceFilterStrings?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			VpcConfig?:              *{
 				SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SubnetIds?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If

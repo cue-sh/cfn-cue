@@ -10,7 +10,7 @@ import (
 		Type: "AWS::APS::RuleGroupsNamespace"
 		Properties: {
 			Data:  *string | fn.#Fn
-			Name?: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			Name:  *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

@@ -31,6 +31,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Key?:   *string | fn.#Fn
 				Value?: *string | fn.#Fn
 			}] | fn.#If
+			Type?:       *string | fn.#Fn
 			Validators?: *[...{
 				Content?: *string | fn.#Fn
 				Type?:    *string | fn.#Fn

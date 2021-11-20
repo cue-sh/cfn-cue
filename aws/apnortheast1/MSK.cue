@@ -9,9 +9,14 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			BrokerNodeGroupInfo: *{
 				BrokerAZDistribution?: *string | fn.#Fn
 				ClientSubnets:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				InstanceType:          *string | fn.#Fn
-				SecurityGroups?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				StorageInfo?:          *{
+				ConnectivityInfo?:     *{
+					PublicAccess?: *{
+						Type?: *string | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				InstanceType:    *string | fn.#Fn
+				SecurityGroups?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				StorageInfo?:    *{
 					EBSStorageInfo?: *{
 						VolumeSize?: *int | fn.#Fn
 					} | fn.#If

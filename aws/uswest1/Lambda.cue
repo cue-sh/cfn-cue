@@ -79,8 +79,11 @@ import (
 					Destination?: *(strings.MinRunes(12) & strings.MaxRunes(1024) & (=~#"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)"#)) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			Enabled?:                        *bool | fn.#Fn
-			EventSourceArn?:                 *(strings.MinRunes(12) & strings.MaxRunes(1024) & (=~#"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)"#)) | fn.#Fn
+			Enabled?:        *bool | fn.#Fn
+			EventSourceArn?: *(strings.MinRunes(12) & strings.MaxRunes(1024) & (=~#"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)"#)) | fn.#Fn
+			FilterCriteria?: *{
+				[string]: _
+			} | fn.#Fn
 			FunctionName:                    *(strings.MinRunes(1) & strings.MaxRunes(140) & (=~#"(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\d{1}:)?(\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\$LATEST|[a-zA-Z0-9-_]+))?"#)) | fn.#Fn
 			FunctionResponseTypes?:          [...(*("ReportBatchItemFailures") | fn.#Fn)] | (*("ReportBatchItemFailures") | fn.#Fn)
 			MaximumBatchingWindowInSeconds?: *(>=0 & <=300) | fn.#Fn

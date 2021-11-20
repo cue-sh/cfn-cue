@@ -18,6 +18,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			EndpointType?:            *string | fn.#Fn
 			IdentityProviderDetails?: *{
 				DirectoryId?:    *string | fn.#Fn
+				Function?:       *string | fn.#Fn
 				InvocationRole?: *string | fn.#Fn
 				Url?:            *string | fn.#Fn
 			} | fn.#If

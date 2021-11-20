@@ -6,10 +6,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#FileSystem: {
 		Type: "AWS::FSx::FileSystem"
 		Properties: {
-			BackupId?:            *string | fn.#Fn
-			FileSystemType:       *string | fn.#Fn
-			KmsKeyId?:            *string | fn.#Fn
-			LustreConfiguration?: *{
+			BackupId?:              *string | fn.#Fn
+			FileSystemType:         *string | fn.#Fn
+			FileSystemTypeVersion?: *string | fn.#Fn
+			KmsKeyId?:              *string | fn.#Fn
+			LustreConfiguration?:   *{
 				AutoImportPolicy?:              *string | fn.#Fn
 				AutomaticBackupRetentionDays?:  *int | fn.#Fn
 				CopyTagsToBackups?:             *bool | fn.#Fn
@@ -22,6 +23,21 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ImportedFileChunkSize?:         *int | fn.#Fn
 				PerUnitStorageThroughput?:      *int | fn.#Fn
 				WeeklyMaintenanceStartTime?:    *string | fn.#Fn
+			} | fn.#If
+			OntapConfiguration?: *{
+				AutomaticBackupRetentionDays?:  *int | fn.#Fn
+				DailyAutomaticBackupStartTime?: *string | fn.#Fn
+				DeploymentType:                 *string | fn.#Fn
+				DiskIopsConfiguration?:         *{
+					Iops?: *int | fn.#Fn
+					Mode?: *string | fn.#Fn
+				} | fn.#If
+				EndpointIpAddressRange?:     *string | fn.#Fn
+				FsxAdminPassword?:           *string | fn.#Fn
+				PreferredSubnetId?:          *string | fn.#Fn
+				RouteTableIds?:              [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				ThroughputCapacity?:         *int | fn.#Fn
+				WeeklyMaintenanceStartTime?: *string | fn.#Fn
 			} | fn.#If
 			SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			StorageCapacity?:  *(>=32 & <=65536) | fn.#Fn

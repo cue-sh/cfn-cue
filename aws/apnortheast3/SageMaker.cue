@@ -267,7 +267,7 @@ import (
 				} | fn.#If
 			} | fn.#If
 			ModelBiasAppSpecification: *{
-				ConfigUri:    *(=~#".*"#) | fn.#Fn
+				ConfigUri:    *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 				Environment?: *{
 					[string]: *string | fn.#Fn
 				} | fn.#If
@@ -342,7 +342,7 @@ import (
 				} | fn.#If
 			} | fn.#If
 			ModelExplainabilityAppSpecification: *{
-				ConfigUri:    *(=~#".*"#) | fn.#Fn
+				ConfigUri:    *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 				Environment?: *{
 					[string]: *string | fn.#Fn
 				} | fn.#If

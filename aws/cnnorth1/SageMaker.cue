@@ -199,12 +199,12 @@ import (
 			EndpointConfigName?: *string | fn.#Fn
 			KmsKeyId?:           *string | fn.#Fn
 			ProductionVariants:  *[...{
-				AcceleratorType?:     *string | fn.#Fn
-				InitialInstanceCount: *int | fn.#Fn
-				InitialVariantWeight: *number | fn.#Fn
-				InstanceType:         *string | fn.#Fn
-				ModelName:            *string | fn.#Fn
-				VariantName:          *string | fn.#Fn
+				AcceleratorType?:      *string | fn.#Fn
+				InitialInstanceCount?: *int | fn.#Fn
+				InitialVariantWeight:  *number | fn.#Fn
+				InstanceType?:         *string | fn.#Fn
+				ModelName:             *string | fn.#Fn
+				VariantName:           *string | fn.#Fn
 			}] | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn

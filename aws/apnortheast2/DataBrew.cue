@@ -35,12 +35,16 @@ import (
 					} | fn.#If
 				} | fn.#If
 				DatabaseInputDefinition?: *{
-					DatabaseTableName?:  *string | fn.#Fn
-					GlueConnectionName?: *string | fn.#Fn
-					TempDirectory?:      *{
+					DatabaseTableName?: *string | fn.#Fn
+					GlueConnectionName: *string | fn.#Fn
+					QueryString?:       *string | fn.#Fn
+					TempDirectory?:     *{
 						Bucket: *string | fn.#Fn
 						Key?:   *string | fn.#Fn
 					} | fn.#If
+				} | fn.#If
+				Metadata?: *{
+					SourceArn?: *string | fn.#Fn
 				} | fn.#If
 				S3InputDefinition?: *{
 					Bucket: *string | fn.#Fn
@@ -177,6 +181,12 @@ import (
 						Statistic:  *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z\_]+$"#)) | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
+				EntityDetectorConfiguration?: *{
+					AllowedStatistics?: *{
+						Statistics: [...(*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z\_]+$"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z\_]+$"#)) | fn.#Fn)
+					} | fn.#If
+					EntityTypes: [...(*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z_][A-Z\\d_]*$"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[A-Z_][A-Z\\d_]*$"#)) | fn.#Fn)
+				} | fn.#If
 				ProfileColumns?: *[...{
 					Name?:  *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 					Regex?: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
@@ -184,15 +194,20 @@ import (
 			} | fn.#If
 			ProjectName?: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			Recipe?:      *{
-				[string]: _
-			} | fn.#Fn
+				Name:     *string | fn.#Fn
+				Version?: *string | fn.#Fn
+			} | fn.#If
 			RoleArn: *string | fn.#Fn
 			Tags?:   *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			Timeout?: *int | fn.#Fn
-			Type:     *("PROFILE" | "RECIPE") | fn.#Fn
+			Timeout?:                  *int | fn.#Fn
+			Type:                      *("PROFILE" | "RECIPE") | fn.#Fn
+			ValidationConfigurations?: *[...{
+				RulesetArn:      *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+				ValidationMode?: *("CHECK_ALL") | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -244,6 +259,41 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Ruleset: {
+		Type: "AWS::DataBrew::Ruleset"
+		Properties: {
+			Description?: *string | fn.#Fn
+			Name:         *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+			Rules:        *[...{
+				CheckExpression:  *(strings.MinRunes(4) & strings.MaxRunes(1024) & (=~#"^[><0-9A-Za-z_.,:)(!= ]+$"#)) | fn.#Fn
+				ColumnSelectors?: *[...{
+					Name?:  *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+					Regex?: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+				}] | fn.#If
+				Disabled?:        *bool | fn.#Fn
+				Name:             *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				SubstitutionMap?: *[...{
+					Value:          *string | fn.#Fn
+					ValueReference: *(strings.MinRunes(2) & strings.MaxRunes(128) & (=~#"^:[A-Za-z0-9_]+$"#)) | fn.#Fn
+				}] | fn.#If
+				Threshold?: *{
+					Type?: *("GREATER_THAN_OR_EQUAL" | "LESS_THAN_OR_EQUAL" | "GREATER_THAN" | "LESS_THAN") | fn.#Fn
+					Unit?: *("COUNT" | "PERCENTAGE") | fn.#Fn
+					Value: *number | fn.#Fn
+				} | fn.#If
+			}] | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TargetArn: *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

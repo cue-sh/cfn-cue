@@ -74,9 +74,41 @@ import (
 				Name:  *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			MetricName?: *string | fn.#Fn
-			Namespace?:  *string | fn.#Fn
-			Stat?:       *string | fn.#Fn
+			MetricMathAnomalyDetector?: *{
+				MetricDataQueries?: *[...{
+					AccountId?:  *string | fn.#Fn
+					Expression?: *string | fn.#Fn
+					Id:          *string | fn.#Fn
+					Label?:      *string | fn.#Fn
+					MetricStat?: *{
+						Metric: *{
+							Dimensions?: *[...{
+								Name:  *string | fn.#Fn
+								Value: *string | fn.#Fn
+							}] | fn.#If
+							MetricName: *string | fn.#Fn
+							Namespace:  *string | fn.#Fn
+						} | fn.#If
+						Period: *int | fn.#Fn
+						Stat:   *string | fn.#Fn
+						Unit?:  *string | fn.#Fn
+					} | fn.#If
+					Period?:     *int | fn.#Fn
+					ReturnData?: *bool | fn.#Fn
+				}] | fn.#If
+			} | fn.#If
+			MetricName?:                  *string | fn.#Fn
+			Namespace?:                   *string | fn.#Fn
+			SingleMetricAnomalyDetector?: *{
+				Dimensions?: *[...{
+					Name:  *string | fn.#Fn
+					Value: *string | fn.#Fn
+				}] | fn.#If
+				MetricName?: *string | fn.#Fn
+				Namespace?:  *string | fn.#Fn
+				Stat?:       *string | fn.#Fn
+			} | fn.#If
+			Stat?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

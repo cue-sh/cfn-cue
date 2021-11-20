@@ -3,6 +3,76 @@ package apsoutheast2
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #AppStream: {
+	#AppBlock: {
+		Type: "AWS::AppStream::AppBlock"
+		Properties: {
+			Description?:       *string | fn.#Fn
+			DisplayName?:       *string | fn.#Fn
+			Name:               *string | fn.#Fn
+			SetupScriptDetails: *{
+				ExecutableParameters?: *string | fn.#Fn
+				ExecutablePath:        *string | fn.#Fn
+				ScriptS3Location:      *{
+					S3Bucket: *string | fn.#Fn
+					S3Key:    *string | fn.#Fn
+				} | fn.#If
+				TimeoutInSeconds: *int | fn.#Fn
+			} | fn.#If
+			SourceS3Location: *{
+				S3Bucket: *string | fn.#Fn
+				S3Key:    *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Application: {
+		Type: "AWS::AppStream::Application"
+		Properties: {
+			AppBlockArn:         *string | fn.#Fn
+			AttributesToDelete?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Description?:        *string | fn.#Fn
+			DisplayName?:        *string | fn.#Fn
+			IconS3Location:      *{
+				S3Bucket: *string | fn.#Fn
+				S3Key:    *string | fn.#Fn
+			} | fn.#If
+			InstanceFamilies:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			LaunchParameters?: *string | fn.#Fn
+			LaunchPath:        *string | fn.#Fn
+			Name:              *string | fn.#Fn
+			Platforms:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:             *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			WorkingDirectory?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ApplicationFleetAssociation: {
+		Type: "AWS::AppStream::ApplicationFleetAssociation"
+		Properties: {
+			ApplicationArn: *string | fn.#Fn
+			FleetName:      *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#DirectoryConfig: {
 		Type: "AWS::AppStream::DirectoryConfig"
 		Properties: {

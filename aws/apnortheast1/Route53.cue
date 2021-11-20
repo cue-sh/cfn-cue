@@ -60,7 +60,7 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			Name:                *string | fn.#Fn
+			Name?:               *string | fn.#Fn
 			QueryLoggingConfig?: *{
 				CloudWatchLogsLogGroupArn: *string | fn.#Fn
 			} | fn.#If

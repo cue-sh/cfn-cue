@@ -287,8 +287,11 @@ import (
 				InstanceInterruptionBehavior?: *("hibernate" | "stop" | "terminate") | fn.#Fn
 				InstancePoolsToUseCount?:      *int | fn.#Fn
 				MaintenanceStrategies?:        *{
-					[string]: _
-				} | fn.#Fn
+					CapacityRebalance?: *{
+						ReplacementStrategy?: *("launch" | "launch-before-terminate") | fn.#Fn
+						TerminationDelay?:    *int | fn.#Fn
+					} | fn.#If
+				} | fn.#If
 				MaxTotalPrice?:          *string | fn.#Fn
 				MinTargetCapacity?:      *int | fn.#Fn
 				SingleAvailabilityZone?: *bool | fn.#Fn
@@ -421,6 +424,86 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#IPAM: {
+		Type: "AWS::EC2::IPAM"
+		Properties: {
+			Description?:      *string | fn.#Fn
+			OperatingRegions?: *[...{
+				RegionName: *string | fn.#Fn
+			}] | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#IPAMAllocation: {
+		Type: "AWS::EC2::IPAMAllocation"
+		Properties: {
+			Cidr?:          *string | fn.#Fn
+			Description?:   *string | fn.#Fn
+			IpamPoolId:     *string | fn.#Fn
+			NetmaskLength?: *int | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#IPAMPool: {
+		Type: "AWS::EC2::IPAMPool"
+		Properties: {
+			AddressFamily:                   *("IPv4" | "IPv6") | fn.#Fn
+			AllocationDefaultNetmaskLength?: *int | fn.#Fn
+			AllocationMaxNetmaskLength?:     *int | fn.#Fn
+			AllocationMinNetmaskLength?:     *int | fn.#Fn
+			AllocationResourceTags?:         *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			AutoImport?:       *bool | fn.#Fn
+			Description?:      *string | fn.#Fn
+			IpamScopeId:       *string | fn.#Fn
+			Locale?:           *string | fn.#Fn
+			ProvisionedCidrs?: *[...{
+				Cidr: *string | fn.#Fn
+			}] | fn.#If
+			PubliclyAdvertisable?: *bool | fn.#Fn
+			SourceIpamPoolId?:     *string | fn.#Fn
+			Tags?:                 *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#IPAMScope: {
+		Type: "AWS::EC2::IPAMScope"
+		Properties: {
+			Description?:   *string | fn.#Fn
+			IpamId:         *string | fn.#Fn
+			IpamScopeType?: *("Public" | "Private") | fn.#Fn
+			Tags?:          *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Instance: {
 		Type: "AWS::EC2::Instance"
 		Properties: {
@@ -503,13 +586,14 @@ import (
 				SecondaryPrivateIpAddressCount?: *int | fn.#Fn
 				SubnetId?:                       *string | fn.#Fn
 			}] | fn.#If
-			PlacementGroupName?: *string | fn.#Fn
-			PrivateIpAddress?:   *string | fn.#Fn
-			RamdiskId?:          *string | fn.#Fn
-			SecurityGroupIds?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SecurityGroups?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SourceDestCheck?:    *bool | fn.#Fn
-			SsmAssociations?:    *[...{
+			PlacementGroupName?:              *string | fn.#Fn
+			PrivateIpAddress?:                *string | fn.#Fn
+			PropagateTagsToVolumeOnCreation?: *bool | fn.#Fn
+			RamdiskId?:                       *string | fn.#Fn
+			SecurityGroupIds?:                [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SecurityGroups?:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SourceDestCheck?:                 *bool | fn.#Fn
+			SsmAssociations?:                 *[...{
 				AssociationParameters?: *[...{
 					Key:   *string | fn.#Fn
 					Value: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -668,7 +752,7 @@ import (
 				SecurityGroupIds?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SecurityGroups?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				TagSpecifications?: *[...{
-					ResourceType: *("capacity-reservation" | "carrier-gateway" | "client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "instance-event-window" | "internet-gateway" | "ipv4pool-ec2" | "ipv6pool-ec2" | "key-pair" | "launch-template" | "local-gateway" | "local-gateway-route-table" | "local-gateway-route-table-virtual-interface-group-association" | "local-gateway-route-table-vpc-association" | "local-gateway-virtual-interface" | "local-gateway-virtual-interface-group" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "prefix-list" | "replace-root-volume-task" | "reserved-instances" | "route-table" | "security-group" | "security-group-rule" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-endpoint" | "vpc-endpoint-service" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
+					ResourceType: *("capacity-reservation" | "carrier-gateway" | "client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "instance-event-window" | "internet-gateway" | "ipam" | "ipam-pool" | "ipam-scope" | "ipv4pool-ec2" | "ipv6pool-ec2" | "key-pair" | "launch-template" | "local-gateway" | "local-gateway-route-table" | "local-gateway-route-table-virtual-interface-group-association" | "local-gateway-route-table-vpc-association" | "local-gateway-virtual-interface" | "local-gateway-virtual-interface-group" | "natgateway" | "network-acl" | "network-insights-access-scope" | "network-insights-access-scope-analysis" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "prefix-list" | "replace-root-volume-task" | "reserved-instances" | "route-table" | "security-group" | "security-group-rule" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-endpoint" | "vpc-endpoint-service" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
 					Tags:         *[...{
 						Key:   *string | fn.#Fn
 						Value: *string | fn.#Fn
@@ -1523,7 +1607,7 @@ import (
 			SecurityGroupIds?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			ServiceName:        *string | fn.#Fn
 			SubnetIds?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			VpcEndpointType?:   *("Gateway" | "GatewayLoadBalancer" | "Interface") | fn.#Fn
+			VpcEndpointType?:   *("Interface" | "Gateway" | "GatewayLoadBalancer") | fn.#Fn
 			VpcId:              *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
@@ -1552,7 +1636,6 @@ import (
 			AcceptanceRequired?:      *bool | fn.#Fn
 			GatewayLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			NetworkLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			PayerResponsibility?:     *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

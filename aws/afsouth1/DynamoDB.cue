@@ -65,8 +65,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			StreamSpecification?: *{
 				StreamViewType: *("KEYS_ONLY" | "NEW_AND_OLD_IMAGES" | "NEW_IMAGE" | "OLD_IMAGE") | fn.#Fn
 			} | fn.#If
-			TableName?: *string | fn.#Fn
-			Tags?:      *[...{
+			TableClass?: *string | fn.#Fn
+			TableName?:  *string | fn.#Fn
+			Tags?:       *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

@@ -39,6 +39,35 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ThroughputCapacity?:         *int | fn.#Fn
 				WeeklyMaintenanceStartTime?: *string | fn.#Fn
 			} | fn.#If
+			OpenZFSConfiguration?: *{
+				AutomaticBackupRetentionDays?:  *int | fn.#Fn
+				CopyTagsToBackups?:             *bool | fn.#Fn
+				CopyTagsToVolumes?:             *bool | fn.#Fn
+				DailyAutomaticBackupStartTime?: *string | fn.#Fn
+				DeploymentType:                 *string | fn.#Fn
+				DiskIopsConfiguration?:         *{
+					Iops?: *int | fn.#Fn
+					Mode?: *string | fn.#Fn
+				} | fn.#If
+				RootVolumeConfiguration?: *{
+					CopyTagsToSnapshots?: *bool | fn.#Fn
+					DataCompressionType?: *string | fn.#Fn
+					NfsExports?:          *[...{
+						ClientConfigurations?: *[...{
+							Clients?: *string | fn.#Fn
+							Options?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						}] | fn.#If
+					}] | fn.#If
+					ReadOnly?:           *bool | fn.#Fn
+					UserAndGroupQuotas?: *[...{
+						Id?:                      *int | fn.#Fn
+						StorageCapacityQuotaGiB?: *int | fn.#Fn
+						Type?:                    *string | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
+				ThroughputCapacity?:         *int | fn.#Fn
+				WeeklyMaintenanceStartTime?: *string | fn.#Fn
+			} | fn.#If
 			SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			StorageCapacity?:  *(>=32 & <=65536) | fn.#Fn
 			StorageType?:      *string | fn.#Fn

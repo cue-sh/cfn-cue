@@ -362,9 +362,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Mode?:                   *string | fn.#Fn
 			Name?:                   *string | fn.#Fn
 			Parameters?:             *{
-				[string]: *{
-					[string]: _
-				} | fn.#Fn
+				[string]: *string | fn.#Fn
 			} | fn.#If
 			Policy?: *{
 				[string]: _

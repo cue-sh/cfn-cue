@@ -80,6 +80,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			CacheParameterGroupName?:   *string | fn.#Fn
 			CacheSecurityGroupNames?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			CacheSubnetGroupName?:      *string | fn.#Fn
+			DataTieringEnabled?:        *bool | fn.#Fn
 			Engine?:                    *string | fn.#Fn
 			EngineVersion?:             *string | fn.#Fn
 			GlobalReplicationGroupId?:  *string | fn.#Fn

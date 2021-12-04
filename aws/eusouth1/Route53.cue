@@ -6,6 +6,15 @@ import (
 )
 
 #Route53: {
+	#DNSSEC: {
+		Type: "AWS::Route53::DNSSEC"
+		Properties: HostedZoneId: *(=~#"^[A-Z0-9]{1,32}$"#) | fn.#Fn
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#HealthCheck: {
 		Type: "AWS::Route53::HealthCheck"
 		Properties: {
@@ -59,6 +68,20 @@ import (
 				VPCId:     *string | fn.#Fn
 				VPCRegion: *string | fn.#Fn
 			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#KeySigningKey: {
+		Type: "AWS::Route53::KeySigningKey"
+		Properties: {
+			HostedZoneId:            *(=~#"^[A-Z0-9]{1,32}$"#) | fn.#Fn
+			KeyManagementServiceArn: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			Name:                    *(=~#"^[a-zA-Z0-9_]{3,128}$"#) | fn.#Fn
+			Status:                  *("ACTIVE" | "INACTIVE") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -112,22 +112,30 @@ import (
 					AbortIncompleteMultipartUpload?: *{
 						DaysAfterInitiation: *int | fn.#Fn
 					} | fn.#If
-					ExpirationDate?:                    *(=~#"^([0-2]\d{3})-(0[0-9]|1[0-2])-([0-2]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-6]\d)((\.\d{3})?)Z$"#) | fn.#Fn
-					ExpirationInDays?:                  *int | fn.#Fn
-					ExpiredObjectDeleteMarker?:         *bool | fn.#Fn
-					Id?:                                *string | fn.#Fn
+					ExpirationDate?:              *(=~#"^([0-2]\d{3})-(0[0-9]|1[0-2])-([0-2]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-6]\d)((\.\d{3})?)Z$"#) | fn.#Fn
+					ExpirationInDays?:            *int | fn.#Fn
+					ExpiredObjectDeleteMarker?:   *bool | fn.#Fn
+					Id?:                          *string | fn.#Fn
+					NoncurrentVersionExpiration?: *{
+						NewerNoncurrentVersions?: *int | fn.#Fn
+						NoncurrentDays:           *int | fn.#Fn
+					} | fn.#If
 					NoncurrentVersionExpirationInDays?: *int | fn.#Fn
 					NoncurrentVersionTransition?:       *{
-						StorageClass:     *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
-						TransitionInDays: *int | fn.#Fn
+						NewerNoncurrentVersions?: *int | fn.#Fn
+						StorageClass:             *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
+						TransitionInDays:         *int | fn.#Fn
 					} | fn.#If
 					NoncurrentVersionTransitions?: *[...{
-						StorageClass:     *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
-						TransitionInDays: *int | fn.#Fn
+						NewerNoncurrentVersions?: *int | fn.#Fn
+						StorageClass:             *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
+						TransitionInDays:         *int | fn.#Fn
 					}] | fn.#If
-					Prefix?:     *string | fn.#Fn
-					Status:      *("Enabled" | "Disabled") | fn.#Fn
-					TagFilters?: *[...{
+					ObjectSizeGreaterThan?: *int | fn.#Fn
+					ObjectSizeLessThan?:    *int | fn.#Fn
+					Prefix?:                *string | fn.#Fn
+					Status:                 *("Enabled" | "Disabled") | fn.#Fn
+					TagFilters?:            *[...{
 						Key:   *string | fn.#Fn
 						Value: *string | fn.#Fn
 					}] | fn.#If
@@ -157,6 +165,9 @@ import (
 				}] | fn.#If
 			}] | fn.#If
 			NotificationConfiguration?: *{
+				EventBridgeConfiguration?: *{
+					EventBridgeEnabled?: *bool | fn.#Fn
+				} | fn.#If
 				LambdaConfigurations?: *[...{
 					Event:   *string | fn.#Fn
 					Filter?: *{

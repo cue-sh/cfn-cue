@@ -39,6 +39,7 @@ import (
 						BidPrice?:                            *string | fn.#Fn
 						BidPriceAsPercentageOfOnDemandPrice?: *number | fn.#Fn
 						Configurations?:                      *[..._#Configuration] | fn.#If
+						CustomAmiId?:                         *string | fn.#Fn
 						EbsConfiguration?:                    *{
 							EbsBlockDeviceConfigs?: *[...{
 								VolumeSpecification: *{
@@ -105,6 +106,7 @@ import (
 					} | fn.#If
 					BidPrice?:         *string | fn.#Fn
 					Configurations?:   *[..._#Configuration] | fn.#If
+					CustomAmiId?:      *string | fn.#Fn
 					EbsConfiguration?: *{
 						EbsBlockDeviceConfigs?: *[...{
 							VolumeSpecification: *{
@@ -133,6 +135,7 @@ import (
 						BidPrice?:                            *string | fn.#Fn
 						BidPriceAsPercentageOfOnDemandPrice?: *number | fn.#Fn
 						Configurations?:                      *[..._#Configuration] | fn.#If
+						CustomAmiId?:                         *string | fn.#Fn
 						EbsConfiguration?:                    *{
 							EbsBlockDeviceConfigs?: *[...{
 								VolumeSpecification: *{
@@ -199,6 +202,7 @@ import (
 					} | fn.#If
 					BidPrice?:         *string | fn.#Fn
 					Configurations?:   *[..._#Configuration] | fn.#If
+					CustomAmiId?:      *string | fn.#Fn
 					EbsConfiguration?: *{
 						EbsBlockDeviceConfigs?: *[...{
 							VolumeSpecification: *{
@@ -287,6 +291,7 @@ import (
 				BidPrice?:                            *string | fn.#Fn
 				BidPriceAsPercentageOfOnDemandPrice?: *number | fn.#Fn
 				Configurations?:                      *[..._#Configuration] | fn.#If
+				CustomAmiId?:                         *string | fn.#Fn
 				EbsConfiguration?:                    *{
 					EbsBlockDeviceConfigs?: *[...{
 						VolumeSpecification: *{
@@ -368,6 +373,7 @@ import (
 			} | fn.#If
 			BidPrice?:         *string | fn.#Fn
 			Configurations?:   *[..._#Configuration] | fn.#If
+			CustomAmiId?:      *string | fn.#Fn
 			EbsConfiguration?: *{
 				EbsBlockDeviceConfigs?: *[...{
 					VolumeSpecification: *{

@@ -99,12 +99,16 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			EndpointConfigName?: *string | fn.#Fn
 			KmsKeyId?:           *string | fn.#Fn
 			ProductionVariants:  *[...{
-				AcceleratorType?:     *string | fn.#Fn
-				InitialInstanceCount: *int | fn.#Fn
-				InitialVariantWeight: *number | fn.#Fn
-				InstanceType:         *string | fn.#Fn
-				ModelName:            *string | fn.#Fn
-				VariantName:          *string | fn.#Fn
+				AcceleratorType?:      *string | fn.#Fn
+				InitialInstanceCount?: *int | fn.#Fn
+				InitialVariantWeight:  *number | fn.#Fn
+				InstanceType?:         *string | fn.#Fn
+				ModelName:             *string | fn.#Fn
+				ServerlessConfig?:     *{
+					MaxConcurrency: *int | fn.#Fn
+					MemorySizeInMB: *int | fn.#Fn
+				} | fn.#If
+				VariantName: *string | fn.#Fn
 			}] | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
@@ -132,10 +136,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						RepositoryCredentialsProviderArn: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				Mode?:             *string | fn.#Fn
-				ModelDataUrl?:     *string | fn.#Fn
-				ModelPackageName?: *string | fn.#Fn
-				MultiModelConfig?: *{
+				InferenceSpecificationName?: *string | fn.#Fn
+				Mode?:                       *string | fn.#Fn
+				ModelDataUrl?:               *string | fn.#Fn
+				ModelPackageName?:           *string | fn.#Fn
+				MultiModelConfig?:           *{
 					ModelCacheSetting?: *string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
@@ -157,10 +162,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						RepositoryCredentialsProviderArn: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				Mode?:             *string | fn.#Fn
-				ModelDataUrl?:     *string | fn.#Fn
-				ModelPackageName?: *string | fn.#Fn
-				MultiModelConfig?: *{
+				InferenceSpecificationName?: *string | fn.#Fn
+				Mode?:                       *string | fn.#Fn
+				ModelDataUrl?:               *string | fn.#Fn
+				ModelPackageName?:           *string | fn.#Fn
+				MultiModelConfig?:           *{
 					ModelCacheSetting?: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If

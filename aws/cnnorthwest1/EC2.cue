@@ -342,13 +342,14 @@ import (
 				SecondaryPrivateIpAddressCount?: *int | fn.#Fn
 				SubnetId?:                       *string | fn.#Fn
 			}] | fn.#If
-			PlacementGroupName?: *string | fn.#Fn
-			PrivateIpAddress?:   *string | fn.#Fn
-			RamdiskId?:          *string | fn.#Fn
-			SecurityGroupIds?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SecurityGroups?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SourceDestCheck?:    *bool | fn.#Fn
-			SsmAssociations?:    *[...{
+			PlacementGroupName?:              *string | fn.#Fn
+			PrivateIpAddress?:                *string | fn.#Fn
+			PropagateTagsToVolumeOnCreation?: *bool | fn.#Fn
+			RamdiskId?:                       *string | fn.#Fn
+			SecurityGroupIds?:                [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SecurityGroups?:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SourceDestCheck?:                 *bool | fn.#Fn
+			SsmAssociations?:                 *[...{
 				AssociationParameters?: *[...{
 					Key:   *string | fn.#Fn
 					Value: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -507,7 +508,7 @@ import (
 				SecurityGroupIds?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SecurityGroups?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				TagSpecifications?: *[...{
-					ResourceType: *("capacity-reservation" | "carrier-gateway" | "client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "instance-event-window" | "internet-gateway" | "ipv4pool-ec2" | "ipv6pool-ec2" | "key-pair" | "launch-template" | "local-gateway" | "local-gateway-route-table" | "local-gateway-route-table-virtual-interface-group-association" | "local-gateway-route-table-vpc-association" | "local-gateway-virtual-interface" | "local-gateway-virtual-interface-group" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "prefix-list" | "replace-root-volume-task" | "reserved-instances" | "route-table" | "security-group" | "security-group-rule" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-endpoint" | "vpc-endpoint-service" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
+					ResourceType: *("capacity-reservation" | "carrier-gateway" | "client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "instance-event-window" | "internet-gateway" | "ipam" | "ipam-pool" | "ipam-scope" | "ipv4pool-ec2" | "ipv6pool-ec2" | "key-pair" | "launch-template" | "local-gateway" | "local-gateway-route-table" | "local-gateway-route-table-virtual-interface-group-association" | "local-gateway-route-table-vpc-association" | "local-gateway-virtual-interface" | "local-gateway-virtual-interface-group" | "natgateway" | "network-acl" | "network-insights-access-scope" | "network-insights-access-scope-analysis" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "prefix-list" | "replace-root-volume-task" | "reserved-instances" | "route-table" | "security-group" | "security-group-rule" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-endpoint" | "vpc-endpoint-service" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
 					Tags:         *[...{
 						Key:   *string | fn.#Fn
 						Value: *string | fn.#Fn
@@ -1276,7 +1277,7 @@ import (
 			SecurityGroupIds?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			ServiceName:        *string | fn.#Fn
 			SubnetIds?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			VpcEndpointType?:   *("Gateway" | "GatewayLoadBalancer" | "Interface") | fn.#Fn
+			VpcEndpointType?:   *("Interface" | "Gateway" | "GatewayLoadBalancer") | fn.#Fn
 			VpcId:              *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

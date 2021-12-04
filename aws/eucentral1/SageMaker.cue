@@ -315,7 +315,11 @@ import (
 				InitialVariantWeight:  *number | fn.#Fn
 				InstanceType?:         *string | fn.#Fn
 				ModelName:             *string | fn.#Fn
-				VariantName:           *string | fn.#Fn
+				ServerlessConfig?:     *{
+					MaxConcurrency: *int | fn.#Fn
+					MemorySizeInMB: *int | fn.#Fn
+				} | fn.#If
+				VariantName: *string | fn.#Fn
 			}] | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
@@ -402,10 +406,11 @@ import (
 						RepositoryCredentialsProviderArn: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				Mode?:             *string | fn.#Fn
-				ModelDataUrl?:     *string | fn.#Fn
-				ModelPackageName?: *string | fn.#Fn
-				MultiModelConfig?: *{
+				InferenceSpecificationName?: *string | fn.#Fn
+				Mode?:                       *string | fn.#Fn
+				ModelDataUrl?:               *string | fn.#Fn
+				ModelPackageName?:           *string | fn.#Fn
+				MultiModelConfig?:           *{
 					ModelCacheSetting?: *string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
@@ -427,10 +432,11 @@ import (
 						RepositoryCredentialsProviderArn: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				Mode?:             *string | fn.#Fn
-				ModelDataUrl?:     *string | fn.#Fn
-				ModelPackageName?: *string | fn.#Fn
-				MultiModelConfig?: *{
+				InferenceSpecificationName?: *string | fn.#Fn
+				Mode?:                       *string | fn.#Fn
+				ModelDataUrl?:               *string | fn.#Fn
+				ModelPackageName?:           *string | fn.#Fn
+				MultiModelConfig?:           *{
 					ModelCacheSetting?: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If

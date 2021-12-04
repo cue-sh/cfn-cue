@@ -20,6 +20,33 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#HookDefaultVersion: {
+		Type: "AWS::CloudFormation::HookDefaultVersion"
+		Properties: {
+			TypeName?:       *string | fn.#Fn
+			TypeVersionArn?: *string | fn.#Fn
+			VersionId?:      *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#HookTypeConfig: {
+		Type: "AWS::CloudFormation::HookTypeConfig"
+		Properties: {
+			Configuration:       *string | fn.#Fn
+			ConfigurationAlias?: *string | fn.#Fn
+			TypeArn?:            *string | fn.#Fn
+			TypeName?:           *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Macro: {
 		Type: "AWS::CloudFormation::Macro"
 		Properties: {

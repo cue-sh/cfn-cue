@@ -233,6 +233,7 @@ import (
 	#Project: {
 		Type: "AWS::IoTSiteWise::Project"
 		Properties: {
+			AssetIds?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			PortalId:            *string | fn.#Fn
 			ProjectDescription?: *string | fn.#Fn
 			ProjectName:         *string | fn.#Fn

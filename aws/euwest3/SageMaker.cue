@@ -79,9 +79,11 @@ import (
 		Type: "AWS::SageMaker::DataQualityJobDefinition"
 		Properties: {
 			DataQualityAppSpecification: *{
-				ContainerArguments?:              [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-				ContainerEntrypoint?:             [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-				Environment?:                     *{} | fn.#If
+				ContainerArguments?:  [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				ContainerEntrypoint?: [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				Environment?:         *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
 				ImageUri:                         *(=~#".*"#) | fn.#Fn
 				PostAnalyticsProcessorSourceUri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 				RecordPreprocessorSourceUri?:     *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
@@ -269,12 +271,16 @@ import (
 			EndpointConfigName?: *string | fn.#Fn
 			KmsKeyId?:           *string | fn.#Fn
 			ProductionVariants:  *[...{
-				AcceleratorType?:     *string | fn.#Fn
-				InitialInstanceCount: *int | fn.#Fn
-				InitialVariantWeight: *number | fn.#Fn
-				InstanceType:         *string | fn.#Fn
-				ModelName:            *string | fn.#Fn
-				VariantName:          *string | fn.#Fn
+				AcceleratorType?:      *string | fn.#Fn
+				InitialInstanceCount?: *int | fn.#Fn
+				InitialVariantWeight:  *number | fn.#Fn
+				InstanceType?:         *string | fn.#Fn
+				ModelName:             *string | fn.#Fn
+				ServerlessConfig?:     *{
+					MaxConcurrency: *int | fn.#Fn
+					MemorySizeInMB: *int | fn.#Fn
+				} | fn.#If
+				VariantName: *string | fn.#Fn
 			}] | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
@@ -361,10 +367,11 @@ import (
 						RepositoryCredentialsProviderArn: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				Mode?:             *string | fn.#Fn
-				ModelDataUrl?:     *string | fn.#Fn
-				ModelPackageName?: *string | fn.#Fn
-				MultiModelConfig?: *{
+				InferenceSpecificationName?: *string | fn.#Fn
+				Mode?:                       *string | fn.#Fn
+				ModelDataUrl?:               *string | fn.#Fn
+				ModelPackageName?:           *string | fn.#Fn
+				MultiModelConfig?:           *{
 					ModelCacheSetting?: *string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
@@ -386,10 +393,11 @@ import (
 						RepositoryCredentialsProviderArn: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				Mode?:             *string | fn.#Fn
-				ModelDataUrl?:     *string | fn.#Fn
-				ModelPackageName?: *string | fn.#Fn
-				MultiModelConfig?: *{
+				InferenceSpecificationName?: *string | fn.#Fn
+				Mode?:                       *string | fn.#Fn
+				ModelDataUrl?:               *string | fn.#Fn
+				ModelPackageName?:           *string | fn.#Fn
+				MultiModelConfig?:           *{
 					ModelCacheSetting?: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
@@ -422,8 +430,10 @@ import (
 			} | fn.#If
 			ModelBiasAppSpecification: *{
 				ConfigUri:    *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
-				Environment?: *{} | fn.#If
-				ImageUri:     *(=~#".*"#) | fn.#Fn
+				Environment?: *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
+				ImageUri: *(=~#".*"#) | fn.#Fn
 			} | fn.#If
 			ModelBiasBaselineConfig?: *{
 				BaseliningJobName?:   *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
@@ -495,8 +505,10 @@ import (
 			} | fn.#If
 			ModelExplainabilityAppSpecification: *{
 				ConfigUri:    *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
-				Environment?: *{} | fn.#If
-				ImageUri:     *(=~#".*"#) | fn.#Fn
+				Environment?: *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
+				ImageUri: *(=~#".*"#) | fn.#Fn
 			} | fn.#If
 			ModelExplainabilityBaselineConfig?: *{
 				BaseliningJobName?:   *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
@@ -580,9 +592,11 @@ import (
 				} | fn.#If
 			} | fn.#If
 			ModelQualityAppSpecification: *{
-				ContainerArguments?:              [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-				ContainerEntrypoint?:             [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-				Environment?:                     *{} | fn.#If
+				ContainerArguments?:  [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				ContainerEntrypoint?: [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+				Environment?:         *{
+					[string]: *string | fn.#Fn
+				} | fn.#If
 				ImageUri:                         *(=~#".*"#) | fn.#Fn
 				PostAnalyticsProcessorSourceUri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 				ProblemType:                      *("BinaryClassification" | "MulticlassClassification" | "Regression") | fn.#Fn
@@ -668,7 +682,9 @@ import (
 							S3Uri?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 						} | fn.#If
 					} | fn.#If
-					Environment?:               *{} | fn.#If
+					Environment?: *{
+						[string]: *string | fn.#Fn
+					} | fn.#If
 					MonitoringAppSpecification: *{
 						ContainerArguments?:              [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
 						ContainerEntrypoint?:             [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)

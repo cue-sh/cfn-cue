@@ -35,7 +35,7 @@ import (
 				Resources?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			}] | fn.#If
 			KubernetesNetworkConfig?: *{
-				IpFamily?:        *string | fn.#Fn
+				IpFamily?:        *("ipv4" | "ipv6") | fn.#Fn
 				ServiceIpv4Cidr?: *string | fn.#Fn
 				ServiceIpv6Cidr?: *string | fn.#Fn
 			} | fn.#If

@@ -6,6 +6,50 @@ import (
 )
 
 #Lightsail: {
+	#Alarm: {
+		Type: "AWS::Lightsail::Alarm"
+		Properties: {
+			AlarmName:             *(=~#"\w[\w\-]*\w"#) | fn.#Fn
+			ComparisonOperator:    *string | fn.#Fn
+			ContactProtocols?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			DatapointsToAlarm?:    *int | fn.#Fn
+			EvaluationPeriods:     *int | fn.#Fn
+			MetricName:            *string | fn.#Fn
+			MonitoredResourceName: *string | fn.#Fn
+			NotificationEnabled?:  *bool | fn.#Fn
+			NotificationTriggers?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Threshold:             *number | fn.#Fn
+			TreatMissingData?:     *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Bucket: {
+		Type: "AWS::Lightsail::Bucket"
+		Properties: {
+			AccessRules?: *{
+				AllowPublicOverrides?: *bool | fn.#Fn
+				GetObject?:            *string | fn.#Fn
+			} | fn.#If
+			BucketName:                *(strings.MinRunes(3) & strings.MaxRunes(54) & (=~#"^[a-z0-9][a-z0-9-]{1,52}[a-z0-9]$"#)) | fn.#Fn
+			BundleId:                  *string | fn.#Fn
+			ObjectVersioning?:         *bool | fn.#Fn
+			ReadOnlyAccessAccounts?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			ResourcesReceivingAccess?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:                     *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Database: {
 		Type: "AWS::Lightsail::Database"
 		Properties: {
@@ -117,6 +161,42 @@ import (
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			UserData?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#LoadBalancer: {
+		Type: "AWS::Lightsail::LoadBalancer"
+		Properties: {
+			AttachedInstances?:                        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			HealthCheckPath?:                          *string | fn.#Fn
+			InstancePort:                              *int | fn.#Fn
+			IpAddressType?:                            *string | fn.#Fn
+			LoadBalancerName:                          *(=~#"\w[\w\-]*\w"#) | fn.#Fn
+			SessionStickinessEnabled?:                 *bool | fn.#Fn
+			SessionStickinessLBCookieDurationSeconds?: *string | fn.#Fn
+			Tags?:                                     *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#LoadBalancerTlsCertificate: {
+		Type: "AWS::Lightsail::LoadBalancerTlsCertificate"
+		Properties: {
+			CertificateAlternativeNames?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			CertificateDomainName:        *string | fn.#Fn
+			CertificateName:              *string | fn.#Fn
+			IsAttached?:                  *bool | fn.#Fn
+			LoadBalancerName:             *(=~#"\w[\w\-]*\w"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

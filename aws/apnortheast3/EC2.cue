@@ -277,14 +277,17 @@ import (
 		Type: "AWS::EC2::FlowLog"
 		Properties: {
 			DeliverLogsPermissionArn?: *string | fn.#Fn
-			LogDestination?:           *string | fn.#Fn
-			LogDestinationType?:       *("cloud-watch-logs" | "s3") | fn.#Fn
-			LogFormat?:                *string | fn.#Fn
-			LogGroupName?:             *string | fn.#Fn
-			MaxAggregationInterval?:   *int | fn.#Fn
-			ResourceId:                *string | fn.#Fn
-			ResourceType:              *("NetworkInterface" | "Subnet" | "VPC") | fn.#Fn
-			Tags?:                     *[...{
+			DestinationOptions?:       *{
+				[string]: _
+			} | fn.#Fn
+			LogDestination?:         *string | fn.#Fn
+			LogDestinationType?:     *("cloud-watch-logs" | "s3") | fn.#Fn
+			LogFormat?:              *string | fn.#Fn
+			LogGroupName?:           *string | fn.#Fn
+			MaxAggregationInterval?: *int | fn.#Fn
+			ResourceId:              *string | fn.#Fn
+			ResourceType:            *("NetworkInterface" | "Subnet" | "VPC") | fn.#Fn
+			Tags?:                   *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -357,7 +360,7 @@ import (
 	#IPAMPool: {
 		Type: "AWS::EC2::IPAMPool"
 		Properties: {
-			AddressFamily:                   *("IPv4" | "IPv6") | fn.#Fn
+			AddressFamily:                   *string | fn.#Fn
 			AllocationDefaultNetmaskLength?: *int | fn.#Fn
 			AllocationMaxNetmaskLength?:     *int | fn.#Fn
 			AllocationMinNetmaskLength?:     *int | fn.#Fn
@@ -388,10 +391,9 @@ import (
 	#IPAMScope: {
 		Type: "AWS::EC2::IPAMScope"
 		Properties: {
-			Description?:   *string | fn.#Fn
-			IpamId:         *string | fn.#Fn
-			IpamScopeType?: *("Public" | "Private") | fn.#Fn
-			Tags?:          *[...{
+			Description?: *string | fn.#Fn
+			IpamId:       *string | fn.#Fn
+			Tags?:        *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -597,6 +599,53 @@ import (
 						MaxPrice?:                     *string | fn.#Fn
 						SpotInstanceType?:             *("one-time" | "persistent") | fn.#Fn
 						ValidUntil?:                   *string | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				InstanceRequirements?: *{
+					AcceleratorCount?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					AcceleratorManufacturers?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					AcceleratorNames?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					AcceleratorTotalMemoryMiB?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					AcceleratorTypes?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					BareMetal?:                *string | fn.#Fn
+					BaselineEbsBandwidthMbps?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					BurstablePerformance?:  *string | fn.#Fn
+					CpuManufacturers?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					ExcludedInstanceTypes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					InstanceGenerations?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					LocalStorage?:          *string | fn.#Fn
+					LocalStorageTypes?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					MemoryGiBPerVCpu?:      *{
+						Max?: *number | fn.#Fn
+						Min?: *number | fn.#Fn
+					} | fn.#If
+					MemoryMiB?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					NetworkInterfaceCount?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					OnDemandMaxPricePercentageOverLowestPrice?: *int | fn.#Fn
+					RequireHibernateSupport?:                   *bool | fn.#Fn
+					SpotMaxPricePercentageOverLowestPrice?:     *int | fn.#Fn
+					TotalLocalStorageGB?:                       *{
+						Max?: *number | fn.#Fn
+						Min?: *number | fn.#Fn
+					} | fn.#If
+					VCpuCount?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				InstanceType?:          *("c3.2xlarge" | "c3.4xlarge" | "c3.8xlarge" | "c3.large" | "c3.xlarge" | "c4.2xlarge" | "c4.4xlarge" | "c4.8xlarge" | "c4.large" | "c4.xlarge" | "c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "d2.2xlarge" | "d2.4xlarge" | "d2.8xlarge" | "d2.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.metal" | "i3.xlarge" | "i3en.12xlarge" | "i3en.24xlarge" | "i3en.2xlarge" | "i3en.3xlarge" | "i3en.6xlarge" | "i3en.large" | "i3en.metal" | "i3en.xlarge" | "m3.2xlarge" | "m3.large" | "m3.medium" | "m3.xlarge" | "m4.10xlarge" | "m4.16xlarge" | "m4.2xlarge" | "m4.4xlarge" | "m4.large" | "m4.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "r3.2xlarge" | "r3.4xlarge" | "r3.8xlarge" | "r3.large" | "r3.xlarge" | "r4.16xlarge" | "r4.2xlarge" | "r4.4xlarge" | "r4.8xlarge" | "r4.large" | "r4.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "t2.2xlarge" | "t2.large" | "t2.medium" | "t2.micro" | "t2.nano" | "t2.small" | "t2.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "u-12tb1.metal" | "u-6tb1.metal" | "u-9tb1.metal" | "x1.16xlarge" | "x1.32xlarge" | "x1e.16xlarge" | "x1e.2xlarge" | "x1e.32xlarge" | "x1e.4xlarge" | "x1e.8xlarge" | "x1e.xlarge") | fn.#Fn
@@ -1352,7 +1401,7 @@ import (
 			SecurityGroupIds?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			ServiceName:        *string | fn.#Fn
 			SubnetIds?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			VpcEndpointType?:   *("Interface" | "Gateway" | "GatewayLoadBalancer") | fn.#Fn
+			VpcEndpointType?:   *string | fn.#Fn
 			VpcId:              *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
@@ -1381,6 +1430,7 @@ import (
 			AcceptanceRequired?:      *bool | fn.#Fn
 			GatewayLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			NetworkLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			PayerResponsibility?:     *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

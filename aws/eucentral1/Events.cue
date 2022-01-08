@@ -60,6 +60,10 @@ import (
 		Properties: {
 			EventSourceName?: *string | fn.#Fn
 			Name:             *string | fn.#Fn
+			Tags?:            *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

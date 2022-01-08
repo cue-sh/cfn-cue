@@ -148,6 +148,10 @@ import (
 				LocationOrder?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				PriorityOrder?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 			TimeoutInSeconds?: *int | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
@@ -176,6 +180,10 @@ import (
 			NotificationTarget?:   *string | fn.#Fn
 			RequestTimeoutSeconds: *int | fn.#Fn
 			RuleSetName:           *string | fn.#Fn
+			Tags?:                 *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -188,6 +196,10 @@ import (
 		Properties: {
 			Name:        *string | fn.#Fn
 			RuleSetBody: *string | fn.#Fn
+			Tags?:       *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -205,6 +217,10 @@ import (
 				ObjectVersion?: *string | fn.#Fn
 				RoleArn:        *string | fn.#Fn
 			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 			Version?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

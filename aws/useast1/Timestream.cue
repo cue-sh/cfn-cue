@@ -9,7 +9,7 @@ import (
 	#Database: {
 		Type: "AWS::Timestream::Database"
 		Properties: {
-			DatabaseName?: *(=~#"^[a-zA-Z0-9_.-]{3,64}$"#) | fn.#Fn
+			DatabaseName?: *(=~#"^[a-zA-Z0-9_.-]{3,256}$"#) | fn.#Fn
 			KmsKeyId?:     *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 			Tags?:         *[...{
 				Key:   *string | fn.#Fn

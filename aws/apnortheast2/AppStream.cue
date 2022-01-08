@@ -61,6 +61,19 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ApplicationEntitlementAssociation: {
+		Type: "AWS::AppStream::ApplicationEntitlementAssociation"
+		Properties: {
+			ApplicationIdentifier: *string | fn.#Fn
+			EntitlementName:       *string | fn.#Fn
+			StackName:             *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ApplicationFleetAssociation: {
 		Type: "AWS::AppStream::ApplicationFleetAssociation"
 		Properties: {
@@ -82,6 +95,24 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				AccountName:     *string | fn.#Fn
 				AccountPassword: *string | fn.#Fn
 			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Entitlement: {
+		Type: "AWS::AppStream::Entitlement"
+		Properties: {
+			AppVisibility: *string | fn.#Fn
+			Attributes:    *[...{
+				Name:  *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			Description?: *string | fn.#Fn
+			Name:         *string | fn.#Fn
+			StackName:    *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

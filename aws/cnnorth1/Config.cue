@@ -91,8 +91,21 @@ import (
 	#OrganizationConfigRule: {
 		Type: "AWS::Config::OrganizationConfigRule"
 		Properties: {
-			ExcludedAccounts?:               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			OrganizationConfigRuleName:      *string | fn.#Fn
+			ExcludedAccounts?:                   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			OrganizationConfigRuleName:          *string | fn.#Fn
+			OrganizationCustomCodeRuleMetadata?: *{
+				CodeText:                            *string | fn.#Fn
+				DebugLogDeliveryAccounts?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				Description?:                        *string | fn.#Fn
+				InputParameters?:                    *string | fn.#Fn
+				MaximumExecutionFrequency?:          *string | fn.#Fn
+				OrganizationConfigRuleTriggerTypes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				ResourceIdScope?:                    *string | fn.#Fn
+				ResourceTypesScope?:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				Runtime:                             *string | fn.#Fn
+				TagKeyScope?:                        *string | fn.#Fn
+				TagValueScope?:                      *string | fn.#Fn
+			} | fn.#If
 			OrganizationCustomRuleMetadata?: *{
 				Description?:                       *string | fn.#Fn
 				InputParameters?:                   *string | fn.#Fn

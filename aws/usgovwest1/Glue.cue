@@ -357,7 +357,7 @@ import (
 				VersionNumber?: *(>=1 & <=100000) | fn.#Fn
 			} | fn.#If
 			Compatibility: *("NONE" | "DISABLED" | "BACKWARD" | "BACKWARD_ALL" | "FORWARD" | "FORWARD_ALL" | "FULL" | "FULL_ALL") | fn.#Fn
-			DataFormat:    *("AVRO" | "JSON") | fn.#Fn
+			DataFormat:    *("AVRO" | "JSON" | "PROTOBUF") | fn.#Fn
 			Description?:  *string | fn.#Fn
 			Name:          *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			Registry?:     *{

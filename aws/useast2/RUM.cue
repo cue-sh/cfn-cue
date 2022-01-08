@@ -21,8 +21,8 @@ import (
 				Telemetries?:       [...(*("errors" | "performance" | "http") | fn.#Fn)] | (*("errors" | "performance" | "http") | fn.#Fn)
 			} | fn.#If
 			CwLogEnabled?: *bool | fn.#Fn
-			Domain?:       *(strings.MinRunes(1) & strings.MaxRunes(253) & (=~#"^(localhost)|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(?![-.])([A-Za-z0-9-\.\-]{0,63})((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))\.(?![-])[A-Za-z-0-9]{1,63}((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))|^(\*\.)(?![-.])([A-Za-z0-9-\.\-]{0,63})((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))\.(?![-])[A-Za-z-0-9]{1,63}((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))"#)) | fn.#Fn
-			Name?:         *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[\.\-_/#A-Za-z0-9]+"#)) | fn.#Fn
+			Domain:        *(strings.MinRunes(1) & strings.MaxRunes(253) & (=~#"^(localhost)|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(?![-.])([A-Za-z0-9-\.\-]{0,63})((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))\.(?![-])[A-Za-z-0-9]{1,63}((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))|^(\*\.)(?![-.])([A-Za-z0-9-\.\-]{0,63})((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))\.(?![-])[A-Za-z-0-9]{1,63}((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))"#)) | fn.#Fn
+			Name:          *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[\.\-_/#A-Za-z0-9]+"#)) | fn.#Fn
 			Tags?:         *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

@@ -24,6 +24,7 @@ import (
 	#StateMachine: {
 		Type: "AWS::StepFunctions::StateMachine"
 		Properties: {
+			Definition?:           *{} | fn.#If
 			DefinitionS3Location?: *{
 				Bucket:   *string | fn.#Fn
 				Key:      *string | fn.#Fn

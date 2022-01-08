@@ -94,7 +94,19 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							DatabaseARN?: *string | fn.#Fn
 						} | fn.#If
 					} | fn.#If
-					CustomArtifactsConfiguration?:     *{} | fn.#If
+					CustomArtifactsConfiguration?: *[...{
+						ArtifactType:    *string | fn.#Fn
+						MavenReference?: *{
+							ArtifactId: *string | fn.#Fn
+							GroupId:    *string | fn.#Fn
+							Version:    *string | fn.#Fn
+						} | fn.#If
+						S3ContentLocation?: *{
+							BucketARN?:     *string | fn.#Fn
+							FileKey?:       *string | fn.#Fn
+							ObjectVersion?: *string | fn.#Fn
+						} | fn.#If
+					}] | fn.#If
 					DeployAsApplicationConfiguration?: *{
 						S3ContentLocation: *{
 							BasePath:  *string | fn.#Fn

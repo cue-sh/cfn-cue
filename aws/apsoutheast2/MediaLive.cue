@@ -368,6 +368,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Mode?:                       *string | fn.#Fn
 							OutputSelection?:            *string | fn.#Fn
 							ProgramDateTime?:            *string | fn.#Fn
+							ProgramDateTimeClock?:       *string | fn.#Fn
 							ProgramDateTimePeriod?:      *int | fn.#Fn
 							RedundantManifest?:          *string | fn.#Fn
 							SegmentLength?:              *int | fn.#Fn
@@ -872,6 +873,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						} | fn.#If
 						ServerValidation?: *string | fn.#Fn
 					} | fn.#If
+					Scte35Pid?:               *int | fn.#Fn
 					Smpte2038DataPreference?: *string | fn.#Fn
 					SourceEndBehavior?:       *string | fn.#Fn
 					VideoSelector?:           *{

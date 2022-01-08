@@ -123,12 +123,12 @@ import (
 					NoncurrentVersionExpirationInDays?: *int | fn.#Fn
 					NoncurrentVersionTransition?:       *{
 						NewerNoncurrentVersions?: *int | fn.#Fn
-						StorageClass:             *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
+						StorageClass:             *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "GLACIER_IR" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
 						TransitionInDays:         *int | fn.#Fn
 					} | fn.#If
 					NoncurrentVersionTransitions?: *[...{
 						NewerNoncurrentVersions?: *int | fn.#Fn
-						StorageClass:             *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
+						StorageClass:             *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "GLACIER_IR" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
 						TransitionInDays:         *int | fn.#Fn
 					}] | fn.#If
 					ObjectSizeGreaterThan?: *int | fn.#Fn
@@ -140,12 +140,12 @@ import (
 						Value: *string | fn.#Fn
 					}] | fn.#If
 					Transition?: *{
-						StorageClass:      *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
+						StorageClass:      *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "GLACIER_IR" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
 						TransitionDate?:   *(=~#"^([0-2]\d{3})-(0[0-9]|1[0-2])-([0-2]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-6]\d)((\.\d{3})?)Z$"#) | fn.#Fn
 						TransitionInDays?: *int | fn.#Fn
 					} | fn.#If
 					Transitions?: *[...{
-						StorageClass:      *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
+						StorageClass:      *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "GLACIER_IR" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
 						TransitionDate?:   *(=~#"^([0-2]\d{3})-(0[0-9]|1[0-2])-([0-2]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-6]\d)((\.\d{3})?)Z$"#) | fn.#Fn
 						TransitionInDays?: *int | fn.#Fn
 					}] | fn.#If
@@ -254,7 +254,7 @@ import (
 								Minutes: *int | fn.#Fn
 							} | fn.#If
 						} | fn.#If
-						StorageClass?: *("DEEP_ARCHIVE" | "GLACIER" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "REDUCED_REDUNDANCY" | "STANDARD" | "STANDARD_IA") | fn.#Fn
+						StorageClass?: *("DEEP_ARCHIVE" | "GLACIER" | "GLACIER_IR" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "REDUCED_REDUNDANCY" | "STANDARD" | "STANDARD_IA") | fn.#Fn
 					} | fn.#If
 					Filter?: *{
 						And?: *{

@@ -118,8 +118,12 @@ import (
 		Type: "AWS::Evidently::Project"
 		Properties: {
 			DataDelivery?: *{
-				[string]: _
-			} | fn.#Fn
+				LogGroup?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[-a-zA-Z0-9._/]+$"#)) | fn.#Fn
+				S3?:       *{
+					BucketName: *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[a-z0-9][-a-z0-9]*[a-z0-9]$"#)) | fn.#Fn
+					Prefix?:    *(strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^[-a-zA-Z0-9!_.*'()/]*$"#)) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 			Description?: *string | fn.#Fn
 			Name:         *(strings.MinRunes(1) & strings.MaxRunes(127) & (=~#"[-a-zA-Z0-9._]*"#)) | fn.#Fn
 			Tags?:        *[...{

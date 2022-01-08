@@ -76,16 +76,17 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						IncludeBody?:      *bool | fn.#Fn
 						LambdaFunctionARN: *string | fn.#Fn
 					}] | fn.#If
-					MaxTTL?:                *number | fn.#Fn
-					MinTTL?:                *number | fn.#Fn
-					OriginRequestPolicyId?: *string | fn.#Fn
-					PathPattern:            *string | fn.#Fn
-					RealtimeLogConfigArn?:  *string | fn.#Fn
-					SmoothStreaming?:       *bool | fn.#Fn
-					TargetOriginId:         *string | fn.#Fn
-					TrustedKeyGroups?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					TrustedSigners?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					ViewerProtocolPolicy:   *("allow-all" | "https-only" | "redirect-to-https") | fn.#Fn
+					MaxTTL?:                  *number | fn.#Fn
+					MinTTL?:                  *number | fn.#Fn
+					OriginRequestPolicyId?:   *string | fn.#Fn
+					PathPattern:              *string | fn.#Fn
+					RealtimeLogConfigArn?:    *string | fn.#Fn
+					ResponseHeadersPolicyId?: *string | fn.#Fn
+					SmoothStreaming?:         *bool | fn.#Fn
+					TargetOriginId:           *string | fn.#Fn
+					TrustedKeyGroups?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					TrustedSigners?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					ViewerProtocolPolicy:     *("allow-all" | "https-only" | "redirect-to-https") | fn.#Fn
 				}] | fn.#If
 				Comment?:              *string | fn.#Fn
 				CustomErrorResponses?: *[...{
@@ -126,15 +127,16 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						IncludeBody?:      *bool | fn.#Fn
 						LambdaFunctionARN: *string | fn.#Fn
 					}] | fn.#If
-					MaxTTL?:                *number | fn.#Fn
-					MinTTL?:                *number | fn.#Fn
-					OriginRequestPolicyId?: *string | fn.#Fn
-					RealtimeLogConfigArn?:  *string | fn.#Fn
-					SmoothStreaming?:       *bool | fn.#Fn
-					TargetOriginId:         *string | fn.#Fn
-					TrustedKeyGroups?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					TrustedSigners?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					ViewerProtocolPolicy:   *("allow-all" | "https-only" | "redirect-to-https") | fn.#Fn
+					MaxTTL?:                  *number | fn.#Fn
+					MinTTL?:                  *number | fn.#Fn
+					OriginRequestPolicyId?:   *string | fn.#Fn
+					RealtimeLogConfigArn?:    *string | fn.#Fn
+					ResponseHeadersPolicyId?: *string | fn.#Fn
+					SmoothStreaming?:         *bool | fn.#Fn
+					TargetOriginId:           *string | fn.#Fn
+					TrustedKeyGroups?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					TrustedSigners?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					ViewerProtocolPolicy:     *("allow-all" | "https-only" | "redirect-to-https") | fn.#Fn
 				} | fn.#If
 				DefaultRootObject?: *string | fn.#Fn
 				Enabled:            *bool | fn.#Fn
@@ -285,6 +287,71 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Name:         *string | fn.#Fn
 			SamplingRate: *(>=1 & <=100) | fn.#Fn
 		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ResponseHeadersPolicy: {
+		Type: "AWS::CloudFront::ResponseHeadersPolicy"
+		Properties: ResponseHeadersPolicyConfig: *{
+			Comment?:    *string | fn.#Fn
+			CorsConfig?: *{
+				AccessControlAllowCredentials: *bool | fn.#Fn
+				AccessControlAllowHeaders:     *{
+					Items: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				} | fn.#If
+				AccessControlAllowMethods: *{
+					Items: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				} | fn.#If
+				AccessControlAllowOrigins: *{
+					Items: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				} | fn.#If
+				AccessControlExposeHeaders?: *{
+					Items: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				} | fn.#If
+				AccessControlMaxAgeSec?: *int | fn.#Fn
+				OriginOverride:          *bool | fn.#Fn
+			} | fn.#If
+			CustomHeadersConfig?: *{
+				Items: *[...{
+					Header:   *string | fn.#Fn
+					Override: *bool | fn.#Fn
+					Value:    *string | fn.#Fn
+				}] | fn.#If
+			} | fn.#If
+			Name:                   *string | fn.#Fn
+			SecurityHeadersConfig?: *{
+				ContentSecurityPolicy?: *{
+					ContentSecurityPolicy: *string | fn.#Fn
+					Override:              *bool | fn.#Fn
+				} | fn.#If
+				ContentTypeOptions?: *{
+					Override: *bool | fn.#Fn
+				} | fn.#If
+				FrameOptions?: *{
+					FrameOption: *(=~#"^(DENY|SAMEORIGIN)$"#) | fn.#Fn
+					Override:    *bool | fn.#Fn
+				} | fn.#If
+				ReferrerPolicy?: *{
+					Override:       *bool | fn.#Fn
+					ReferrerPolicy: *(=~#"^(no-referrer|no-referrer-when-downgrade|origin|origin-when-cross-origin|same-origin|strict-origin|strict-origin-when-cross-origin|unsafe-url)$"#) | fn.#Fn
+				} | fn.#If
+				StrictTransportSecurity?: *{
+					AccessControlMaxAgeSec: *int | fn.#Fn
+					IncludeSubdomains?:     *bool | fn.#Fn
+					Override:               *bool | fn.#Fn
+					Preload?:               *bool | fn.#Fn
+				} | fn.#If
+				XSSProtection?: *{
+					ModeBlock?: *bool | fn.#Fn
+					Override:   *bool | fn.#Fn
+					Protection: *bool | fn.#Fn
+					ReportUri?: *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+		} | fn.#If
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"

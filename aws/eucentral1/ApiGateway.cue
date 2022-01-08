@@ -192,8 +192,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Types?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 			MutualTlsAuthentication?: *{
-				TruststoreUri?:     *string | fn.#Fn
-				TruststoreVersion?: *string | fn.#Fn
+				CertificateRevocationCheckType?: *string | fn.#Fn
+				CertificateRevocationSourceUri?: *string | fn.#Fn
+				TruststoreUri?:                  *string | fn.#Fn
+				TruststoreVersion?:              *string | fn.#Fn
 			} | fn.#If
 			OwnershipVerificationCertificateArn?: *string | fn.#Fn
 			RegionalCertificateArn?:              *string | fn.#Fn
@@ -481,7 +483,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			Description?: *string | fn.#Fn
 			Name:         *string | fn.#Fn
-			TargetArns:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TargetArns: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

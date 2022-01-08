@@ -5,9 +5,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 #LakeFormation: {
 	#DataLakeSettings: {
 		Type: "AWS::LakeFormation::DataLakeSettings"
-		Properties: Admins?: *[...{
-			DataLakePrincipalIdentifier?: *string | fn.#Fn
-		}] | fn.#If
+		Properties: {
+			Admins?: *[...{
+				DataLakePrincipalIdentifier?: *string | fn.#Fn
+			}] | fn.#If
+			TrustedResourceOwners?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"

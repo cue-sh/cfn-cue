@@ -95,9 +95,17 @@ import (
 					Block?: *{
 						[string]: _
 					} | fn.#Fn
+					Captcha?: *{
+						[string]: _
+					} | fn.#Fn
 					Count?: *{
 						[string]: _
 					} | fn.#Fn
+				} | fn.#If
+				CaptchaConfig?: *{
+					ImmunityTimeProperty?: *{
+						ImmunityTime: *(>=60 & <=259200) | fn.#Fn
+					} | fn.#If
 				} | fn.#If
 				Name:        *(=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 				Priority:    *int | fn.#Fn
@@ -200,6 +208,46 @@ import (
 					} | fn.#If
 					Limit:               *(>=100 & <=2000000000) | fn.#Fn
 					ScopeDownStatement?: *_#Statement | fn.#If
+				} | fn.#If
+				RegexMatchStatement?: *{
+					FieldToMatch: *{
+						AllQueryArguments?: *{
+							[string]: _
+						} | fn.#Fn
+						Body?: *{
+							[string]: _
+						} | fn.#Fn
+						JsonBody?: *{
+							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+							MatchPattern:             *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							} | fn.#If
+							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+						} | fn.#If
+						Method?: *{
+							[string]: _
+						} | fn.#Fn
+						QueryString?: *{
+							[string]: _
+						} | fn.#Fn
+						SingleHeader?: *{
+							[string]: _
+						} | fn.#Fn
+						SingleQueryArgument?: *{
+							[string]: _
+						} | fn.#Fn
+						UriPath?: *{
+							[string]: _
+						} | fn.#Fn
+					} | fn.#If
+					RegexString:         *(strings.MinRunes(1) & strings.MaxRunes(512)) | fn.#Fn
+					TextTransformations: *[...{
+						Priority: *int | fn.#Fn
+						Type:     *("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE" | "BASE64_DECODE" | "HEX_DECODE" | "MD5" | "REPLACE_COMMENTS" | "ESCAPE_SEQ_DECODE" | "SQL_HEX_DECODE" | "CSS_DECODE" | "JS_DECODE" | "NORMALIZE_PATH" | "NORMALIZE_PATH_WIN" | "REMOVE_NULLS" | "REPLACE_NULLS" | "BASE64_DECODE_EXT" | "URL_DECODE_UNI" | "UTF8_TO_UNICODE") | fn.#Fn
+					}] | fn.#If
 				} | fn.#If
 				RegexPatternSetReferenceStatement?: *{
 					Arn:          *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
@@ -371,6 +419,11 @@ import (
 	#WebACL: {
 		Type: "AWS::WAFv2::WebACL"
 		Properties: {
+			CaptchaConfig?: *{
+				ImmunityTimeProperty?: *{
+					ImmunityTime: *(>=60 & <=259200) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 			CustomResponseBodies?: *{
 				[string]: {
 					Content:     *string | fn.#Fn
@@ -389,7 +442,7 @@ import (
 				Block?: *{
 					CustomResponse?: *{
 						CustomResponseBodyKey?: *(=~#"^[\w\-]+$"#) | fn.#Fn
-						ResponseCode:           *(>=200 & <=600) | fn.#Fn
+						ResponseCode:           *(>=200 & <=599) | fn.#Fn
 						ResponseHeaders?:       *[...{
 							Name:  *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 							Value: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
@@ -412,8 +465,16 @@ import (
 					Block?: *{
 						CustomResponse?: *{
 							CustomResponseBodyKey?: *(=~#"^[\w\-]+$"#) | fn.#Fn
-							ResponseCode:           *(>=200 & <=600) | fn.#Fn
+							ResponseCode:           *(>=200 & <=599) | fn.#Fn
 							ResponseHeaders?:       *[...{
+								Name:  *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+								Value: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+							}] | fn.#If
+						} | fn.#If
+					} | fn.#If
+					Captcha?: *{
+						CustomRequestHandling?: *{
+							InsertHeaders: *[...{
 								Name:  *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 								Value: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 							}] | fn.#If
@@ -426,6 +487,11 @@ import (
 								Value: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 							}] | fn.#If
 						} | fn.#If
+					} | fn.#If
+				} | fn.#If
+				CaptchaConfig?: *{
+					ImmunityTimeProperty?: *{
+						ImmunityTime: *(>=60 & <=259200) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				Name:            *(=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
@@ -546,6 +612,46 @@ import (
 					} | fn.#If
 					Limit:               *(>=100 & <=2000000000) | fn.#Fn
 					ScopeDownStatement?: *_#Statement | fn.#If
+				} | fn.#If
+				RegexMatchStatement?: *{
+					FieldToMatch: *{
+						AllQueryArguments?: *{
+							[string]: _
+						} | fn.#Fn
+						Body?: *{
+							[string]: _
+						} | fn.#Fn
+						JsonBody?: *{
+							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
+							MatchPattern:             *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							} | fn.#If
+							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+						} | fn.#If
+						Method?: *{
+							[string]: _
+						} | fn.#Fn
+						QueryString?: *{
+							[string]: _
+						} | fn.#Fn
+						SingleHeader?: *{
+							[string]: _
+						} | fn.#Fn
+						SingleQueryArgument?: *{
+							[string]: _
+						} | fn.#Fn
+						UriPath?: *{
+							[string]: _
+						} | fn.#Fn
+					} | fn.#If
+					RegexString:         *(strings.MinRunes(1) & strings.MaxRunes(512)) | fn.#Fn
+					TextTransformations: *[...{
+						Priority: *int | fn.#Fn
+						Type:     *("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE" | "BASE64_DECODE" | "HEX_DECODE" | "MD5" | "REPLACE_COMMENTS" | "ESCAPE_SEQ_DECODE" | "SQL_HEX_DECODE" | "CSS_DECODE" | "JS_DECODE" | "NORMALIZE_PATH" | "NORMALIZE_PATH_WIN" | "REMOVE_NULLS" | "REPLACE_NULLS" | "BASE64_DECODE_EXT" | "URL_DECODE_UNI" | "UTF8_TO_UNICODE") | fn.#Fn
+					}] | fn.#If
 				} | fn.#If
 				RegexPatternSetReferenceStatement?: *{
 					Arn:          *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn

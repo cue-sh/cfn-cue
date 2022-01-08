@@ -196,10 +196,13 @@ import (
 			AbortConfig?: *{
 				[string]: _
 			} | fn.#Fn
-			Description:                 *string | fn.#Fn
-			Document?:                   *string | fn.#Fn
-			DocumentSource?:             *(strings.MinRunes(1) & strings.MaxRunes(1350)) | fn.#Fn
-			JobArn?:                     *string | fn.#Fn
+			Description:               *string | fn.#Fn
+			Document?:                 *string | fn.#Fn
+			DocumentSource?:           *(strings.MinRunes(1) & strings.MaxRunes(1350)) | fn.#Fn
+			JobArn?:                   *string | fn.#Fn
+			JobExecutionsRetryConfig?: *{
+				[string]: _
+			} | fn.#Fn
 			JobExecutionsRolloutConfig?: *{
 				[string]: _
 			} | fn.#Fn

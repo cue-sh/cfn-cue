@@ -17,7 +17,7 @@ import (
 				KeyId:          *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 			} | fn.#If
 			StreamModeDetails?: *{
-				StreamMode: *string | fn.#Fn
+				StreamMode: *("ON_DEMAND" | "PROVISIONED") | fn.#Fn
 			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn

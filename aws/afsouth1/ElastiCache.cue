@@ -181,4 +181,33 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#User: {
+		Type: "AWS::ElastiCache::User"
+		Properties: {
+			AccessString?:       *string | fn.#Fn
+			Engine:              *("redis") | fn.#Fn
+			NoPasswordRequired?: *bool | fn.#Fn
+			Passwords?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			UserId:              *(=~#"[a-z][a-z0-9\\-]*"#) | fn.#Fn
+			UserName:            *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#UserGroup: {
+		Type: "AWS::ElastiCache::UserGroup"
+		Properties: {
+			Engine:      *("redis") | fn.#Fn
+			UserGroupId: *(=~#"[a-z][a-z0-9\\-]*"#) | fn.#Fn
+			UserIds?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

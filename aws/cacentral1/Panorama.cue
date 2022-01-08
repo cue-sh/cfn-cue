@@ -21,7 +21,7 @@ import (
 			} | fn.#If
 			Name?:           *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z0-9\-\_]+$"#)) | fn.#Fn
 			RuntimeRoleArn?: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^arn:[a-z0-9][-.a-z0-9]{0,62}:iam::[0-9]{12}:role/.+$"#)) | fn.#Fn
-			StatusFilter?:   *("DEPLOYMENT_SUCCEEDED" | "DEPLOYMENT_FAILED" | "REMOVAL_SUCCEEDED" | "REMOVAL_FAILED" | "PROCESSING_DEPLOYMENT" | "PROCESSING_REMOVAL") | fn.#Fn
+			StatusFilter?:   *("DEPLOYMENT_SUCCEEDED" | "DEPLOYMENT_ERROR" | "REMOVAL_SUCCEEDED" | "REMOVAL_FAILED" | "PROCESSING_DEPLOYMENT" | "PROCESSING_REMOVAL") | fn.#Fn
 			Tags?:           *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

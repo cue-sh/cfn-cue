@@ -9,14 +9,14 @@ import (
 	#AccessPoint: {
 		Type: "AWS::S3ObjectLambda::AccessPoint"
 		Properties: {
-			Name?:                      *(strings.MinRunes(3) & strings.MaxRunes(45) & (=~#"^[a-z0-9]([a-z0-9\-]*[a-z0-9])?$"#)) | fn.#Fn
-			ObjectLambdaConfiguration?: *{
+			Name?:                     *(strings.MinRunes(3) & strings.MaxRunes(45) & (=~#"^[a-z0-9]([a-z0-9\-]*[a-z0-9])?$"#)) | fn.#Fn
+			ObjectLambdaConfiguration: *{
 				AllowedFeatures?:             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				CloudWatchMetricsEnabled?:    *bool | fn.#Fn
 				SupportingAccessPoint:        *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 				TransformationConfigurations: *[...{
-					Actions?:               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					ContentTransformation?: *{
+					Actions:               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					ContentTransformation: *{
 						[string]: _
 					} | fn.#Fn
 				}] | fn.#If

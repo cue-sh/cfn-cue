@@ -1,6 +1,9 @@
 package mesouth1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #AppSync: {
 	#ApiCache: {
@@ -83,6 +86,31 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			ServiceRoleArn?: *string | fn.#Fn
 			Type:            *("AMAZON_DYNAMODB" | "AMAZON_ELASTICSEARCH" | "AMAZON_OPENSEARCH_SERVICE" | "AWS_LAMBDA" | "HTTP" | "NONE" | "RELATIONAL_DATABASE") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DomainName: {
+		Type: "AWS::AppSync::DomainName"
+		Properties: {
+			CertificateArn: *(strings.MinRunes(3) & strings.MaxRunes(2048) & (=~#"^arn:[a-z-]*:acm:[a-z0-9-]*:\d{12}:certificate/[0-9A-Za-z_/-]*$"#)) | fn.#Fn
+			Description?:   *string | fn.#Fn
+			DomainName:     *(strings.MinRunes(1) & strings.MaxRunes(253) & (=~#"^(\*[a-z\d-]*\.)?([a-z\d-]+\.)+[a-z\d-]+$"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DomainNameApiAssociation: {
+		Type: "AWS::AppSync::DomainNameApiAssociation"
+		Properties: {
+			ApiId:      *string | fn.#Fn
+			DomainName: *(strings.MinRunes(1) & strings.MaxRunes(253) & (=~#"^(\*[a-z\d-]*\.)?([a-z\d-]+\.)+[a-z\d-]+$"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

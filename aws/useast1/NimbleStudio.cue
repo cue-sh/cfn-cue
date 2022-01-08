@@ -14,10 +14,18 @@ import (
 			LaunchProfileProtocolVersions: [...(*(=~#"^2021\-03\-31$"#) | fn.#Fn)] | (*(=~#"^2021\-03\-31$"#) | fn.#Fn)
 			Name:                          *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 			StreamConfiguration:           *{
-				ClipboardMode:              *("ENABLED" | "DISABLED") | fn.#Fn
-				Ec2InstanceTypes:           [...(*("g4dn.xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge") | fn.#Fn)] | (*("g4dn.xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge") | fn.#Fn)
-				MaxSessionLengthInMinutes?: *(>=1 & <=690) | fn.#Fn
-				StreamingImageIds:          [...(*(=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn)] | (*(=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn)
+				ClipboardMode:                     *("ENABLED" | "DISABLED") | fn.#Fn
+				Ec2InstanceTypes:                  [...(*("g4dn.xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge") | fn.#Fn)] | (*("g4dn.xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge") | fn.#Fn)
+				MaxSessionLengthInMinutes?:        *(>=1 & <=43200) | fn.#Fn
+				MaxStoppedSessionLengthInMinutes?: *number | fn.#Fn
+				SessionStorage?:                   *{
+					Mode?: [...(*("UPLOAD") | fn.#Fn)] | (*("UPLOAD") | fn.#Fn)
+					Root?: *{
+						Linux?:   *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^(/?|(\$HOME)?(/[^\$/\n\s\\]+)*)$"#)) | fn.#Fn
+						Windows?: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^((\%HOMEPATH\%)|[a-zA-Z]:)[\\/](?:[a-zA-Z0-9_-]+[\\/])*[a-zA-Z0-9_-]+$"#)) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				StreamingImageIds: [...(*(=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn)] | (*(=~#"^[a-zA-Z0-9-_]*$"#) | fn.#Fn)
 			} | fn.#If
 			StudioComponentIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			StudioId:           *string | fn.#Fn

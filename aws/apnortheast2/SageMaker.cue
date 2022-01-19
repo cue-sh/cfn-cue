@@ -798,6 +798,9 @@ import (
 	#Pipeline: {
 		Type: "AWS::SageMaker::Pipeline"
 		Properties: {
+			ParallelismConfiguration?: *{
+				[string]: _
+			} | fn.#Fn
 			PipelineDefinition: *{
 				[string]: _
 			} | fn.#Fn

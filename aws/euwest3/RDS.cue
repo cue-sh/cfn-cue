@@ -92,7 +92,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			CharacterSetName?:                   *string | fn.#Fn
 			CopyTagsToSnapshot?:                 *bool | fn.#Fn
 			DBClusterIdentifier?:                *string | fn.#Fn
-			DBInstanceClass:                     *("db.m4.10xlarge" | "db.m5.12xlarge" | "db.m5.16xlarge" | "db.m5.24xlarge" | "db.m5.2xlarge" | "db.m5.4xlarge" | "db.m5.8xlarge" | "db.m5.large" | "db.m5.xlarge" | "db.m5d.12xlarge" | "db.m5d.16xlarge" | "db.m5d.24xlarge" | "db.m5d.2xlarge" | "db.m5d.4xlarge" | "db.m5d.8xlarge" | "db.m5d.large" | "db.m5d.xlarge" | "db.r4.16xlarge" | "db.r4.2xlarge" | "db.r4.4xlarge" | "db.r4.8xlarge" | "db.r4.large" | "db.r4.xlarge" | "db.r5.12xlarge" | "db.r5.12xlarge.tpc2.mem2x" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.2xlarge.tpc1.mem2x" | "db.r5.2xlarge.tpc2.mem4x" | "db.r5.2xlarge.tpc2.mem8x" | "db.r5.4xlarge" | "db.r5.4xlarge.tpc2.mem2x" | "db.r5.4xlarge.tpc2.mem3x" | "db.r5.4xlarge.tpc2.mem4x" | "db.r5.6xlarge.tpc2.mem4x" | "db.r5.8xlarge" | "db.r5.8xlarge.tpc2.mem3x" | "db.r5.large" | "db.r5.large.tpc1.mem2x" | "db.r5.xlarge" | "db.r5.xlarge.tpc2.mem2x" | "db.r5.xlarge.tpc2.mem4x" | "db.r5d.12xlarge" | "db.r5d.16xlarge" | "db.r5d.24xlarge" | "db.r5d.2xlarge" | "db.r5d.4xlarge" | "db.r5d.8xlarge" | "db.r5d.large" | "db.r5d.xlarge" | "db.r6g.12xlarge" | "db.r6g.16xlarge" | "db.r6g.2xlarge" | "db.r6g.4xlarge" | "db.r6g.8xlarge" | "db.r6g.large" | "db.r6g.xlarge" | "db.t2.2xlarge" | "db.t2.large" | "db.t2.medium" | "db.t2.micro" | "db.t2.small" | "db.t2.xlarge" | "db.t3.2xlarge" | "db.t3.large" | "db.t3.medium" | "db.t3.micro" | "db.t3.small" | "db.t3.xlarge" | "db.x1.16xlarge" | "db.x1.32xlarge") | fn.#Fn
+			DBInstanceClass:                     *("db.m4.10xlarge" | "db.m5.12xlarge" | "db.m5.16xlarge" | "db.m5.24xlarge" | "db.m5.2xlarge" | "db.m5.4xlarge" | "db.m5.8xlarge" | "db.m5.large" | "db.m5.xlarge" | "db.m5d.12xlarge" | "db.m5d.16xlarge" | "db.m5d.24xlarge" | "db.m5d.2xlarge" | "db.m5d.4xlarge" | "db.m5d.8xlarge" | "db.m5d.large" | "db.m5d.xlarge" | "db.m6g.12xlarge" | "db.m6g.16xlarge" | "db.m6g.2xlarge" | "db.m6g.4xlarge" | "db.m6g.8xlarge" | "db.m6g.large" | "db.m6g.xlarge" | "db.r4.16xlarge" | "db.r4.2xlarge" | "db.r4.4xlarge" | "db.r4.8xlarge" | "db.r4.large" | "db.r4.xlarge" | "db.r5.12xlarge" | "db.r5.12xlarge.tpc2.mem2x" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.2xlarge.tpc1.mem2x" | "db.r5.2xlarge.tpc2.mem4x" | "db.r5.2xlarge.tpc2.mem8x" | "db.r5.4xlarge" | "db.r5.4xlarge.tpc2.mem2x" | "db.r5.4xlarge.tpc2.mem3x" | "db.r5.4xlarge.tpc2.mem4x" | "db.r5.6xlarge.tpc2.mem4x" | "db.r5.8xlarge" | "db.r5.8xlarge.tpc2.mem3x" | "db.r5.large" | "db.r5.large.tpc1.mem2x" | "db.r5.xlarge" | "db.r5.xlarge.tpc2.mem2x" | "db.r5.xlarge.tpc2.mem4x" | "db.r5d.12xlarge" | "db.r5d.16xlarge" | "db.r5d.24xlarge" | "db.r5d.2xlarge" | "db.r5d.4xlarge" | "db.r5d.8xlarge" | "db.r5d.large" | "db.r5d.xlarge" | "db.r6g.12xlarge" | "db.r6g.16xlarge" | "db.r6g.2xlarge" | "db.r6g.4xlarge" | "db.r6g.8xlarge" | "db.r6g.large" | "db.r6g.xlarge" | "db.t2.2xlarge" | "db.t2.large" | "db.t2.medium" | "db.t2.micro" | "db.t2.small" | "db.t2.xlarge" | "db.t3.2xlarge" | "db.t3.large" | "db.t3.medium" | "db.t3.micro" | "db.t3.small" | "db.t3.xlarge" | "db.x1.16xlarge" | "db.x1.32xlarge") | fn.#Fn
 			DBInstanceIdentifier?:               *string | fn.#Fn
 			DBName?:                             *string | fn.#Fn
 			DBParameterGroupName?:               *string | fn.#Fn
@@ -159,6 +159,75 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DBProxy: {
+		Type: "AWS::RDS::DBProxy"
+		Properties: {
+			Auth: *[...{
+				AuthScheme?:  *("SECRETS") | fn.#Fn
+				Description?: *string | fn.#Fn
+				IAMAuth?:     *("DISABLED" | "REQUIRED") | fn.#Fn
+				SecretArn?:   *string | fn.#Fn
+				UserName?:    *string | fn.#Fn
+			}] | fn.#If
+			DBProxyName:        *(=~#"[0-z]*"#) | fn.#Fn
+			DebugLogging?:      *bool | fn.#Fn
+			EngineFamily:       *("MYSQL" | "POSTGRESQL") | fn.#Fn
+			IdleClientTimeout?: *int | fn.#Fn
+			RequireTLS?:        *bool | fn.#Fn
+			RoleArn:            *string | fn.#Fn
+			Tags?:              *[...{
+				Key?:   *(=~#"(\w|\d|\s|\\|-|\.:=+-)*"#) | fn.#Fn
+				Value?: *(=~#"(\w|\d|\s|\\|-|\.:=+-)*"#) | fn.#Fn
+			}] | fn.#If
+			VpcSecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			VpcSubnetIds:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DBProxyEndpoint: {
+		Type: "AWS::RDS::DBProxyEndpoint"
+		Properties: {
+			DBProxyEndpointName: *(=~#"[0-z]*"#) | fn.#Fn
+			DBProxyName:         *(=~#"[0-z]*"#) | fn.#Fn
+			Tags?:               *[...{
+				Key?:   *(=~#"(\w|\d|\s|\\|-|\.:=+-)*"#) | fn.#Fn
+				Value?: *(=~#"(\w|\d|\s|\\|-|\.:=+-)*"#) | fn.#Fn
+			}] | fn.#If
+			TargetRole?:          *("READ_WRITE" | "READ_ONLY") | fn.#Fn
+			VpcSecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			VpcSubnetIds:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DBProxyTargetGroup: {
+		Type: "AWS::RDS::DBProxyTargetGroup"
+		Properties: {
+			ConnectionPoolConfigurationInfo?: *{
+				ConnectionBorrowTimeout?:   *int | fn.#Fn
+				InitQuery?:                 *string | fn.#Fn
+				MaxConnectionsPercent?:     *int | fn.#Fn
+				MaxIdleConnectionsPercent?: *int | fn.#Fn
+				SessionPinningFilters?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			DBClusterIdentifiers?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			DBInstanceIdentifiers?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			DBProxyName:            *(=~#"[A-z][0-z]*"#) | fn.#Fn
+			TargetGroupName:        *("default") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

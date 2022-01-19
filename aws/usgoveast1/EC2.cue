@@ -42,6 +42,10 @@ import (
 				Enabled:            *bool | fn.#Fn
 				LambdaFunctionArn?: *string | fn.#Fn
 			} | fn.#If
+			ClientLoginBannerOptions?: *{
+				BannerText?: *string | fn.#Fn
+				Enabled:     *bool | fn.#Fn
+			} | fn.#If
 			ConnectionLogOptions: *{
 				CloudwatchLogGroup?:  *string | fn.#Fn
 				CloudwatchLogStream?: *string | fn.#Fn
@@ -52,6 +56,7 @@ import (
 			SecurityGroupIds?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			SelfServicePortal?:   *string | fn.#Fn
 			ServerCertificateArn: *string | fn.#Fn
+			SessionTimeoutHours?: *int | fn.#Fn
 			SplitTunnel?:         *bool | fn.#Fn
 			TagSpecifications?:   *[...{
 				ResourceType: *string | fn.#Fn

@@ -102,10 +102,17 @@ import (
 					Exclusions?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					Path?:           *string | fn.#Fn
 				}] | fn.#If
-				S3Targets?: *[...{
+				MongoDBTargets?: *[...{
 					ConnectionName?: *string | fn.#Fn
-					Exclusions?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					Path?:           *string | fn.#Fn
+				}] | fn.#If
+				S3Targets?: *[...{
+					ConnectionName?:   *string | fn.#Fn
+					DlqEventQueueArn?: *string | fn.#Fn
+					EventQueueArn?:    *string | fn.#Fn
+					Exclusions?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Path?:             *string | fn.#Fn
+					SampleSize?:       *int | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
 		}

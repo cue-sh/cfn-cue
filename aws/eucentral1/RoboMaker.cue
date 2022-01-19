@@ -84,12 +84,12 @@ import (
 				Version: *(=~#"1.x"#) | fn.#Fn
 			} | fn.#If
 			RobotSoftwareSuite: *{
-				Name:    *("ROS" | "ROS2") | fn.#Fn
-				Version: *("Kinetic" | "Melodic" | "Dashing" | "Foxy") | fn.#Fn
+				Name:     *("ROS" | "ROS2" | "General") | fn.#Fn
+				Version?: *("Kinetic" | "Melodic" | "Dashing" | "Foxy") | fn.#Fn
 			} | fn.#If
 			SimulationSoftwareSuite: *{
-				Name:    *("Gazebo" | "RosbagPlay") | fn.#Fn
-				Version: *("7" | "9" | "11" | "Kinetic" | "Melodic" | "Dashing" | "Foxy") | fn.#Fn
+				Name:     *("Gazebo" | "RosbagPlay" | "SimulationRuntime") | fn.#Fn
+				Version?: *("7" | "9" | "11" | "Kinetic" | "Melodic" | "Dashing" | "Foxy") | fn.#Fn
 			} | fn.#If
 			Sources?: *[...{
 				Architecture: *("X86_64" | "ARM64" | "ARMHF") | fn.#Fn

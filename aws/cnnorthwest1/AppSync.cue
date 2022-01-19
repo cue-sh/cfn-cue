@@ -97,6 +97,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			DataSourceName:                     *string | fn.#Fn
 			Description?:                       *string | fn.#Fn
 			FunctionVersion:                    *string | fn.#Fn
+			MaxBatchSize?:                      *number | fn.#Fn
 			Name:                               *string | fn.#Fn
 			RequestMappingTemplate?:            *string | fn.#Fn
 			RequestMappingTemplateS3Location?:  *string | fn.#Fn
@@ -193,11 +194,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ApiId:          *string | fn.#Fn
 			CachingConfig?: *{
 				CachingKeys?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				Ttl?:         *number | fn.#Fn
+				Ttl:          *number | fn.#Fn
 			} | fn.#If
 			DataSourceName?: *string | fn.#Fn
 			FieldName:       *string | fn.#Fn
 			Kind?:           *("PIPELINE" | "UNIT") | fn.#Fn
+			MaxBatchSize?:   *number | fn.#Fn
 			PipelineConfig?: *{
 				Functions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If

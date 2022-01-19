@@ -166,6 +166,75 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#DBProxy: {
+		Type: "AWS::RDS::DBProxy"
+		Properties: {
+			Auth: *[...{
+				AuthScheme?:  *("SECRETS") | fn.#Fn
+				Description?: *string | fn.#Fn
+				IAMAuth?:     *("DISABLED" | "REQUIRED") | fn.#Fn
+				SecretArn?:   *string | fn.#Fn
+				UserName?:    *string | fn.#Fn
+			}] | fn.#If
+			DBProxyName:        *(=~#"[0-z]*"#) | fn.#Fn
+			DebugLogging?:      *bool | fn.#Fn
+			EngineFamily:       *("MYSQL" | "POSTGRESQL") | fn.#Fn
+			IdleClientTimeout?: *int | fn.#Fn
+			RequireTLS?:        *bool | fn.#Fn
+			RoleArn:            *string | fn.#Fn
+			Tags?:              *[...{
+				Key?:   *(=~#"(\w|\d|\s|\\|-|\.:=+-)*"#) | fn.#Fn
+				Value?: *(=~#"(\w|\d|\s|\\|-|\.:=+-)*"#) | fn.#Fn
+			}] | fn.#If
+			VpcSecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			VpcSubnetIds:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DBProxyEndpoint: {
+		Type: "AWS::RDS::DBProxyEndpoint"
+		Properties: {
+			DBProxyEndpointName: *(=~#"[0-z]*"#) | fn.#Fn
+			DBProxyName:         *(=~#"[0-z]*"#) | fn.#Fn
+			Tags?:               *[...{
+				Key?:   *(=~#"(\w|\d|\s|\\|-|\.:=+-)*"#) | fn.#Fn
+				Value?: *(=~#"(\w|\d|\s|\\|-|\.:=+-)*"#) | fn.#Fn
+			}] | fn.#If
+			TargetRole?:          *("READ_WRITE" | "READ_ONLY") | fn.#Fn
+			VpcSecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			VpcSubnetIds:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DBProxyTargetGroup: {
+		Type: "AWS::RDS::DBProxyTargetGroup"
+		Properties: {
+			ConnectionPoolConfigurationInfo?: *{
+				ConnectionBorrowTimeout?:   *int | fn.#Fn
+				InitQuery?:                 *string | fn.#Fn
+				MaxConnectionsPercent?:     *int | fn.#Fn
+				MaxIdleConnectionsPercent?: *int | fn.#Fn
+				SessionPinningFilters?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			DBClusterIdentifiers?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			DBInstanceIdentifiers?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			DBProxyName:            *(=~#"[A-z][0-z]*"#) | fn.#Fn
+			TargetGroupName:        *("default") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#DBSecurityGroup: {
 		Type: "AWS::RDS::DBSecurityGroup"
 		Properties: {

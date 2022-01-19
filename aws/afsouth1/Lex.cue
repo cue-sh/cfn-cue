@@ -691,7 +691,7 @@ import (
 		Type: "AWS::Lex::BotAlias"
 		Properties: {
 			BotAliasLocaleSettings?: *[...{
-				BotAliasLocaleSetting?: *{
+				BotAliasLocaleSetting: *{
 					CodeHookSpecification?: *{
 						LambdaCodeHook: *{
 							CodeHookInterfaceVersion: *(strings.MinRunes(1) & strings.MaxRunes(5)) | fn.#Fn
@@ -700,7 +700,7 @@ import (
 					} | fn.#If
 					Enabled: *bool | fn.#Fn
 				} | fn.#If
-				LocaleId?: *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				LocaleId: *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 			}] | fn.#If
 			BotAliasName:  *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^([0-9a-zA-Z][_-]?)+$"#)) | fn.#Fn
 			BotAliasTags?: *[...{

@@ -78,8 +78,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			BackupVaultTags?: *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
-			EncryptionKeyArn?: *string | fn.#Fn
-			Notifications?:    *{
+			EncryptionKeyArn?:  *string | fn.#Fn
+			LockConfiguration?: *{
+				ChangeableForDays?: *number | fn.#Fn
+				MaxRetentionDays?:  *number | fn.#Fn
+				MinRetentionDays:   *number | fn.#Fn
+			} | fn.#If
+			Notifications?: *{
 				BackupVaultEvents: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				SNSTopicArn:       *string | fn.#Fn
 			} | fn.#If

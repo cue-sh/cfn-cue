@@ -192,8 +192,11 @@ import (
 			}] | fn.#If
 			GatewayName:     *string | fn.#Fn
 			GatewayPlatform: *{
-				Greengrass: *{
+				Greengrass?: *{
 					GroupArn: *string | fn.#Fn
+				} | fn.#If
+				GreengrassV2?: *{
+					CoreDeviceThingName: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			Tags?: *[...{

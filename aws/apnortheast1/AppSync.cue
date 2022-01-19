@@ -125,6 +125,7 @@ import (
 			DataSourceName:                     *string | fn.#Fn
 			Description?:                       *string | fn.#Fn
 			FunctionVersion:                    *string | fn.#Fn
+			MaxBatchSize?:                      *int | fn.#Fn
 			Name:                               *string | fn.#Fn
 			RequestMappingTemplate?:            *string | fn.#Fn
 			RequestMappingTemplateS3Location?:  *string | fn.#Fn
@@ -221,11 +222,12 @@ import (
 			ApiId:          *string | fn.#Fn
 			CachingConfig?: *{
 				CachingKeys?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				Ttl?:         *number | fn.#Fn
+				Ttl:          *number | fn.#Fn
 			} | fn.#If
 			DataSourceName?: *string | fn.#Fn
 			FieldName:       *string | fn.#Fn
 			Kind?:           *("PIPELINE" | "UNIT") | fn.#Fn
+			MaxBatchSize?:   *int | fn.#Fn
 			PipelineConfig?: *{
 				Functions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If

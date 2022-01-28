@@ -38,7 +38,22 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			EndpointType:               *string | fn.#Fn
 			EngineName:                 *string | fn.#Fn
 			ExtraConnectionAttributes?: *string | fn.#Fn
-			IbmDb2Settings?:            *{
+			GcpMySQLSettings?:          *{
+				AfterConnectScript?:            *string | fn.#Fn
+				CleanSourceMetadataOnMismatch?: *bool | fn.#Fn
+				DatabaseName?:                  *string | fn.#Fn
+				EventsPollInterval?:            *int | fn.#Fn
+				MaxFileSize?:                   *int | fn.#Fn
+				ParallelLoadThreads?:           *int | fn.#Fn
+				Password?:                      *string | fn.#Fn
+				Port?:                          *int | fn.#Fn
+				SecretsManagerAccessRoleArn?:   *string | fn.#Fn
+				SecretsManagerSecretId?:        *string | fn.#Fn
+				ServerName?:                    *string | fn.#Fn
+				ServerTimezone?:                *string | fn.#Fn
+				Username?:                      *string | fn.#Fn
+			} | fn.#If
+			IbmDb2Settings?: *{
 				SecretsManagerAccessRoleArn?: *string | fn.#Fn
 				SecretsManagerSecretId?:      *string | fn.#Fn
 			} | fn.#If

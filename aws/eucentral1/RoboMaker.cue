@@ -40,20 +40,21 @@ import (
 	#RobotApplication: {
 		Type: "AWS::RoboMaker::RobotApplication"
 		Properties: {
-			CurrentRevisionId?: *string | fn.#Fn
-			Name?:              *string | fn.#Fn
+			CurrentRevisionId?: *(strings.MinRunes(1) & strings.MaxRunes(40)) | fn.#Fn
+			Environment?:       *string | fn.#Fn
+			Name?:              *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			RobotSoftwareSuite: *{
-				Name:    *string | fn.#Fn
-				Version: *string | fn.#Fn
+				Name:     *("ROS" | "ROS2" | "General") | fn.#Fn
+				Version?: *("Kinetic" | "Melodic" | "Dashing") | fn.#Fn
 			} | fn.#If
-			Sources: *[...{
-				Architecture: *string | fn.#Fn
+			Sources?: *[...{
+				Architecture: *(("X86_64" | "ARM64" | "ARMHF") & (strings.MinRunes(1) & strings.MaxRunes(255))) | fn.#Fn
 				S3Bucket:     *string | fn.#Fn
 				S3Key:        *string | fn.#Fn
 			}] | fn.#If
 			Tags?: *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

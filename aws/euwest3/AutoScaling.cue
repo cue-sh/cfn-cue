@@ -292,7 +292,10 @@ import (
 	#WarmPool: {
 		Type: "AWS::AutoScaling::WarmPool"
 		Properties: {
-			AutoScalingGroupName:      *string | fn.#Fn
+			AutoScalingGroupName: *string | fn.#Fn
+			InstanceReusePolicy?: *{
+				ReuseOnScaleIn?: *bool | fn.#Fn
+			} | fn.#If
 			MaxGroupPreparedCapacity?: *int | fn.#Fn
 			MinSize?:                  *int | fn.#Fn
 			PoolState?:                *string | fn.#Fn

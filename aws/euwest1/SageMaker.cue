@@ -151,8 +151,10 @@ import (
 		Type: "AWS::SageMaker::Device"
 		Properties: {
 			Device?: *{
-				[string]: _
-			} | fn.#Fn
+				Description?:  *(strings.MinRunes(1) & strings.MaxRunes(40) & (=~#"[\S\s]+"#)) | fn.#Fn
+				DeviceName:    *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#)) | fn.#Fn
+				IotThingName?: *(=~#"[a-zA-Z0-9:_-]+"#) | fn.#Fn
+			} | fn.#If
 			DeviceFleetName: *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*_*[a-zA-Z0-9])*$"#)) | fn.#Fn
 			Tags?:           *[...{
 				Key:   *string | fn.#Fn

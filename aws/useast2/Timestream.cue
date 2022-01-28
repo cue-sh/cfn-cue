@@ -90,11 +90,14 @@ import (
 	#Table: {
 		Type: "AWS::Timestream::Table"
 		Properties: {
-			DatabaseName:         *(=~#"^[a-zA-Z0-9_.-]{3,64}$"#) | fn.#Fn
+			DatabaseName:                  *(=~#"^[a-zA-Z0-9_.-]{3,256}$"#) | fn.#Fn
+			MagneticStoreWriteProperties?: *{
+				[string]: _
+			} | fn.#Fn
 			RetentionProperties?: *{
 				[string]: _
 			} | fn.#Fn
-			TableName?: *(=~#"^[a-zA-Z0-9_.-]{3,64}$"#) | fn.#Fn
+			TableName?: *(=~#"^[a-zA-Z0-9_.-]{3,256}$"#) | fn.#Fn
 			Tags?:      *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

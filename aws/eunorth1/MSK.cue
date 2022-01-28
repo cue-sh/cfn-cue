@@ -18,6 +18,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SecurityGroups?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				StorageInfo?:    *{
 					EBSStorageInfo?: *{
+						ProvisionedThroughput?: *{
+							Enabled?:          *bool | fn.#Fn
+							VolumeThroughput?: *int | fn.#Fn
+						} | fn.#If
 						VolumeSize?: *int | fn.#Fn
 					} | fn.#If
 				} | fn.#If

@@ -50,6 +50,72 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Certificate: {
+		Type: "AWS::Lightsail::Certificate"
+		Properties: {
+			CertificateName:          *string | fn.#Fn
+			DomainName:               *string | fn.#Fn
+			SubjectAlternativeNames?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:                    *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Container: {
+		Type: "AWS::Lightsail::Container"
+		Properties: {
+			ContainerServiceDeployment?: *{
+				Containers?: *[...{
+					Command?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					ContainerName?: *string | fn.#Fn
+					Environment?:   *[...{
+						Value?:    *string | fn.#Fn
+						Variable?: *string | fn.#Fn
+					}] | fn.#If
+					Image?: *string | fn.#Fn
+					Ports?: *[...{
+						Port?:     *string | fn.#Fn
+						Protocol?: *string | fn.#Fn
+					}] | fn.#If
+				}] | fn.#If
+				PublicEndpoint?: *{
+					ContainerName?:     *string | fn.#Fn
+					ContainerPort?:     *int | fn.#Fn
+					HealthCheckConfig?: *{
+						HealthyThreshold?:   *int | fn.#Fn
+						IntervalSeconds?:    *int | fn.#Fn
+						Path?:               *string | fn.#Fn
+						SuccessCodes?:       *string | fn.#Fn
+						TimeoutSeconds?:     *int | fn.#Fn
+						UnhealthyThreshold?: *int | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+			IsDisabled?:        *bool | fn.#Fn
+			Power:              *string | fn.#Fn
+			PublicDomainNames?: *[...{
+				CertificateName?: *string | fn.#Fn
+				DomainNames?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			}] | fn.#If
+			Scale:       *(>=1 & <=20) | fn.#Fn
+			ServiceName: *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-z0-9]{1,2}|[a-z0-9][a-z0-9-]+[a-z0-9]$"#)) | fn.#Fn
+			Tags?:       *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Database: {
 		Type: "AWS::Lightsail::Database"
 		Properties: {
@@ -101,6 +167,56 @@ import (
 			DiskName:          *(strings.MinRunes(1) & strings.MaxRunes(254) & (=~#"^[a-zA-Z0-9][\w\-.]*[a-zA-Z0-9]$"#)) | fn.#Fn
 			SizeInGb:          *int | fn.#Fn
 			Tags?:             *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Distribution: {
+		Type: "AWS::Lightsail::Distribution"
+		Properties: {
+			BundleId:               *string | fn.#Fn
+			CacheBehaviorSettings?: *{
+				AllowedHTTPMethods?: *string | fn.#Fn
+				CachedHTTPMethods?:  *string | fn.#Fn
+				DefaultTTL?:         *int | fn.#Fn
+				ForwardedCookies?:   *{
+					CookiesAllowList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Option?:           *string | fn.#Fn
+				} | fn.#If
+				ForwardedHeaders?: *{
+					HeadersAllowList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Option?:           *string | fn.#Fn
+				} | fn.#If
+				ForwardedQueryStrings?: *{
+					Option?:                *bool | fn.#Fn
+					QueryStringsAllowList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				} | fn.#If
+				MaximumTTL?: *int | fn.#Fn
+				MinimumTTL?: *int | fn.#Fn
+			} | fn.#If
+			CacheBehaviors?: *[...{
+				Behavior?: *string | fn.#Fn
+				Path?:     *string | fn.#Fn
+			}] | fn.#If
+			CertificateName?:     *string | fn.#Fn
+			DefaultCacheBehavior: *{
+				Behavior?: *string | fn.#Fn
+			} | fn.#If
+			DistributionName: *(=~#"\w[\w\-]*\w"#) | fn.#Fn
+			IpAddressType?:   *string | fn.#Fn
+			IsEnabled?:       *bool | fn.#Fn
+			Origin:           *{
+				Name?:           *string | fn.#Fn
+				ProtocolPolicy?: *string | fn.#Fn
+				RegionName?:     *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

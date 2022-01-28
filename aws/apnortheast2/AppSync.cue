@@ -125,7 +125,7 @@ import (
 			DataSourceName:                     *string | fn.#Fn
 			Description?:                       *string | fn.#Fn
 			FunctionVersion:                    *string | fn.#Fn
-			MaxBatchSize?:                      *number | fn.#Fn
+			MaxBatchSize?:                      *int | fn.#Fn
 			Name:                               *string | fn.#Fn
 			RequestMappingTemplate?:            *string | fn.#Fn
 			RequestMappingTemplateS3Location?:  *string | fn.#Fn
@@ -227,7 +227,7 @@ import (
 			DataSourceName?: *string | fn.#Fn
 			FieldName:       *string | fn.#Fn
 			Kind?:           *("PIPELINE" | "UNIT") | fn.#Fn
-			MaxBatchSize?:   *number | fn.#Fn
+			MaxBatchSize?:   *int | fn.#Fn
 			PipelineConfig?: *{
 				Functions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If

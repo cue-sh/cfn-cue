@@ -152,9 +152,14 @@ import (
 					Qualifier?:     *string | fn.#Fn
 				} | fn.#If
 				MaintenanceWindowRunCommandParameters?: *{
+					CloudWatchOutputConfig?: *{
+						CloudWatchLogGroupName?:  *string | fn.#Fn
+						CloudWatchOutputEnabled?: *bool | fn.#Fn
+					} | fn.#If
 					Comment?:            *string | fn.#Fn
 					DocumentHash?:       *string | fn.#Fn
 					DocumentHashType?:   *string | fn.#Fn
+					DocumentVersion?:    *string | fn.#Fn
 					NotificationConfig?: *{
 						NotificationArn:     *string | fn.#Fn
 						NotificationEvents?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)

@@ -12,7 +12,7 @@ import (
 			CollectionName:         *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[-._\w]+$"#)) | fn.#Fn
 			Description?:           *string | fn.#Fn
 			KmsKeyId?:              *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
-			PricingPlan:            *("RequestBasedUsage" | "MobileAssetTracking" | "MobileAssetManagement") | fn.#Fn
+			PricingPlan?:           *("RequestBasedUsage") | fn.#Fn
 			PricingPlanDataSource?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
@@ -29,7 +29,7 @@ import (
 			} | fn.#If
 			Description?: *string | fn.#Fn
 			MapName:      *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[-._\w]+$"#)) | fn.#Fn
-			PricingPlan:  *("RequestBasedUsage" | "MobileAssetTracking" | "MobileAssetManagement") | fn.#Fn
+			PricingPlan?: *("RequestBasedUsage") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -46,7 +46,7 @@ import (
 			} | fn.#If
 			Description?: *string | fn.#Fn
 			IndexName:    *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[-._\w]+$"#)) | fn.#Fn
-			PricingPlan:  *("RequestBasedUsage" | "MobileAssetTracking" | "MobileAssetManagement") | fn.#Fn
+			PricingPlan?: *("RequestBasedUsage") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -60,7 +60,7 @@ import (
 			CalculatorName: *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[-._\w]+$"#)) | fn.#Fn
 			DataSource:     *string | fn.#Fn
 			Description?:   *string | fn.#Fn
-			PricingPlan:    *("RequestBasedUsage" | "MobileAssetManagement") | fn.#Fn
+			PricingPlan?:   *("RequestBasedUsage") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -74,7 +74,7 @@ import (
 			Description?:           *string | fn.#Fn
 			KmsKeyId?:              *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 			PositionFiltering?:     *("TimeBased" | "DistanceBased" | "AccuracyBased") | fn.#Fn
-			PricingPlan:            *("RequestBasedUsage" | "MobileAssetTracking" | "MobileAssetManagement") | fn.#Fn
+			PricingPlan?:           *("RequestBasedUsage") | fn.#Fn
 			PricingPlanDataSource?: *string | fn.#Fn
 			TrackerName:            *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[-._\w]+$"#)) | fn.#Fn
 		}

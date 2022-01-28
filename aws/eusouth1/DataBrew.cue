@@ -106,15 +106,17 @@ import (
 				DatabaseOptions?: *{
 					TableName:      *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 					TempDirectory?: *{
-						Bucket: *string | fn.#Fn
-						Key?:   *string | fn.#Fn
+						Bucket:       *string | fn.#Fn
+						BucketOwner?: *(strings.MinRunes(12) & strings.MaxRunes(12)) | fn.#Fn
+						Key?:         *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				Overwrite?: *bool | fn.#Fn
 				S3Options?: *{
 					Location: *{
-						Bucket: *string | fn.#Fn
-						Key?:   *string | fn.#Fn
+						Bucket:       *string | fn.#Fn
+						BucketOwner?: *(strings.MinRunes(12) & strings.MaxRunes(12)) | fn.#Fn
+						Key?:         *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				TableName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
@@ -123,8 +125,9 @@ import (
 				DatabaseOptions: *{
 					TableName:      *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 					TempDirectory?: *{
-						Bucket: *string | fn.#Fn
-						Key?:   *string | fn.#Fn
+						Bucket:       *string | fn.#Fn
+						BucketOwner?: *(strings.MinRunes(12) & strings.MaxRunes(12)) | fn.#Fn
+						Key?:         *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				DatabaseOutputMode?: *("NEW_TABLE") | fn.#Fn
@@ -142,8 +145,9 @@ import (
 			MaxRetries?:      *int | fn.#Fn
 			Name:             *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			OutputLocation?:  *{
-				Bucket: *string | fn.#Fn
-				Key?:   *string | fn.#Fn
+				Bucket:       *string | fn.#Fn
+				BucketOwner?: *(strings.MinRunes(12) & strings.MaxRunes(12)) | fn.#Fn
+				Key?:         *string | fn.#Fn
 			} | fn.#If
 			Outputs?: *[...{
 				CompressionFormat?: *("GZIP" | "LZ4" | "SNAPPY" | "BZIP2" | "DEFLATE" | "LZO" | "BROTLI" | "ZSTD" | "ZLIB") | fn.#Fn
@@ -154,8 +158,9 @@ import (
 					} | fn.#If
 				} | fn.#If
 				Location: *{
-					Bucket: *string | fn.#Fn
-					Key?:   *string | fn.#Fn
+					Bucket:       *string | fn.#Fn
+					BucketOwner?: *(strings.MinRunes(12) & strings.MaxRunes(12)) | fn.#Fn
+					Key?:         *string | fn.#Fn
 				} | fn.#If
 				Overwrite?:        *bool | fn.#Fn
 				PartitionColumns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)

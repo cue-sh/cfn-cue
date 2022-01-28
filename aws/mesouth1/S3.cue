@@ -131,8 +131,8 @@ import (
 						StorageClass:             *("DEEP_ARCHIVE" | "GLACIER" | "Glacier" | "GLACIER_IR" | "INTELLIGENT_TIERING" | "ONEZONE_IA" | "STANDARD_IA") | fn.#Fn
 						TransitionInDays:         *int | fn.#Fn
 					}] | fn.#If
-					ObjectSizeGreaterThan?: *int | fn.#Fn
-					ObjectSizeLessThan?:    *int | fn.#Fn
+					ObjectSizeGreaterThan?: *(=~#"[0-9]+"#) | fn.#Fn
+					ObjectSizeLessThan?:    *(=~#"[0-9]+"#) | fn.#Fn
 					Prefix?:                *string | fn.#Fn
 					Status:                 *("Enabled" | "Disabled") | fn.#Fn
 					TagFilters?:            *[...{

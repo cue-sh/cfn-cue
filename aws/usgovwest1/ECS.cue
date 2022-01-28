@@ -342,8 +342,9 @@ import (
 				} | fn.#If
 				EFSVolumeConfiguration?: *{
 					AuthorizationConfig?: *{
-						[string]: _
-					} | fn.#Fn
+						AccessPointId?: *string | fn.#Fn
+						IAM?:           *("ENABLED" | "DISABLED") | fn.#Fn
+					} | fn.#If
 					FilesystemId:           *string | fn.#Fn
 					RootDirectory?:         *string | fn.#Fn
 					TransitEncryption?:     *("ENABLED" | "DISABLED") | fn.#Fn

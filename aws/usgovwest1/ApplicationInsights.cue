@@ -24,6 +24,16 @@ import (
 							AlarmName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 							Severity?: *("HIGH" | "MEDIUM" | "LOW") | fn.#Fn
 						}] | fn.#If
+						HAClusterPrometheusExporter?: *{
+							PrometheusPort?: *string | fn.#Fn
+						} | fn.#If
+						HANAPrometheusExporter?: *{
+							AgreeToInstallHANADBClient?: *bool | fn.#Fn
+							HANAPort?:                   *string | fn.#Fn
+							HANASID?:                    *string | fn.#Fn
+							HANASecretName?:             *string | fn.#Fn
+							PrometheusPort?:             *string | fn.#Fn
+						} | fn.#If
 						JMXPrometheusExporter?: *{
 							HostPort?:       *string | fn.#Fn
 							JMXURL?:         *string | fn.#Fn
@@ -74,6 +84,16 @@ import (
 							AlarmName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 							Severity?: *("HIGH" | "MEDIUM" | "LOW") | fn.#Fn
 						}] | fn.#If
+						HAClusterPrometheusExporter?: *{
+							PrometheusPort?: *string | fn.#Fn
+						} | fn.#If
+						HANAPrometheusExporter?: *{
+							AgreeToInstallHANADBClient?: *bool | fn.#Fn
+							HANAPort?:                   *string | fn.#Fn
+							HANASID?:                    *string | fn.#Fn
+							HANASecretName?:             *string | fn.#Fn
+							PrometheusPort?:             *string | fn.#Fn
+						} | fn.#If
 						JMXPrometheusExporter?: *{
 							HostPort?:       *string | fn.#Fn
 							JMXURL?:         *string | fn.#Fn

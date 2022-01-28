@@ -54,6 +54,10 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
+			ThumbnailConfiguration?: *{
+				RecordingMode:          *("INTERVAL" | "DISABLED") | fn.#Fn
+				TargetIntervalSeconds?: *(>=5 & <=60) | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

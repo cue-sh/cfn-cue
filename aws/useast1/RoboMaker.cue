@@ -40,14 +40,14 @@ import (
 	#RobotApplication: {
 		Type: "AWS::RoboMaker::RobotApplication"
 		Properties: {
-			CurrentRevisionId?: *string | fn.#Fn
-			Name?:              *string | fn.#Fn
+			CurrentRevisionId?: *(strings.MinRunes(1) & strings.MaxRunes(40)) | fn.#Fn
+			Name?:              *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 			RobotSoftwareSuite: *{
-				Name:    *string | fn.#Fn
-				Version: *string | fn.#Fn
+				Name:    *("ROS" | "ROS2" | "General") | fn.#Fn
+				Version: *("Kinetic" | "Melodic" | "Dashing") | fn.#Fn
 			} | fn.#If
 			Sources: *[...{
-				Architecture: *string | fn.#Fn
+				Architecture: *(("X86_64" | "ARM64" | "ARMHF") & (strings.MinRunes(1) & strings.MaxRunes(255))) | fn.#Fn
 				S3Bucket:     *string | fn.#Fn
 				S3Key:        *string | fn.#Fn
 			}] | fn.#If
@@ -84,12 +84,12 @@ import (
 				Version: *(=~#"1.x"#) | fn.#Fn
 			} | fn.#If
 			RobotSoftwareSuite: *{
-				Name:    *("ROS" | "ROS2" | "General") | fn.#Fn
-				Version: *("Kinetic" | "Melodic" | "Dashing" | "Foxy") | fn.#Fn
+				Name:     *("ROS" | "ROS2" | "General") | fn.#Fn
+				Version?: *("Kinetic" | "Melodic" | "Dashing" | "Foxy") | fn.#Fn
 			} | fn.#If
 			SimulationSoftwareSuite: *{
-				Name:    *("Gazebo" | "RosbagPlay" | "SimulationRuntime") | fn.#Fn
-				Version: *("7" | "9" | "11" | "Kinetic" | "Melodic" | "Dashing" | "Foxy") | fn.#Fn
+				Name:     *("Gazebo" | "RosbagPlay" | "SimulationRuntime") | fn.#Fn
+				Version?: *("7" | "9" | "11" | "Kinetic" | "Melodic" | "Dashing" | "Foxy") | fn.#Fn
 			} | fn.#If
 			Sources?: *[...{
 				Architecture: *("X86_64" | "ARM64" | "ARMHF") | fn.#Fn

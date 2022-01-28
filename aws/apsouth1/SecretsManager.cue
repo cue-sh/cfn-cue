@@ -32,9 +32,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				VpcSecurityGroupIds?:      *string | fn.#Fn
 				VpcSubnetIds?:             *string | fn.#Fn
 			} | fn.#If
-			RotationLambdaARN?: *string | fn.#Fn
-			RotationRules?:     *{
+			RotateImmediatelyOnUpdate?: *bool | fn.#Fn
+			RotationLambdaARN?:         *string | fn.#Fn
+			RotationRules?:             *{
 				AutomaticallyAfterDays?: *int | fn.#Fn
+				Duration?:               *string | fn.#Fn
+				ScheduleExpression?:     *string | fn.#Fn
 			} | fn.#If
 			SecretId: *string | fn.#Fn
 		}

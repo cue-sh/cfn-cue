@@ -7,6 +7,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::GuardDuty::Detector"
 		Properties: {
 			DataSources?: *{
+				Kubernetes?: *{
+					AuditLogs?: *{
+						Enable?: *bool | fn.#Fn
+					} | fn.#If
+				} | fn.#If
 				S3Logs?: *{
 					Enable?: *bool | fn.#Fn
 				} | fn.#If

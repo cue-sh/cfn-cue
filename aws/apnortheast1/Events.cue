@@ -195,6 +195,12 @@ import (
 						Values: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					}] | fn.#If
 				} | fn.#If
+				SageMakerPipelineParameters?: *{
+					PipelineParameterList?: *[...{
+						Name:  *string | fn.#Fn
+						Value: *string | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
 				SqsParameters?: *{
 					MessageGroupId: *string | fn.#Fn
 				} | fn.#If

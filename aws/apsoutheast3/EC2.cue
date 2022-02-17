@@ -857,13 +857,21 @@ import (
 	#Subnet: {
 		Type: "AWS::EC2::Subnet"
 		Properties: {
-			AssignIpv6AddressOnCreation?: *bool | fn.#Fn
-			AvailabilityZone?:            *(=~#"[a-z0-9-]+"#) | fn.#Fn
-			CidrBlock:                    *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
-			Ipv6CidrBlock?:               *string | fn.#Fn
-			MapPublicIpOnLaunch?:         *bool | fn.#Fn
-			OutpostArn?:                  *string | fn.#Fn
-			Tags?:                        *[...{
+			AssignIpv6AddressOnCreation?:   *bool | fn.#Fn
+			AvailabilityZone?:              *(=~#"[a-z0-9-]+"#) | fn.#Fn
+			AvailabilityZoneId?:            *string | fn.#Fn
+			CidrBlock:                      *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
+			EnableDns64?:                   *bool | fn.#Fn
+			Ipv6CidrBlock?:                 *string | fn.#Fn
+			Ipv6Native?:                    *bool | fn.#Fn
+			MapPublicIpOnLaunch?:           *bool | fn.#Fn
+			OutpostArn?:                    *string | fn.#Fn
+			PrivateDnsNameOptionsOnLaunch?: *{
+				EnableResourceNameDnsAAAARecord?: *bool | fn.#Fn
+				EnableResourceNameDnsARecord?:    *bool | fn.#Fn
+				HostnameType?:                    *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -918,6 +926,8 @@ import (
 			EnableDnsHostnames?: *bool | fn.#Fn
 			EnableDnsSupport?:   *bool | fn.#Fn
 			InstanceTenancy?:    *("dedicated" | "default") | fn.#Fn
+			Ipv4IpamPoolId?:     *string | fn.#Fn
+			Ipv4NetmaskLength?:  *int | fn.#Fn
 			Tags?:               *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
@@ -934,7 +944,11 @@ import (
 		Properties: {
 			AmazonProvidedIpv6CidrBlock?: *bool | fn.#Fn
 			CidrBlock?:                   *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
+			Ipv4IpamPoolId?:              *string | fn.#Fn
+			Ipv4NetmaskLength?:           *int | fn.#Fn
 			Ipv6CidrBlock?:               *string | fn.#Fn
+			Ipv6IpamPoolId?:              *string | fn.#Fn
+			Ipv6NetmaskLength?:           *int | fn.#Fn
 			Ipv6Pool?:                    *string | fn.#Fn
 			VpcId:                        *string | fn.#Fn
 		}

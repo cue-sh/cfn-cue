@@ -8,6 +8,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			AvailabilityZones?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			BackupRetentionPeriod?:       *(>=1 & <=35) | fn.#Fn
+			CopyTagsToSnapshot?:          *bool | fn.#Fn
 			DBClusterIdentifier?:         *string | fn.#Fn
 			DBClusterParameterGroupName?: *string | fn.#Fn
 			DBSubnetGroupName?:           *string | fn.#Fn

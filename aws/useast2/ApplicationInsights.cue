@@ -28,11 +28,11 @@ import (
 							PrometheusPort?: *string | fn.#Fn
 						} | fn.#If
 						HANAPrometheusExporter?: *{
-							AgreeToInstallHANADBClient?: *bool | fn.#Fn
-							HANAPort?:                   *string | fn.#Fn
-							HANASID?:                    *string | fn.#Fn
-							HANASecretName?:             *string | fn.#Fn
-							PrometheusPort?:             *string | fn.#Fn
+							AgreeToInstallHANADBClient: *bool | fn.#Fn
+							HANAPort:                   *string | fn.#Fn
+							HANASID:                    *string | fn.#Fn
+							HANASecretName:             *string | fn.#Fn
+							PrometheusPort?:            *string | fn.#Fn
 						} | fn.#If
 						JMXPrometheusExporter?: *{
 							HostPort?:       *string | fn.#Fn
@@ -88,11 +88,11 @@ import (
 							PrometheusPort?: *string | fn.#Fn
 						} | fn.#If
 						HANAPrometheusExporter?: *{
-							AgreeToInstallHANADBClient?: *bool | fn.#Fn
-							HANAPort?:                   *string | fn.#Fn
-							HANASID?:                    *string | fn.#Fn
-							HANASecretName?:             *string | fn.#Fn
-							PrometheusPort?:             *string | fn.#Fn
+							AgreeToInstallHANADBClient: *bool | fn.#Fn
+							HANAPort:                   *string | fn.#Fn
+							HANASID:                    *string | fn.#Fn
+							HANASecretName:             *string | fn.#Fn
+							PrometheusPort?:            *string | fn.#Fn
 						} | fn.#If
 						JMXPrometheusExporter?: *{
 							HostPort?:       *string | fn.#Fn

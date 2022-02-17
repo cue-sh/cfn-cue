@@ -1,6 +1,9 @@
 package cnnorth1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #Batch: {
 	#ComputeEnvironment: {
@@ -31,15 +34,15 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SpotIamFleetRole?: *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 				Subnets:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Tags?:             *{
-					[string]: _
-				} | fn.#Fn
+					[string]: *string | fn.#Fn
+				} | fn.#If
 				Type: *string | fn.#Fn
 			} | fn.#If
 			ServiceRole?: *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 			State?:       *string | fn.#Fn
 			Tags?:        *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 			Type:            *string | fn.#Fn
 			UnmanagedvCpus?: *int | fn.#Fn
 		}
@@ -260,13 +263,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ComputeEnvironment: *string | fn.#Fn
 				Order:              *int | fn.#Fn
 			}] | fn.#If
-			JobQueueName?:        *string | fn.#Fn
+			JobQueueName?:        *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 			Priority:             *int | fn.#Fn
-			SchedulingPolicyArn?: *string | fn.#Fn
-			State?:               *string | fn.#Fn
+			SchedulingPolicyArn?: *(=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#) | fn.#Fn
+			State?:               *("DISABLED" | "ENABLED") | fn.#Fn
 			Tags?:                *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

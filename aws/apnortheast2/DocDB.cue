@@ -8,6 +8,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			AvailabilityZones?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			BackupRetentionPeriod?:       *(>=1 & <=35) | fn.#Fn
+			CopyTagsToSnapshot?:          *bool | fn.#Fn
 			DBClusterIdentifier?:         *string | fn.#Fn
 			DBClusterParameterGroupName?: *string | fn.#Fn
 			DBSubnetGroupName?:           *string | fn.#Fn
@@ -60,7 +61,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			AutoMinorVersionUpgrade?:    *bool | fn.#Fn
 			AvailabilityZone?:           *string | fn.#Fn
 			DBClusterIdentifier:         *string | fn.#Fn
-			DBInstanceClass:             *("db.r5.12xlarge" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.4xlarge" | "db.r5.8xlarge" | "db.r5.large" | "db.r5.xlarge" | "db.t3.medium") | fn.#Fn
+			DBInstanceClass:             *("db.r5.12xlarge" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.4xlarge" | "db.r5.8xlarge" | "db.r5.large" | "db.r5.xlarge" | "db.r6g.12xlarge" | "db.r6g.16xlarge" | "db.r6g.2xlarge" | "db.r6g.4xlarge" | "db.r6g.8xlarge" | "db.r6g.large" | "db.r6g.xlarge" | "db.t3.medium" | "db.t4g.medium") | fn.#Fn
 			DBInstanceIdentifier?:       *string | fn.#Fn
 			PreferredMaintenanceWindow?: *string | fn.#Fn
 			Tags?:                       *[...{

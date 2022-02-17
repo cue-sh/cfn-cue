@@ -69,7 +69,11 @@ import (
 			LambdaConfig?: *{
 				LambdaFunctionArn: *string | fn.#Fn
 			} | fn.#If
-			Name:                      *string | fn.#Fn
+			Name:                     *string | fn.#Fn
+			OpenSearchServiceConfig?: *{
+				AwsRegion: *string | fn.#Fn
+				Endpoint:  *string | fn.#Fn
+			} | fn.#If
 			RelationalDatabaseConfig?: *{
 				RdsHttpEndpointConfig?: *{
 					AwsRegion:           *string | fn.#Fn
@@ -81,7 +85,7 @@ import (
 				RelationalDatabaseSourceType: *string | fn.#Fn
 			} | fn.#If
 			ServiceRoleArn?: *string | fn.#Fn
-			Type:            *string | fn.#Fn
+			Type:            *("AMAZON_DYNAMODB" | "AMAZON_ELASTICSEARCH" | "AMAZON_OPENSEARCH_SERVICE" | "AWS_LAMBDA" | "HTTP" | "NONE" | "RELATIONAL_DATABASE") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -121,6 +125,7 @@ import (
 			DataSourceName:                     *string | fn.#Fn
 			Description?:                       *string | fn.#Fn
 			FunctionVersion:                    *string | fn.#Fn
+			MaxBatchSize?:                      *int | fn.#Fn
 			Name:                               *string | fn.#Fn
 			RequestMappingTemplate?:            *string | fn.#Fn
 			RequestMappingTemplateS3Location?:  *string | fn.#Fn
@@ -162,7 +167,7 @@ import (
 					UserPoolId?:       *string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
-			AuthenticationType:      *string | fn.#Fn
+			AuthenticationType:      *("AMAZON_COGNITO_USER_POOLS" | "API_KEY" | "AWS_IAM" | "AWS_LAMBDA" | "OPENID_CONNECT") | fn.#Fn
 			LambdaAuthorizerConfig?: *{
 				AuthorizerResultTtlInSeconds?: *number | fn.#Fn
 				AuthorizerUri?:                *string | fn.#Fn
@@ -217,11 +222,12 @@ import (
 			ApiId:          *string | fn.#Fn
 			CachingConfig?: *{
 				CachingKeys?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				Ttl?:         *number | fn.#Fn
+				Ttl:          *number | fn.#Fn
 			} | fn.#If
 			DataSourceName?: *string | fn.#Fn
 			FieldName:       *string | fn.#Fn
-			Kind?:           *string | fn.#Fn
+			Kind?:           *("PIPELINE" | "UNIT") | fn.#Fn
+			MaxBatchSize?:   *int | fn.#Fn
 			PipelineConfig?: *{
 				Functions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If

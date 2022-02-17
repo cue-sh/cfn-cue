@@ -192,10 +192,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Types?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 			MutualTlsAuthentication?: *{
-				CertificateRevocationCheckType?: *string | fn.#Fn
-				CertificateRevocationSourceUri?: *string | fn.#Fn
-				TruststoreUri?:                  *string | fn.#Fn
-				TruststoreVersion?:              *string | fn.#Fn
+				TruststoreUri?:     *string | fn.#Fn
+				TruststoreVersion?: *string | fn.#Fn
 			} | fn.#If
 			OwnershipVerificationCertificateArn?: *string | fn.#Fn
 			RegionalCertificateArn?:              *string | fn.#Fn

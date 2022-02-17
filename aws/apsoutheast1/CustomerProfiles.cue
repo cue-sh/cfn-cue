@@ -90,8 +90,12 @@ import (
 					TriggerType: *("Scheduled" | "Event" | "OnDemand") | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			ObjectTypeName: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z_][a-zA-Z_0-9-]*$"#)) | fn.#Fn
-			Tags?:          *[...{
+			ObjectTypeName?:  *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z_][a-zA-Z_0-9-]*$"#)) | fn.#Fn
+			ObjectTypeNames?: *[...{
+				Key:   *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+				Value: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z_][a-zA-Z_0-9-]*$"#)) | fn.#Fn
+			}] | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

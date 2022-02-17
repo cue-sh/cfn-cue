@@ -1,6 +1,9 @@
 package uswest1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #SES: {
 	#ConfigurationSet: {
@@ -19,8 +22,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			EventDestination:     *{
 				CloudWatchDestination?: *{
 					DimensionConfigurations?: *[...{
-						DefaultDimensionValue: *string | fn.#Fn
-						DimensionName:         *string | fn.#Fn
+						DefaultDimensionValue: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9_-]{1,256}$"#)) | fn.#Fn
+						DimensionName:         *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9_-]{1,256}$"#)) | fn.#Fn
 						DimensionValueSource:  *string | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
@@ -30,7 +33,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					IAMRoleARN:        *string | fn.#Fn
 				} | fn.#If
 				MatchingEventTypes: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				Name?:              *string | fn.#Fn
+				Name?:              *(=~#"^[a-zA-Z0-9_-]{0,64}$"#) | fn.#Fn
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
@@ -145,7 +148,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: Template?: *{
 			HtmlPart?:     *string | fn.#Fn
 			SubjectPart?:  *string | fn.#Fn
-			TemplateName?: *string | fn.#Fn
+			TemplateName?: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z0-9_-]{1,64}$"#)) | fn.#Fn
 			TextPart?:     *string | fn.#Fn
 		} | fn.#If
 		DependsOn?:           string | [...string]

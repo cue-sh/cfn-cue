@@ -90,7 +90,7 @@ import (
 	#ResolverEndpoint: {
 		Type: "AWS::Route53Resolver::ResolverEndpoint"
 		Properties: {
-			Direction:   *string | fn.#Fn
+			Direction:   *("INBOUND" | "OUTBOUND") | fn.#Fn
 			IpAddresses: *[...{
 				Ip?:      *string | fn.#Fn
 				SubnetId: *string | fn.#Fn

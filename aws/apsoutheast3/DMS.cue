@@ -145,13 +145,44 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			ResourceIdentifier?: *string | fn.#Fn
 			S3Settings?:         *{
-				BucketFolder?:            *string | fn.#Fn
-				BucketName?:              *string | fn.#Fn
-				CompressionType?:         *string | fn.#Fn
-				CsvDelimiter?:            *string | fn.#Fn
-				CsvRowDelimiter?:         *string | fn.#Fn
-				ExternalTableDefinition?: *string | fn.#Fn
-				ServiceAccessRoleArn?:    *string | fn.#Fn
+				AddColumnName?:                        *bool | fn.#Fn
+				BucketFolder?:                         *string | fn.#Fn
+				BucketName?:                           *string | fn.#Fn
+				CannedAclForObjects?:                  *string | fn.#Fn
+				CdcInsertsAndUpdates?:                 *bool | fn.#Fn
+				CdcInsertsOnly?:                       *bool | fn.#Fn
+				CdcMaxBatchInterval?:                  *int | fn.#Fn
+				CdcMinFileSize?:                       *int | fn.#Fn
+				CdcPath?:                              *string | fn.#Fn
+				CompressionType?:                      *string | fn.#Fn
+				CsvDelimiter?:                         *string | fn.#Fn
+				CsvNoSupValue?:                        *string | fn.#Fn
+				CsvNullValue?:                         *string | fn.#Fn
+				CsvRowDelimiter?:                      *string | fn.#Fn
+				DataFormat?:                           *string | fn.#Fn
+				DataPageSize?:                         *int | fn.#Fn
+				DatePartitionDelimiter?:               *string | fn.#Fn
+				DatePartitionEnabled?:                 *bool | fn.#Fn
+				DatePartitionSequence?:                *string | fn.#Fn
+				DatePartitionTimezone?:                *string | fn.#Fn
+				DictPageSizeLimit?:                    *int | fn.#Fn
+				EnableStatistics?:                     *bool | fn.#Fn
+				EncodingType?:                         *string | fn.#Fn
+				EncryptionMode?:                       *string | fn.#Fn
+				ExternalTableDefinition?:              *string | fn.#Fn
+				IgnoreHeaderRows?:                     *int | fn.#Fn
+				IncludeOpForFullLoad?:                 *bool | fn.#Fn
+				MaxFileSize?:                          *int | fn.#Fn
+				ParquetTimestampInMillisecond?:        *bool | fn.#Fn
+				ParquetVersion?:                       *string | fn.#Fn
+				PreserveTransactions?:                 *bool | fn.#Fn
+				Rfc4180?:                              *bool | fn.#Fn
+				RowGroupLength?:                       *int | fn.#Fn
+				ServerSideEncryptionKmsKeyId?:         *string | fn.#Fn
+				ServiceAccessRoleArn?:                 *string | fn.#Fn
+				TimestampColumnName?:                  *string | fn.#Fn
+				UseCsvNoSupValue?:                     *bool | fn.#Fn
+				UseTaskStartTimeForFullLoadTimestamp?: *bool | fn.#Fn
 			} | fn.#If
 			ServerName?:     *string | fn.#Fn
 			SslMode?:        *string | fn.#Fn

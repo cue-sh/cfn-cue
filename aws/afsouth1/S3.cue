@@ -218,7 +218,7 @@ import (
 			ObjectLockEnabled?: *bool | fn.#Fn
 			OwnershipControls?: *{
 				Rules: *[...{
-					ObjectOwnership?: *("ObjectWriter" | "BucketOwnerPreferred") | fn.#Fn
+					ObjectOwnership?: *("ObjectWriter" | "BucketOwnerPreferred" | "BucketOwnerEnforced") | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
 			PublicAccessBlockConfiguration?: *{

@@ -1,6 +1,9 @@
 package apsouth1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #Batch: {
 	#ComputeEnvironment: {
@@ -260,10 +263,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ComputeEnvironment: *string | fn.#Fn
 				Order:              *int | fn.#Fn
 			}] | fn.#If
-			JobQueueName?:        *string | fn.#Fn
+			JobQueueName?:        *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 			Priority:             *int | fn.#Fn
-			SchedulingPolicyArn?: *string | fn.#Fn
-			State?:               *string | fn.#Fn
+			SchedulingPolicyArn?: *(=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#) | fn.#Fn
+			State?:               *("DISABLED" | "ENABLED") | fn.#Fn
 			Tags?:                *{
 				[string]: _
 			} | fn.#Fn

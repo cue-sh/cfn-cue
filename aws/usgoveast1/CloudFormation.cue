@@ -20,6 +20,50 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#HookDefaultVersion: {
+		Type: "AWS::CloudFormation::HookDefaultVersion"
+		Properties: {
+			TypeName?:       *(=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$"#) | fn.#Fn
+			TypeVersionArn?: *(=~#"^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/hook/.+$"#) | fn.#Fn
+			VersionId?:      *(=~#"^[A-Za-z0-9-]{1,128}$"#) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#HookTypeConfig: {
+		Type: "AWS::CloudFormation::HookTypeConfig"
+		Properties: {
+			Configuration:       *(=~#"[\s\S]+"#) | fn.#Fn
+			ConfigurationAlias?: *("default" & (=~#"^[a-zA-Z0-9]{1,256}$"#)) | fn.#Fn
+			TypeArn?:            *(=~#"^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/hook/.+$"#) | fn.#Fn
+			TypeName?:           *(=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$"#) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#HookVersion: {
+		Type: "AWS::CloudFormation::HookVersion"
+		Properties: {
+			ExecutionRoleArn?: *(=~#"arn:.+:iam::[0-9]{12}:role/.+"#) | fn.#Fn
+			LoggingConfig?:    *{
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[\.\-_/#A-Za-z0-9]+$"#)) | fn.#Fn
+				LogRoleArn?:   *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			} | fn.#If
+			SchemaHandlerPackage: *string | fn.#Fn
+			TypeName:             *(=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$"#) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Macro: {
 		Type: "AWS::CloudFormation::Macro"
 		Properties: {

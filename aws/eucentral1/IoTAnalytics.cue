@@ -9,17 +9,17 @@ import (
 	#Channel: {
 		Type: "AWS::IoTAnalytics::Channel"
 		Properties: {
-			ChannelName?:    *string | fn.#Fn
+			ChannelName?:    *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"(^(?!_{2}))(^[a-zA-Z0-9_]+$)"#)) | fn.#Fn
 			ChannelStorage?: *{
 				CustomerManagedS3?: *{
-					Bucket:     *string | fn.#Fn
-					KeyPrefix?: *string | fn.#Fn
-					RoleArn:    *string | fn.#Fn
+					Bucket:     *(strings.MinRunes(3) & strings.MaxRunes(255) & (=~#"^[a-zA-Z0-9.\-_]*$"#)) | fn.#Fn
+					KeyPrefix?: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z0-9!_.*'()/{}:-]*/$"#)) | fn.#Fn
+					RoleArn:    *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
 				} | fn.#If
 				ServiceManagedS3?: *{} | fn.#If
 			} | fn.#If
 			RetentionPeriod?: *{
-				NumberOfDays?: *int | fn.#Fn
+				NumberOfDays?: *(>=1 & <=2147483647) | fn.#Fn
 				Unlimited?:    *bool | fn.#Fn
 			} | fn.#If
 			Tags?: *[...{

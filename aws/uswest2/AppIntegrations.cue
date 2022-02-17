@@ -13,8 +13,10 @@ import (
 			KmsKey:         *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#".*\S.*"#)) | fn.#Fn
 			Name:           *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z0-9/\._\-]+$"#)) | fn.#Fn
 			ScheduleConfig: *{
-				[string]: _
-			} | fn.#Fn
+				FirstExecutionFrom: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#".*\S.*"#)) | fn.#Fn
+				Object:             *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^[a-zA-Z0-9/\._\-]+$"#)) | fn.#Fn
+				ScheduleExpression: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#".*\S.*"#)) | fn.#Fn
+			} | fn.#If
 			SourceURI: *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^\w+\:\/\/\w+\/[\w/!@#+=.-]+$"#)) | fn.#Fn
 			Tags?:     *[...{
 				Key:   *string | fn.#Fn

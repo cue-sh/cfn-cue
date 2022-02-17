@@ -141,6 +141,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			SmsConfiguration?:         *{
 				ExternalId:    *string | fn.#Fn
 				SnsCallerArn?: *string | fn.#Fn
+				SnsRegion?:    *string | fn.#Fn
 			} | fn.#If
 			SmsVerificationMessage?: *string | fn.#Fn
 			UserPoolAddOns?:         *{

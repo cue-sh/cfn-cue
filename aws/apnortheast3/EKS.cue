@@ -132,7 +132,7 @@ import (
 			}] | fn.#If
 			UpdateConfig?: *{
 				MaxUnavailable?:           *number | fn.#Fn
-				MaxUnavailablePercentage?: *number | fn.#Fn
+				MaxUnavailablePercentage?: *(>=1 & <=100) | fn.#Fn
 			} | fn.#If
 			Version?: *string | fn.#Fn
 		}

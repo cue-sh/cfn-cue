@@ -23,9 +23,9 @@ import (
 	#HookDefaultVersion: {
 		Type: "AWS::CloudFormation::HookDefaultVersion"
 		Properties: {
-			TypeName?:       *string | fn.#Fn
-			TypeVersionArn?: *string | fn.#Fn
-			VersionId?:      *string | fn.#Fn
+			TypeName?:       *(=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$"#) | fn.#Fn
+			TypeVersionArn?: *(=~#"^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/hook/.+$"#) | fn.#Fn
+			VersionId?:      *(=~#"^[A-Za-z0-9-]{1,128}$"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -36,10 +36,27 @@ import (
 	#HookTypeConfig: {
 		Type: "AWS::CloudFormation::HookTypeConfig"
 		Properties: {
-			Configuration:       *string | fn.#Fn
-			ConfigurationAlias?: *string | fn.#Fn
-			TypeArn?:            *string | fn.#Fn
-			TypeName?:           *string | fn.#Fn
+			Configuration:       *(=~#"[\s\S]+"#) | fn.#Fn
+			ConfigurationAlias?: *("default" & (=~#"^[a-zA-Z0-9]{1,256}$"#)) | fn.#Fn
+			TypeArn?:            *(=~#"^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/hook/.+$"#) | fn.#Fn
+			TypeName?:           *(=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$"#) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#HookVersion: {
+		Type: "AWS::CloudFormation::HookVersion"
+		Properties: {
+			ExecutionRoleArn?: *(=~#"arn:.+:iam::[0-9]{12}:role/.+"#) | fn.#Fn
+			LoggingConfig?:    *{
+				LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[\.\-_/#A-Za-z0-9]+$"#)) | fn.#Fn
+				LogRoleArn?:   *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			} | fn.#If
+			SchemaHandlerPackage: *string | fn.#Fn
+			TypeName:             *(=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -93,7 +110,7 @@ import (
 			Arn?:                 *(=~#"arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:[0-9]{12}:type/.+"#) | fn.#Fn
 			LogDeliveryBucket?:   *string | fn.#Fn
 			PublicVersionNumber?: *(strings.MinRunes(5) & strings.MaxRunes(64)) | fn.#Fn
-			Type?:                *("RESOURCE" | "MODULE") | fn.#Fn
+			Type?:                *("RESOURCE" | "MODULE" | "HOOK") | fn.#Fn
 			TypeName?:            *(=~#"[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}(::MODULE){0,1}"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
@@ -229,7 +246,7 @@ import (
 			MajorVersion?:  *(strings.MinRunes(1) & strings.MaxRunes(100000)) | fn.#Fn
 			PublicTypeArn?: *(=~#"arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/.+"#) | fn.#Fn
 			PublisherId?:   *(strings.MinRunes(1) & strings.MaxRunes(40) & (=~#"[0-9a-zA-Z]{40}"#)) | fn.#Fn
-			Type?:          *("RESOURCE" | "MODULE") | fn.#Fn
+			Type?:          *("RESOURCE" | "MODULE" | "HOOK") | fn.#Fn
 			TypeName?:      *(=~#"[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}(::MODULE){0,1}"#) | fn.#Fn
 			TypeNameAlias?: *(strings.MinRunes(10) & strings.MaxRunes(204) & (=~#"[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}(::MODULE){0,1}"#)) | fn.#Fn
 			VersionBump?:   *("MAJOR" | "MINOR") | fn.#Fn

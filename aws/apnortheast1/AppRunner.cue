@@ -26,6 +26,12 @@ import (
 				InstanceRoleArn?: *(strings.MinRunes(29) & strings.MaxRunes(102) & (=~#"arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):iam::[0-9]{12}:role/[\w+=,.@-]{1,64}"#)) | fn.#Fn
 				Memory?:          *(strings.MinRunes(4) & strings.MaxRunes(4) & (=~#"2048|3072|4096|(2|3|4) GB"#)) | fn.#Fn
 			} | fn.#If
+			NetworkConfiguration?: *{
+				EgressConfiguration: *{
+					EgressType:       *("DEFAULT" | "VPC") | fn.#Fn
+					VpcConnectorArn?: *(strings.MinRunes(44) & strings.MaxRunes(1011) & (=~#"arn:aws(-[\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\w|\/|-){1,1011}"#)) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 			ServiceName?:        *(strings.MinRunes(4) & strings.MaxRunes(40) & (=~#"[A-Za-z0-9][A-Za-z0-9-_]{3,39}"#)) | fn.#Fn
 			SourceConfiguration: *{
 				AuthenticationConfiguration?: *{
@@ -70,6 +76,23 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#VpcConnector: {
+		Type: "AWS::AppRunner::VpcConnector"
+		Properties: {
+			SecurityGroups?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Subnets:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:           *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpcConnectorName?: *(strings.MinRunes(4) & strings.MaxRunes(40) & (=~#"^[A-Za-z0-9][A-Za-z0-9-\\_]{3,39}$"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

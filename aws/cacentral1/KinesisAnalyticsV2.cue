@@ -94,7 +94,19 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							DatabaseARN?: *string | fn.#Fn
 						} | fn.#If
 					} | fn.#If
-					CustomArtifactsConfiguration?:     *{} | fn.#If
+					CustomArtifactsConfiguration?: *[...{
+						ArtifactType:    *string | fn.#Fn
+						MavenReference?: *{
+							ArtifactId: *string | fn.#Fn
+							GroupId:    *string | fn.#Fn
+							Version:    *string | fn.#Fn
+						} | fn.#If
+						S3ContentLocation?: *{
+							BucketARN?:     *string | fn.#Fn
+							FileKey?:       *string | fn.#Fn
+							ObjectVersion?: *string | fn.#Fn
+						} | fn.#If
+					}] | fn.#If
 					DeployAsApplicationConfiguration?: *{
 						S3ContentLocation: *{
 							BasePath:  *string | fn.#Fn
@@ -109,7 +121,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ApplicationDescription?: *string | fn.#Fn
 			ApplicationMode?:        *string | fn.#Fn
 			ApplicationName?:        *string | fn.#Fn
-			RuntimeEnvironment:      *string | fn.#Fn
+			RuntimeEnvironment:      *("FLINK-1_11" | "FLINK-1_13" | "FLINK-1_6" | "FLINK-1_8" | "SQL-1_0" | "ZEPPELIN-FLINK-1_0" | "ZEPPELIN-FLINK-2_0") | fn.#Fn
 			ServiceExecutionRole:    *string | fn.#Fn
 			Tags?:                   *[...{
 				Key:   *string | fn.#Fn

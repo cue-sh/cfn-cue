@@ -98,7 +98,7 @@ import (
 			AmiType?:            *string | fn.#Fn
 			CapacityType?:       *string | fn.#Fn
 			ClusterName:         *string | fn.#Fn
-			DiskSize?:           *number | fn.#Fn
+			DiskSize?:           *int | fn.#Fn
 			ForceUpdateEnabled?: *bool | fn.#Fn
 			InstanceTypes?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			Labels?:             *{
@@ -117,9 +117,9 @@ import (
 				SourceSecurityGroups?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 			ScalingConfig?: *{
-				DesiredSize?: *number | fn.#Fn
-				MaxSize?:     *number | fn.#Fn
-				MinSize?:     *number | fn.#Fn
+				DesiredSize?: *int | fn.#Fn
+				MaxSize?:     *int | fn.#Fn
+				MinSize?:     *int | fn.#Fn
 			} | fn.#If
 			Subnets: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			Tags?:   *{

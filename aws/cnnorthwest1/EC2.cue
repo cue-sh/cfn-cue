@@ -345,7 +345,12 @@ import (
 				SecondaryPrivateIpAddressCount?: *int | fn.#Fn
 				SubnetId?:                       *string | fn.#Fn
 			}] | fn.#If
-			PlacementGroupName?:              *string | fn.#Fn
+			PlacementGroupName?:    *string | fn.#Fn
+			PrivateDnsNameOptions?: *{
+				EnableResourceNameDnsAAAARecord?: *bool | fn.#Fn
+				EnableResourceNameDnsARecord?:    *bool | fn.#Fn
+				HostnameType?:                    *string | fn.#Fn
+			} | fn.#If
 			PrivateIpAddress?:                *string | fn.#Fn
 			PropagateTagsToVolumeOnCreation?: *bool | fn.#Fn
 			RamdiskId?:                       *string | fn.#Fn

@@ -196,6 +196,35 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#FeatureGroup: {
+		Type: "AWS::SageMaker::FeatureGroup"
+		Properties: {
+			Description?:         *string | fn.#Fn
+			EventTimeFeatureName: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}"#)) | fn.#Fn
+			FeatureDefinitions:   *[...{
+				FeatureName: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}"#)) | fn.#Fn
+				FeatureType: *("Integral" | "Fractional" | "String") | fn.#Fn
+			}] | fn.#If
+			FeatureGroupName:    *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}"#)) | fn.#Fn
+			OfflineStoreConfig?: *{
+				[string]: _
+			} | fn.#Fn
+			OnlineStoreConfig?: *{
+				[string]: _
+			} | fn.#Fn
+			RecordIdentifierFeatureName: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}"#)) | fn.#Fn
+			RoleArn?:                    *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
+			Tags?:                       *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Model: {
 		Type: "AWS::SageMaker::Model"
 		Properties: {

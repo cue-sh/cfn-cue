@@ -218,6 +218,20 @@ import (
 							} | fn.#If
 						} | fn.#If
 					} | fn.#If
+					SAPOData?: *{
+						ErrorHandlingConfig?: *{
+							BucketName?:       *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
+							BucketPrefix?:     *string | fn.#Fn
+							FailOnFirstError?: *bool | fn.#Fn
+						} | fn.#If
+						IdFieldNames?:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						ObjectPath:                     *(=~#"\S+"#) | fn.#Fn
+						SuccessResponseHandlingConfig?: *{
+							BucketName?:   *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
+							BucketPrefix?: *string | fn.#Fn
+						} | fn.#If
+						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE") | fn.#Fn
+					} | fn.#If
 					Salesforce?: *{
 						ErrorHandlingConfig?: *{
 							BucketName?:       *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
@@ -358,7 +372,7 @@ import (
 					Key:   *("VALUE" | "VALUES" | "DATA_TYPE" | "UPPER_BOUND" | "LOWER_BOUND" | "SOURCE_DATA_TYPE" | "DESTINATION_DATA_TYPE" | "VALIDATION_ACTION" | "MASK_VALUE" | "MASK_LENGTH" | "TRUNCATE_LENGTH" | "MATH_OPERATION_FIELDS_ORDER" | "CONCAT_FORMAT" | "SUBFIELD_CATEGORY_MAP" | "EXCLUDE_SOURCE_FIELDS_LIST") | fn.#Fn
 					Value: *(=~#".+"#) | fn.#Fn
 				}] | fn.#If
-				TaskType: *("Arithmetic" | "Filter" | "Map" | "Map_all" | "Mask" | "Merge" | "Truncate" | "Validate") | fn.#Fn
+				TaskType: *("Arithmetic" | "Filter" | "Map" | "Map_all" | "Mask" | "Merge" | "Passthrough" | "Truncate" | "Validate") | fn.#Fn
 			}] | fn.#If
 			TriggerConfig: *{
 				TriggerProperties?: *{

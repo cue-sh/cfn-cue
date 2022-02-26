@@ -27,6 +27,18 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#PullThroughCacheRule: {
+		Type: "AWS::ECR::PullThroughCacheRule"
+		Properties: {
+			EcrRepositoryPrefix?: *(strings.MinRunes(2) & strings.MaxRunes(20) & (=~#"^([a-z0-9]+(?:[._-][a-z0-9]+)*)$"#)) | fn.#Fn
+			UpstreamRegistryUrl?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#RegistryPolicy: {
 		Type: "AWS::ECR::RegistryPolicy"
 		Properties: PolicyText: *{

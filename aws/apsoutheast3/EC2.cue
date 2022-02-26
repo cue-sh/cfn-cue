@@ -345,7 +345,12 @@ import (
 				SecondaryPrivateIpAddressCount?: *int | fn.#Fn
 				SubnetId?:                       *string | fn.#Fn
 			}] | fn.#If
-			PlacementGroupName?:              *string | fn.#Fn
+			PlacementGroupName?:    *string | fn.#Fn
+			PrivateDnsNameOptions?: *{
+				EnableResourceNameDnsAAAARecord?: *bool | fn.#Fn
+				EnableResourceNameDnsARecord?:    *bool | fn.#Fn
+				HostnameType?:                    *string | fn.#Fn
+			} | fn.#If
 			PrivateIpAddress?:                *string | fn.#Fn
 			PropagateTagsToVolumeOnCreation?: *bool | fn.#Fn
 			RamdiskId?:                       *string | fn.#Fn
@@ -812,6 +817,7 @@ import (
 						} | fn.#If
 					} | fn.#If
 					InstanceType?:     *string | fn.#Fn
+					Priority?:         *number | fn.#Fn
 					SpotPrice?:        *string | fn.#Fn
 					SubnetId?:         *string | fn.#Fn
 					WeightedCapacity?: *number | fn.#Fn
@@ -912,6 +918,98 @@ import (
 		Properties: {
 			RouteTableId: *string | fn.#Fn
 			SubnetId:     *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGateway: {
+		Type: "AWS::EC2::TransitGateway"
+		Properties: {
+			AmazonSideAsn?:                *int | fn.#Fn
+			AutoAcceptSharedAttachments?:  *("disable" | "enable") | fn.#Fn
+			DefaultRouteTableAssociation?: *("disable" | "enable") | fn.#Fn
+			DefaultRouteTablePropagation?: *("disable" | "enable") | fn.#Fn
+			Description?:                  *string | fn.#Fn
+			DnsSupport?:                   *("disable" | "enable") | fn.#Fn
+			MulticastSupport?:             *string | fn.#Fn
+			Tags?:                         *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpnEcmpSupport?: *("disable" | "enable") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayAttachment: {
+		Type: "AWS::EC2::TransitGatewayAttachment"
+		Properties: {
+			SubnetIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:     *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+			VpcId:            *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayRoute: {
+		Type: "AWS::EC2::TransitGatewayRoute"
+		Properties: {
+			Blackhole?:                  *bool | fn.#Fn
+			DestinationCidrBlock?:       *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$"#) | fn.#Fn
+			TransitGatewayAttachmentId?: *string | fn.#Fn
+			TransitGatewayRouteTableId:  *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayRouteTable: {
+		Type: "AWS::EC2::TransitGatewayRouteTable"
+		Properties: {
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayRouteTableAssociation: {
+		Type: "AWS::EC2::TransitGatewayRouteTableAssociation"
+		Properties: {
+			TransitGatewayAttachmentId: *string | fn.#Fn
+			TransitGatewayRouteTableId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayRouteTablePropagation: {
+		Type: "AWS::EC2::TransitGatewayRouteTablePropagation"
+		Properties: {
+			TransitGatewayAttachmentId: *string | fn.#Fn
+			TransitGatewayRouteTableId: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

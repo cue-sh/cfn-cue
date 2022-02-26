@@ -43,8 +43,57 @@ import (
 		Type: "AWS::Events::Connection"
 		Properties: {
 			AuthParameters: *{
-				[string]: _
-			} | fn.#Fn
+				ApiKeyAuthParameters?: *{
+					ApiKeyName:  *string | fn.#Fn
+					ApiKeyValue: *string | fn.#Fn
+				} | fn.#If
+				BasicAuthParameters?: *{
+					Password: *string | fn.#Fn
+					Username: *string | fn.#Fn
+				} | fn.#If
+				InvocationHttpParameters?: *{
+					BodyParameters?: *[...{
+						IsValueSecret?: *bool | fn.#Fn
+						Key:            *string | fn.#Fn
+						Value:          *string | fn.#Fn
+					}] | fn.#If
+					HeaderParameters?: *[...{
+						IsValueSecret?: *bool | fn.#Fn
+						Key:            *string | fn.#Fn
+						Value:          *string | fn.#Fn
+					}] | fn.#If
+					QueryStringParameters?: *[...{
+						IsValueSecret?: *bool | fn.#Fn
+						Key:            *string | fn.#Fn
+						Value:          *string | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
+				OAuthParameters?: *{
+					AuthorizationEndpoint: *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+					ClientParameters:      *{
+						ClientID:     *string | fn.#Fn
+						ClientSecret: *string | fn.#Fn
+					} | fn.#If
+					HttpMethod:           *("GET" | "POST" | "PUT") | fn.#Fn
+					OAuthHttpParameters?: *{
+						BodyParameters?: *[...{
+							IsValueSecret?: *bool | fn.#Fn
+							Key:            *string | fn.#Fn
+							Value:          *string | fn.#Fn
+						}] | fn.#If
+						HeaderParameters?: *[...{
+							IsValueSecret?: *bool | fn.#Fn
+							Key:            *string | fn.#Fn
+							Value:          *string | fn.#Fn
+						}] | fn.#If
+						QueryStringParameters?: *[...{
+							IsValueSecret?: *bool | fn.#Fn
+							Key:            *string | fn.#Fn
+							Value:          *string | fn.#Fn
+						}] | fn.#If
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
 			AuthorizationType: *("API_KEY" | "BASIC" | "OAUTH_CLIENT_CREDENTIALS") | fn.#Fn
 			Description?:      *string | fn.#Fn
 			Name?:             *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn

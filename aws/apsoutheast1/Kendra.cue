@@ -9,6 +9,60 @@ import (
 	#DataSource: {
 		Type: "AWS::Kendra::DataSource"
 		Properties: {
+			CustomDocumentEnrichmentConfiguration?: *{
+				InlineConfigurations?: *[...{
+					Condition?: *{
+						ConditionDocumentAttributeKey: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9_][a-zA-Z0-9_-]*"#)) | fn.#Fn
+						ConditionOnValue?:             *{
+							DateValue?:       *string | fn.#Fn
+							LongValue?:       *int | fn.#Fn
+							StringListValue?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							StringValue?:     *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+						} | fn.#If
+						Operator: *("GreaterThan" | "GreaterThanOrEquals" | "LessThan" | "LessThanOrEquals" | "Equals" | "NotEquals" | "Contains" | "NotContains" | "Exists" | "NotExists" | "BeginsWith") | fn.#Fn
+					} | fn.#If
+					DocumentContentDeletion?: *bool | fn.#Fn
+					Target?:                  *{
+						TargetDocumentAttributeKey:    *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9_][a-zA-Z0-9_-]*"#)) | fn.#Fn
+						TargetDocumentAttributeValue?: *{
+							DateValue?:       *string | fn.#Fn
+							LongValue?:       *int | fn.#Fn
+							StringListValue?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							StringValue?:     *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+						} | fn.#If
+						TargetDocumentAttributeValueDeletion?: *bool | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
+				PostExtractionHookConfiguration?: *{
+					InvocationCondition?: *{
+						ConditionDocumentAttributeKey: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9_][a-zA-Z0-9_-]*"#)) | fn.#Fn
+						ConditionOnValue?:             *{
+							DateValue?:       *string | fn.#Fn
+							LongValue?:       *int | fn.#Fn
+							StringListValue?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							StringValue?:     *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+						} | fn.#If
+						Operator: *("GreaterThan" | "GreaterThanOrEquals" | "LessThan" | "LessThanOrEquals" | "Equals" | "NotEquals" | "Contains" | "NotContains" | "Exists" | "NotExists" | "BeginsWith") | fn.#Fn
+					} | fn.#If
+					LambdaArn: *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+					S3Bucket:  *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"[a-z0-9][\.\-a-z0-9]{1,61}[a-z0-9]"#)) | fn.#Fn
+				} | fn.#If
+				PreExtractionHookConfiguration?: *{
+					InvocationCondition?: *{
+						ConditionDocumentAttributeKey: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9_][a-zA-Z0-9_-]*"#)) | fn.#Fn
+						ConditionOnValue?:             *{
+							DateValue?:       *string | fn.#Fn
+							LongValue?:       *int | fn.#Fn
+							StringListValue?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							StringValue?:     *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+						} | fn.#If
+						Operator: *("GreaterThan" | "GreaterThanOrEquals" | "LessThan" | "LessThanOrEquals" | "Equals" | "NotEquals" | "Contains" | "NotContains" | "Exists" | "NotExists" | "BeginsWith") | fn.#Fn
+					} | fn.#If
+					LambdaArn: *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+					S3Bucket:  *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"[a-z0-9][\.\-a-z0-9]{1,61}[a-z0-9]"#)) | fn.#Fn
+				} | fn.#If
+				RoleArn?: *(strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
+			} | fn.#If
 			DataSourceConfiguration?: *{
 				ConfluenceConfiguration?: *{
 					AttachmentConfiguration?: *{

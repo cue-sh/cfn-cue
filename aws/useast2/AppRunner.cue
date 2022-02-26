@@ -44,7 +44,7 @@ import (
 						CodeConfigurationValues?: *{
 							BuildCommand?:                *string | fn.#Fn
 							Port?:                        *string | fn.#Fn
-							Runtime:                      *("PYTHON_3" | "NODEJS_12") | fn.#Fn
+							Runtime:                      *("PYTHON_3" | "NODEJS_12" | "NODEJS_14" | "CORRETTO_8" | "CORRETTO_11") | fn.#Fn
 							RuntimeEnvironmentVariables?: *[...{
 								Name?:  *string | fn.#Fn
 								Value?: *string | fn.#Fn

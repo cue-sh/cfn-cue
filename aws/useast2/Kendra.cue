@@ -9,6 +9,60 @@ import (
 	#DataSource: {
 		Type: "AWS::Kendra::DataSource"
 		Properties: {
+			CustomDocumentEnrichmentConfiguration?: *{
+				InlineConfigurations?: *[...{
+					Condition?: *{
+						ConditionDocumentAttributeKey: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9_][a-zA-Z0-9_-]*"#)) | fn.#Fn
+						ConditionOnValue?:             *{
+							DateValue?:       *string | fn.#Fn
+							LongValue?:       *int | fn.#Fn
+							StringListValue?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							StringValue?:     *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+						} | fn.#If
+						Operator: *("GreaterThan" | "GreaterThanOrEquals" | "LessThan" | "LessThanOrEquals" | "Equals" | "NotEquals" | "Contains" | "NotContains" | "Exists" | "NotExists" | "BeginsWith") | fn.#Fn
+					} | fn.#If
+					DocumentContentDeletion?: *bool | fn.#Fn
+					Target?:                  *{
+						TargetDocumentAttributeKey:    *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9_][a-zA-Z0-9_-]*"#)) | fn.#Fn
+						TargetDocumentAttributeValue?: *{
+							DateValue?:       *string | fn.#Fn
+							LongValue?:       *int | fn.#Fn
+							StringListValue?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							StringValue?:     *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+						} | fn.#If
+						TargetDocumentAttributeValueDeletion?: *bool | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
+				PostExtractionHookConfiguration?: *{
+					InvocationCondition?: *{
+						ConditionDocumentAttributeKey: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9_][a-zA-Z0-9_-]*"#)) | fn.#Fn
+						ConditionOnValue?:             *{
+							DateValue?:       *string | fn.#Fn
+							LongValue?:       *int | fn.#Fn
+							StringListValue?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							StringValue?:     *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+						} | fn.#If
+						Operator: *("GreaterThan" | "GreaterThanOrEquals" | "LessThan" | "LessThanOrEquals" | "Equals" | "NotEquals" | "Contains" | "NotContains" | "Exists" | "NotExists" | "BeginsWith") | fn.#Fn
+					} | fn.#If
+					LambdaArn: *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+					S3Bucket:  *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"[a-z0-9][\.\-a-z0-9]{1,61}[a-z0-9]"#)) | fn.#Fn
+				} | fn.#If
+				PreExtractionHookConfiguration?: *{
+					InvocationCondition?: *{
+						ConditionDocumentAttributeKey: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9_][a-zA-Z0-9_-]*"#)) | fn.#Fn
+						ConditionOnValue?:             *{
+							DateValue?:       *string | fn.#Fn
+							LongValue?:       *int | fn.#Fn
+							StringListValue?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+							StringValue?:     *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+						} | fn.#If
+						Operator: *("GreaterThan" | "GreaterThanOrEquals" | "LessThan" | "LessThanOrEquals" | "Equals" | "NotEquals" | "Contains" | "NotContains" | "Exists" | "NotExists" | "BeginsWith") | fn.#Fn
+					} | fn.#If
+					LambdaArn: *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+					S3Bucket:  *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"[a-z0-9][\.\-a-z0-9]{1,61}[a-z0-9]"#)) | fn.#Fn
+				} | fn.#If
+				RoleArn?: *(strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
+			} | fn.#If
 			DataSourceConfiguration?: *{
 				ConfluenceConfiguration?: *{
 					AttachmentConfiguration?: *{
@@ -293,6 +347,90 @@ import (
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			Type: *("S3" | "SHAREPOINT" | "SALESFORCE" | "ONEDRIVE" | "SERVICENOW" | "DATABASE" | "CUSTOM" | "CONFLUENCE" | "GOOGLEDRIVE" | "WEBCRAWLER" | "WORKDOCS") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Faq: {
+		Type: "AWS::Kendra::Faq"
+		Properties: {
+			Description?: *(strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
+			FileFormat?:  *("CSV" | "CSV_WITH_HEADER" | "JSON") | fn.#Fn
+			IndexId:      *(strings.MinRunes(36) & strings.MaxRunes(36)) | fn.#Fn
+			Name:         *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+			RoleArn:      *(strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
+			S3Path:       *{
+				Bucket: *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"[a-z0-9][\.\-a-z0-9]{1,61}[a-z0-9]"#)) | fn.#Fn
+				Key:    *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Index: {
+		Type: "AWS::Kendra::Index"
+		Properties: {
+			CapacityUnits?: *{
+				QueryCapacityUnits:   *int | fn.#Fn
+				StorageCapacityUnits: *int | fn.#Fn
+			} | fn.#If
+			Description?:                    *string | fn.#Fn
+			DocumentMetadataConfigurations?: *[...{
+				Name:       *(strings.MinRunes(1) & strings.MaxRunes(30)) | fn.#Fn
+				Relevance?: *{
+					Duration?:             *(strings.MinRunes(1) & strings.MaxRunes(10) & (=~#"[0-9]+[s]"#)) | fn.#Fn
+					Freshness?:            *bool | fn.#Fn
+					Importance?:           *(>=1 & <=10) | fn.#Fn
+					RankOrder?:            *("ASCENDING" | "DESCENDING") | fn.#Fn
+					ValueImportanceItems?: *[...{
+						Key?:   *(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn
+						Value?: *(>=1 & <=10) | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
+				Search?: *{
+					Displayable?: *bool | fn.#Fn
+					Facetable?:   *bool | fn.#Fn
+					Searchable?:  *bool | fn.#Fn
+					Sortable?:    *bool | fn.#Fn
+				} | fn.#If
+				Type: *("STRING_VALUE" | "STRING_LIST_VALUE" | "LONG_VALUE" | "DATE_VALUE") | fn.#Fn
+			}] | fn.#If
+			Edition:                            *("DEVELOPER_EDITION" | "ENTERPRISE_EDITION") | fn.#Fn
+			Name:                               *(strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
+			RoleArn:                            *(strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
+			ServerSideEncryptionConfiguration?: *{
+				KmsKeyId?: *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			UserContextPolicy?:       *("ATTRIBUTE_FILTER" | "USER_TOKEN") | fn.#Fn
+			UserTokenConfigurations?: *[...{
+				JsonTokenTypeConfiguration?: *{
+					GroupAttributeField:    *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+					UserNameAttributeField: *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+				} | fn.#If
+				JwtTokenTypeConfiguration?: *{
+					ClaimRegex?:             *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+					GroupAttributeField?:    *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+					Issuer?:                 *(strings.MinRunes(1) & strings.MaxRunes(65)) | fn.#Fn
+					KeyLocation:             *("URL" | "SECRET_MANAGER") | fn.#Fn
+					SecretManagerArn?:       *(strings.MinRunes(1) & strings.MaxRunes(1284) & (=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#)) | fn.#Fn
+					URL?:                    *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(https?|ftp|file):\/\/([^\s]*)"#)) | fn.#Fn
+					UserNameAttributeField?: *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+				} | fn.#If
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

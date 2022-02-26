@@ -74,6 +74,7 @@ import (
 		Properties: {
 			AuthorizerFunctionArn: *string | fn.#Fn
 			AuthorizerName?:       *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[\w=,@-]+"#)) | fn.#Fn
+			EnableCachingForHttp?: *bool | fn.#Fn
 			SigningDisabled?:      *bool | fn.#Fn
 			Status?:               *("ACTIVE" | "INACTIVE") | fn.#Fn
 			Tags?:                 *[...{

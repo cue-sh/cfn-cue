@@ -16,8 +16,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			EnableCloudwatchLogsExports?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			EngineVersion?:               *("3.6.0" | "4.0" | "4.0.0") | fn.#Fn
 			KmsKeyId?:                    *string | fn.#Fn
-			MasterUserPassword:           *string | fn.#Fn
-			MasterUsername:               *string | fn.#Fn
+			MasterUserPassword?:          *string | fn.#Fn
+			MasterUsername?:              *string | fn.#Fn
 			Port?:                        *int | fn.#Fn
 			PreferredBackupWindow?:       *string | fn.#Fn
 			PreferredMaintenanceWindow?:  *string | fn.#Fn

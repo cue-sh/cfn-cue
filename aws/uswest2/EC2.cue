@@ -608,7 +608,12 @@ import (
 				SecondaryPrivateIpAddressCount?: *int | fn.#Fn
 				SubnetId?:                       *string | fn.#Fn
 			}] | fn.#If
-			PlacementGroupName?:              *string | fn.#Fn
+			PlacementGroupName?:    *string | fn.#Fn
+			PrivateDnsNameOptions?: *{
+				EnableResourceNameDnsAAAARecord?: *bool | fn.#Fn
+				EnableResourceNameDnsARecord?:    *bool | fn.#Fn
+				HostnameType?:                    *string | fn.#Fn
+			} | fn.#If
 			PrivateIpAddress?:                *string | fn.#Fn
 			PropagateTagsToVolumeOnCreation?: *bool | fn.#Fn
 			RamdiskId?:                       *string | fn.#Fn
@@ -1457,6 +1462,7 @@ import (
 						} | fn.#If
 					} | fn.#If
 					InstanceType?:     *string | fn.#Fn
+					Priority?:         *number | fn.#Fn
 					SpotPrice?:        *string | fn.#Fn
 					SubnetId?:         *string | fn.#Fn
 					WeightedCapacity?: *number | fn.#Fn
@@ -1502,21 +1508,13 @@ import (
 	#Subnet: {
 		Type: "AWS::EC2::Subnet"
 		Properties: {
-			AssignIpv6AddressOnCreation?:   *bool | fn.#Fn
-			AvailabilityZone?:              *(=~#"[a-z0-9-]+"#) | fn.#Fn
-			AvailabilityZoneId?:            *string | fn.#Fn
-			CidrBlock:                      *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
-			EnableDns64?:                   *bool | fn.#Fn
-			Ipv6CidrBlock?:                 *string | fn.#Fn
-			Ipv6Native?:                    *bool | fn.#Fn
-			MapPublicIpOnLaunch?:           *bool | fn.#Fn
-			OutpostArn?:                    *string | fn.#Fn
-			PrivateDnsNameOptionsOnLaunch?: *{
-				EnableResourceNameDnsAAAARecord?: *bool | fn.#Fn
-				EnableResourceNameDnsARecord?:    *bool | fn.#Fn
-				HostnameType?:                    *string | fn.#Fn
-			} | fn.#If
-			Tags?: *[...{
+			AssignIpv6AddressOnCreation?: *bool | fn.#Fn
+			AvailabilityZone?:            *(=~#"[a-z0-9-]+"#) | fn.#Fn
+			CidrBlock:                    *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
+			Ipv6CidrBlock?:               *string | fn.#Fn
+			MapPublicIpOnLaunch?:         *bool | fn.#Fn
+			OutpostArn?:                  *string | fn.#Fn
+			Tags?:                        *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

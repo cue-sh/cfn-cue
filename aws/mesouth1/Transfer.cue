@@ -22,9 +22,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				InvocationRole?: *string | fn.#Fn
 				Url?:            *string | fn.#Fn
 			} | fn.#If
-			IdentityProviderType?: *string | fn.#Fn
-			LoggingRole?:          *string | fn.#Fn
-			ProtocolDetails?:      *{
+			IdentityProviderType?:          *string | fn.#Fn
+			LoggingRole?:                   *string | fn.#Fn
+			PostAuthenticationLoginBanner?: *string | fn.#Fn
+			PreAuthenticationLoginBanner?:  *string | fn.#Fn
+			ProtocolDetails?:               *{
 				PassiveIp?:                *string | fn.#Fn
 				TlsSessionResumptionMode?: *string | fn.#Fn
 			} | fn.#If

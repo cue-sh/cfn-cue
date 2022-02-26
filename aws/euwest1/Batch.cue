@@ -34,15 +34,15 @@ import (
 				SpotIamFleetRole?: *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 				Subnets:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Tags?:             *{
-					[string]: _
-				} | fn.#Fn
+					[string]: *string | fn.#Fn
+				} | fn.#If
 				Type: *string | fn.#Fn
 			} | fn.#If
 			ServiceRole?: *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 			State?:       *string | fn.#Fn
 			Tags?:        *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 			Type:            *string | fn.#Fn
 			UnmanagedvCpus?: *int | fn.#Fn
 		}
@@ -268,8 +268,8 @@ import (
 			SchedulingPolicyArn?: *(=~#"arn:[a-z0-9-\.]{1,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[^/].{0,1023}"#) | fn.#Fn
 			State?:               *("DISABLED" | "ENABLED") | fn.#Fn
 			Tags?:                *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -95,8 +95,8 @@ import (
 				RuleName?: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9_]+$"#)) | fn.#Fn
 			}] | fn.#If
 			RetentionPeriod?: *{
-				NumberOfDays: *(>=1 & <=2147483647) | fn.#Fn
-				Unlimited:    *bool | fn.#Fn
+				NumberOfDays?: *(>=1 & <=2147483647) | fn.#Fn
+				Unlimited?:    *bool | fn.#Fn
 			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn

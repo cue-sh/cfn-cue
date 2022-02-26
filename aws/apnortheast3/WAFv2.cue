@@ -593,6 +593,16 @@ import (
 					ExcludedRules?: *[...{
 						Name: *(=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 					}] | fn.#If
+					ManagedRuleGroupConfigs?: *[...{
+						LoginPath?:     *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#".*\S.*"#)) | fn.#Fn
+						PasswordField?: *{
+							Identifier: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#".*\S.*"#)) | fn.#Fn
+						} | fn.#If
+						PayloadType?:   *("JSON" | "FORM_ENCODED") | fn.#Fn
+						UsernameField?: *{
+							Identifier: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#".*\S.*"#)) | fn.#Fn
+						} | fn.#If
+					}] | fn.#If
 					Name:                *(=~#"^[0-9A-Za-z_-]{1,128}$"#) | fn.#Fn
 					ScopeDownStatement?: *_#Statement | fn.#If
 					VendorName:          *string | fn.#Fn

@@ -1,19 +1,84 @@
 package apsoutheast3
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #ECS: {
+	#CapacityProvider: {
+		Type: "AWS::ECS::CapacityProvider"
+		Properties: {
+			AutoScalingGroupProvider: *{
+				AutoScalingGroupArn: *string | fn.#Fn
+				ManagedScaling?:     *{
+					InstanceWarmupPeriod?:   *int | fn.#Fn
+					MaximumScalingStepSize?: *int | fn.#Fn
+					MinimumScalingStepSize?: *int | fn.#Fn
+					Status?:                 *("DISABLED" | "ENABLED") | fn.#Fn
+					TargetCapacity?:         *int | fn.#Fn
+				} | fn.#If
+				ManagedTerminationProtection?: *("DISABLED" | "ENABLED") | fn.#Fn
+			} | fn.#If
+			Name?: *string | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Cluster: {
 		Type: "AWS::ECS::Cluster"
 		Properties: {
-			ClusterName?:     *string | fn.#Fn
-			ClusterSettings?: *[...{
-				Name:  *string | fn.#Fn
-				Value: *string | fn.#Fn
+			CapacityProviders?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			ClusterName?:       *string | fn.#Fn
+			ClusterSettings?:   *[...{
+				Name?:  *string | fn.#Fn
+				Value?: *string | fn.#Fn
+			}] | fn.#If
+			Configuration?: *{
+				ExecuteCommandConfiguration?: *{
+					KmsKeyId?:         *string | fn.#Fn
+					LogConfiguration?: *{
+						CloudWatchEncryptionEnabled?: *bool | fn.#Fn
+						CloudWatchLogGroupName?:      *string | fn.#Fn
+						S3BucketName?:                *string | fn.#Fn
+						S3EncryptionEnabled?:         *bool | fn.#Fn
+						S3KeyPrefix?:                 *string | fn.#Fn
+					} | fn.#If
+					Logging?: *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			DefaultCapacityProviderStrategy?: *[...{
+				Base?:             *int | fn.#Fn
+				CapacityProvider?: *string | fn.#Fn
+				Weight?:           *int | fn.#Fn
 			}] | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ClusterCapacityProviderAssociations: {
+		Type: "AWS::ECS::ClusterCapacityProviderAssociations"
+		Properties: {
+			CapacityProviders:               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Cluster:                         *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+			DefaultCapacityProviderStrategy: *[...{
+				Base?:            *int | fn.#Fn
+				CapacityProvider: *string | fn.#Fn
+				Weight?:          *int | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

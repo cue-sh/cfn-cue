@@ -22,9 +22,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				InvocationRole?: *string | fn.#Fn
 				Url?:            *string | fn.#Fn
 			} | fn.#If
-			IdentityProviderType?: *string | fn.#Fn
-			LoggingRole?:          *string | fn.#Fn
-			ProtocolDetails?:      *{
+			IdentityProviderType?:          *string | fn.#Fn
+			LoggingRole?:                   *string | fn.#Fn
+			PostAuthenticationLoginBanner?: *string | fn.#Fn
+			PreAuthenticationLoginBanner?:  *string | fn.#Fn
+			ProtocolDetails?:               *{
 				PassiveIp?:                *string | fn.#Fn
 				TlsSessionResumptionMode?: *string | fn.#Fn
 			} | fn.#If
@@ -70,6 +72,51 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			UserName: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Workflow: {
+		Type: "AWS::Transfer::Workflow"
+		Properties: {
+			Description?:      *(=~#"^[\w\- ]*$"#) | fn.#Fn
+			OnExceptionSteps?: *[...{
+				CopyStepDetails?: *{
+					[string]: _
+				} | fn.#Fn
+				CustomStepDetails?: *{
+					[string]: _
+				} | fn.#Fn
+				DeleteStepDetails?: *{
+					[string]: _
+				} | fn.#Fn
+				TagStepDetails?: *{
+					[string]: _
+				} | fn.#Fn
+				Type?: *("COPY" | "CUSTOM" | "DELETE" | "TAG") | fn.#Fn
+			}] | fn.#If
+			Steps: *[...{
+				CopyStepDetails?: *{
+					[string]: _
+				} | fn.#Fn
+				CustomStepDetails?: *{
+					[string]: _
+				} | fn.#Fn
+				DeleteStepDetails?: *{
+					[string]: _
+				} | fn.#Fn
+				TagStepDetails?: *{
+					[string]: _
+				} | fn.#Fn
+				Type?: *("COPY" | "CUSTOM" | "DELETE" | "TAG") | fn.#Fn
+			}] | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

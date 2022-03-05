@@ -218,6 +218,20 @@ import (
 							} | fn.#If
 						} | fn.#If
 					} | fn.#If
+					SAPOData?: *{
+						ErrorHandlingConfig?: *{
+							BucketName?:       *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
+							BucketPrefix?:     *string | fn.#Fn
+							FailOnFirstError?: *bool | fn.#Fn
+						} | fn.#If
+						IdFieldNames?:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						ObjectPath:                     *(=~#"\S+"#) | fn.#Fn
+						SuccessResponseHandlingConfig?: *{
+							BucketName?:   *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
+							BucketPrefix?: *string | fn.#Fn
+						} | fn.#If
+						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE") | fn.#Fn
+					} | fn.#If
 					Salesforce?: *{
 						ErrorHandlingConfig?: *{
 							BucketName?:       *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn

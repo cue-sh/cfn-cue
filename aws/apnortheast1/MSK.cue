@@ -3,6 +3,18 @@ package apnortheast1
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #MSK: {
+	#BatchScramSecret: {
+		Type: "AWS::MSK::BatchScramSecret"
+		Properties: {
+			ClusterArn:     *string | fn.#Fn
+			SecretArnList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Cluster: {
 		Type: "AWS::MSK::Cluster"
 		Properties: {
@@ -48,6 +60,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Arn:      *string | fn.#Fn
 				Revision: *int | fn.#Fn
 			} | fn.#If
+			CurrentVersion?: *string | fn.#Fn
 			EncryptionInfo?: *{
 				EncryptionAtRest?: *{
 					DataVolumeKMSKeyId: *string | fn.#Fn
@@ -88,8 +101,22 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 			} | fn.#If
 			Tags?: *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Configuration: {
+		Type: "AWS::MSK::Configuration"
+		Properties: {
+			Description?:       *string | fn.#Fn
+			KafkaVersionsList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Name?:              *string | fn.#Fn
+			ServerProperties:   *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -289,4 +289,21 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#WarmPool: {
+		Type: "AWS::AutoScaling::WarmPool"
+		Properties: {
+			AutoScalingGroupName: *string | fn.#Fn
+			InstanceReusePolicy?: *{
+				ReuseOnScaleIn?: *bool | fn.#Fn
+			} | fn.#If
+			MaxGroupPreparedCapacity?: *int | fn.#Fn
+			MinSize?:                  *int | fn.#Fn
+			PoolState?:                *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

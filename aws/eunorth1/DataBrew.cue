@@ -162,6 +162,7 @@ import (
 					BucketOwner?: *(strings.MinRunes(12) & strings.MaxRunes(12)) | fn.#Fn
 					Key?:         *string | fn.#Fn
 				} | fn.#If
+				MaxOutputFiles?:   *(>=1 & <=999) | fn.#Fn
 				Overwrite?:        *bool | fn.#Fn
 				PartitionColumns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			}] | fn.#If

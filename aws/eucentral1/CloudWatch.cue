@@ -9,25 +9,27 @@ import (
 	#Alarm: {
 		Type: "AWS::CloudWatch::Alarm"
 		Properties: {
-			ActionsEnabled?:    *bool | fn.#Fn
-			AlarmActions?:      [...(*(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)
-			AlarmDescription?:  *string | fn.#Fn
-			AlarmName?:         *string | fn.#Fn
-			ComparisonOperator: *("GreaterThanOrEqualToThreshold" | "GreaterThanThreshold" | "GreaterThanUpperThreshold" | "LessThanLowerOrGreaterThanUpperThreshold" | "LessThanLowerThreshold" | "LessThanOrEqualToThreshold" | "LessThanThreshold") | fn.#Fn
-			DatapointsToAlarm?: *int | fn.#Fn
-			Dimensions?:        *[...{
+			ActionsEnabled?:     *bool | fn.#Fn
+			AlarmActions?:       [...(*(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)
+			AlarmDescription?:   *string | fn.#Fn
+			AlarmName?:          *string | fn.#Fn
+			ComparisonOperator?: *("GreaterThanOrEqualToThreshold" | "GreaterThanThreshold" | "GreaterThanUpperThreshold" | "LessThanLowerOrGreaterThanUpperThreshold" | "LessThanLowerThreshold" | "LessThanOrEqualToThreshold" | "LessThanThreshold") | fn.#Fn
+			DatapointsToAlarm?:  *int | fn.#Fn
+			Dimensions?:         *[...{
 				Name:  *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			EvaluateLowSampleCountPercentile?: *string | fn.#Fn
-			EvaluationPeriods:                 *int | fn.#Fn
-			ExtendedStatistic?:                *string | fn.#Fn
-			InsufficientDataActions?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			MetricName?:                       *string | fn.#Fn
-			Metrics?:                          *[...{
+			EvaluationPeriods?:                *int | fn.#Fn
+			ExtendedStatistic?:                *{
+				[string]: *string | fn.#Fn
+			} | fn.#If
+			InsufficientDataActions?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			MetricName?:              *string | fn.#Fn
+			Metrics?:                 *[...{
 				AccountId?:  *string | fn.#Fn
 				Expression?: *string | fn.#Fn
-				Id:          *(=~#"^([a-z])([A-Za-z0-9\_]+)$"#) | fn.#Fn
+				Id?:         *(=~#"^([a-z])([A-Za-z0-9\_]+)$"#) | fn.#Fn
 				Label?:      *string | fn.#Fn
 				MetricStat?: *{
 					Metric: *{
@@ -36,7 +38,9 @@ import (
 							Value: *string | fn.#Fn
 						}] | fn.#If
 						MetricName?: *string | fn.#Fn
-						Namespace?:  *string | fn.#Fn
+						Namespace?:  *{
+							[string]: *string | fn.#Fn
+						} | fn.#If
 					} | fn.#If
 					Period: *int | fn.#Fn
 					Stat:   *string | fn.#Fn
@@ -45,7 +49,9 @@ import (
 				Period?:     *int | fn.#Fn
 				ReturnData?: *bool | fn.#Fn
 			}] | fn.#If
-			Namespace?:         *string | fn.#Fn
+			Namespace?: *{
+				[string]: *string | fn.#Fn
+			} | fn.#If
 			OKActions?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			Period?:            *int | fn.#Fn
 			Statistic?:         *("Average" | "Maximum" | "Minimum" | "SampleCount" | "Sum") | fn.#Fn

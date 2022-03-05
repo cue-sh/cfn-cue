@@ -64,8 +64,9 @@ import (
 			Properties: *{
 				[string]: _#ComponentProperty
 			} | fn.#If
-			SourceId?: *string | fn.#Fn
-			Tags?:     *{
+			SchemaVersion?: *string | fn.#Fn
+			SourceId?:      *string | fn.#Fn
+			Tags?:          *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
 			Variants: *[...{

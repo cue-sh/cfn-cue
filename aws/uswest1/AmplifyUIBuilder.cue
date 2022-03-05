@@ -64,14 +64,22 @@ import (
 			Properties: *{
 				[string]: _#ComponentProperty
 			} | fn.#If
-			SourceId?: *string | fn.#Fn
-			Tags?:     *{
+			SchemaVersion?: *string | fn.#Fn
+			SourceId?:      *string | fn.#Fn
+			Tags?:          *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
 			Variants: *[...{
 				Overrides?:     *{} | fn.#If
 				VariantValues?: *{} | fn.#If
 			}] | fn.#If
+			_#Predicate: {
+				And?:      *[..._#Predicate] | fn.#If
+				Field?:    *string | fn.#Fn
+				Operand?:  *string | fn.#Fn
+				Operator?: *string | fn.#Fn
+				Or?:       *[..._#Predicate] | fn.#If
+			}
 			_#ComponentProperty: {
 				BindingProperties?: *{
 					Field?:   *string | fn.#Fn
@@ -102,13 +110,6 @@ import (
 				Type?:          *string | fn.#Fn
 				UserAttribute?: *string | fn.#Fn
 				Value?:         *string | fn.#Fn
-			}
-			_#Predicate: {
-				And?:      *[..._#Predicate] | fn.#If
-				Field?:    *string | fn.#Fn
-				Operand?:  *string | fn.#Fn
-				Operator?: *string | fn.#Fn
-				Or?:       *[..._#Predicate] | fn.#If
 			}
 			_#ComponentChild: {
 				Children?:     *[..._#ComponentChild] | fn.#If

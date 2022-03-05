@@ -3,6 +3,18 @@ package euwest1
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #MSK: {
+	#BatchScramSecret: {
+		Type: "AWS::MSK::BatchScramSecret"
+		Properties: {
+			ClusterArn:     *string | fn.#Fn
+			SecretArnList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Cluster: {
 		Type: "AWS::MSK::Cluster"
 		Properties: {
@@ -90,6 +102,20 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Tags?: *{
 				[string]: _
 			} | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Configuration: {
+		Type: "AWS::MSK::Configuration"
+		Properties: {
+			Description?:       *string | fn.#Fn
+			KafkaVersionsList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Name?:              *string | fn.#Fn
+			ServerProperties:   *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

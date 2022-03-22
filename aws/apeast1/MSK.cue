@@ -1,6 +1,9 @@
 package apeast1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #MSK: {
 	#BatchScramSecret: {
@@ -19,14 +22,14 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::MSK::Cluster"
 		Properties: {
 			BrokerNodeGroupInfo: *{
-				BrokerAZDistribution?: *string | fn.#Fn
+				BrokerAZDistribution?: *(strings.MinRunes(6) & strings.MaxRunes(9)) | fn.#Fn
 				ClientSubnets:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				ConnectivityInfo?:     *{
 					PublicAccess?: *{
-						Type?: *string | fn.#Fn
+						Type?: *(strings.MinRunes(7) & strings.MaxRunes(23)) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				InstanceType:    *string | fn.#Fn
+				InstanceType:    *(strings.MinRunes(5) & strings.MaxRunes(32)) | fn.#Fn
 				SecurityGroups?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				StorageInfo?:    *{
 					EBSStorageInfo?: *{
@@ -34,7 +37,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Enabled?:          *bool | fn.#Fn
 							VolumeThroughput?: *int | fn.#Fn
 						} | fn.#If
-						VolumeSize?: *int | fn.#Fn
+						VolumeSize?: *(>=1 & <=16384) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 			} | fn.#If
@@ -55,22 +58,23 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					Enabled: *bool | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			ClusterName:        *string | fn.#Fn
+			ClusterName:        *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 			ConfigurationInfo?: *{
 				Arn:      *string | fn.#Fn
 				Revision: *int | fn.#Fn
 			} | fn.#If
+			CurrentVersion?: *string | fn.#Fn
 			EncryptionInfo?: *{
 				EncryptionAtRest?: *{
 					DataVolumeKMSKeyId: *string | fn.#Fn
 				} | fn.#If
 				EncryptionInTransit?: *{
-					ClientBroker?: *string | fn.#Fn
+					ClientBroker?: *("TLS" | "TLS_PLAINTEXT" | "PLAINTEXT") | fn.#Fn
 					InCluster?:    *bool | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			EnhancedMonitoring?: *string | fn.#Fn
-			KafkaVersion:        *string | fn.#Fn
+			EnhancedMonitoring?: *(("DEFAULT" | "PER_BROKER" | "PER_TOPIC_PER_BROKER" | "PER_TOPIC_PER_PARTITION") & (strings.MinRunes(7) & strings.MaxRunes(23))) | fn.#Fn
+			KafkaVersion:        *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 			LoggingInfo?:        *{
 				BrokerLogs: *{
 					CloudWatchLogs?: *{
@@ -100,8 +104,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 			} | fn.#If
 			Tags?: *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -194,6 +194,14 @@ import (
 					LookoutMetrics?: *{
 						Object?: *(=~#"\S+"#) | fn.#Fn
 					} | fn.#If
+					Marketo?: *{
+						ErrorHandlingConfig?: *{
+							BucketName?:       *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
+							BucketPrefix?:     *string | fn.#Fn
+							FailOnFirstError?: *bool | fn.#Fn
+						} | fn.#If
+						Object: *(=~#"\S+"#) | fn.#Fn
+					} | fn.#If
 					Redshift?: *{
 						BucketPrefix?:        *string | fn.#Fn
 						ErrorHandlingConfig?: *{

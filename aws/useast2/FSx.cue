@@ -49,6 +49,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					Iops?: *int | fn.#Fn
 					Mode?: *string | fn.#Fn
 				} | fn.#If
+				Options?:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				RootVolumeConfiguration?: *{
 					CopyTagsToSnapshots?: *bool | fn.#Fn
 					DataCompressionType?: *string | fn.#Fn
@@ -59,6 +60,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						}] | fn.#If
 					}] | fn.#If
 					ReadOnly?:           *bool | fn.#Fn
+					RecordSizeKiB?:      *int | fn.#Fn
 					UserAndGroupQuotas?: *[...{
 						Id?:                      *int | fn.#Fn
 						StorageCapacityQuotaGiB?: *int | fn.#Fn

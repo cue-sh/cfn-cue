@@ -32,6 +32,31 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ModuleDefaultVersion: {
+		Type: "AWS::CloudFormation::ModuleDefaultVersion"
+		Properties: {
+			Arn?:        *(=~#"^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/module/.+/[0-9]{8}$"#) | fn.#Fn
+			ModuleName?: *(=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::MODULE"#) | fn.#Fn
+			VersionId?:  *(=~#"^[0-9]{8}$"#) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ModuleVersion: {
+		Type: "AWS::CloudFormation::ModuleVersion"
+		Properties: {
+			ModuleName:    *(=~#"^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::MODULE"#) | fn.#Fn
+			ModulePackage: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Stack: {
 		Type: "AWS::CloudFormation::Stack"
 		Properties: {

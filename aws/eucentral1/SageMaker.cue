@@ -191,9 +191,10 @@ import (
 	#Domain: {
 		Type: "AWS::SageMaker::Domain"
 		Properties: {
-			AppNetworkAccessType?: *("PublicInternetOnly" | "VpcOnly") | fn.#Fn
-			AuthMode:              *("SSO" | "IAM") | fn.#Fn
-			DefaultUserSettings:   *{
+			AppNetworkAccessType?:       *("PublicInternetOnly" | "VpcOnly") | fn.#Fn
+			AppSecurityGroupManagement?: *string | fn.#Fn
+			AuthMode:                    *("SSO" | "IAM") | fn.#Fn
+			DefaultUserSettings:         *{
 				ExecutionRole?:            *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
 				JupyterServerAppSettings?: *{
 					DefaultResourceSpec?: *{
@@ -214,6 +215,10 @@ import (
 						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
+				RStudioServerProAppSettings?: *{
+					AccessStatus?: *string | fn.#Fn
+					UserGroup?:    *string | fn.#Fn
+				} | fn.#If
 				SecurityGroups?:  [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
 				SharingSettings?: *{
 					NotebookOutputOption?: *("Allowed" | "Disabled") | fn.#Fn
@@ -221,10 +226,23 @@ import (
 					S3OutputPath?:         *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			DomainName: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
-			KmsKeyId?:  *(=~#".*"#) | fn.#Fn
-			SubnetIds:  [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
-			Tags?:      *[...{
+			DomainName:      *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
+			DomainSettings?: *{
+				RStudioServerProDomainSettings?: *{
+					DefaultResourceSpec?: *{
+						InstanceType?:             *("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
+						SageMakerImageArn?:        *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
+						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
+					} | fn.#If
+					DomainExecutionRoleArn:    *string | fn.#Fn
+					RStudioConnectUrl?:        *string | fn.#Fn
+					RStudioPackageManagerUrl?: *string | fn.#Fn
+				} | fn.#If
+				SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			KmsKeyId?: *(=~#".*"#) | fn.#Fn
+			SubnetIds: [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
+			Tags?:     *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

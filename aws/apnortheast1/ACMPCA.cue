@@ -17,6 +17,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							} | fn.#If
 						}] | fn.#If
 					}] | fn.#If
+					CustomExtensions?: *[...{
+						Critical?:        *bool | fn.#Fn
+						ObjectIdentifier: *string | fn.#Fn
+						Value:            *string | fn.#Fn
+					}] | fn.#If
 					ExtendedKeyUsage?: *[...{
 						ExtendedKeyUsageObjectIdentifier?: *string | fn.#Fn
 						ExtendedKeyUsageType?:             *string | fn.#Fn
@@ -34,8 +39,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					} | fn.#If
 					SubjectAlternativeNames?: *[...{
 						DirectoryName?: *{
-							CommonName?:                 *string | fn.#Fn
-							Country?:                    *string | fn.#Fn
+							CommonName?:       *string | fn.#Fn
+							Country?:          *string | fn.#Fn
+							CustomAttributes?: *[...{
+								ObjectIdentifier: *string | fn.#Fn
+								Value:            *string | fn.#Fn
+							}] | fn.#If
 							DistinguishedNameQualifier?: *string | fn.#Fn
 							GenerationQualifier?:        *string | fn.#Fn
 							GivenName?:                  *string | fn.#Fn
@@ -65,8 +74,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					}] | fn.#If
 				} | fn.#If
 				Subject?: *{
-					CommonName?:                 *string | fn.#Fn
-					Country?:                    *string | fn.#Fn
+					CommonName?:       *string | fn.#Fn
+					Country?:          *string | fn.#Fn
+					CustomAttributes?: *[...{
+						ObjectIdentifier: *string | fn.#Fn
+						Value:            *string | fn.#Fn
+					}] | fn.#If
 					DistinguishedNameQualifier?: *string | fn.#Fn
 					GenerationQualifier?:        *string | fn.#Fn
 					GivenName?:                  *string | fn.#Fn
@@ -118,8 +131,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SubjectInformationAccess?: *[...{
 					AccessLocation: *{
 						DirectoryName?: *{
-							CommonName?:                 *string | fn.#Fn
-							Country?:                    *string | fn.#Fn
+							CommonName?:       *string | fn.#Fn
+							Country?:          *string | fn.#Fn
+							CustomAttributes?: *[...{
+								ObjectIdentifier: *string | fn.#Fn
+								Value:            *string | fn.#Fn
+							}] | fn.#If
 							DistinguishedNameQualifier?: *string | fn.#Fn
 							GenerationQualifier?:        *string | fn.#Fn
 							GivenName?:                  *string | fn.#Fn
@@ -170,8 +187,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			SigningAlgorithm: *string | fn.#Fn
 			Subject:          *{
-				CommonName?:                 *string | fn.#Fn
-				Country?:                    *string | fn.#Fn
+				CommonName?:       *string | fn.#Fn
+				Country?:          *string | fn.#Fn
+				CustomAttributes?: *[...{
+					ObjectIdentifier: *string | fn.#Fn
+					Value:            *string | fn.#Fn
+				}] | fn.#If
 				DistinguishedNameQualifier?: *string | fn.#Fn
 				GenerationQualifier?:        *string | fn.#Fn
 				GivenName?:                  *string | fn.#Fn

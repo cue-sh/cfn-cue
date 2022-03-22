@@ -712,7 +712,7 @@ import (
 			ConversationLogSettings?: *{
 				AudioLogSettings?: *[...{
 					Destination: *{
-						S3Bucket?: *{
+						S3Bucket: *{
 							KmsKeyArn?:  *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:[\w\-]+:kms:[\w\-]+:[\d]{12}:(?:key\/[\w\-]+|alias\/[a-zA-Z0-9:\/_\-]{1,256})$"#)) | fn.#Fn
 							LogPrefix:   *string | fn.#Fn
 							S3BucketArn: *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:[\w\-]+:s3:::[a-z0-9][\.\-a-z0-9]{1,61}[a-z0-9]$"#)) | fn.#Fn
@@ -721,13 +721,13 @@ import (
 					Enabled: *bool | fn.#Fn
 				}] | fn.#If
 				TextLogSettings?: *[...{
-					Destination?: *{
-						CloudWatch?: *{
+					Destination: *{
+						CloudWatch: *{
 							CloudWatchLogGroupArn: *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
 							LogPrefix:             *string | fn.#Fn
 						} | fn.#If
 					} | fn.#If
-					Enabled?: *bool | fn.#Fn
+					Enabled: *bool | fn.#Fn
 				}] | fn.#If
 			} | fn.#If
 			Description?:               *string | fn.#Fn

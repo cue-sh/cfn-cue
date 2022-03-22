@@ -1600,9 +1600,6 @@ import (
 	#TransitGatewayPeeringAttachment: {
 		Type: "AWS::EC2::TransitGatewayPeeringAttachment"
 		Properties: {
-			Options?: *{
-				DynamicRouting?: *string | fn.#Fn
-			} | fn.#If
 			PeerAccountId:        *string | fn.#Fn
 			PeerRegion:           *string | fn.#Fn
 			PeerTransitGatewayId: *string | fn.#Fn

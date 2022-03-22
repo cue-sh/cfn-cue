@@ -223,6 +223,66 @@ import (
 				MaxCapacityBreachBehavior?: *string | fn.#Fn
 				MaxCapacityBuffer?:         *int | fn.#Fn
 				MetricSpecifications:       *[...{
+					CustomizedCapacityMetricSpecification?: *{
+						MetricDataQueries: *[...{
+							Expression?: *string | fn.#Fn
+							Id:          *string | fn.#Fn
+							Label?:      *string | fn.#Fn
+							MetricStat?: *{
+								Metric: *{
+									Dimensions?: *[...{
+										Name:  *string | fn.#Fn
+										Value: *string | fn.#Fn
+									}] | fn.#If
+									MetricName: *string | fn.#Fn
+									Namespace:  *string | fn.#Fn
+								} | fn.#If
+								Stat:  *string | fn.#Fn
+								Unit?: *string | fn.#Fn
+							} | fn.#If
+							ReturnData?: *bool | fn.#Fn
+						}] | fn.#If
+					} | fn.#If
+					CustomizedLoadMetricSpecification?: *{
+						MetricDataQueries: *[...{
+							Expression?: *string | fn.#Fn
+							Id:          *string | fn.#Fn
+							Label?:      *string | fn.#Fn
+							MetricStat?: *{
+								Metric: *{
+									Dimensions?: *[...{
+										Name:  *string | fn.#Fn
+										Value: *string | fn.#Fn
+									}] | fn.#If
+									MetricName: *string | fn.#Fn
+									Namespace:  *string | fn.#Fn
+								} | fn.#If
+								Stat:  *string | fn.#Fn
+								Unit?: *string | fn.#Fn
+							} | fn.#If
+							ReturnData?: *bool | fn.#Fn
+						}] | fn.#If
+					} | fn.#If
+					CustomizedScalingMetricSpecification?: *{
+						MetricDataQueries: *[...{
+							Expression?: *string | fn.#Fn
+							Id:          *string | fn.#Fn
+							Label?:      *string | fn.#Fn
+							MetricStat?: *{
+								Metric: *{
+									Dimensions?: *[...{
+										Name:  *string | fn.#Fn
+										Value: *string | fn.#Fn
+									}] | fn.#If
+									MetricName: *string | fn.#Fn
+									Namespace:  *string | fn.#Fn
+								} | fn.#If
+								Stat:  *string | fn.#Fn
+								Unit?: *string | fn.#Fn
+							} | fn.#If
+							ReturnData?: *bool | fn.#Fn
+						}] | fn.#If
+					} | fn.#If
 					PredefinedLoadMetricSpecification?: *{
 						PredefinedMetricType: *string | fn.#Fn
 						ResourceLabel?:       *string | fn.#Fn

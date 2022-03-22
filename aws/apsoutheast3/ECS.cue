@@ -153,8 +153,8 @@ import (
 				Command?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Cpu?:       *int | fn.#Fn
 				DependsOn?: *[...{
-					Condition:     *string | fn.#Fn
-					ContainerName: *string | fn.#Fn
+					Condition?:     *string | fn.#Fn
+					ContainerName?: *string | fn.#Fn
 				}] | fn.#If
 				DisableNetworking?: *bool | fn.#Fn
 				DnsSearchDomains?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -168,19 +168,23 @@ import (
 					Name?:  *string | fn.#Fn
 					Value?: *string | fn.#Fn
 				}] | fn.#If
+				EnvironmentFiles?: *[...{
+					Type?:  *string | fn.#Fn
+					Value?: *string | fn.#Fn
+				}] | fn.#If
 				Essential?:  *bool | fn.#Fn
 				ExtraHosts?: *[...{
-					Hostname:  *string | fn.#Fn
-					IpAddress: *string | fn.#Fn
+					Hostname?:  *string | fn.#Fn
+					IpAddress?: *string | fn.#Fn
 				}] | fn.#If
 				FirelensConfiguration?: *{
 					Options?: *{
 						[string]: *string | fn.#Fn
 					} | fn.#If
-					Type: *string | fn.#Fn
+					Type?: *string | fn.#Fn
 				} | fn.#If
 				HealthCheck?: *{
-					Command:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Command?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					Interval?:    *int | fn.#Fn
 					Retries?:     *int | fn.#Fn
 					StartPeriod?: *int | fn.#Fn
@@ -197,7 +201,7 @@ import (
 					} | fn.#If
 					Devices?: *[...{
 						ContainerPath?: *string | fn.#Fn
-						HostPath:       *string | fn.#Fn
+						HostPath?:      *string | fn.#Fn
 						Permissions?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					}] | fn.#If
 					InitProcessEnabled?: *bool | fn.#Fn
@@ -250,8 +254,8 @@ import (
 				StartTimeout?:   *int | fn.#Fn
 				StopTimeout?:    *int | fn.#Fn
 				SystemControls?: *[...{
-					Namespace: *string | fn.#Fn
-					Value:     *string | fn.#Fn
+					Namespace?: *string | fn.#Fn
+					Value?:     *string | fn.#Fn
 				}] | fn.#If
 				Ulimits?: *[...{
 					HardLimit: *int | fn.#Fn
@@ -265,7 +269,10 @@ import (
 				}] | fn.#If
 				WorkingDirectory?: *string | fn.#Fn
 			}] | fn.#If
-			Cpu?:                   *string | fn.#Fn
+			Cpu?:              *string | fn.#Fn
+			EphemeralStorage?: *{
+				SizeInGiB?: *int | fn.#Fn
+			} | fn.#If
 			ExecutionRoleArn?:      *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 			Family?:                *string | fn.#Fn
 			InferenceAccelerators?: *[...{
@@ -289,7 +296,11 @@ import (
 				Type?: *("APPMESH") | fn.#Fn
 			} | fn.#If
 			RequiresCompatibilities?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Tags?:                    *[...{
+			RuntimePlatform?:         *{
+				CpuArchitecture?:       *string | fn.#Fn
+				OperatingSystemFamily?: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -305,6 +316,16 @@ import (
 						[string]: *string | fn.#Fn
 					} | fn.#If
 					Scope?: *string | fn.#Fn
+				} | fn.#If
+				EFSVolumeConfiguration?: *{
+					AuthorizationConfig?: *{
+						AccessPointId?: *string | fn.#Fn
+						IAM?:           *("ENABLED" | "DISABLED") | fn.#Fn
+					} | fn.#If
+					FilesystemId:           *string | fn.#Fn
+					RootDirectory?:         *string | fn.#Fn
+					TransitEncryption?:     *("ENABLED" | "DISABLED") | fn.#Fn
+					TransitEncryptionPort?: *int | fn.#Fn
 				} | fn.#If
 				Host?: *{
 					SourcePath?: *string | fn.#Fn

@@ -124,6 +124,17 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				TargetGroupInfoList?: *[...{
 					Name?: *string | fn.#Fn
 				}] | fn.#If
+				TargetGroupPairInfoList?: *[...{
+					ProdTrafficRoute?: *{
+						ListenerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					} | fn.#If
+					TargetGroups?: *[...{
+						Name?: *string | fn.#Fn
+					}] | fn.#If
+					TestTrafficRoute?: *{
+						ListenerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					} | fn.#If
+				}] | fn.#If
 			} | fn.#If
 			OnPremisesInstanceTagFilters?: *[...{
 				Key?:   *string | fn.#Fn
@@ -139,7 +150,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					}] | fn.#If
 				}] | fn.#If
 			} | fn.#If
-			ServiceRoleArn:         *string | fn.#Fn
+			OutdatedInstancesStrategy?: *string | fn.#Fn
+			ServiceRoleArn:             *string | fn.#Fn
+			Tags?:                      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 			TriggerConfigurations?: *[...{
 				TriggerEvents?:    [...(*("DeploymentFailure" | "DeploymentReady" | "DeploymentRollback" | "DeploymentStart" | "DeploymentStop" | "DeploymentSuccess" | "InstanceFailure" | "InstanceReady" | "InstanceStart" | "InstanceSuccess") | fn.#Fn)] | (*("DeploymentFailure" | "DeploymentReady" | "DeploymentRollback" | "DeploymentStart" | "DeploymentStop" | "DeploymentSuccess" | "InstanceFailure" | "InstanceReady" | "InstanceStart" | "InstanceSuccess") | fn.#Fn)
 				TriggerName?:      *string | fn.#Fn

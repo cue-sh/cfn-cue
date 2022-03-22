@@ -23,7 +23,7 @@ import (
 				CloudWatchDestination?: *{
 					DimensionConfigurations?: *[...{
 						DefaultDimensionValue: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9_-]{1,256}$"#)) | fn.#Fn
-						DimensionName:         *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9_-]{1,256}$"#)) | fn.#Fn
+						DimensionName:         *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9_:-]{1,256}$"#)) | fn.#Fn
 						DimensionValueSource:  *string | fn.#Fn
 					}] | fn.#If
 				} | fn.#If

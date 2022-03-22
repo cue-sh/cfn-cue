@@ -105,7 +105,7 @@ import (
 				MinBufferTimeSeconds?:   *int | fn.#Fn
 				MinUpdatePeriodSeconds?: *int | fn.#Fn
 				PeriodTriggers?:         [...(*("ADS") | fn.#Fn)] | (*("ADS") | fn.#Fn)
-				Profile?:                *("NONE" | "HBBTV_1_5") | fn.#Fn
+				Profile?:                *("NONE" | "HBBTV_1_5" | "HYBRIDCAST") | fn.#Fn
 				SegmentDurationSeconds?: *int | fn.#Fn
 				SegmentTemplateFormat?:  *("NUMBER_WITH_TIMELINE" | "TIME_WITH_TIMELINE" | "NUMBER_WITH_DURATION") | fn.#Fn
 				StreamSelection?:        *{

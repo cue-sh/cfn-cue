@@ -22,7 +22,16 @@ import (
 					} | fn.#If
 				}
 			} | fn.#If
-			Description:    *string | fn.#Fn
+			Description:       *string | fn.#Fn
+			LogConfiguration?: *{
+				CloudWatchLogsConfiguration?: *{
+					[string]: _
+				} | fn.#Fn
+				LogSchemaVersion: *int | fn.#Fn
+				S3Configuration?: *{
+					[string]: _
+				} | fn.#Fn
+			} | fn.#If
 			RoleArn:        *string | fn.#Fn
 			StopConditions: *[...{
 				Source: *string | fn.#Fn
@@ -37,6 +46,9 @@ import (
 						Path:   *string | fn.#Fn
 						Values: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					}] | fn.#If
+					Parameters?: *{
+						[string]: *string | fn.#Fn
+					} | fn.#If
 					ResourceArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					ResourceTags?: *{
 						[string]: *string | fn.#Fn

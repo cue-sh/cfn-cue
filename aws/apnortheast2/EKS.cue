@@ -92,6 +92,35 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#IdentityProviderConfig: {
+		Type: "AWS::EKS::IdentityProviderConfig"
+		Properties: {
+			ClusterName:                 *string | fn.#Fn
+			IdentityProviderConfigName?: *string | fn.#Fn
+			Oidc?:                       *{
+				ClientId:        *string | fn.#Fn
+				GroupsClaim?:    *string | fn.#Fn
+				GroupsPrefix?:   *string | fn.#Fn
+				IssuerUrl:       *string | fn.#Fn
+				RequiredClaims?: *[...{
+					Key:   *(strings.MinRunes(1) & strings.MaxRunes(63)) | fn.#Fn
+					Value: *(strings.MinRunes(1) & strings.MaxRunes(253)) | fn.#Fn
+				}] | fn.#If
+				UsernameClaim?:  *string | fn.#Fn
+				UsernamePrefix?: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			Type: *("oidc") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Nodegroup: {
 		Type: "AWS::EKS::Nodegroup"
 		Properties: {

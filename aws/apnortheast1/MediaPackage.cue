@@ -60,11 +60,15 @@ import (
 					ConstantInitializationVector?: *(strings.MinRunes(32) & strings.MaxRunes(32) & (=~#"\A[0-9a-fA-F]+\Z"#)) | fn.#Fn
 					KeyRotationIntervalSeconds?:   *int | fn.#Fn
 					SpekeKeyProvider:              *{
-						CertificateArn?: *string | fn.#Fn
-						ResourceId:      *string | fn.#Fn
-						RoleArn:         *string | fn.#Fn
-						SystemIds:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-						Url:             *string | fn.#Fn
+						CertificateArn?:                  *string | fn.#Fn
+						EncryptionContractConfiguration?: *{
+							PresetSpeke20Audio: *("PRESET-AUDIO-1") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1") | fn.#Fn
+						} | fn.#If
+						ResourceId: *string | fn.#Fn
+						RoleArn:    *string | fn.#Fn
+						SystemIds:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						Url:        *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				HlsManifests?: *[...{
@@ -93,11 +97,15 @@ import (
 				Encryption?:                *{
 					KeyRotationIntervalSeconds?: *int | fn.#Fn
 					SpekeKeyProvider:            *{
-						CertificateArn?: *string | fn.#Fn
-						ResourceId:      *string | fn.#Fn
-						RoleArn:         *string | fn.#Fn
-						SystemIds:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-						Url:             *string | fn.#Fn
+						CertificateArn?:                  *string | fn.#Fn
+						EncryptionContractConfiguration?: *{
+							PresetSpeke20Audio: *("PRESET-AUDIO-1") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1") | fn.#Fn
+						} | fn.#If
+						ResourceId: *string | fn.#Fn
+						RoleArn:    *string | fn.#Fn
+						SystemIds:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						Url:        *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				ManifestLayout?:         *("FULL" | "COMPACT") | fn.#Fn
@@ -105,7 +113,7 @@ import (
 				MinBufferTimeSeconds?:   *int | fn.#Fn
 				MinUpdatePeriodSeconds?: *int | fn.#Fn
 				PeriodTriggers?:         [...(*("ADS") | fn.#Fn)] | (*("ADS") | fn.#Fn)
-				Profile?:                *("NONE" | "HBBTV_1_5") | fn.#Fn
+				Profile?:                *("NONE" | "HBBTV_1_5" | "HYBRIDCAST") | fn.#Fn
 				SegmentDurationSeconds?: *int | fn.#Fn
 				SegmentTemplateFormat?:  *("NUMBER_WITH_TIMELINE" | "TIME_WITH_TIMELINE" | "NUMBER_WITH_DURATION") | fn.#Fn
 				StreamSelection?:        *{
@@ -128,11 +136,15 @@ import (
 					KeyRotationIntervalSeconds?:   *int | fn.#Fn
 					RepeatExtXKey?:                *bool | fn.#Fn
 					SpekeKeyProvider:              *{
-						CertificateArn?: *string | fn.#Fn
-						ResourceId:      *string | fn.#Fn
-						RoleArn:         *string | fn.#Fn
-						SystemIds:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-						Url:             *string | fn.#Fn
+						CertificateArn?:                  *string | fn.#Fn
+						EncryptionContractConfiguration?: *{
+							PresetSpeke20Audio: *("PRESET-AUDIO-1") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1") | fn.#Fn
+						} | fn.#If
+						ResourceId: *string | fn.#Fn
+						RoleArn:    *string | fn.#Fn
+						SystemIds:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						Url:        *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				IncludeIframeOnlyStream?:        *bool | fn.#Fn
@@ -152,11 +164,15 @@ import (
 			MssPackage?:   *{
 				Encryption?: *{
 					SpekeKeyProvider: *{
-						CertificateArn?: *string | fn.#Fn
-						ResourceId:      *string | fn.#Fn
-						RoleArn:         *string | fn.#Fn
-						SystemIds:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-						Url:             *string | fn.#Fn
+						CertificateArn?:                  *string | fn.#Fn
+						EncryptionContractConfiguration?: *{
+							PresetSpeke20Audio: *("PRESET-AUDIO-1") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1") | fn.#Fn
+						} | fn.#If
+						ResourceId: *string | fn.#Fn
+						RoleArn:    *string | fn.#Fn
+						SystemIds:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						Url:        *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				ManifestWindowSeconds?:  *int | fn.#Fn

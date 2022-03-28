@@ -929,6 +929,10 @@ import (
 						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
 					} | fn.#If
 				} | fn.#If
+				RStudioServerProAppSettings?: *{
+					AccessStatus?: *string | fn.#Fn
+					UserGroup?:    *string | fn.#Fn
+				} | fn.#If
 				SecurityGroups?:  [...(*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)] | (*(=~#"[-0-9a-zA-Z]+"#) | fn.#Fn)
 				SharingSettings?: *{
 					NotebookOutputOption?: *("Allowed" | "Disabled") | fn.#Fn

@@ -138,6 +138,7 @@ import (
 			EventSourceToken?: *string | fn.#Fn
 			FunctionName:      *string | fn.#Fn
 			Principal:         *string | fn.#Fn
+			PrincipalOrgID?:   *string | fn.#Fn
 			SourceAccount?:    *string | fn.#Fn
 			SourceArn?:        *string | fn.#Fn
 		}

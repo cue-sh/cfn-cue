@@ -281,7 +281,7 @@ import (
 				[string]: _
 			} | fn.#Fn
 			LogDestination?:         *string | fn.#Fn
-			LogDestinationType?:     *("cloud-watch-logs" | "s3") | fn.#Fn
+			LogDestinationType?:     *("cloud-watch-logs" | "s3" | "kinesis-data-firehose") | fn.#Fn
 			LogFormat?:              *string | fn.#Fn
 			LogGroupName?:           *string | fn.#Fn
 			MaxAggregationInterval?: *int | fn.#Fn
@@ -677,9 +677,17 @@ import (
 					DeviceIndex?:               *int | fn.#Fn
 					Groups?:                    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					InterfaceType?:             *string | fn.#Fn
-					Ipv6AddressCount?:          *int | fn.#Fn
-					Ipv6Addresses?:             *[...{
+					Ipv4PrefixCount?:           *int | fn.#Fn
+					Ipv4Prefixes?:              *[...{
+						Ipv4Prefix?: *string | fn.#Fn
+					}] | fn.#If
+					Ipv6AddressCount?: *int | fn.#Fn
+					Ipv6Addresses?:    *[...{
 						Ipv6Address?: *string | fn.#Fn
+					}] | fn.#If
+					Ipv6PrefixCount?: *int | fn.#Fn
+					Ipv6Prefixes?:    *[...{
+						Ipv6Prefix?: *string | fn.#Fn
 					}] | fn.#If
 					NetworkCardIndex?:   *int | fn.#Fn
 					NetworkInterfaceId?: *string | fn.#Fn
@@ -1211,17 +1219,15 @@ import (
 			AssignIpv6AddressOnCreation?:   *bool | fn.#Fn
 			AvailabilityZone?:              *(=~#"[a-z0-9-]+"#) | fn.#Fn
 			AvailabilityZoneId?:            *string | fn.#Fn
-			CidrBlock:                      *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
+			CidrBlock?:                     *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
 			EnableDns64?:                   *bool | fn.#Fn
 			Ipv6CidrBlock?:                 *string | fn.#Fn
 			Ipv6Native?:                    *bool | fn.#Fn
 			MapPublicIpOnLaunch?:           *bool | fn.#Fn
 			OutpostArn?:                    *string | fn.#Fn
 			PrivateDnsNameOptionsOnLaunch?: *{
-				EnableResourceNameDnsAAAARecord?: *bool | fn.#Fn
-				EnableResourceNameDnsARecord?:    *bool | fn.#Fn
-				HostnameType?:                    *string | fn.#Fn
-			} | fn.#If
+				[string]: _
+			} | fn.#Fn
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

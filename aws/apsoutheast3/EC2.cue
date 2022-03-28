@@ -219,7 +219,7 @@ import (
 				[string]: _
 			} | fn.#Fn
 			LogDestination?:         *string | fn.#Fn
-			LogDestinationType?:     *("cloud-watch-logs" | "s3") | fn.#Fn
+			LogDestinationType?:     *("cloud-watch-logs" | "s3" | "kinesis-data-firehose") | fn.#Fn
 			LogFormat?:              *string | fn.#Fn
 			LogGroupName?:           *string | fn.#Fn
 			MaxAggregationInterval?: *int | fn.#Fn

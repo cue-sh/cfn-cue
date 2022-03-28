@@ -22,7 +22,7 @@ import (
 				TagValue?:                *string | fn.#Fn
 			} | fn.#If
 			Source: *{
-				Owner:          *("AWS" | "CUSTOM_LAMBDA") | fn.#Fn
+				Owner:          *("AWS" | "CUSTOM_LAMBDA" | "CUSTOM_POLICY") | fn.#Fn
 				SourceDetails?: *[...{
 					EventSource:                *("aws.config") | fn.#Fn
 					MaximumExecutionFrequency?: *("One_Hour" | "Six_Hours" | "Three_Hours" | "Twelve_Hours" | "TwentyFour_Hours") | fn.#Fn

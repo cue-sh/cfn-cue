@@ -117,6 +117,9 @@ import (
 					[string]: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
+			EphemeralStorage?: *{
+				Size: *(>=512 & <=10240) | fn.#Fn
+			} | fn.#If
 			FileSystemConfigs?: *[...{
 				Arn:            *(=~#"^arn:aws[a-zA-Z-]*:elasticfilesystem:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\d{1}:\d{12}:access-point/fsap-[a-f0-9]{17}$"#) | fn.#Fn
 				LocalMountPath: *(=~#"^/mnt/[a-zA-Z0-9-_.]+$"#) | fn.#Fn
@@ -195,6 +198,7 @@ import (
 			EventSourceToken?: *string | fn.#Fn
 			FunctionName:      *string | fn.#Fn
 			Principal:         *string | fn.#Fn
+			PrincipalOrgID?:   *string | fn.#Fn
 			SourceAccount?:    *string | fn.#Fn
 			SourceArn?:        *string | fn.#Fn
 		}

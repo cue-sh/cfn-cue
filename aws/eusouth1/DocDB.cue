@@ -63,6 +63,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			DBClusterIdentifier:         *string | fn.#Fn
 			DBInstanceClass:             *string | fn.#Fn
 			DBInstanceIdentifier?:       *string | fn.#Fn
+			EnablePerformanceInsights?:  *bool | fn.#Fn
 			PreferredMaintenanceWindow?: *string | fn.#Fn
 			Tags?:                       *[...{
 				Key:   *string | fn.#Fn

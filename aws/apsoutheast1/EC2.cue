@@ -388,7 +388,7 @@ import (
 				[string]: _
 			} | fn.#Fn
 			LogDestination?:         *string | fn.#Fn
-			LogDestinationType?:     *("cloud-watch-logs" | "s3") | fn.#Fn
+			LogDestinationType?:     *("cloud-watch-logs" | "s3" | "kinesis-data-firehose") | fn.#Fn
 			LogFormat?:              *string | fn.#Fn
 			LogGroupName?:           *string | fn.#Fn
 			MaxAggregationInterval?: *int | fn.#Fn
@@ -784,9 +784,17 @@ import (
 					DeviceIndex?:               *int | fn.#Fn
 					Groups?:                    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					InterfaceType?:             *string | fn.#Fn
-					Ipv6AddressCount?:          *int | fn.#Fn
-					Ipv6Addresses?:             *[...{
+					Ipv4PrefixCount?:           *int | fn.#Fn
+					Ipv4Prefixes?:              *[...{
+						Ipv4Prefix?: *string | fn.#Fn
+					}] | fn.#If
+					Ipv6AddressCount?: *int | fn.#Fn
+					Ipv6Addresses?:    *[...{
 						Ipv6Address?: *string | fn.#Fn
+					}] | fn.#If
+					Ipv6PrefixCount?: *int | fn.#Fn
+					Ipv6Prefixes?:    *[...{
+						Ipv6Prefix?: *string | fn.#Fn
 					}] | fn.#If
 					NetworkCardIndex?:   *int | fn.#Fn
 					NetworkInterfaceId?: *string | fn.#Fn

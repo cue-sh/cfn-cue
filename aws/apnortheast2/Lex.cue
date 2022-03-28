@@ -16,6 +16,12 @@ import (
 				S3ObjectVersion?: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 			} | fn.#If
 			BotLocales?: *[...{
+				CustomVocabulary?: *{
+					CustomVocabularyItems: *[...{
+						Phrase:  *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
+						Weight?: *(>=1 & <=3) | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
 				Description?: *string | fn.#Fn
 				Intents?:     *[...{
 					Description?:    *string | fn.#Fn
@@ -655,6 +661,9 @@ import (
 						}] | fn.#If
 					}] | fn.#If
 					ValueSelectionSetting?: *{
+						AdvancedRecognitionSetting?: *{
+							AudioRecognitionStrategy?: *("UseSlotValuesAsCustomVocabulary") | fn.#Fn
+						} | fn.#If
 						RegexFilter?: *{
 							Pattern: *(strings.MinRunes(1) & strings.MaxRunes(300)) | fn.#Fn
 						} | fn.#If
@@ -676,7 +685,46 @@ import (
 			IdleSessionTTLInSeconds: *(>=60 & <=86400) | fn.#Fn
 			Name:                    *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^([0-9a-zA-Z][_-]?)+$"#)) | fn.#Fn
 			RoleArn:                 *(strings.MinRunes(32) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-zA-Z-]*:iam::[0-9]{12}:role/.*$"#)) | fn.#Fn
-			TestBotAliasTags?:       *[...{
+			TestBotAliasSettings?:   *{
+				BotAliasLocaleSettings?: *[...{
+					BotAliasLocaleSetting: *{
+						CodeHookSpecification?: *{
+							LambdaCodeHook: *{
+								CodeHookInterfaceVersion: *(strings.MinRunes(1) & strings.MaxRunes(5)) | fn.#Fn
+								LambdaArn:                *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+							} | fn.#If
+						} | fn.#If
+						Enabled: *bool | fn.#Fn
+					} | fn.#If
+					LocaleId: *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				}] | fn.#If
+				ConversationLogSettings?: *{
+					AudioLogSettings?: *[...{
+						Destination: *{
+							S3Bucket: *{
+								KmsKeyArn?:  *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:[\w\-]+:kms:[\w\-]+:[\d]{12}:(?:key\/[\w\-]+|alias\/[a-zA-Z0-9:\/_\-]{1,256})$"#)) | fn.#Fn
+								LogPrefix:   *string | fn.#Fn
+								S3BucketArn: *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:[\w\-]+:s3:::[a-z0-9][\.\-a-z0-9]{1,61}[a-z0-9]$"#)) | fn.#Fn
+							} | fn.#If
+						} | fn.#If
+						Enabled: *bool | fn.#Fn
+					}] | fn.#If
+					TextLogSettings?: *[...{
+						Destination: *{
+							CloudWatch: *{
+								CloudWatchLogGroupArn: *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+								LogPrefix:             *string | fn.#Fn
+							} | fn.#If
+						} | fn.#If
+						Enabled: *bool | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
+				Description?:               *string | fn.#Fn
+				SentimentAnalysisSettings?: *{
+					[string]: _
+				} | fn.#Fn
+			} | fn.#If
+			TestBotAliasTags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

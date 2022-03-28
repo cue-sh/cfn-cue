@@ -119,10 +119,41 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ServiceAccessRoleArn?: *string | fn.#Fn
 			} | fn.#If
 			OracleSettings?: *{
-				SecretsManagerAccessRoleArn?:          *string | fn.#Fn
-				SecretsManagerOracleAsmAccessRoleArn?: *string | fn.#Fn
-				SecretsManagerOracleAsmSecretId?:      *string | fn.#Fn
-				SecretsManagerSecretId?:               *string | fn.#Fn
+				AccessAlternateDirectly?:                *bool | fn.#Fn
+				AddSupplementalLogging?:                 *bool | fn.#Fn
+				AdditionalArchivedLogDestId?:            *int | fn.#Fn
+				AllowSelectNestedTables?:                *bool | fn.#Fn
+				ArchivedLogDestId?:                      *int | fn.#Fn
+				ArchivedLogsOnly?:                       *bool | fn.#Fn
+				AsmPassword?:                            *string | fn.#Fn
+				AsmServer?:                              *string | fn.#Fn
+				AsmUser?:                                *string | fn.#Fn
+				CharLengthSemantics?:                    *string | fn.#Fn
+				DirectPathNoLog?:                        *bool | fn.#Fn
+				DirectPathParallelLoad?:                 *bool | fn.#Fn
+				EnableHomogenousTablespace?:             *bool | fn.#Fn
+				ExtraArchivedLogDestIds?:                [...(*int | fn.#Fn)] | (*int | fn.#Fn)
+				FailTasksOnLobTruncation?:               *bool | fn.#Fn
+				NumberDatatypeScale?:                    *int | fn.#Fn
+				OraclePathPrefix?:                       *string | fn.#Fn
+				ParallelAsmReadThreads?:                 *int | fn.#Fn
+				ReadAheadBlocks?:                        *int | fn.#Fn
+				ReadTableSpaceName?:                     *bool | fn.#Fn
+				ReplacePathPrefix?:                      *bool | fn.#Fn
+				RetryInterval?:                          *int | fn.#Fn
+				SecretsManagerAccessRoleArn?:            *string | fn.#Fn
+				SecretsManagerOracleAsmAccessRoleArn?:   *string | fn.#Fn
+				SecretsManagerOracleAsmSecretId?:        *string | fn.#Fn
+				SecretsManagerSecretId?:                 *string | fn.#Fn
+				SecurityDbEncryption?:                   *string | fn.#Fn
+				SecurityDbEncryptionName?:               *string | fn.#Fn
+				SpatialDataOptionToGeoJsonFunctionName?: *string | fn.#Fn
+				StandbyDelayTime?:                       *int | fn.#Fn
+				UseAlternateFolderForOnline?:            *bool | fn.#Fn
+				UseBFile?:                               *bool | fn.#Fn
+				UseDirectPathFullLoad?:                  *bool | fn.#Fn
+				UseLogminerReader?:                      *bool | fn.#Fn
+				UsePathPrefix?:                          *string | fn.#Fn
 			} | fn.#If
 			Password?:           *string | fn.#Fn
 			Port?:               *int | fn.#Fn

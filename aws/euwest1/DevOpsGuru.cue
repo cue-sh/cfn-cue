@@ -25,6 +25,10 @@ import (
 			CloudFormation?: *{
 				StackNames?: [...(*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z*]+[a-zA-Z0-9-]*$"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z*]+[a-zA-Z0-9-]*$"#)) | fn.#Fn)
 			} | fn.#If
+			Tags?: *[...{
+				AppBoundaryKey?: *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				TagValues?:      [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+			}] | fn.#If
 		} | fn.#If
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

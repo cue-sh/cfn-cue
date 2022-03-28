@@ -6,6 +6,129 @@ import (
 )
 
 #IoTEvents: {
+	#AlarmModel: {
+		Type: "AWS::IoTEvents::AlarmModel"
+		Properties: {
+			AlarmCapabilities?: *{
+				AcknowledgeFlow?: *{
+					Enabled?: *bool | fn.#Fn
+				} | fn.#If
+				InitializationConfiguration?: *{
+					DisabledOnInitialization: *bool | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			AlarmEventActions?: *{
+				AlarmActions?: *[...{
+					DynamoDB?: *{
+						HashKeyField: *string | fn.#Fn
+						HashKeyType?: *string | fn.#Fn
+						HashKeyValue: *string | fn.#Fn
+						Operation?:   *string | fn.#Fn
+						Payload?:     *{
+							ContentExpression: *string | fn.#Fn
+							Type:              *string | fn.#Fn
+						} | fn.#If
+						PayloadField?:  *string | fn.#Fn
+						RangeKeyField?: *string | fn.#Fn
+						RangeKeyType?:  *string | fn.#Fn
+						RangeKeyValue?: *string | fn.#Fn
+						TableName:      *string | fn.#Fn
+					} | fn.#If
+					DynamoDBv2?: *{
+						Payload?: *{
+							ContentExpression: *string | fn.#Fn
+							Type:              *string | fn.#Fn
+						} | fn.#If
+						TableName: *string | fn.#Fn
+					} | fn.#If
+					Firehose?: *{
+						DeliveryStreamName: *string | fn.#Fn
+						Payload?:           *{
+							ContentExpression: *string | fn.#Fn
+							Type:              *string | fn.#Fn
+						} | fn.#If
+						Separator?: *(=~#"([\n\t])|(\r\n)|(,)"#) | fn.#Fn
+					} | fn.#If
+					IotEvents?: *{
+						InputName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]*$"#)) | fn.#Fn
+						Payload?:  *{
+							ContentExpression: *string | fn.#Fn
+							Type:              *string | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+					IotSiteWise?: *{
+						AssetId?:       *string | fn.#Fn
+						EntryId?:       *string | fn.#Fn
+						PropertyAlias?: *string | fn.#Fn
+						PropertyId?:    *string | fn.#Fn
+						PropertyValue:  *{
+							Quality?:   *string | fn.#Fn
+							Timestamp?: *{
+								OffsetInNanos?: *string | fn.#Fn
+								TimeInSeconds:  *string | fn.#Fn
+							} | fn.#If
+							Value: *{
+								BooleanValue?: *string | fn.#Fn
+								DoubleValue?:  *string | fn.#Fn
+								IntegerValue?: *string | fn.#Fn
+								StringValue?:  *string | fn.#Fn
+							} | fn.#If
+						} | fn.#If
+					} | fn.#If
+					IotTopicPublish?: *{
+						MqttTopic: *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+						Payload?:  *{
+							ContentExpression: *string | fn.#Fn
+							Type:              *string | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+					Lambda?: *{
+						FunctionArn: *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+						Payload?:    *{
+							ContentExpression: *string | fn.#Fn
+							Type:              *string | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+					Sns?: *{
+						Payload?: *{
+							ContentExpression: *string | fn.#Fn
+							Type:              *string | fn.#Fn
+						} | fn.#If
+						TargetArn: *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+					} | fn.#If
+					Sqs?: *{
+						Payload?: *{
+							ContentExpression: *string | fn.#Fn
+							Type:              *string | fn.#Fn
+						} | fn.#If
+						QueueUrl:   *string | fn.#Fn
+						UseBase64?: *bool | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
+			} | fn.#If
+			AlarmModelDescription?: *string | fn.#Fn
+			AlarmModelName?:        *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9_-]+$"#)) | fn.#Fn
+			AlarmRule:              *{
+				SimpleRule?: *{
+					ComparisonOperator: *("GREATER" | "GREATER_OR_EQUAL" | "LESS" | "LESS_OR_EQUAL" | "EQUAL" | "NOT_EQUAL") | fn.#Fn
+					InputProperty:      *(strings.MinRunes(1) & strings.MaxRunes(512)) | fn.#Fn
+					Threshold:          *(strings.MinRunes(1) & strings.MaxRunes(512)) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			Key?:      *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^((`[\w\- ]+`)|([\w\-]+))(\.((`[\w\- ]+`)|([\w\-]+)))*$"#)) | fn.#Fn
+			RoleArn:   *(strings.MinRunes(1) & strings.MaxRunes(2048)) | fn.#Fn
+			Severity?: *int | fn.#Fn
+			Tags?:     *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#DetectorModel: {
 		Type: "AWS::IoTEvents::DetectorModel"
 		Properties: {

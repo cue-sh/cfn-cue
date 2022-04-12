@@ -6,6 +6,30 @@ import (
 )
 
 #NetworkFirewall: {
+	#Firewall: {
+		Type: "AWS::NetworkFirewall::Firewall"
+		Properties: {
+			DeleteProtection?:               *bool | fn.#Fn
+			Description?:                    *(=~#"^.*$"#) | fn.#Fn
+			FirewallName:                    *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9-]+$"#)) | fn.#Fn
+			FirewallPolicyArn:               *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:aws.*$"#)) | fn.#Fn
+			FirewallPolicyChangeProtection?: *bool | fn.#Fn
+			SubnetChangeProtection?:         *bool | fn.#Fn
+			SubnetMappings:                  *[...{
+				SubnetId: *string | fn.#Fn
+			}] | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpcId: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^vpc-[0-9a-f]+$"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#FirewallPolicy: {
 		Type: "AWS::NetworkFirewall::FirewallPolicy"
 		Properties: {

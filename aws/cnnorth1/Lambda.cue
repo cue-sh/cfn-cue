@@ -194,13 +194,14 @@ import (
 	#Permission: {
 		Type: "AWS::Lambda::Permission"
 		Properties: {
-			Action:            *string | fn.#Fn
-			EventSourceToken?: *string | fn.#Fn
-			FunctionName:      *string | fn.#Fn
-			Principal:         *string | fn.#Fn
-			PrincipalOrgID?:   *string | fn.#Fn
-			SourceAccount?:    *string | fn.#Fn
-			SourceArn?:        *string | fn.#Fn
+			Action:               *string | fn.#Fn
+			EventSourceToken?:    *string | fn.#Fn
+			FunctionName:         *string | fn.#Fn
+			FunctionUrlAuthType?: *string | fn.#Fn
+			Principal:            *string | fn.#Fn
+			PrincipalOrgID?:      *string | fn.#Fn
+			SourceAccount?:       *string | fn.#Fn
+			SourceArn?:           *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

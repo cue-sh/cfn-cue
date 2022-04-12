@@ -62,6 +62,30 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#LocationFSxOpenZFS: {
+		Type: "AWS::DataSync::LocationFSxOpenZFS"
+		Properties: {
+			FsxFilesystemArn: *(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):fsx:[a-z\-0-9]+:[0-9]{12}:file-system/fs-[0-9a-f]+$"#) | fn.#Fn
+			Protocol:         *{
+				NFS?: *{
+					MountOptions: *{
+						Version?: *("AUTOMATIC" | "NFS3" | "NFS4_0" | "NFS4_1") | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+			SecurityGroupArns: [...(*(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\-0-9]*:[0-9]{12}:security-group/sg-[a-f0-9]+$"#) | fn.#Fn)] | (*(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\-0-9]*:[0-9]{12}:security-group/sg-[a-f0-9]+$"#) | fn.#Fn)
+			Subdirectory?:     *string | fn.#Fn
+			Tags?:             *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#LocationFSxWindows: {
 		Type: "AWS::DataSync::LocationFSxWindows"
 		Properties: {

@@ -1,8 +1,40 @@
 package apnortheast3
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #Events: {
+	#Endpoint: {
+		Type: "AWS::Events::Endpoint"
+		Properties: {
+			Description?: *(=~#".*"#) | fn.#Fn
+			EventBuses:   *[...{
+				EventBusArn: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^arn:aws[a-z-]*:events:[a-z]{2}-[a-z-]+-\d+:\d{12}:event-bus/[\w.-]+$"#)) | fn.#Fn
+			}] | fn.#If
+			Name:               *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[\.\-_A-Za-z0-9]+$"#)) | fn.#Fn
+			ReplicationConfig?: *{
+				State: *("ENABLED" | "DISABLED") | fn.#Fn
+			} | fn.#If
+			RoleArn?:      *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^arn:aws[a-z-]*:iam::\d{12}:role\/[\w+=,.@/-]+$"#)) | fn.#Fn
+			RoutingConfig: *{
+				FailoverConfig: *{
+					Primary: *{
+						HealthCheck: *(strings.MinRunes(1) & strings.MaxRunes(1600) & (=~#"^arn:aws([a-z]|\-)*:route53:::healthcheck/[\-a-z0-9]+$"#)) | fn.#Fn
+					} | fn.#If
+					Secondary: *{
+						Route: *(strings.MinRunes(9) & strings.MaxRunes(20) & (=~#"^[\-a-z0-9]+$"#)) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#EventBus: {
 		Type: "AWS::Events::EventBus"
 		Properties: {

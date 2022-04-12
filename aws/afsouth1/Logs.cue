@@ -80,6 +80,18 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ResourcePolicy: {
+		Type: "AWS::Logs::ResourcePolicy"
+		Properties: {
+			PolicyDocument: *(strings.MinRunes(1) & strings.MaxRunes(5120) & (=~#"[\u0009\u000A\u000D\u0020-\u00FF]+"#)) | fn.#Fn
+			PolicyName:     *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^([^:*\/]+\/?)*[^:*\/]+$"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#SubscriptionFilter: {
 		Type: "AWS::Logs::SubscriptionFilter"
 		Properties: {

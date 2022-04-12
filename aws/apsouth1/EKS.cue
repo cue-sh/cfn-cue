@@ -30,8 +30,8 @@ import (
 		Properties: {
 			EncryptionConfig?: *[...{
 				Provider?: *{
-					[string]: _
-				} | fn.#Fn
+					KeyArn?: *string | fn.#Fn
+				} | fn.#If
 				Resources?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			}] | fn.#If
 			KubernetesNetworkConfig?: *{

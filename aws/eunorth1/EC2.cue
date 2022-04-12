@@ -1504,17 +1504,15 @@ import (
 			AssignIpv6AddressOnCreation?:   *bool | fn.#Fn
 			AvailabilityZone?:              *(=~#"[a-z0-9-]+"#) | fn.#Fn
 			AvailabilityZoneId?:            *string | fn.#Fn
-			CidrBlock:                      *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
+			CidrBlock?:                     *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
 			EnableDns64?:                   *bool | fn.#Fn
 			Ipv6CidrBlock?:                 *string | fn.#Fn
 			Ipv6Native?:                    *bool | fn.#Fn
 			MapPublicIpOnLaunch?:           *bool | fn.#Fn
 			OutpostArn?:                    *string | fn.#Fn
 			PrivateDnsNameOptionsOnLaunch?: *{
-				EnableResourceNameDnsAAAARecord?: *bool | fn.#Fn
-				EnableResourceNameDnsARecord?:    *bool | fn.#Fn
-				HostnameType?:                    *string | fn.#Fn
-			} | fn.#If
+				[string]: _
+			} | fn.#Fn
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
@@ -1678,6 +1676,24 @@ import (
 			}] | fn.#If
 			TransitGatewayId: *string | fn.#Fn
 			VpcId:            *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayConnect: {
+		Type: "AWS::EC2::TransitGatewayConnect"
+		Properties: {
+			Options: *{
+				Protocol?: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransportTransitGatewayAttachmentId: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

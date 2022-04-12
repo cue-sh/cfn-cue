@@ -1680,6 +1680,24 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#TransitGatewayConnect: {
+		Type: "AWS::EC2::TransitGatewayConnect"
+		Properties: {
+			Options: *{
+				Protocol?: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransportTransitGatewayAttachmentId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#TransitGatewayRoute: {
 		Type: "AWS::EC2::TransitGatewayRoute"
 		Properties: {

@@ -36,15 +36,21 @@ import (
 				Tags?:             *{
 					[string]: *string | fn.#Fn
 				} | fn.#If
-				Type: *string | fn.#Fn
+				Type:                        *string | fn.#Fn
+				UpdateToLatestImageVersion?: *bool | fn.#Fn
 			} | fn.#If
-			ServiceRole?: *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
-			State?:       *string | fn.#Fn
-			Tags?:        *{
+			ReplaceComputeEnvironment?: *bool | fn.#Fn
+			ServiceRole?:               *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
+			State?:                     *string | fn.#Fn
+			Tags?:                      *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
 			Type:            *string | fn.#Fn
 			UnmanagedvCpus?: *int | fn.#Fn
+			UpdatePolicy?:   *{
+				JobExecutionTimeoutMinutes?: *int | fn.#Fn
+				TerminateJobsOnUpdate?:      *bool | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

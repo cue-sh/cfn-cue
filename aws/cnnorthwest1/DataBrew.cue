@@ -9,7 +9,7 @@ import (
 	#Dataset: {
 		Type: "AWS::DataBrew::Dataset"
 		Properties: {
-			Format?:        *("CSV" | "JSON" | "PARQUET" | "EXCEL") | fn.#Fn
+			Format?:        *("CSV" | "JSON" | "PARQUET" | "EXCEL" | "ORC") | fn.#Fn
 			FormatOptions?: *{
 				Csv?: *{
 					Delimiter?: *(strings.MinRunes(1) & strings.MaxRunes(1)) | fn.#Fn

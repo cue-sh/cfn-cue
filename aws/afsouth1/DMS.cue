@@ -22,6 +22,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			CertificateArn?: *string | fn.#Fn
 			DatabaseName?:   *string | fn.#Fn
 			DocDbSettings?:  *{
+				DocsToInvestigate?:           *int | fn.#Fn
+				ExtractDocId?:                *bool | fn.#Fn
+				NestingLevel?:                *string | fn.#Fn
 				SecretsManagerAccessRoleArn?: *string | fn.#Fn
 				SecretsManagerSecretId?:      *string | fn.#Fn
 			} | fn.#If
@@ -54,15 +57,21 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Username?:                      *string | fn.#Fn
 			} | fn.#If
 			IbmDb2Settings?: *{
+				CurrentLsn?:                  *string | fn.#Fn
+				MaxKBytesPerRead?:            *int | fn.#Fn
 				SecretsManagerAccessRoleArn?: *string | fn.#Fn
 				SecretsManagerSecretId?:      *string | fn.#Fn
+				SetDataCaptureChanges?:       *bool | fn.#Fn
 			} | fn.#If
 			KafkaSettings?: *{
 				Broker?:                      *string | fn.#Fn
 				IncludeControlDetails?:       *bool | fn.#Fn
 				IncludeNullAndEmpty?:         *bool | fn.#Fn
+				IncludePartitionValue?:       *bool | fn.#Fn
 				IncludeTableAlterOperations?: *bool | fn.#Fn
 				IncludeTransactionDetails?:   *bool | fn.#Fn
+				MessageFormat?:               *string | fn.#Fn
+				MessageMaxBytes?:             *int | fn.#Fn
 				NoHexPrefix?:                 *bool | fn.#Fn
 				PartitionIncludeSchemaTable?: *bool | fn.#Fn
 				SaslPassword?:                *string | fn.#Fn
@@ -77,6 +86,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			KinesisSettings?: *{
 				IncludeControlDetails?:       *bool | fn.#Fn
 				IncludeNullAndEmpty?:         *bool | fn.#Fn
+				IncludePartitionValue?:       *bool | fn.#Fn
 				IncludeTableAlterOperations?: *bool | fn.#Fn
 				IncludeTransactionDetails?:   *bool | fn.#Fn
 				MessageFormat?:               *string | fn.#Fn
@@ -87,8 +97,15 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			KmsKeyId?:                   *string | fn.#Fn
 			MicrosoftSqlServerSettings?: *{
+				BcpPacketSize?:               *int | fn.#Fn
+				ControlTablesFileGroup?:      *string | fn.#Fn
+				QuerySingleAlwaysOnNode?:     *bool | fn.#Fn
+				ReadBackupOnly?:              *bool | fn.#Fn
+				SafeguardPolicy?:             *string | fn.#Fn
 				SecretsManagerAccessRoleArn?: *string | fn.#Fn
 				SecretsManagerSecretId?:      *string | fn.#Fn
+				UseBcpFullLoad?:              *bool | fn.#Fn
+				UseThirdPartyBackupDevice?:   *bool | fn.#Fn
 			} | fn.#If
 			MongoDbSettings?: *{
 				AuthMechanism?:               *string | fn.#Fn
@@ -106,8 +123,15 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Username?:                    *string | fn.#Fn
 			} | fn.#If
 			MySqlSettings?: *{
-				SecretsManagerAccessRoleArn?: *string | fn.#Fn
-				SecretsManagerSecretId?:      *string | fn.#Fn
+				AfterConnectScript?:            *string | fn.#Fn
+				CleanSourceMetadataOnMismatch?: *bool | fn.#Fn
+				EventsPollInterval?:            *int | fn.#Fn
+				MaxFileSize?:                   *int | fn.#Fn
+				ParallelLoadThreads?:           *int | fn.#Fn
+				SecretsManagerAccessRoleArn?:   *string | fn.#Fn
+				SecretsManagerSecretId?:        *string | fn.#Fn
+				ServerTimezone?:                *string | fn.#Fn
+				TargetDbType?:                  *string | fn.#Fn
 			} | fn.#If
 			NeptuneSettings?: *{
 				ErrorRetryDuration?:   *int | fn.#Fn
@@ -119,16 +143,58 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ServiceAccessRoleArn?: *string | fn.#Fn
 			} | fn.#If
 			OracleSettings?: *{
-				SecretsManagerAccessRoleArn?:          *string | fn.#Fn
-				SecretsManagerOracleAsmAccessRoleArn?: *string | fn.#Fn
-				SecretsManagerOracleAsmSecretId?:      *string | fn.#Fn
-				SecretsManagerSecretId?:               *string | fn.#Fn
+				AccessAlternateDirectly?:                *bool | fn.#Fn
+				AddSupplementalLogging?:                 *bool | fn.#Fn
+				AdditionalArchivedLogDestId?:            *int | fn.#Fn
+				AllowSelectNestedTables?:                *bool | fn.#Fn
+				ArchivedLogDestId?:                      *int | fn.#Fn
+				ArchivedLogsOnly?:                       *bool | fn.#Fn
+				AsmPassword?:                            *string | fn.#Fn
+				AsmServer?:                              *string | fn.#Fn
+				AsmUser?:                                *string | fn.#Fn
+				CharLengthSemantics?:                    *string | fn.#Fn
+				DirectPathNoLog?:                        *bool | fn.#Fn
+				DirectPathParallelLoad?:                 *bool | fn.#Fn
+				EnableHomogenousTablespace?:             *bool | fn.#Fn
+				ExtraArchivedLogDestIds?:                [...(*int | fn.#Fn)] | (*int | fn.#Fn)
+				FailTasksOnLobTruncation?:               *bool | fn.#Fn
+				NumberDatatypeScale?:                    *int | fn.#Fn
+				OraclePathPrefix?:                       *string | fn.#Fn
+				ParallelAsmReadThreads?:                 *int | fn.#Fn
+				ReadAheadBlocks?:                        *int | fn.#Fn
+				ReadTableSpaceName?:                     *bool | fn.#Fn
+				ReplacePathPrefix?:                      *bool | fn.#Fn
+				RetryInterval?:                          *int | fn.#Fn
+				SecretsManagerAccessRoleArn?:            *string | fn.#Fn
+				SecretsManagerOracleAsmAccessRoleArn?:   *string | fn.#Fn
+				SecretsManagerOracleAsmSecretId?:        *string | fn.#Fn
+				SecretsManagerSecretId?:                 *string | fn.#Fn
+				SecurityDbEncryption?:                   *string | fn.#Fn
+				SecurityDbEncryptionName?:               *string | fn.#Fn
+				SpatialDataOptionToGeoJsonFunctionName?: *string | fn.#Fn
+				StandbyDelayTime?:                       *int | fn.#Fn
+				UseAlternateFolderForOnline?:            *bool | fn.#Fn
+				UseBFile?:                               *bool | fn.#Fn
+				UseDirectPathFullLoad?:                  *bool | fn.#Fn
+				UseLogminerReader?:                      *bool | fn.#Fn
+				UsePathPrefix?:                          *string | fn.#Fn
 			} | fn.#If
 			Password?:           *string | fn.#Fn
 			Port?:               *int | fn.#Fn
 			PostgreSqlSettings?: *{
+				AfterConnectScript?:          *string | fn.#Fn
+				CaptureDdls?:                 *bool | fn.#Fn
+				DdlArtifactsSchema?:          *string | fn.#Fn
+				ExecuteTimeout?:              *int | fn.#Fn
+				FailTasksOnLobTruncation?:    *bool | fn.#Fn
+				HeartbeatEnable?:             *bool | fn.#Fn
+				HeartbeatFrequency?:          *int | fn.#Fn
+				HeartbeatSchema?:             *string | fn.#Fn
+				MaxFileSize?:                 *int | fn.#Fn
+				PluginName?:                  *string | fn.#Fn
 				SecretsManagerAccessRoleArn?: *string | fn.#Fn
 				SecretsManagerSecretId?:      *string | fn.#Fn
+				SlotName?:                    *string | fn.#Fn
 			} | fn.#If
 			RedisSettings?: *{
 				AuthPassword?:        *string | fn.#Fn
@@ -140,8 +206,31 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SslSecurityProtocol?: *string | fn.#Fn
 			} | fn.#If
 			RedshiftSettings?: *{
-				SecretsManagerAccessRoleArn?: *string | fn.#Fn
-				SecretsManagerSecretId?:      *string | fn.#Fn
+				AcceptAnyDate?:                *bool | fn.#Fn
+				AfterConnectScript?:           *string | fn.#Fn
+				BucketFolder?:                 *string | fn.#Fn
+				BucketName?:                   *string | fn.#Fn
+				CaseSensitiveNames?:           *bool | fn.#Fn
+				CompUpdate?:                   *bool | fn.#Fn
+				ConnectionTimeout?:            *int | fn.#Fn
+				DateFormat?:                   *string | fn.#Fn
+				EmptyAsNull?:                  *bool | fn.#Fn
+				EncryptionMode?:               *string | fn.#Fn
+				ExplicitIds?:                  *bool | fn.#Fn
+				FileTransferUploadStreams?:    *int | fn.#Fn
+				LoadTimeout?:                  *int | fn.#Fn
+				MaxFileSize?:                  *int | fn.#Fn
+				RemoveQuotes?:                 *bool | fn.#Fn
+				ReplaceChars?:                 *string | fn.#Fn
+				ReplaceInvalidChars?:          *string | fn.#Fn
+				SecretsManagerAccessRoleArn?:  *string | fn.#Fn
+				SecretsManagerSecretId?:       *string | fn.#Fn
+				ServerSideEncryptionKmsKeyId?: *string | fn.#Fn
+				ServiceAccessRoleArn?:         *string | fn.#Fn
+				TimeFormat?:                   *string | fn.#Fn
+				TrimBlanks?:                   *bool | fn.#Fn
+				TruncateColumns?:              *bool | fn.#Fn
+				WriteBufferSize?:              *int | fn.#Fn
 			} | fn.#If
 			ResourceIdentifier?: *string | fn.#Fn
 			S3Settings?:         *{

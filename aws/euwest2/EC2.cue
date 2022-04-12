@@ -1642,10 +1642,11 @@ import (
 	#TrafficMirrorTarget: {
 		Type: "AWS::EC2::TrafficMirrorTarget"
 		Properties: {
-			Description?:            *string | fn.#Fn
-			NetworkInterfaceId?:     *string | fn.#Fn
-			NetworkLoadBalancerArn?: *string | fn.#Fn
-			Tags?:                   *[...{
+			Description?:                   *string | fn.#Fn
+			GatewayLoadBalancerEndpointId?: *string | fn.#Fn
+			NetworkInterfaceId?:            *string | fn.#Fn
+			NetworkLoadBalancerArn?:        *string | fn.#Fn
+			Tags?:                          *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -1691,6 +1692,24 @@ import (
 			}] | fn.#If
 			TransitGatewayId: *string | fn.#Fn
 			VpcId:            *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayConnect: {
+		Type: "AWS::EC2::TransitGatewayConnect"
+		Properties: {
+			Options: *{
+				Protocol?: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransportTransitGatewayAttachmentId: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

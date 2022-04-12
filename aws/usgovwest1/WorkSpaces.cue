@@ -17,7 +17,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			UserVolumeEncryptionEnabled?: *bool | fn.#Fn
 			VolumeEncryptionKey?:         *string | fn.#Fn
 			WorkspaceProperties?:         *{
-				ComputeTypeName?:                     *("GRAPHICS" | "GRAPHICSPRO" | "PERFORMANCE" | "POWER" | "POWERPRO" | "STANDARD" | "VALUE") | fn.#Fn
+				ComputeTypeName?:                     *("GRAPHICS" | "GRAPHICSPRO" | "GRAPHICSPRO_G4DN" | "GRAPHICS_G4DN" | "PERFORMANCE" | "POWER" | "POWERPRO" | "STANDARD" | "VALUE") | fn.#Fn
 				RootVolumeSizeGib?:                   *int | fn.#Fn
 				RunningMode?:                         *("ALWAYS_ON" | "AUTO_STOP") | fn.#Fn
 				RunningModeAutoStopTimeoutInMinutes?: *int | fn.#Fn

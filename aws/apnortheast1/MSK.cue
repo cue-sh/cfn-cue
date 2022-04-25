@@ -118,7 +118,7 @@ import (
 		Properties: {
 			Description?:       *string | fn.#Fn
 			KafkaVersionsList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Name?:              *string | fn.#Fn
+			Name:               *string | fn.#Fn
 			ServerProperties:   *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

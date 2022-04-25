@@ -27,7 +27,7 @@ import (
 			KeyPolicy:          *{
 				[string]: _
 			} | fn.#Fn
-			KeyUsage?:            *("ENCRYPT_DECRYPT" | "SIGN_VERIFY") | fn.#Fn
+			KeyUsage?:            *("ENCRYPT_DECRYPT" | "SIGN_VERIFY" | "GENERATE_VERIFY_MAC") | fn.#Fn
 			PendingWindowInDays?: *(>=7 & <=30) | fn.#Fn
 			Tags?:                *[...{
 				Key:   *string | fn.#Fn

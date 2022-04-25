@@ -40,7 +40,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ManualSnapshotRetentionPeriod?: *int | fn.#Fn
 			MasterUserPassword:             *string | fn.#Fn
 			MasterUsername:                 *string | fn.#Fn
-			NodeType:                       *("dc2.8xlarge" | "dc2.large" | "ds2.8xlarge" | "ds2.xlarge") | fn.#Fn
+			NodeType:                       *("dc2.8xlarge" | "dc2.large" | "ds2.8xlarge" | "ds2.xlarge" | "ra3.16xlarge" | "ra3.4xlarge" | "ra3.xlplus") | fn.#Fn
 			NumberOfNodes?:                 *(>=1 & <=100) | fn.#Fn
 			OwnerAccount?:                  *string | fn.#Fn
 			Port?:                          *int | fn.#Fn

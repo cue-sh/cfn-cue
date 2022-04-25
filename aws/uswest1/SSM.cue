@@ -67,8 +67,9 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			TargetType?:  *(=~#"^\/[\w\.\-\:\/]*$"#) | fn.#Fn
-			VersionName?: *(=~#"^[a-zA-Z0-9_\-.]{1,128}$"#) | fn.#Fn
+			TargetType?:   *(=~#"^\/[\w\.\-\:\/]*$"#) | fn.#Fn
+			UpdateMethod?: *("Replace" | "NewVersion") | fn.#Fn
+			VersionName?:  *(=~#"^[a-zA-Z0-9_\-.]{1,128}$"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

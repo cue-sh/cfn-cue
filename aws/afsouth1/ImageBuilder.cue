@@ -83,11 +83,28 @@ import (
 			Description?:  *string | fn.#Fn
 			Distributions: *[...{
 				AmiDistributionConfiguration?: *{
-					[string]: _
-				} | fn.#Fn
+					AmiTags?: *{
+						[string]: *string | fn.#Fn
+					} | fn.#If
+					Description?:                   *string | fn.#Fn
+					KmsKeyId?:                      *string | fn.#Fn
+					LaunchPermissionConfiguration?: *{
+						OrganizationArns?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						OrganizationalUnitArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						UserGroups?:             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						UserIds?:                [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					} | fn.#If
+					Name?:             *string | fn.#Fn
+					TargetAccountIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				} | fn.#If
 				ContainerDistributionConfiguration?: *{
-					[string]: _
-				} | fn.#Fn
+					ContainerTags?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Description?:      *string | fn.#Fn
+					TargetRepository?: *{
+						RepositoryName?: *string | fn.#Fn
+						Service?:        *("ECR") | fn.#Fn
+					} | fn.#If
+				} | fn.#If
 				LaunchTemplateConfigurations?: *[...{
 					AccountId?:         *string | fn.#Fn
 					LaunchTemplateId?:  *string | fn.#Fn

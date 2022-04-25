@@ -53,8 +53,12 @@ import (
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			WorkGroupConfiguration?: *{
-				BytesScannedCutoffPerQuery?:      *int | fn.#Fn
-				EnforceWorkGroupConfiguration?:   *bool | fn.#Fn
+				BytesScannedCutoffPerQuery?:    *int | fn.#Fn
+				EnforceWorkGroupConfiguration?: *bool | fn.#Fn
+				EngineVersion?:                 *{
+					EffectiveEngineVersion?: *string | fn.#Fn
+					SelectedEngineVersion?:  *string | fn.#Fn
+				} | fn.#If
 				PublishCloudWatchMetricsEnabled?: *bool | fn.#Fn
 				RequesterPaysEnabled?:            *bool | fn.#Fn
 				ResultConfiguration?:             *{
@@ -63,22 +67,6 @@ import (
 						KmsKey?:          *string | fn.#Fn
 					} | fn.#If
 					OutputLocation?: *string | fn.#Fn
-				} | fn.#If
-			} | fn.#If
-			WorkGroupConfigurationUpdates?: *{
-				BytesScannedCutoffPerQuery?:       *int | fn.#Fn
-				EnforceWorkGroupConfiguration?:    *bool | fn.#Fn
-				PublishCloudWatchMetricsEnabled?:  *bool | fn.#Fn
-				RemoveBytesScannedCutoffPerQuery?: *bool | fn.#Fn
-				RequesterPaysEnabled?:             *bool | fn.#Fn
-				ResultConfigurationUpdates?:       *{
-					EncryptionConfiguration?: *{
-						EncryptionOption: *("SSE_S3" | "SSE_KMS" | "CSE_KMS") | fn.#Fn
-						KmsKey?:          *string | fn.#Fn
-					} | fn.#If
-					OutputLocation?:                *string | fn.#Fn
-					RemoveEncryptionConfiguration?: *bool | fn.#Fn
-					RemoveOutputLocation?:          *bool | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 		}

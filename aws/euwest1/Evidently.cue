@@ -28,8 +28,14 @@ import (
 			} | fn.#If
 			Project:            *(=~#"([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*)"#) | fn.#Fn
 			RandomizationSalt?: *(=~#".*"#) | fn.#Fn
-			SamplingRate?:      *int | fn.#Fn
-			Tags?:              *[...{
+			RunningStatus?:     *{
+				AnalysisCompleteTime?: *string | fn.#Fn
+				DesiredState?:         *(=~#"^(CANCELLED|COMPLETED)"#) | fn.#Fn
+				Reason?:               *string | fn.#Fn
+				Status?:               *string | fn.#Fn
+			} | fn.#If
+			SamplingRate?: *int | fn.#Fn
+			Tags?:         *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -79,8 +85,13 @@ import (
 	#Launch: {
 		Type: "AWS::Evidently::Launch"
 		Properties: {
-			Description?: *string | fn.#Fn
-			Groups:       *[...{
+			Description?:     *string | fn.#Fn
+			ExecutionStatus?: *{
+				DesiredState?: *string | fn.#Fn
+				Reason?:       *string | fn.#Fn
+				Status:        *string | fn.#Fn
+			} | fn.#If
+			Groups: *[...{
 				Description?: *string | fn.#Fn
 				Feature:      *string | fn.#Fn
 				GroupName:    *(strings.MinRunes(1) & strings.MaxRunes(127) & (=~#"[-a-zA-Z0-9._]*"#)) | fn.#Fn

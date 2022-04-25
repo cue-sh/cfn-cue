@@ -6,6 +6,24 @@ import (
 )
 
 #AppRunner: {
+	#ObservabilityConfiguration: {
+		Type: "AWS::AppRunner::ObservabilityConfiguration"
+		Properties: {
+			ObservabilityConfigurationName?: *(strings.MinRunes(4) & strings.MaxRunes(32) & (=~#"[A-Za-z0-9][A-Za-z0-9\-_]{3,31}"#)) | fn.#Fn
+			Tags?:                           *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TraceConfiguration?: *{
+				Vendor: *("AWSXRAY") | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Service: {
 		Type: "AWS::AppRunner::Service"
 		Properties: {
@@ -31,6 +49,10 @@ import (
 					EgressType:       *("DEFAULT" | "VPC") | fn.#Fn
 					VpcConnectorArn?: *(strings.MinRunes(44) & strings.MaxRunes(1011) & (=~#"arn:aws(-[\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\w|\/|-){1,1011}"#)) | fn.#Fn
 				} | fn.#If
+			} | fn.#If
+			ObservabilityConfiguration?: *{
+				ObservabilityConfigurationArn?: *(strings.MinRunes(1) & strings.MaxRunes(1011) & (=~#"arn:aws(-[\w]+)*:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[0-9]{12}:(\w|/|-){1,1011}"#)) | fn.#Fn
+				ObservabilityEnabled:           *bool | fn.#Fn
 			} | fn.#If
 			ServiceName?:        *(strings.MinRunes(4) & strings.MaxRunes(40) & (=~#"[A-Za-z0-9][A-Za-z0-9-_]{3,39}"#)) | fn.#Fn
 			SourceConfiguration: *{

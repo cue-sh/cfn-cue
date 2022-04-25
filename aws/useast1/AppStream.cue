@@ -144,8 +144,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			MaxUserDurationInSeconds?:       *(>=600 & <=360000) | fn.#Fn
 			Name:                            *string | fn.#Fn
 			Platform?:                       *string | fn.#Fn
-			StreamView?:                     *string | fn.#Fn
-			Tags?:                           *[...{
+			SessionScriptS3Location?:        *{
+				S3Bucket: *string | fn.#Fn
+				S3Key:    *string | fn.#Fn
+			} | fn.#If
+			StreamView?: *string | fn.#Fn
+			Tags?:       *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

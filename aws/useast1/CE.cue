@@ -13,6 +13,10 @@ import (
 			MonitorName:           *(=~#"[\S\s]*"#) | fn.#Fn
 			MonitorSpecification?: *string | fn.#Fn
 			MonitorType:           *("DIMENSIONAL" | "CUSTOM") | fn.#Fn
+			ResourceTags?:         *[...{
+				Key:   *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^(?!aws:).*$"#)) | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -25,7 +29,11 @@ import (
 		Properties: {
 			Frequency:      *("DAILY" | "IMMEDIATE" | "WEEKLY") | fn.#Fn
 			MonitorArnList: [...(*(=~#"^arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+$"#) | fn.#Fn)] | (*(=~#"^arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+$"#) | fn.#Fn)
-			Subscribers:    *[...{
+			ResourceTags?:  *[...{
+				Key:   *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^(?!aws:).*$"#)) | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			Subscribers: *[...{
 				Address: *string | fn.#Fn
 				Status?: *("CONFIRMED" | "DECLINED") | fn.#Fn
 				Type:    *("EMAIL" | "SNS") | fn.#Fn

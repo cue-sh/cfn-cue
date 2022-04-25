@@ -36,11 +36,18 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					[string]: _
 				} | fn.#Fn
 				ItemType?: *{
-					Eq?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					Gte?: *int | fn.#Fn
-					Lt?:  *int | fn.#Fn
-					Lte?: *int | fn.#Fn
-					Neq?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Eq?:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Equals?:             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					GreaterThan?:        *int | fn.#Fn
+					GreaterThanOrEqual?: *int | fn.#Fn
+					Gt?:                 *int | fn.#Fn
+					Gte?:                *int | fn.#Fn
+					LessThan?:           *int | fn.#Fn
+					LessThanOrEqual?:    *int | fn.#Fn
+					Lt?:                 *int | fn.#Fn
+					Lte?:                *int | fn.#Fn
+					Neq?:                [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					NotEquals?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				} | fn.#If
 			} | fn.#If
 			Name: *string | fn.#Fn

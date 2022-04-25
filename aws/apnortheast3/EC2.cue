@@ -659,6 +659,9 @@ import (
 				LicenseSpecifications?: *[...{
 					LicenseConfigurationArn?: *string | fn.#Fn
 				}] | fn.#If
+				MaintenanceOptions?: *{
+					AutoRecovery?: *string | fn.#Fn
+				} | fn.#If
 				MetadataOptions?: *{
 					HttpEndpoint?:            *string | fn.#Fn
 					HttpProtocolIpv6?:        *string | fn.#Fn
@@ -870,6 +873,27 @@ import (
 	#PlacementGroup: {
 		Type: "AWS::EC2::PlacementGroup"
 		Properties: Strategy?: *("cluster" | "partition" | "spread") | fn.#Fn
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#PrefixList: {
+		Type: "AWS::EC2::PrefixList"
+		Properties: {
+			AddressFamily: *("IPv4" | "IPv6") | fn.#Fn
+			Entries?:      *[...{
+				Cidr:         *(strings.MinRunes(1) & strings.MaxRunes(46)) | fn.#Fn
+				Description?: *string | fn.#Fn
+			}] | fn.#If
+			MaxEntries:     *int | fn.#Fn
+			PrefixListName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+			Tags?:          *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"

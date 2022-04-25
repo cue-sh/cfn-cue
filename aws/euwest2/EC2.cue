@@ -781,6 +781,9 @@ import (
 				LicenseSpecifications?: *[...{
 					LicenseConfigurationArn?: *string | fn.#Fn
 				}] | fn.#If
+				MaintenanceOptions?: *{
+					AutoRecovery?: *string | fn.#Fn
+				} | fn.#If
 				MetadataOptions?: *{
 					HttpEndpoint?:            *string | fn.#Fn
 					HttpProtocolIpv6?:        *string | fn.#Fn
@@ -1642,11 +1645,10 @@ import (
 	#TrafficMirrorTarget: {
 		Type: "AWS::EC2::TrafficMirrorTarget"
 		Properties: {
-			Description?:                   *string | fn.#Fn
-			GatewayLoadBalancerEndpointId?: *string | fn.#Fn
-			NetworkInterfaceId?:            *string | fn.#Fn
-			NetworkLoadBalancerArn?:        *string | fn.#Fn
-			Tags?:                          *[...{
+			Description?:            *string | fn.#Fn
+			NetworkInterfaceId?:     *string | fn.#Fn
+			NetworkLoadBalancerArn?: *string | fn.#Fn
+			Tags?:                   *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

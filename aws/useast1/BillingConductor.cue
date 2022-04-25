@@ -18,6 +18,10 @@ import (
 			Description?:     *string | fn.#Fn
 			Name:             *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9_\+=\.\-@]+"#)) | fn.#Fn
 			PrimaryAccountId: *(=~#"[0-9]{12}"#) | fn.#Fn
+			Tags?:            *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -45,6 +49,10 @@ import (
 			} | fn.#If
 			Description?: *string | fn.#Fn
 			Name:         *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9_\+=\.\-@]+"#)) | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -58,6 +66,10 @@ import (
 			Description?:     *string | fn.#Fn
 			Name:             *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9_\+=\.\-@]+"#)) | fn.#Fn
 			PricingRuleArns?: [...(*(=~#"arn:aws(-cn)?:billingconductor::[0-9]{12}:pricingrule/[a-zA-Z0-9]{10}"#) | fn.#Fn)] | (*(=~#"arn:aws(-cn)?:billingconductor::[0-9]{12}:pricingrule/[a-zA-Z0-9]{10}"#) | fn.#Fn)
+			Tags?:            *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -73,7 +85,11 @@ import (
 			Name:               *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9_\+=\.\-@]+"#)) | fn.#Fn
 			Scope:              *("GLOBAL" | "SERVICE") | fn.#Fn
 			Service?:           *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9\.\-]+"#)) | fn.#Fn
-			Type:               *("MARKUP" | "DISCOUNT") | fn.#Fn
+			Tags?:              *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			Type: *("MARKUP" | "DISCOUNT") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

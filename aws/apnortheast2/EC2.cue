@@ -781,6 +781,9 @@ import (
 				LicenseSpecifications?: *[...{
 					LicenseConfigurationArn?: *string | fn.#Fn
 				}] | fn.#If
+				MaintenanceOptions?: *{
+					AutoRecovery?: *string | fn.#Fn
+				} | fn.#If
 				MetadataOptions?: *{
 					HttpEndpoint?:            *string | fn.#Fn
 					HttpProtocolIpv6?:        *string | fn.#Fn

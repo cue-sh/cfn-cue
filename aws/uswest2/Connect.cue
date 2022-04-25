@@ -74,6 +74,25 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#PhoneNumber: {
+		Type: "AWS::Connect::PhoneNumber"
+		Properties: {
+			CountryCode:  *(=~#"^[A-Z]{2}"#) | fn.#Fn
+			Description?: *(strings.MinRunes(1) & strings.MaxRunes(500)) | fn.#Fn
+			Prefix?:      *(=~#"^\+[0-9]{1,15}"#) | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TargetArn: *(=~#"^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$"#) | fn.#Fn
+			Type:      *(=~#"TOLL_FREE|DID"#) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#QuickConnect: {
 		Type: "AWS::Connect::QuickConnect"
 		Properties: {

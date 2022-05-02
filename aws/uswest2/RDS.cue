@@ -22,8 +22,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			EnableCloudwatchLogsExports?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			EnableHttpEndpoint?:              *bool | fn.#Fn
 			EnableIAMDatabaseAuthentication?: *bool | fn.#Fn
-			EndpointAddress?:                 *string | fn.#Fn
-			EndpointPort?:                    *string | fn.#Fn
 			Engine:                           *string | fn.#Fn
 			EngineMode?:                      *string | fn.#Fn
 			EngineVersion?:                   *string | fn.#Fn
@@ -34,7 +32,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Port?:                            *int | fn.#Fn
 			PreferredBackupWindow?:           *string | fn.#Fn
 			PreferredMaintenanceWindow?:      *string | fn.#Fn
-			ReadEndpointAddress?:             *string | fn.#Fn
 			ReplicationSourceIdentifier?:     *string | fn.#Fn
 			RestoreType?:                     *string | fn.#Fn
 			ScalingConfiguration?:            *{

@@ -230,6 +230,7 @@ import (
 					ManifestName?:         *string | fn.#Fn
 					MinBufferTimeSeconds?: *int | fn.#Fn
 					Profile?:              *("NONE" | "HBBTV_1_5") | fn.#Fn
+					ScteMarkersSource?:    *("SEGMENTS" | "MANIFEST") | fn.#Fn
 					StreamSelection?:      *{
 						MaxVideoBitsPerSecond?: *int | fn.#Fn
 						MinVideoBitsPerSecond?: *int | fn.#Fn

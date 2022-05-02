@@ -401,6 +401,23 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#KeyPair: {
+		Type: "AWS::EC2::KeyPair"
+		Properties: {
+			KeyName:            *string | fn.#Fn
+			KeyType?:           *("rsa" | "ed25519") | fn.#Fn
+			PublicKeyMaterial?: *string | fn.#Fn
+			Tags?:              *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#LaunchTemplate: {
 		Type: "AWS::EC2::LaunchTemplate"
 		Properties: {
@@ -1019,6 +1036,7 @@ import (
 						} | fn.#If
 					} | fn.#If
 					InstanceType?:     *string | fn.#Fn
+					Priority?:         *number | fn.#Fn
 					SpotPrice?:        *string | fn.#Fn
 					SubnetId?:         *string | fn.#Fn
 					WeightedCapacity?: *number | fn.#Fn

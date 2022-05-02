@@ -32,6 +32,7 @@ import (
 				} | fn.#Fn
 			} | fn.#If
 			ScheduleExpression?: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			ScheduleOffset?:     *int | fn.#Fn
 			SyncCompliance?:     *("AUTO" | "MANUAL") | fn.#Fn
 			Targets?:            *[...{
 				Key:    *string | fn.#Fn

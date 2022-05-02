@@ -22,6 +22,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::SecretsManager::RotationSchedule"
 		Properties: {
 			HostedRotationLambda?: *{
+				ExcludeCharacters?:        *string | fn.#Fn
 				KmsKeyArn?:                *string | fn.#Fn
 				MasterSecretArn?:          *string | fn.#Fn
 				MasterSecretKmsKeyArn?:    *string | fn.#Fn

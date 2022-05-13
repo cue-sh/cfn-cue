@@ -20,10 +20,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				S3ObjectVersion?: *string | fn.#Fn
 				Script?:          *string | fn.#Fn
 			} | fn.#If
-			ExecutionRoleArn:        *string | fn.#Fn
-			FailureRetentionPeriod?: *int | fn.#Fn
-			Name:                    *(=~#"^[0-9a-z_\-]{1,21}$"#) | fn.#Fn
-			RunConfig?:              *{
+			DeleteLambdaResourcesOnCanaryDeletion?: *bool | fn.#Fn
+			ExecutionRoleArn:                       *string | fn.#Fn
+			FailureRetentionPeriod?:                *int | fn.#Fn
+			Name:                                   *(=~#"^[0-9a-z_\-]{1,21}$"#) | fn.#Fn
+			RunConfig?:                             *{
 				ActiveTracing?:        *bool | fn.#Fn
 				EnvironmentVariables?: *{
 					[string]: *string | fn.#Fn

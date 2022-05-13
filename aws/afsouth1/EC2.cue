@@ -1641,6 +1641,63 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#TransitGatewayMulticastDomain: {
+		Type: "AWS::EC2::TransitGatewayMulticastDomain"
+		Properties: {
+			Options?: *{
+				[string]: _
+			} | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastDomainAssociation: {
+		Type: "AWS::EC2::TransitGatewayMulticastDomainAssociation"
+		Properties: {
+			SubnetId:                        *string | fn.#Fn
+			TransitGatewayAttachmentId:      *string | fn.#Fn
+			TransitGatewayMulticastDomainId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastGroupMember: {
+		Type: "AWS::EC2::TransitGatewayMulticastGroupMember"
+		Properties: {
+			GroupIpAddress:                  *string | fn.#Fn
+			NetworkInterfaceId:              *string | fn.#Fn
+			TransitGatewayMulticastDomainId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastGroupSource: {
+		Type: "AWS::EC2::TransitGatewayMulticastGroupSource"
+		Properties: {
+			GroupIpAddress:                  *string | fn.#Fn
+			NetworkInterfaceId:              *string | fn.#Fn
+			TransitGatewayMulticastDomainId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#TransitGatewayPeeringAttachment: {
 		Type: "AWS::EC2::TransitGatewayPeeringAttachment"
 		Properties: {
@@ -1737,7 +1794,7 @@ import (
 	#VPC: {
 		Type: "AWS::EC2::VPC"
 		Properties: {
-			CidrBlock:           *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
+			CidrBlock?:          *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
 			EnableDnsHostnames?: *bool | fn.#Fn
 			EnableDnsSupport?:   *bool | fn.#Fn
 			InstanceTenancy?:    *("dedicated" | "default") | fn.#Fn

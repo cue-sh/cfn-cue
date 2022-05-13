@@ -332,8 +332,8 @@ import (
 		Type: "AWS::IoT::ResourceSpecificLogging"
 		Properties: {
 			LogLevel:   *("ERROR" | "WARN" | "INFO" | "DEBUG" | "DISABLED") | fn.#Fn
-			TargetName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9:_-]+"#)) | fn.#Fn
-			TargetType: *("THING_GROUP") | fn.#Fn
+			TargetName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9.:_-]+"#)) | fn.#Fn
+			TargetType: *("THING_GROUP" | "CLIENT_ID" | "SOURCE_IP" | "PRINCIPAL_ID") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

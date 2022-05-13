@@ -332,8 +332,25 @@ import (
 		Type: "AWS::IoT::ResourceSpecificLogging"
 		Properties: {
 			LogLevel:   *("ERROR" | "WARN" | "INFO" | "DEBUG" | "DISABLED") | fn.#Fn
-			TargetName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9:_-]+"#)) | fn.#Fn
-			TargetType: *("THING_GROUP") | fn.#Fn
+			TargetName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9.:_-]+"#)) | fn.#Fn
+			TargetType: *("THING_GROUP" | "CLIENT_ID" | "SOURCE_IP" | "PRINCIPAL_ID") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#RoleAlias: {
+		Type: "AWS::IoT::RoleAlias"
+		Properties: {
+			CredentialDurationSeconds?: *(>=900 & <=43200) | fn.#Fn
+			RoleAlias?:                 *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[\w=,@-]+"#)) | fn.#Fn
+			RoleArn:                    *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+"#)) | fn.#Fn
+			Tags?:                      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

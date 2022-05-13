@@ -23,7 +23,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			RedrivePolicy?: *{
 				[string]: _
 			} | fn.#Fn
-			Tags?: *[...{
+			SqsManagedSseEnabled?: *bool | fn.#Fn
+			Tags?:                 *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

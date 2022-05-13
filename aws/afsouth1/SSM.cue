@@ -32,6 +32,7 @@ import (
 				} | fn.#Fn
 			} | fn.#If
 			ScheduleExpression?: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			ScheduleOffset?:     *(>=1 & <=6) | fn.#Fn
 			SyncCompliance?:     *("AUTO" | "MANUAL") | fn.#Fn
 			Targets?:            *[...{
 				Key:    *string | fn.#Fn
@@ -67,8 +68,9 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			TargetType?:  *(=~#"^\/[\w\.\-\:\/]*$"#) | fn.#Fn
-			VersionName?: *(=~#"^[a-zA-Z0-9_\-.]{1,128}$"#) | fn.#Fn
+			TargetType?:   *(=~#"^\/[\w\.\-\:\/]*$"#) | fn.#Fn
+			UpdateMethod?: *("Replace" | "NewVersion") | fn.#Fn
+			VersionName?:  *(=~#"^[a-zA-Z0-9_\-.]{1,128}$"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

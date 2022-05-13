@@ -28,8 +28,9 @@ import (
 				} | fn.#Fn
 			} | fn.#If
 			DashConfiguration?: *{
-				MpdLocation?:        *string | fn.#Fn
-				OriginManifestType?: *("SINGLE_PERIOD" | "MULTI_PERIOD") | fn.#Fn
+				ManifestEndpointPrefix?: *string | fn.#Fn
+				MpdLocation?:            *string | fn.#Fn
+				OriginManifestType?:     *("SINGLE_PERIOD" | "MULTI_PERIOD") | fn.#Fn
 			} | fn.#If
 			LivePreRollConfiguration?: *{
 				AdDecisionServerUrl?: *string | fn.#Fn
@@ -40,11 +41,10 @@ import (
 					Enabled?: *bool | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			Name:                                 *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z0-9_-]+$"#)) | fn.#Fn
-			PersonalizationThresholdSeconds?:     *int | fn.#Fn
-			SessionInitializationEndpointPrefix?: *string | fn.#Fn
-			SlateAdUrl?:                          *string | fn.#Fn
-			Tags?:                                *[...{
+			Name:                             *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z0-9_-]+$"#)) | fn.#Fn
+			PersonalizationThresholdSeconds?: *int | fn.#Fn
+			SlateAdUrl?:                      *string | fn.#Fn
+			Tags?:                            *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

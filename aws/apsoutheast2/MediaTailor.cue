@@ -29,7 +29,7 @@ import (
 			} | fn.#If
 			DashConfiguration?: *{
 				MpdLocation?:        *string | fn.#Fn
-				OriginManifestType?: *("SINGLE_PERIOD" | "MULTI_PERIOD") | fn.#Fn
+				OriginManifestType?: *string | fn.#Fn
 			} | fn.#If
 			LivePreRollConfiguration?: *{
 				AdDecisionServerUrl?: *string | fn.#Fn

@@ -14,6 +14,7 @@ import (
 			CapacityRebalance?:       *bool | fn.#Fn
 			Context?:                 *string | fn.#Fn
 			Cooldown?:                *string | fn.#Fn
+			DefaultInstanceWarmup?:   *int | fn.#Fn
 			DesiredCapacity?:         *string | fn.#Fn
 			DesiredCapacityType?:     *string | fn.#Fn
 			HealthCheckGracePeriod?:  *int | fn.#Fn

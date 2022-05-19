@@ -3,6 +3,64 @@ package eucentral1
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #NetworkManager: {
+	#ConnectAttachment: {
+		Type: "AWS::NetworkManager::ConnectAttachment"
+		Properties: {
+			CoreNetworkId?: *string | fn.#Fn
+			EdgeLocation?:  *string | fn.#Fn
+			Options?:       *{
+				Protocol?: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransportAttachmentId?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#ConnectPeer: {
+		Type: "AWS::NetworkManager::ConnectPeer"
+		Properties: {
+			BgpOptions?: *{
+				PeerAsn?: *number | fn.#Fn
+			} | fn.#If
+			ConnectAttachmentId?: *string | fn.#Fn
+			CoreNetworkAddress?:  *string | fn.#Fn
+			InsideCidrBlocks?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			PeerAddress?:         *string | fn.#Fn
+			Tags?:                *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#CoreNetwork: {
+		Type: "AWS::NetworkManager::CoreNetwork"
+		Properties: {
+			Description?:    *string | fn.#Fn
+			GlobalNetworkId: *string | fn.#Fn
+			PolicyDocument?: *string | fn.#Fn
+			Tags?:           *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#CustomerGatewayAssociation: {
 		Type: "AWS::NetworkManager::CustomerGatewayAssociation"
 		Properties: {
@@ -115,11 +173,47 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#SiteToSiteVpnAttachment: {
+		Type: "AWS::NetworkManager::SiteToSiteVpnAttachment"
+		Properties: {
+			CoreNetworkId?: *string | fn.#Fn
+			Tags?:          *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpnConnectionArn?: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#TransitGatewayRegistration: {
 		Type: "AWS::NetworkManager::TransitGatewayRegistration"
 		Properties: {
 			GlobalNetworkId:   *string | fn.#Fn
 			TransitGatewayArn: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#VpcAttachment: {
+		Type: "AWS::NetworkManager::VpcAttachment"
+		Properties: {
+			CoreNetworkId?: *string | fn.#Fn
+			Options?:       *{
+				Ipv6Support?: *bool | fn.#Fn
+			} | fn.#If
+			SubnetArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:       *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpcArn?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

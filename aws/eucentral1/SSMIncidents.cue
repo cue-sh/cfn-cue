@@ -28,9 +28,15 @@ import (
 		Properties: {
 			Actions?: *[...{
 				SsmAutomation?: *{
-					DocumentName:     *string | fn.#Fn
-					DocumentVersion?: *string | fn.#Fn
-					Parameters?:      *[...{
+					DocumentName:       *string | fn.#Fn
+					DocumentVersion?:   *string | fn.#Fn
+					DynamicParameters?: *[...{
+						Key:   *(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn
+						Value: *{
+							Variable?: *("INCIDENT_RECORD_ARN" | "INVOLVED_RESOURCES") | fn.#Fn
+						} | fn.#If
+					}] | fn.#If
+					Parameters?: *[...{
 						Key:    *(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn
 						Values: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					}] | fn.#If

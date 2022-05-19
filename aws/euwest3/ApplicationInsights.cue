@@ -43,7 +43,7 @@ import (
 							Encoding?:     *("utf-8" | "utf-16" | "ascii") | fn.#Fn
 							LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"[\.\-_/#A-Za-z0-9]+"#)) | fn.#Fn
 							LogPath?:      *(strings.MinRunes(1) & strings.MaxRunes(260) & (=~#"^([a-zA-Z]:\\[\\\S|*\S]?.*|/[^"']*)$"#)) | fn.#Fn
-							LogType:       *(=~#"^[A-Z][[A-Z]_]*$"#) | fn.#Fn
+							LogType:       *string | fn.#Fn
 							PatternSet?:   *(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9.-_]*"#)) | fn.#Fn
 						}] | fn.#If
 						WindowsEvents?: *[...{
@@ -62,7 +62,7 @@ import (
 								Encoding?:     *("utf-8" | "utf-16" | "ascii") | fn.#Fn
 								LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"[\.\-_/#A-Za-z0-9]+"#)) | fn.#Fn
 								LogPath?:      *(strings.MinRunes(1) & strings.MaxRunes(260) & (=~#"^([a-zA-Z]:\\[\\\S|*\S]?.*|/[^"']*)$"#)) | fn.#Fn
-								LogType:       *(=~#"^[A-Z][[A-Z]_]*$"#) | fn.#Fn
+								LogType:       *string | fn.#Fn
 								PatternSet?:   *(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9.-_]*"#)) | fn.#Fn
 							}] | fn.#If
 							WindowsEvents?: *[...{
@@ -103,7 +103,7 @@ import (
 							Encoding?:     *("utf-8" | "utf-16" | "ascii") | fn.#Fn
 							LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"[\.\-_/#A-Za-z0-9]+"#)) | fn.#Fn
 							LogPath?:      *(strings.MinRunes(1) & strings.MaxRunes(260) & (=~#"^([a-zA-Z]:\\[\\\S|*\S]?.*|/[^"']*)$"#)) | fn.#Fn
-							LogType:       *(=~#"^[A-Z][[A-Z]_]*$"#) | fn.#Fn
+							LogType:       *string | fn.#Fn
 							PatternSet?:   *(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9.-_]*"#)) | fn.#Fn
 						}] | fn.#If
 						WindowsEvents?: *[...{
@@ -122,7 +122,7 @@ import (
 								Encoding?:     *("utf-8" | "utf-16" | "ascii") | fn.#Fn
 								LogGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"[\.\-_/#A-Za-z0-9]+"#)) | fn.#Fn
 								LogPath?:      *(strings.MinRunes(1) & strings.MaxRunes(260) & (=~#"^([a-zA-Z]:\\[\\\S|*\S]?.*|/[^"']*)$"#)) | fn.#Fn
-								LogType:       *(=~#"^[A-Z][[A-Z]_]*$"#) | fn.#Fn
+								LogType:       *string | fn.#Fn
 								PatternSet?:   *(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9.-_]*"#)) | fn.#Fn
 							}] | fn.#If
 							WindowsEvents?: *[...{
@@ -135,7 +135,7 @@ import (
 						SubComponentType: *("AWS::EC2::Instance" | "AWS::EC2::Volume") | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
-				Tier: *(=~#"^[A-Z][[A-Z]_]*$"#) | fn.#Fn
+				Tier: *string | fn.#Fn
 			}] | fn.#If
 			CustomComponents?: *[...{
 				ComponentName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[\d\w\-_.+]*$"#)) | fn.#Fn

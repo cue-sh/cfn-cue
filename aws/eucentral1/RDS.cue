@@ -292,11 +292,16 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#EventSubscription: {
 		Type: "AWS::RDS::EventSubscription"
 		Properties: {
-			Enabled?:         *bool | fn.#Fn
-			EventCategories?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SnsTopicArn:      *string | fn.#Fn
-			SourceIds?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SourceType?:      *string | fn.#Fn
+			Enabled?:          *bool | fn.#Fn
+			EventCategories?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SnsTopicArn:       *string | fn.#Fn
+			SourceIds?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SourceType?:       *string | fn.#Fn
+			SubscriptionName?: *string | fn.#Fn
+			Tags?:             *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

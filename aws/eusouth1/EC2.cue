@@ -868,6 +868,35 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#LocalGatewayRoute: {
+		Type: "AWS::EC2::LocalGatewayRoute"
+		Properties: {
+			DestinationCidrBlock:                *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$"#) | fn.#Fn
+			LocalGatewayRouteTableId:            *string | fn.#Fn
+			LocalGatewayVirtualInterfaceGroupId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#LocalGatewayRouteTableVPCAssociation: {
+		Type: "AWS::EC2::LocalGatewayRouteTableVPCAssociation"
+		Properties: {
+			LocalGatewayRouteTableId: *string | fn.#Fn
+			Tags?:                    *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpcId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#NatGateway: {
 		Type: "AWS::EC2::NatGateway"
 		Properties: {

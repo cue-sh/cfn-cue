@@ -714,6 +714,7 @@ import (
 				CreditSpecification?: *{
 					CpuCredits?: *("standard" | "unlimited") | fn.#Fn
 				} | fn.#If
+				DisableApiStop?:           *bool | fn.#Fn
 				DisableApiTermination?:    *bool | fn.#Fn
 				EbsOptimized?:             *bool | fn.#Fn
 				ElasticGpuSpecifications?: *[...{
@@ -1705,6 +1706,9 @@ import (
 	#TransitGatewayAttachment: {
 		Type: "AWS::EC2::TransitGatewayAttachment"
 		Properties: {
+			Options?: *{
+				[string]: _
+			} | fn.#Fn
 			SubnetIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			Tags?:     *[...{
 				Key:   *string | fn.#Fn

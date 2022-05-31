@@ -143,8 +143,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SnsCallerArn?: *string | fn.#Fn
 				SnsRegion?:    *string | fn.#Fn
 			} | fn.#If
-			SmsVerificationMessage?: *string | fn.#Fn
-			UserPoolAddOns?:         *{
+			SmsVerificationMessage?:      *string | fn.#Fn
+			UserAttributeUpdateSettings?: *{
+				AttributesRequireVerificationBeforeUpdate: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			UserPoolAddOns?: *{
 				AdvancedSecurityMode?: *string | fn.#Fn
 			} | fn.#If
 			UserPoolName?: *string | fn.#Fn

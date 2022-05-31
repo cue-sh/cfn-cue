@@ -76,6 +76,23 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#OIDCProvider: {
+		Type: "AWS::IAM::OIDCProvider"
+		Properties: {
+			ClientIdList?: [...(*(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn)
+			Tags?:         *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			ThumbprintList: [...(*(strings.MinRunes(40) & strings.MaxRunes(40) & (=~#"[0-9A-Fa-f]{40}"#)) | fn.#Fn)] | (*(strings.MinRunes(40) & strings.MaxRunes(40) & (=~#"[0-9A-Fa-f]{40}"#)) | fn.#Fn)
+			Url?:           *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Policy: {
 		Type: "AWS::IAM::Policy"
 		Properties: {

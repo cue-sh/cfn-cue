@@ -245,6 +245,7 @@ import (
 				Gid?:                         *("NONE" | "INT_VALUE" | "NAME" | "BOTH") | fn.#Fn
 				LogLevel?:                    *("OFF" | "BASIC" | "TRANSFER") | fn.#Fn
 				Mtime?:                       *("NONE" | "PRESERVE") | fn.#Fn
+				ObjectTags?:                  *("PRESERVE" | "NONE") | fn.#Fn
 				OverwriteMode?:               *("ALWAYS" | "NEVER") | fn.#Fn
 				PosixPermissions?:            *("NONE" | "PRESERVE") | fn.#Fn
 				PreserveDeletedFiles?:        *("PRESERVE" | "REMOVE") | fn.#Fn

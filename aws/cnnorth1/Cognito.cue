@@ -143,8 +143,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SnsCallerArn?: *string | fn.#Fn
 				SnsRegion?:    *string | fn.#Fn
 			} | fn.#If
-			SmsVerificationMessage?: *string | fn.#Fn
-			UserPoolAddOns?:         *{
+			SmsVerificationMessage?:      *string | fn.#Fn
+			UserAttributeUpdateSettings?: *{
+				AttributesRequireVerificationBeforeUpdate: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			UserPoolAddOns?: *{
 				AdvancedSecurityMode?: *string | fn.#Fn
 			} | fn.#If
 			UserPoolName?: *string | fn.#Fn
@@ -153,7 +156,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#Fn
 			UsernameAttributes?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			UsernameConfiguration?: *{
-				CaseSensitive?: *bool | fn.#Fn
+				CaseSensitive: *bool | fn.#Fn
 			} | fn.#If
 			VerificationMessageTemplate?: *{
 				DefaultEmailOption?: *string | fn.#Fn
@@ -184,19 +187,20 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				RoleArn?:        *string | fn.#Fn
 				UserDataShared?: *bool | fn.#Fn
 			} | fn.#If
-			CallbackURLs?:               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			ClientName?:                 *string | fn.#Fn
-			DefaultRedirectURI?:         *string | fn.#Fn
-			EnableTokenRevocation?:      *bool | fn.#Fn
-			ExplicitAuthFlows?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			GenerateSecret?:             *bool | fn.#Fn
-			IdTokenValidity?:            *int | fn.#Fn
-			LogoutURLs?:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			PreventUserExistenceErrors?: *string | fn.#Fn
-			ReadAttributes?:             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			RefreshTokenValidity?:       *int | fn.#Fn
-			SupportedIdentityProviders?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			TokenValidityUnits?:         *{
+			CallbackURLs?:                             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			ClientName?:                               *string | fn.#Fn
+			DefaultRedirectURI?:                       *string | fn.#Fn
+			EnablePropagateAdditionalUserContextData?: *bool | fn.#Fn
+			EnableTokenRevocation?:                    *bool | fn.#Fn
+			ExplicitAuthFlows?:                        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			GenerateSecret?:                           *bool | fn.#Fn
+			IdTokenValidity?:                          *int | fn.#Fn
+			LogoutURLs?:                               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			PreventUserExistenceErrors?:               *string | fn.#Fn
+			ReadAttributes?:                           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			RefreshTokenValidity?:                     *int | fn.#Fn
+			SupportedIdentityProviders?:               [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			TokenValidityUnits?:                       *{
 				AccessToken?:  *string | fn.#Fn
 				IdToken?:      *string | fn.#Fn
 				RefreshToken?: *string | fn.#Fn

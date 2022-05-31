@@ -49,8 +49,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			Description?:    *string | fn.#Fn
 			GlobalNetworkId: *string | fn.#Fn
-			PolicyDocument?: *string | fn.#Fn
-			Tags?:           *[...{
+			PolicyDocument?: *{
+				{
+					[string]: _
+				}
+				Version: string | *"2012-10-17"
+			} | fn.#Fn
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

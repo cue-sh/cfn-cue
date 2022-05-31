@@ -39,6 +39,7 @@ import (
 	#Asset: {
 		Type: "AWS::IoTSiteWise::Asset"
 		Properties: {
+			AssetDescription?: *string | fn.#Fn
 			AssetHierarchies?: *[...{
 				ChildAssetId: *string | fn.#Fn
 				LogicalId:    *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn

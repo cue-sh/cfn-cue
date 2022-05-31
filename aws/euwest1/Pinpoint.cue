@@ -152,6 +152,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::Pinpoint::Campaign"
 		Properties: {
 			AdditionalTreatments?: *[...{
+				CustomDeliveryConfiguration?: *{
+					DeliveryUri?:   *string | fn.#Fn
+					EndpointTypes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				} | fn.#If
 				MessageConfiguration?: *{
 					ADMMessage?: *{
 						Action?:            *string | fn.#Fn
@@ -194,6 +198,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						TimeToLive?:        *int | fn.#Fn
 						Title?:             *string | fn.#Fn
 						Url?:               *string | fn.#Fn
+					} | fn.#If
+					CustomMessage?: *{
+						Data?: *string | fn.#Fn
 					} | fn.#If
 					DefaultMessage?: *{
 						Action?:            *string | fn.#Fn
@@ -328,7 +335,25 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					StartTime?: *string | fn.#Fn
 					TimeZone?:  *string | fn.#Fn
 				} | fn.#If
-				SizePercent?:          *int | fn.#Fn
+				SizePercent?:           *int | fn.#Fn
+				TemplateConfiguration?: *{
+					EmailTemplate?: *{
+						Name?:    *string | fn.#Fn
+						Version?: *string | fn.#Fn
+					} | fn.#If
+					PushTemplate?: *{
+						Name?:    *string | fn.#Fn
+						Version?: *string | fn.#Fn
+					} | fn.#If
+					SMSTemplate?: *{
+						Name?:    *string | fn.#Fn
+						Version?: *string | fn.#Fn
+					} | fn.#If
+					VoiceTemplate?: *{
+						Name?:    *string | fn.#Fn
+						Version?: *string | fn.#Fn
+					} | fn.#If
+				} | fn.#If
 				TreatmentDescription?: *string | fn.#Fn
 				TreatmentName?:        *string | fn.#Fn
 			}] | fn.#If
@@ -337,6 +362,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				LambdaFunctionName?: *string | fn.#Fn
 				Mode?:               *string | fn.#Fn
 				WebUrl?:             *string | fn.#Fn
+			} | fn.#If
+			CustomDeliveryConfiguration?: *{
+				DeliveryUri?:   *string | fn.#Fn
+				EndpointTypes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 			Description?:    *string | fn.#Fn
 			HoldoutPercent?: *int | fn.#Fn
@@ -348,7 +377,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Session?:           *int | fn.#Fn
 				Total?:             *int | fn.#Fn
 			} | fn.#If
-			MessageConfiguration: *{
+			MessageConfiguration?: *{
 				ADMMessage?: *{
 					Action?:            *string | fn.#Fn
 					Body?:              *string | fn.#Fn
@@ -390,6 +419,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					TimeToLive?:        *int | fn.#Fn
 					Title?:             *string | fn.#Fn
 					Url?:               *string | fn.#Fn
+				} | fn.#If
+				CustomMessage?: *{
+					Data?: *string | fn.#Fn
 				} | fn.#If
 				DefaultMessage?: *{
 					Action?:            *string | fn.#Fn
@@ -531,6 +563,24 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Tags?:           *{
 				[string]: _
 			} | fn.#Fn
+			TemplateConfiguration?: *{
+				EmailTemplate?: *{
+					Name?:    *string | fn.#Fn
+					Version?: *string | fn.#Fn
+				} | fn.#If
+				PushTemplate?: *{
+					Name?:    *string | fn.#Fn
+					Version?: *string | fn.#Fn
+				} | fn.#If
+				SMSTemplate?: *{
+					Name?:    *string | fn.#Fn
+					Version?: *string | fn.#Fn
+				} | fn.#If
+				VoiceTemplate?: *{
+					Name?:    *string | fn.#Fn
+					Version?: *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 			TreatmentDescription?: *string | fn.#Fn
 			TreatmentName?:        *string | fn.#Fn
 		}

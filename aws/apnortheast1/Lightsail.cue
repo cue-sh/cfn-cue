@@ -248,6 +248,7 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
+			TlsPolicyName?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -261,6 +262,7 @@ import (
 			CertificateAlternativeNames?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			CertificateDomainName:        *string | fn.#Fn
 			CertificateName:              *string | fn.#Fn
+			HttpsRedirectionEnabled?:     *bool | fn.#Fn
 			IsAttached?:                  *bool | fn.#Fn
 			LoadBalancerName:             *(=~#"\w[\w\-]*\w"#) | fn.#Fn
 		}

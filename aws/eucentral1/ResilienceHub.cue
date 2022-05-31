@@ -9,11 +9,12 @@ import (
 	#App: {
 		Type: "AWS::ResilienceHub::App"
 		Properties: {
-			AppTemplateBody:      *(=~#"^[\w\s:,-\.'{}\[\]:"]+$"#) | fn.#Fn
-			Description?:         *string | fn.#Fn
-			Name:                 *(=~#"^[A-Za-z0-9][A-Za-z0-9_\-]{1,59}$"#) | fn.#Fn
-			ResiliencyPolicyArn?: *(=~#"^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$"#) | fn.#Fn
-			ResourceMappings:     *[...{
+			AppAssessmentSchedule?: *string | fn.#Fn
+			AppTemplateBody:        *(=~#"^[\w\s:,-\.'{}\[\]:"]+$"#) | fn.#Fn
+			Description?:           *string | fn.#Fn
+			Name:                   *(=~#"^[A-Za-z0-9][A-Za-z0-9_\-]{1,59}$"#) | fn.#Fn
+			ResiliencyPolicyArn?:   *(=~#"^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$"#) | fn.#Fn
+			ResourceMappings:       *[...{
 				LogicalStackName?:  *string | fn.#Fn
 				MappingType:        *(=~#"CfnStack|Resource"#) | fn.#Fn
 				PhysicalResourceId: *{
@@ -22,7 +23,8 @@ import (
 					Identifier:    *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
 					Type:          *(=~#"Arn|Native"#) | fn.#Fn
 				} | fn.#If
-				ResourceName?: *(=~#"^[A-Za-z0-9][A-Za-z0-9_\-]{1,59}$"#) | fn.#Fn
+				ResourceName?:        *(=~#"^[A-Za-z0-9][A-Za-z0-9_\-]{1,59}$"#) | fn.#Fn
+				TerraformSourceName?: *string | fn.#Fn
 			}] | fn.#If
 			Tags?: *{
 				[string]: *string | fn.#Fn

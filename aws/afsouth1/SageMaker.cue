@@ -362,6 +362,306 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ModelPackage: {
+		Type: "AWS::SageMaker::ModelPackage"
+		Properties: {
+			AdditionalInferenceSpecificationDefinition?: *{
+				Containers: *[...{
+					ContainerHostname?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
+					Environment?:       *{} | fn.#If
+					Framework?:         *string | fn.#Fn
+					FrameworkVersion?:  *(strings.MinRunes(3) & strings.MaxRunes(10) & (=~#"[0-9]\.[A-Za-z0-9.]+"#)) | fn.#Fn
+					Image:              *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[\S]{1,255}"#)) | fn.#Fn
+					ImageDigest?:       *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+					ModelDataUrl?:      *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					ModelInput?:        *{
+						[string]: _
+					} | fn.#Fn
+					NearestModelName?: *string | fn.#Fn
+					ProductId?:        *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+				}] | fn.#If
+				Description?:                             *(=~#".*"#) | fn.#Fn
+				Name:                                     *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
+				SupportedContentTypes?:                   [...(*(=~#".*"#) | fn.#Fn)] | (*(=~#".*"#) | fn.#Fn)
+				SupportedRealtimeInferenceInstanceTypes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SupportedResponseMIMETypes?:              [...(*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)] | (*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)
+				SupportedTransformInstanceTypes?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			AdditionalInferenceSpecifications?: *[...{
+				Containers: *[...{
+					ContainerHostname?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
+					Environment?:       *{} | fn.#If
+					Framework?:         *string | fn.#Fn
+					FrameworkVersion?:  *(strings.MinRunes(3) & strings.MaxRunes(10) & (=~#"[0-9]\.[A-Za-z0-9.]+"#)) | fn.#Fn
+					Image:              *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[\S]{1,255}"#)) | fn.#Fn
+					ImageDigest?:       *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+					ModelDataUrl?:      *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					ModelInput?:        *{
+						[string]: _
+					} | fn.#Fn
+					NearestModelName?: *string | fn.#Fn
+					ProductId?:        *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+				}] | fn.#If
+				Description?:                             *(=~#".*"#) | fn.#Fn
+				Name:                                     *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
+				SupportedContentTypes?:                   [...(*(=~#".*"#) | fn.#Fn)] | (*(=~#".*"#) | fn.#Fn)
+				SupportedRealtimeInferenceInstanceTypes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SupportedResponseMIMETypes?:              [...(*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)] | (*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)
+				SupportedTransformInstanceTypes?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			}] | fn.#If
+			AdditionalInferenceSpecificationsToAdd?: *[...{
+				Containers: *[...{
+					ContainerHostname?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
+					Environment?:       *{} | fn.#If
+					Framework?:         *string | fn.#Fn
+					FrameworkVersion?:  *(strings.MinRunes(3) & strings.MaxRunes(10) & (=~#"[0-9]\.[A-Za-z0-9.]+"#)) | fn.#Fn
+					Image:              *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[\S]{1,255}"#)) | fn.#Fn
+					ImageDigest?:       *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+					ModelDataUrl?:      *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					ModelInput?:        *{
+						[string]: _
+					} | fn.#Fn
+					NearestModelName?: *string | fn.#Fn
+					ProductId?:        *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+				}] | fn.#If
+				Description?:                             *(=~#".*"#) | fn.#Fn
+				Name:                                     *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
+				SupportedContentTypes?:                   [...(*(=~#".*"#) | fn.#Fn)] | (*(=~#".*"#) | fn.#Fn)
+				SupportedRealtimeInferenceInstanceTypes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SupportedResponseMIMETypes?:              [...(*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)] | (*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)
+				SupportedTransformInstanceTypes?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			}] | fn.#If
+			ApprovalDescription?:   *(=~#".*"#) | fn.#Fn
+			CertifyForMarketplace?: *bool | fn.#Fn
+			ClientToken?:           *(strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[a-zA-Z0-9-]+$"#)) | fn.#Fn
+			CreatedBy?:             *{
+				DomainId?:        *string | fn.#Fn
+				UserProfileArn?:  *string | fn.#Fn
+				UserProfileName?: *string | fn.#Fn
+			} | fn.#If
+			CustomerMetadataProperties?: *{
+				[string]: *string | fn.#Fn
+			} | fn.#If
+			Domain?:              *string | fn.#Fn
+			DriftCheckBaselines?: *{
+				Bias?: *{
+					ConfigFile?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType?:   *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+					PostTrainingConstraints?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+					PreTrainingConstraints?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				Explainability?: *{
+					ConfigFile?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType?:   *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+					Constraints?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				ModelDataQuality?: *{
+					Constraints?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+					Statistics?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				ModelQuality?: *{
+					Constraints?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+					Statistics?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+			Environment?: *{
+				[string]: *string | fn.#Fn
+			} | fn.#If
+			InferenceSpecification?: *{
+				Containers: *[...{
+					ContainerHostname?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
+					Environment?:       *{} | fn.#If
+					Framework?:         *string | fn.#Fn
+					FrameworkVersion?:  *(strings.MinRunes(3) & strings.MaxRunes(10) & (=~#"[0-9]\.[A-Za-z0-9.]+"#)) | fn.#Fn
+					Image:              *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"[\S]{1,255}"#)) | fn.#Fn
+					ImageDigest?:       *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+					ModelDataUrl?:      *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					ModelInput?:        *{
+						[string]: _
+					} | fn.#Fn
+					NearestModelName?: *string | fn.#Fn
+					ProductId?:        *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
+				}] | fn.#If
+				SupportedContentTypes:                    [...(*(=~#".*"#) | fn.#Fn)] | (*(=~#".*"#) | fn.#Fn)
+				SupportedRealtimeInferenceInstanceTypes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SupportedResponseMIMETypes:               [...(*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)] | (*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)
+				SupportedTransformInstanceTypes?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			LastModifiedBy?: *{
+				DomainId?:        *string | fn.#Fn
+				UserProfileArn?:  *string | fn.#Fn
+				UserProfileName?: *string | fn.#Fn
+			} | fn.#If
+			LastModifiedTime?:   *string | fn.#Fn
+			MetadataProperties?: *{
+				CommitId?:    *(=~#".*"#) | fn.#Fn
+				GeneratedBy?: *(=~#".*"#) | fn.#Fn
+				ProjectId?:   *(=~#".*"#) | fn.#Fn
+				Repository?:  *(=~#".*"#) | fn.#Fn
+			} | fn.#If
+			ModelApprovalStatus?: *("Approved" | "Rejected" | "PendingManualApproval") | fn.#Fn
+			ModelMetrics?:        *{
+				Bias?: *{
+					PostTrainingReport?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+					PreTrainingReport?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+					Report?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				Explainability?: *{
+					Report?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				ModelDataQuality?: *{
+					Constraints?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+					Statistics?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				ModelQuality?: *{
+					Constraints?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+					Statistics?: *{
+						ContentDigest?: *(=~#"^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$"#) | fn.#Fn
+						ContentType:    *(=~#".*"#) | fn.#Fn
+						S3Uri:          *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+			ModelPackageDescription?:   *string | fn.#Fn
+			ModelPackageGroupName?:     *(strings.MinRunes(1) & strings.MaxRunes(170) & (=~#"(arn:aws[a-z\-]*:sagemaker:[a-z0-9\-]*:[0-9]{12}:[a-z\-]*\/)?([a-zA-Z0-9]([a-zA-Z0-9-]){0,62})(?<!-)$"#)) | fn.#Fn
+			ModelPackageName?:          *string | fn.#Fn
+			ModelPackageStatusDetails?: *{
+				ImageScanStatuses?: *[...{
+					FailureReason?: *string | fn.#Fn
+					Name:           *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
+					Status:         *("NotStarted" | "Failed" | "InProgress" | "Completed") | fn.#Fn
+				}] | fn.#If
+				ValidationStatuses: *[...{
+					FailureReason?: *string | fn.#Fn
+					Name:           *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
+					Status:         *("NotStarted" | "Failed" | "InProgress" | "Completed") | fn.#Fn
+				}] | fn.#If
+			} | fn.#If
+			ModelPackageStatusItem?: *{
+				FailureReason?: *string | fn.#Fn
+				Name:           *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
+				Status:         *("NotStarted" | "Failed" | "InProgress" | "Completed") | fn.#Fn
+			} | fn.#If
+			ModelPackageVersion?:          *int | fn.#Fn
+			SamplePayloadUrl?:             *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+			SourceAlgorithmSpecification?: *{
+				SourceAlgorithms: *[...{
+					AlgorithmName: *(strings.MinRunes(1) & strings.MaxRunes(170) & (=~#"(arn:aws[a-z\-]*:sagemaker:[a-z0-9\-]*:[0-9]{12}:[a-z\-]*\/)?([a-zA-Z0-9]([a-zA-Z0-9-]){0,62})(?<!-)$"#)) | fn.#Fn
+					ModelDataUrl?: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+				}] | fn.#If
+			} | fn.#If
+			Tag?: *{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			Task?:                    *string | fn.#Fn
+			ValidationSpecification?: *{
+				ValidationProfiles: *[...{
+					ProfileName:            *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
+					TransformJobDefinition: *{
+						BatchStrategy?:           *("MultiRecord" | "SingleRecord") | fn.#Fn
+						Environment?:             *{} | fn.#If
+						MaxConcurrentTransforms?: *int | fn.#Fn
+						MaxPayloadInMB?:          *int | fn.#Fn
+						TransformInput:           *{
+							CompressionType?: *("None" | "Gzip") | fn.#Fn
+							ContentType?:     *(=~#".*"#) | fn.#Fn
+							DataSource:       *{
+								S3DataSource: *{
+									S3DataType: *("ManifestFile" | "S3Prefix" | "AugmentedManifestFile") | fn.#Fn
+									S3Uri:      *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+								} | fn.#If
+							} | fn.#If
+							SplitType?: *("None" | "TFRecord" | "Line" | "RecordIO") | fn.#Fn
+						} | fn.#If
+						TransformOutput: *{
+							Accept?:       *(=~#".*"#) | fn.#Fn
+							AssembleWith?: *("None" | "Line") | fn.#Fn
+							KmsKeyId?:     *(=~#".*"#) | fn.#Fn
+							S3OutputPath:  *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+						} | fn.#If
+						TransformResources: *{
+							InstanceCount:   *int | fn.#Fn
+							InstanceType:    *string | fn.#Fn
+							VolumeKmsKeyId?: *(=~#".*"#) | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+				}] | fn.#If
+				ValidationRole: *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$"#)) | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ModelPackageGroup: {
 		Type: "AWS::SageMaker::ModelPackageGroup"
 		Properties: {

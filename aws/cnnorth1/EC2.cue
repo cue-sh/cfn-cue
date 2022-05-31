@@ -451,6 +451,7 @@ import (
 				CreditSpecification?: *{
 					CpuCredits?: *("standard" | "unlimited") | fn.#Fn
 				} | fn.#If
+				DisableApiStop?:           *bool | fn.#Fn
 				DisableApiTermination?:    *bool | fn.#Fn
 				EbsOptimized?:             *bool | fn.#Fn
 				ElasticGpuSpecifications?: *[...{

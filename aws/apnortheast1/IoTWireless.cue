@@ -106,6 +106,27 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#NetworkAnalyzerConfiguration: {
+		Type: "AWS::IoTWireless::NetworkAnalyzerConfiguration"
+		Properties: {
+			Description?: *string | fn.#Fn
+			Name:         *(=~#"^[a-zA-Z0-9-_]+$"#) | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TraceContent?: *{
+				[string]: _
+			} | fn.#Fn
+			WirelessDevices?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			WirelessGateways?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ServiceProfile: {
 		Type: "AWS::IoTWireless::ServiceProfile"
 		Properties: {

@@ -199,6 +199,7 @@ import (
 				JupyterServerAppSettings?: *{
 					DefaultResourceSpec?: *{
 						InstanceType?:             *("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
+						LifecycleConfigArn?:       *string | fn.#Fn
 						SageMakerImageArn?:        *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
 						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
 					} | fn.#If
@@ -211,6 +212,20 @@ import (
 					}] | fn.#If
 					DefaultResourceSpec?: *{
 						InstanceType?:             *("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
+						LifecycleConfigArn?:       *string | fn.#Fn
+						SageMakerImageArn?:        *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
+						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				RSessionAppSettings?: *{
+					CustomImages?: *[...{
+						AppImageConfigName:  *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}"#) | fn.#Fn
+						ImageName:           *(=~#"^[a-zA-Z0-9]([-.]?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
+						ImageVersionNumber?: *int | fn.#Fn
+					}] | fn.#If
+					DefaultResourceSpec?: *{
+						InstanceType?:             *("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
+						LifecycleConfigArn?:       *string | fn.#Fn
 						SageMakerImageArn?:        *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
 						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
 					} | fn.#If
@@ -231,6 +246,7 @@ import (
 				RStudioServerProDomainSettings?: *{
 					DefaultResourceSpec?: *{
 						InstanceType?:             *("system" | "ml.t3.micro" | "ml.t3.small" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.8xlarge" | "ml.m5.12xlarge" | "ml.m5.16xlarge" | "ml.m5.24xlarge" | "ml.c5.large" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.12xlarge" | "ml.c5.18xlarge" | "ml.c5.24xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge") | fn.#Fn
+						LifecycleConfigArn?:       *string | fn.#Fn
 						SageMakerImageArn?:        *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$"#) | fn.#Fn
 						SageMakerImageVersionArn?: *(=~#"^arn:aws(-[\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$"#) | fn.#Fn
 					} | fn.#If
@@ -688,10 +704,14 @@ import (
 				SupportedResponseMIMETypes?:              [...(*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)] | (*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)
 				SupportedTransformInstanceTypes?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			}] | fn.#If
-			ApprovalDescription?:        *(=~#".*"#) | fn.#Fn
-			CertifyForMarketplace?:      *bool | fn.#Fn
-			ClientToken?:                *(strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[a-zA-Z0-9-]+$"#)) | fn.#Fn
-			CreatedBy?:                  *{} | fn.#If
+			ApprovalDescription?:   *(=~#".*"#) | fn.#Fn
+			CertifyForMarketplace?: *bool | fn.#Fn
+			ClientToken?:           *(strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[a-zA-Z0-9-]+$"#)) | fn.#Fn
+			CreatedBy?:             *{
+				DomainId?:        *string | fn.#Fn
+				UserProfileArn?:  *string | fn.#Fn
+				UserProfileName?: *string | fn.#Fn
+			} | fn.#If
 			CustomerMetadataProperties?: *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
@@ -774,7 +794,11 @@ import (
 				SupportedResponseMIMETypes:               [...(*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)] | (*(=~#"^[-\w]+\/.+$"#) | fn.#Fn)
 				SupportedTransformInstanceTypes?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
-			LastModifiedBy?:     *{} | fn.#If
+			LastModifiedBy?: *{
+				DomainId?:        *string | fn.#Fn
+				UserProfileArn?:  *string | fn.#Fn
+				UserProfileName?: *string | fn.#Fn
+			} | fn.#If
 			LastModifiedTime?:   *string | fn.#Fn
 			MetadataProperties?: *{
 				CommitId?:    *(=~#".*"#) | fn.#Fn

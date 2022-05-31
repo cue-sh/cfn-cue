@@ -173,6 +173,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				EgressFilter?: *{
 					Type: *string | fn.#Fn
 				} | fn.#If
+				ServiceDiscovery?: *{
+					IpPreference?: *string | fn.#Fn
+				} | fn.#If
 			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
@@ -698,11 +701,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Key:   *string | fn.#Fn
 							Value: *string | fn.#Fn
 						}] | fn.#If
+						IpPreference?: *string | fn.#Fn
 						NamespaceName: *string | fn.#Fn
 						ServiceName:   *string | fn.#Fn
 					} | fn.#If
 					DNS?: *{
 						Hostname:      *string | fn.#Fn
+						IpPreference?: *string | fn.#Fn
 						ResponseType?: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If

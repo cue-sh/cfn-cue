@@ -221,6 +221,7 @@ import (
 				ExposeHeaders?:    [...(*(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn)
 				MaxAge?:           *int | fn.#Fn
 			} | fn.#If
+			InvokeMode?:       *("BUFFERED" | "RESPONSE_STREAM") | fn.#Fn
 			Qualifier?:        *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"((?!^[0-9]+$)([a-zA-Z0-9-_]+))"#)) | fn.#Fn
 			TargetFunctionArn: *(=~#"^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\d{1}:)?(\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?!\d+)[0-9a-zA-Z_]+))?$"#) | fn.#Fn
 		}

@@ -1,6 +1,9 @@
 package cnnorth1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #KinesisAnalyticsV2: {
 	#Application: {
@@ -10,41 +13,41 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ApplicationCodeConfiguration?: *{
 					CodeContent: *{
 						S3ContentLocation?: *{
-							BucketARN?:     *string | fn.#Fn
-							FileKey?:       *string | fn.#Fn
-							ObjectVersion?: *string | fn.#Fn
+							BucketARN:      *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
+							FileKey:        *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+							ObjectVersion?: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 						} | fn.#If
-						TextContent?:    *string | fn.#Fn
+						TextContent?:    *(strings.MinRunes(1) & strings.MaxRunes(102400)) | fn.#Fn
 						ZipFileContent?: *string | fn.#Fn
 					} | fn.#If
-					CodeContentType: *string | fn.#Fn
+					CodeContentType: *("PLAINTEXT" | "ZIPFILE") | fn.#Fn
 				} | fn.#If
 				ApplicationSnapshotConfiguration?: *{
 					SnapshotsEnabled: *bool | fn.#Fn
 				} | fn.#If
 				EnvironmentProperties?: *{
 					PropertyGroups?: *[...{
-						PropertyGroupId?: *string | fn.#Fn
+						PropertyGroupId?: *(strings.MinRunes(1) & strings.MaxRunes(50) & (=~#"^[a-zA-Z0-9_.-]+$"#)) | fn.#Fn
 						PropertyMap?:     *{
-							[string]: _
-						} | fn.#Fn
+							[string]: *string | fn.#Fn
+						} | fn.#If
 					}] | fn.#If
 				} | fn.#If
 				FlinkApplicationConfiguration?: *{
 					CheckpointConfiguration?: *{
-						CheckpointInterval?:         *int | fn.#Fn
+						CheckpointInterval?:         *(>=1 & <=9223372036854776000) | fn.#Fn
 						CheckpointingEnabled?:       *bool | fn.#Fn
-						ConfigurationType:           *string | fn.#Fn
+						ConfigurationType:           *("DEFAULT" | "CUSTOM") | fn.#Fn
 						MinPauseBetweenCheckpoints?: *int | fn.#Fn
 					} | fn.#If
 					MonitoringConfiguration?: *{
-						ConfigurationType: *string | fn.#Fn
-						LogLevel?:         *string | fn.#Fn
-						MetricsLevel?:     *string | fn.#Fn
+						ConfigurationType: *("DEFAULT" | "CUSTOM") | fn.#Fn
+						LogLevel?:         *("DEBUG" | "INFO" | "WARN" | "ERROR") | fn.#Fn
+						MetricsLevel?:     *("APPLICATION" | "OPERATOR" | "PARALLELISM" | "TASK") | fn.#Fn
 					} | fn.#If
 					ParallelismConfiguration?: *{
 						AutoScalingEnabled?: *bool | fn.#Fn
-						ConfigurationType:   *string | fn.#Fn
+						ConfigurationType:   *("CUSTOM" | "DEFAULT") | fn.#Fn
 						Parallelism?:        *int | fn.#Fn
 						ParallelismPerKPU?:  *int | fn.#Fn
 					} | fn.#If
@@ -52,77 +55,77 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SqlApplicationConfiguration?: *{
 					Inputs?: *[...{
 						InputParallelism?: *{
-							Count?: *int | fn.#Fn
+							Count?: *(>=1 & <=64) | fn.#Fn
 						} | fn.#If
 						InputProcessingConfiguration?: *{
 							InputLambdaProcessor?: *{
-								ResourceARN: *string | fn.#Fn
+								ResourceARN: *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
 							} | fn.#If
 						} | fn.#If
 						InputSchema: *{
 							RecordColumns: *[...{
-								Mapping?: *string | fn.#Fn
-								Name:     *string | fn.#Fn
-								SqlType:  *string | fn.#Fn
+								Mapping?: *(strings.MinRunes(1) & strings.MaxRunes(65535)) | fn.#Fn
+								Name:     *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[^-\s<>&]*$"#)) | fn.#Fn
+								SqlType:  *(strings.MinRunes(1) & strings.MaxRunes(100)) | fn.#Fn
 							}] | fn.#If
-							RecordEncoding?: *string | fn.#Fn
+							RecordEncoding?: *("UTF-8") | fn.#Fn
 							RecordFormat:    *{
 								MappingParameters?: *{
 									CSVMappingParameters?: *{
-										RecordColumnDelimiter: *string | fn.#Fn
-										RecordRowDelimiter:    *string | fn.#Fn
+										RecordColumnDelimiter: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+										RecordRowDelimiter:    *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 									} | fn.#If
 									JSONMappingParameters?: *{
-										RecordRowPath: *string | fn.#Fn
+										RecordRowPath: *(strings.MinRunes(1) & strings.MaxRunes(65535) & (=~#"^(?=^\$)(?=^\S+$).*$"#)) | fn.#Fn
 									} | fn.#If
 								} | fn.#If
-								RecordFormatType: *string | fn.#Fn
+								RecordFormatType: *("CSV" | "JSON") | fn.#Fn
 							} | fn.#If
 						} | fn.#If
 						KinesisFirehoseInput?: *{
-							ResourceARN: *string | fn.#Fn
+							ResourceARN: *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
 						} | fn.#If
 						KinesisStreamsInput?: *{
-							ResourceARN: *string | fn.#Fn
+							ResourceARN: *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
 						} | fn.#If
-						NamePrefix: *string | fn.#Fn
+						NamePrefix: *(strings.MinRunes(1) & strings.MaxRunes(32) & (=~#"^[^-\s<>&]*$"#)) | fn.#Fn
 					}] | fn.#If
 				} | fn.#If
 				ZeppelinApplicationConfiguration?: *{
 					CatalogConfiguration?: *{
 						GlueDataCatalogConfiguration?: *{
-							DatabaseARN?: *string | fn.#Fn
+							DatabaseARN?: *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
 						} | fn.#If
 					} | fn.#If
 					CustomArtifactsConfiguration?: *[...{
-						ArtifactType:    *string | fn.#Fn
+						ArtifactType:    *("DEPENDENCY_JAR" | "UDF") | fn.#Fn
 						MavenReference?: *{
-							ArtifactId: *string | fn.#Fn
-							GroupId:    *string | fn.#Fn
-							Version:    *string | fn.#Fn
+							ArtifactId: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9_.-]+$"#)) | fn.#Fn
+							GroupId:    *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9_.-]+$"#)) | fn.#Fn
+							Version:    *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9_.-]+$"#)) | fn.#Fn
 						} | fn.#If
 						S3ContentLocation?: *{
-							BucketARN?:     *string | fn.#Fn
-							FileKey?:       *string | fn.#Fn
-							ObjectVersion?: *string | fn.#Fn
+							BucketARN:      *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
+							FileKey:        *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+							ObjectVersion?: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 						} | fn.#If
 					}] | fn.#If
 					DeployAsApplicationConfiguration?: *{
 						S3ContentLocation: *{
-							BasePath:  *string | fn.#Fn
-							BucketARN: *string | fn.#Fn
+							BasePath?: *(strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^[a-zA-Z0-9/!-_.*'()]+$"#)) | fn.#Fn
+							BucketARN: *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
 						} | fn.#If
 					} | fn.#If
 					MonitoringConfiguration?: *{
-						LogLevel?: *string | fn.#Fn
+						LogLevel?: *("DEBUG" | "INFO" | "WARN" | "ERROR") | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 			} | fn.#If
 			ApplicationDescription?: *string | fn.#Fn
-			ApplicationMode?:        *string | fn.#Fn
-			ApplicationName?:        *string | fn.#Fn
+			ApplicationMode?:        *("INTERACTIVE" | "STREAMING") | fn.#Fn
+			ApplicationName?:        *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z0-9_.-]+$"#)) | fn.#Fn
 			RuntimeEnvironment:      *("FLINK-1_11" | "FLINK-1_13" | "FLINK-1_6" | "FLINK-1_8" | "SQL-1_0" | "ZEPPELIN-FLINK-1_0" | "ZEPPELIN-FLINK-2_0") | fn.#Fn
-			ServiceExecutionRole:    *string | fn.#Fn
+			ServiceExecutionRole:    *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
 			Tags?:                   *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

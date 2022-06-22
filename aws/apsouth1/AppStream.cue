@@ -139,7 +139,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			IdleDisconnectTimeoutInSeconds?: *(>=0 & <=3600) | fn.#Fn
 			ImageArn?:                       *string | fn.#Fn
 			ImageName?:                      *string | fn.#Fn
-			InstanceType:                    *("stream.compute.2xlarge" | "stream.compute.4xlarge" | "stream.compute.8xlarge" | "stream.compute.large" | "stream.compute.xlarge" | "stream.graphics-desktop.2xlarge" | "stream.graphics.g4dn.12xlarge" | "stream.graphics.g4dn.16xlarge" | "stream.graphics.g4dn.2xlarge" | "stream.graphics.g4dn.4xlarge" | "stream.graphics.g4dn.8xlarge" | "stream.graphics.g4dn.xlarge" | "stream.memory.2xlarge" | "stream.memory.4xlarge" | "stream.memory.8xlarge" | "stream.memory.large" | "stream.memory.xlarge" | "stream.memory.z1d.12xlarge" | "stream.memory.z1d.2xlarge" | "stream.memory.z1d.3xlarge" | "stream.memory.z1d.6xlarge" | "stream.memory.z1d.large" | "stream.memory.z1d.xlarge" | "stream.standard.large" | "stream.standard.medium" | "stream.standard.small") | fn.#Fn
+			InstanceType:                    *("stream.compute.2xlarge" | "stream.compute.4xlarge" | "stream.compute.8xlarge" | "stream.compute.large" | "stream.compute.xlarge" | "stream.graphics-desktop.2xlarge" | "stream.graphics.g4dn.12xlarge" | "stream.graphics.g4dn.16xlarge" | "stream.graphics.g4dn.2xlarge" | "stream.graphics.g4dn.4xlarge" | "stream.graphics.g4dn.8xlarge" | "stream.graphics.g4dn.xlarge" | "stream.memory.2xlarge" | "stream.memory.4xlarge" | "stream.memory.8xlarge" | "stream.memory.large" | "stream.memory.xlarge" | "stream.memory.z1d.12xlarge" | "stream.memory.z1d.2xlarge" | "stream.memory.z1d.3xlarge" | "stream.memory.z1d.6xlarge" | "stream.memory.z1d.large" | "stream.memory.z1d.xlarge" | "stream.standard.2xlarge" | "stream.standard.large" | "stream.standard.medium" | "stream.standard.small" | "stream.standard.xlarge") | fn.#Fn
 			MaxConcurrentSessions?:          *int | fn.#Fn
 			MaxUserDurationInSeconds?:       *(>=600 & <=360000) | fn.#Fn
 			Name:                            *string | fn.#Fn
@@ -183,7 +183,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			IamRoleArn?:                  *string | fn.#Fn
 			ImageArn?:                    *string | fn.#Fn
 			ImageName?:                   *string | fn.#Fn
-			InstanceType:                 *("stream.compute.2xlarge" | "stream.compute.4xlarge" | "stream.compute.8xlarge" | "stream.compute.large" | "stream.compute.xlarge" | "stream.graphics-desktop.2xlarge" | "stream.graphics.g4dn.12xlarge" | "stream.graphics.g4dn.16xlarge" | "stream.graphics.g4dn.2xlarge" | "stream.graphics.g4dn.4xlarge" | "stream.graphics.g4dn.8xlarge" | "stream.graphics.g4dn.xlarge" | "stream.memory.2xlarge" | "stream.memory.4xlarge" | "stream.memory.8xlarge" | "stream.memory.large" | "stream.memory.xlarge" | "stream.memory.z1d.12xlarge" | "stream.memory.z1d.2xlarge" | "stream.memory.z1d.3xlarge" | "stream.memory.z1d.6xlarge" | "stream.memory.z1d.large" | "stream.memory.z1d.xlarge" | "stream.standard.large" | "stream.standard.medium" | "stream.standard.small") | fn.#Fn
+			InstanceType:                 *("stream.compute.2xlarge" | "stream.compute.4xlarge" | "stream.compute.8xlarge" | "stream.compute.large" | "stream.compute.xlarge" | "stream.graphics-desktop.2xlarge" | "stream.graphics.g4dn.12xlarge" | "stream.graphics.g4dn.16xlarge" | "stream.graphics.g4dn.2xlarge" | "stream.graphics.g4dn.4xlarge" | "stream.graphics.g4dn.8xlarge" | "stream.graphics.g4dn.xlarge" | "stream.memory.2xlarge" | "stream.memory.4xlarge" | "stream.memory.8xlarge" | "stream.memory.large" | "stream.memory.xlarge" | "stream.memory.z1d.12xlarge" | "stream.memory.z1d.2xlarge" | "stream.memory.z1d.3xlarge" | "stream.memory.z1d.6xlarge" | "stream.memory.z1d.large" | "stream.memory.z1d.xlarge" | "stream.standard.2xlarge" | "stream.standard.large" | "stream.standard.medium" | "stream.standard.small" | "stream.standard.xlarge") | fn.#Fn
 			Name:                         *string | fn.#Fn
 			Tags?:                        *[...{
 				Key:   *string | fn.#Fn
@@ -224,6 +224,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Domains?:            [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				ResourceIdentifier?: *string | fn.#Fn
 			}] | fn.#If
+			StreamingExperienceSettings?: *{
+				PreferredProtocol?: *string | fn.#Fn
+			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

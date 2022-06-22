@@ -13,6 +13,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				[string]: *string | fn.#Fn
 			} | fn.#If
 			AdvancedSecurityOptions?: *{
+				AnonymousAuthEnabled?:        *bool | fn.#Fn
 				Enabled?:                     *bool | fn.#Fn
 				InternalUserDatabaseEnabled?: *bool | fn.#Fn
 				MasterUserOptions?:           *{

@@ -28,13 +28,16 @@ import (
 	#LocationEFS: {
 		Type: "AWS::DataSync::LocationEFS"
 		Properties: {
-			Ec2Config: *{
+			AccessPointArn?: *(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):elasticfilesystem:[a-z\-0-9]+:[0-9]{12}:access-point/fsap-[0-9a-f]{8,40}$"#) | fn.#Fn
+			Ec2Config:       *{
 				SecurityGroupArns: [...(*(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\-0-9]*:[0-9]{12}:security-group/.*$"#) | fn.#Fn)] | (*(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\-0-9]*:[0-9]{12}:security-group/.*$"#) | fn.#Fn)
 				SubnetArn:         *(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\-0-9]*:[0-9]{12}:subnet/.*$"#) | fn.#Fn
 			} | fn.#If
-			EfsFilesystemArn: *(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):elasticfilesystem:[a-z\-0-9]*:[0-9]{12}:file-system/fs-.*$"#) | fn.#Fn
-			Subdirectory?:    *string | fn.#Fn
-			Tags?:            *[...{
+			EfsFilesystemArn:         *(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):elasticfilesystem:[a-z\-0-9]*:[0-9]{12}:file-system/fs-.*$"#) | fn.#Fn
+			FileSystemAccessRoleArn?: *(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*$"#) | fn.#Fn
+			InTransitEncryption?:     *("NONE" | "TLS1_2") | fn.#Fn
+			Subdirectory?:            *string | fn.#Fn
+			Tags?:                    *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

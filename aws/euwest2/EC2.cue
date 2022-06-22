@@ -345,10 +345,11 @@ import (
 	#EIP: {
 		Type: "AWS::EC2::EIP"
 		Properties: {
-			Domain?:         *("standard" | "vpc") | fn.#Fn
-			InstanceId?:     *string | fn.#Fn
-			PublicIpv4Pool?: *string | fn.#Fn
-			Tags?:           *[...{
+			Domain?:             *("standard" | "vpc") | fn.#Fn
+			InstanceId?:         *string | fn.#Fn
+			NetworkBorderGroup?: *string | fn.#Fn
+			PublicIpv4Pool?:     *string | fn.#Fn
+			Tags?:               *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -590,13 +591,14 @@ import (
 			}] | fn.#If
 			Monitoring?:        *bool | fn.#Fn
 			NetworkInterfaces?: *[...{
-				AssociatePublicIpAddress?: *bool | fn.#Fn
-				DeleteOnTermination?:      *bool | fn.#Fn
-				Description?:              *string | fn.#Fn
-				DeviceIndex:               *string | fn.#Fn
-				GroupSet?:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				Ipv6AddressCount?:         *int | fn.#Fn
-				Ipv6Addresses?:            *[...{
+				AssociateCarrierIpAddress?: *bool | fn.#Fn
+				AssociatePublicIpAddress?:  *bool | fn.#Fn
+				DeleteOnTermination?:       *bool | fn.#Fn
+				Description?:               *string | fn.#Fn
+				DeviceIndex:                *string | fn.#Fn
+				GroupSet?:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				Ipv6AddressCount?:          *int | fn.#Fn
+				Ipv6Addresses?:             *[...{
 					Ipv6Address: *string | fn.#Fn
 				}] | fn.#If
 				NetworkInterfaceId?: *string | fn.#Fn
@@ -714,6 +716,7 @@ import (
 				CreditSpecification?: *{
 					CpuCredits?: *("standard" | "unlimited") | fn.#Fn
 				} | fn.#If
+				DisableApiStop?:           *bool | fn.#Fn
 				DisableApiTermination?:    *bool | fn.#Fn
 				EbsOptimized?:             *bool | fn.#Fn
 				ElasticGpuSpecifications?: *[...{

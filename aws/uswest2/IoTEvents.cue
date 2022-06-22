@@ -61,7 +61,7 @@ import (
 						EntryId?:       *string | fn.#Fn
 						PropertyAlias?: *string | fn.#Fn
 						PropertyId?:    *string | fn.#Fn
-						PropertyValue:  *{
+						PropertyValue?: *{
 							Quality?:   *string | fn.#Fn
 							Timestamp?: *{
 								OffsetInNanos?: *string | fn.#Fn

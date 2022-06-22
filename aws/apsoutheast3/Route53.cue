@@ -97,6 +97,10 @@ import (
 				EvaluateTargetHealth?: *bool | fn.#Fn
 				HostedZoneId:          *string | fn.#Fn
 			} | fn.#If
+			CidrRoutingConfig?: *{
+				CollectionId: *string | fn.#Fn
+				LocationName: *string | fn.#Fn
+			} | fn.#If
 			Comment?:     *string | fn.#Fn
 			Failover?:    *("PRIMARY" | "SECONDARY") | fn.#Fn
 			GeoLocation?: *{
@@ -133,6 +137,10 @@ import (
 					DNSName:               *string | fn.#Fn
 					EvaluateTargetHealth?: *bool | fn.#Fn
 					HostedZoneId:          *string | fn.#Fn
+				} | fn.#If
+				CidrRoutingConfig?: *{
+					CollectionId: *string | fn.#Fn
+					LocationName: *string | fn.#Fn
 				} | fn.#If
 				Failover?:    *("PRIMARY" | "SECONDARY") | fn.#Fn
 				GeoLocation?: *{

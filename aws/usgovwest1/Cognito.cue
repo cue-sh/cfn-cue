@@ -143,8 +143,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SnsCallerArn?: *string | fn.#Fn
 				SnsRegion?:    *string | fn.#Fn
 			} | fn.#If
-			SmsVerificationMessage?: *string | fn.#Fn
-			UserPoolAddOns?:         *{
+			SmsVerificationMessage?:      *string | fn.#Fn
+			UserAttributeUpdateSettings?: *{
+				AttributesRequireVerificationBeforeUpdate: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
+			UserPoolAddOns?: *{
 				AdvancedSecurityMode?: *string | fn.#Fn
 			} | fn.#If
 			UserPoolName?: *string | fn.#Fn
@@ -153,7 +156,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#Fn
 			UsernameAttributes?:    [...(*("email" | "phone_number") | fn.#Fn)] | (*("email" | "phone_number") | fn.#Fn)
 			UsernameConfiguration?: *{
-				CaseSensitive: *bool | fn.#Fn
+				CaseSensitive?: *bool | fn.#Fn
 			} | fn.#If
 			VerificationMessageTemplate?: *{
 				DefaultEmailOption?: *string | fn.#Fn

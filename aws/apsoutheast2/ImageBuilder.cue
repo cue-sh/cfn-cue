@@ -105,6 +105,19 @@ import (
 						Service?:        *("ECR") | fn.#Fn
 					} | fn.#If
 				} | fn.#If
+				FastLaunchConfigurations?: *[...{
+					AccountId?:      *string | fn.#Fn
+					Enabled?:        *bool | fn.#Fn
+					LaunchTemplate?: *{
+						LaunchTemplateId?:      *string | fn.#Fn
+						LaunchTemplateName?:    *string | fn.#Fn
+						LaunchTemplateVersion?: *string | fn.#Fn
+					} | fn.#If
+					MaxParallelLaunches?:   *int | fn.#Fn
+					SnapshotConfiguration?: *{
+						TargetResourceCount?: *int | fn.#Fn
+					} | fn.#If
+				}] | fn.#If
 				LaunchTemplateConfigurations?: *[...{
 					AccountId?:         *string | fn.#Fn
 					LaunchTemplateId?:  *string | fn.#Fn

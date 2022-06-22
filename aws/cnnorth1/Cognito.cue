@@ -156,7 +156,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#Fn
 			UsernameAttributes?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			UsernameConfiguration?: *{
-				CaseSensitive: *bool | fn.#Fn
+				CaseSensitive?: *bool | fn.#Fn
 			} | fn.#If
 			VerificationMessageTemplate?: *{
 				DefaultEmailOption?: *string | fn.#Fn

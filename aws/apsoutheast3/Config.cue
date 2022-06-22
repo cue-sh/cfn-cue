@@ -28,7 +28,7 @@ import (
 					MaximumExecutionFrequency?: *("One_Hour" | "Six_Hours" | "Three_Hours" | "Twelve_Hours" | "TwentyFour_Hours") | fn.#Fn
 					MessageType:                *("ConfigurationItemChangeNotification" | "ConfigurationSnapshotDeliveryCompleted" | "OversizedConfigurationItemChangeNotification" | "ScheduledNotification") | fn.#Fn
 				}] | fn.#If
-				SourceIdentifier: *string | fn.#Fn
+				SourceIdentifier?: *string | fn.#Fn
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]

@@ -8,7 +8,25 @@ import (
 #SES: {
 	#ConfigurationSet: {
 		Type: "AWS::SES::ConfigurationSet"
-		Properties: Name?: *(=~#"^[a-zA-Z0-9_-]{1,64}$"#) | fn.#Fn
+		Properties: {
+			DeliveryOptions?: *{
+				SendingPoolName?: *string | fn.#Fn
+				TlsPolicy?:       *(=~#"REQUIRE|OPTIONAL"#) | fn.#Fn
+			} | fn.#If
+			Name?:              *(=~#"^[a-zA-Z0-9_-]{1,64}$"#) | fn.#Fn
+			ReputationOptions?: *{
+				ReputationMetricsEnabled?: *bool | fn.#Fn
+			} | fn.#If
+			SendingOptions?: *{
+				SendingEnabled?: *bool | fn.#Fn
+			} | fn.#If
+			SuppressionOptions?: *{
+				SuppressedReasons?: [...(*(=~#"BOUNCE|COMPLAINT"#) | fn.#Fn)] | (*(=~#"BOUNCE|COMPLAINT"#) | fn.#Fn)
+			} | fn.#If
+			TrackingOptions?: *{
+				CustomRedirectDomain?: *string | fn.#Fn
+			} | fn.#If
+		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
@@ -34,6 +52,9 @@ import (
 				} | fn.#If
 				MatchingEventTypes: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Name?:              *(=~#"^[a-zA-Z0-9_-]{0,64}$"#) | fn.#Fn
+				SnsDestination?:    *{
+					TopicARN: *(strings.MinRunes(36) & strings.MaxRunes(1024) & (=~#"^arn:aws[a-z0-9-]*:sns:[a-z0-9-]+:\d{12}:[^:]+$"#)) | fn.#Fn
+				} | fn.#If
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]

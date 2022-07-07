@@ -328,9 +328,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#OptionGroup: {
 		Type: "AWS::RDS::OptionGroup"
 		Properties: {
-			EngineName:            *string | fn.#Fn
-			MajorEngineVersion:    *string | fn.#Fn
-			OptionConfigurations?: *[...{
+			EngineName:           *string | fn.#Fn
+			MajorEngineVersion:   *string | fn.#Fn
+			OptionConfigurations: *[...{
 				DBSecurityGroupMemberships?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				OptionName:                  *string | fn.#Fn
 				OptionSettings?:             *[...{

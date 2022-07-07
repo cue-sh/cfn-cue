@@ -153,8 +153,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Description: *string | fn.#Fn
 			Family:      *string | fn.#Fn
 			Parameters?: *{
-				[string]: *string | fn.#Fn
-			} | fn.#If
+				[string]: _
+			} | fn.#Fn
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

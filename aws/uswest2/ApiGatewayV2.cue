@@ -331,8 +331,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			SubnetIds:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			Tags?:             *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -423,7 +423,7 @@ import (
 	#LaunchTemplate: {
 		Type: "AWS::EC2::LaunchTemplate"
 		Properties: {
-			LaunchTemplateData?: *{
+			LaunchTemplateData: *{
 				BlockDeviceMappings?: *[...{
 					DeviceName?: *string | fn.#Fn
 					Ebs?:        *{

@@ -67,6 +67,31 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#FargateProfile: {
+		Type: "AWS::EKS::FargateProfile"
+		Properties: {
+			ClusterName:         *string | fn.#Fn
+			FargateProfileName?: *string | fn.#Fn
+			PodExecutionRoleArn: *string | fn.#Fn
+			Selectors:           *[...{
+				Labels?: *[...{
+					Key:   *(strings.MinRunes(1) & strings.MaxRunes(127)) | fn.#Fn
+					Value: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+				}] | fn.#If
+				Namespace: *string | fn.#Fn
+			}] | fn.#If
+			Subnets?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:    *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#IdentityProviderConfig: {
 		Type: "AWS::EKS::IdentityProviderConfig"
 		Properties: {

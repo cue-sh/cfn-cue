@@ -42,16 +42,6 @@ import (
 				[string]: *string | fn.#Fn
 			} | fn.#If
 			WorkspaceId: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z_0-9][a-zA-Z_\-0-9]*[a-zA-Z0-9]+"#)) | fn.#Fn
-			_#DataType: {
-				AllowedValues?: *[..._#DataValue] | fn.#If
-				NestedType?:    *_#DataType | fn.#If
-				Relationship?:  *{
-					RelationshipType?:      *string | fn.#Fn
-					TargetComponentTypeId?: *string | fn.#Fn
-				} | fn.#If
-				Type:           *string | fn.#Fn
-				UnitOfMeasure?: *string | fn.#Fn
-			}
 			_#DataValue: {
 				BooleanValue?: *bool | fn.#Fn
 				DoubleValue?:  *number | fn.#Fn
@@ -66,6 +56,16 @@ import (
 					[string]: _
 				} | fn.#Fn
 				StringValue?: *string | fn.#Fn
+			}
+			_#DataType: {
+				AllowedValues?: *[..._#DataValue] | fn.#If
+				NestedType?:    *_#DataType | fn.#If
+				Relationship?:  *{
+					RelationshipType?:      *string | fn.#Fn
+					TargetComponentTypeId?: *string | fn.#Fn
+				} | fn.#If
+				Type:           *string | fn.#Fn
+				UnitOfMeasure?: *string | fn.#Fn
 			}
 		}
 		DependsOn?:           string | [...string]

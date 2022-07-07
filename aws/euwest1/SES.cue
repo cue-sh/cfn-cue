@@ -85,6 +85,44 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#DedicatedIpPool: {
+		Type: "AWS::SES::DedicatedIpPool"
+		Properties: PoolName?: *(=~#"^[a-z0-9_-]{0,64}$"#) | fn.#Fn
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#EmailIdentity: {
+		Type: "AWS::SES::EmailIdentity"
+		Properties: {
+			ConfigurationSetAttributes?: *{
+				ConfigurationSetName?: *string | fn.#Fn
+			} | fn.#If
+			DkimAttributes?: *{
+				SigningEnabled?: *bool | fn.#Fn
+			} | fn.#If
+			DkimSigningAttributes?: *{
+				DomainSigningPrivateKey?: *string | fn.#Fn
+				DomainSigningSelector?:   *string | fn.#Fn
+				NextSigningKeyLength?:    *(=~#"RSA_1024_BIT|RSA_2048_BIT"#) | fn.#Fn
+			} | fn.#If
+			EmailIdentity:       *string | fn.#Fn
+			FeedbackAttributes?: *{
+				EmailForwardingEnabled?: *bool | fn.#Fn
+			} | fn.#If
+			MailFromAttributes?: *{
+				BehaviorOnMxFailure?: *(=~#"USE_DEFAULT_VALUE|REJECT_MESSAGE"#) | fn.#Fn
+				MailFromDomain?:      *string | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ReceiptFilter: {
 		Type: "AWS::SES::ReceiptFilter"
 		Properties: Filter: *{

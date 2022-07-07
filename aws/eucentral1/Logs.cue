@@ -52,13 +52,19 @@ import (
 	#MetricFilter: {
 		Type: "AWS::Logs::MetricFilter"
 		Properties: {
+			FilterName?:           *string | fn.#Fn
 			FilterPattern:         *string | fn.#Fn
 			LogGroupName:          *string | fn.#Fn
 			MetricTransformations: *[...{
-				DefaultValue?:   *number | fn.#Fn
+				DefaultValue?: *number | fn.#Fn
+				Dimensions?:   *[...{
+					Key:   *string | fn.#Fn
+					Value: *string | fn.#Fn
+				}] | fn.#If
 				MetricName:      *string | fn.#Fn
 				MetricNamespace: *string | fn.#Fn
 				MetricValue:     *(=~#"^(([0-9]*)|(\$.*))$"#) | fn.#Fn
+				Unit?:           *string | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

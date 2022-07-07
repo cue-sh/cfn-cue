@@ -49,6 +49,9 @@ import (
 		Type: "AWS::RefactorSpaces::Route"
 		Properties: {
 			ApplicationIdentifier: *(strings.MinRunes(14) & strings.MaxRunes(14) & (=~#"^app-([0-9A-Za-z]{10}$)"#)) | fn.#Fn
+			DefaultRoute?:         *{
+				ActivationState: *("INACTIVE" | "ACTIVE") | fn.#Fn
+			} | fn.#If
 			EnvironmentIdentifier: *(strings.MinRunes(14) & strings.MaxRunes(14) & (=~#"^env-([0-9A-Za-z]{10}$)"#)) | fn.#Fn
 			RouteType?:            *("DEFAULT" | "URI_PATH") | fn.#Fn
 			ServiceIdentifier:     *(strings.MinRunes(14) & strings.MaxRunes(14) & (=~#"^svc-([0-9A-Za-z]{10}$)"#)) | fn.#Fn
@@ -57,7 +60,7 @@ import (
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			UriPathRoute?: *{
-				ActivationState:    *("ACTIVE") | fn.#Fn
+				ActivationState:    *("INACTIVE" | "ACTIVE") | fn.#Fn
 				IncludeChildPaths?: *bool | fn.#Fn
 				Methods?:           [...(*("DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT") | fn.#Fn)] | (*("DELETE" | "GET" | "HEAD" | "OPTIONS" | "PATCH" | "POST" | "PUT") | fn.#Fn)
 				SourcePath?:        *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^(/[a-zA-Z0-9._-]+)+$"#)) | fn.#Fn

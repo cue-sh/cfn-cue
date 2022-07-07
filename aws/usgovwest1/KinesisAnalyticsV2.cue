@@ -13,8 +13,8 @@ import (
 				ApplicationCodeConfiguration?: *{
 					CodeContent: *{
 						S3ContentLocation?: *{
-							BucketARN?:     *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
-							FileKey?:       *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+							BucketARN:      *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
+							FileKey:        *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 							ObjectVersion?: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 						} | fn.#If
 						TextContent?:    *(strings.MinRunes(1) & strings.MaxRunes(102400)) | fn.#Fn
@@ -29,8 +29,8 @@ import (
 					PropertyGroups?: *[...{
 						PropertyGroupId?: *(strings.MinRunes(1) & strings.MaxRunes(50) & (=~#"^[a-zA-Z0-9_.-]+$"#)) | fn.#Fn
 						PropertyMap?:     *{
-							[string]: _
-						} | fn.#Fn
+							[string]: *string | fn.#Fn
+						} | fn.#If
 					}] | fn.#If
 				} | fn.#If
 				FlinkApplicationConfiguration?: *{
@@ -105,14 +105,14 @@ import (
 							Version:    *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[a-zA-Z0-9_.-]+$"#)) | fn.#Fn
 						} | fn.#If
 						S3ContentLocation?: *{
-							BucketARN?:     *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
-							FileKey?:       *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+							BucketARN:      *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
+							FileKey:        *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 							ObjectVersion?: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 						} | fn.#If
 					}] | fn.#If
 					DeployAsApplicationConfiguration?: *{
 						S3ContentLocation: *{
-							BasePath:  *(strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^[a-zA-Z0-9/!-_.*'()]+$"#)) | fn.#Fn
+							BasePath?: *(strings.MinRunes(1) & strings.MaxRunes(1024) & (=~#"^[a-zA-Z0-9/!-_.*'()]+$"#)) | fn.#Fn
 							BucketARN: *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
 						} | fn.#If
 					} | fn.#If

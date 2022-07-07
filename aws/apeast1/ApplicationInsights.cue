@@ -141,6 +141,7 @@ import (
 				ComponentName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[\d\w\-_.+]*$"#)) | fn.#Fn
 				ResourceList:  [...(*(strings.MinRunes(20) & strings.MaxRunes(300) & (=~#"^arn:aws(-[\w]+)*:[\w\d-]+:([\w\d-]*)?:[\w\d_-]*([:/].+)*$"#)) | fn.#Fn)] | (*(strings.MinRunes(20) & strings.MaxRunes(300) & (=~#"^arn:aws(-[\w]+)*:[\w\d-]+:([\w\d-]*)?:[\w\d_-]*([:/].+)*$"#)) | fn.#Fn)
 			}] | fn.#If
+			GroupingType?:   *("ACCOUNT_BASED") | fn.#Fn
 			LogPatternSets?: *[...{
 				LogPatterns: *[...{
 					Pattern:     *(strings.MinRunes(1) & strings.MaxRunes(50)) | fn.#Fn

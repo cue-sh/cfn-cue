@@ -69,6 +69,27 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#CACertificate: {
+		Type: "AWS::IoT::CACertificate"
+		Properties: {
+			AutoRegistrationStatus?: *("ENABLE" | "DISABLE") | fn.#Fn
+			CACertificatePem?:       *(strings.MinRunes(1) & strings.MaxRunes(65536) & (=~#"[\s\S]*"#)) | fn.#Fn
+			RegistrationConfig?:     *{
+				[string]: _
+			} | fn.#Fn
+			Status: *("ACTIVE" | "INACTIVE") | fn.#Fn
+			Tags?:  *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VerificationCertificatePem?: *(strings.MinRunes(1) & strings.MaxRunes(65536) & (=~#"[\s\S]*"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Certificate: {
 		Type: "AWS::IoT::Certificate"
 		Properties: {

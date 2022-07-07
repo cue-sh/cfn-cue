@@ -152,7 +152,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Account:           *(=~#"^\d{12}$"#) | fn.#Fn
 			ClusterIdentifier: *(=~#"^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,63}$"#) | fn.#Fn
 			Force?:            *bool | fn.#Fn
-			VpcIds?:           [...(*(=~#"^vpc-\d{1,17}$"#) | fn.#Fn)] | (*(=~#"^vpc-\d{1,17}$"#) | fn.#Fn)
+			VpcIds?:           [...(*(=~#"^vpc-[A-Za-z0-9]{1,17}$"#) | fn.#Fn)] | (*(=~#"^vpc-[A-Za-z0-9]{1,17}$"#) | fn.#Fn)
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

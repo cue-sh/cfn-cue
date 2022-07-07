@@ -98,7 +98,8 @@ import (
 				SSESpecification?: *{
 					KMSMasterKeyId: *string | fn.#Fn
 				} | fn.#If
-				Tags?: *[...{
+				TableClass?: *string | fn.#Fn
+				Tags?:       *[...{
 					Key:   *string | fn.#Fn
 					Value: *string | fn.#Fn
 				}] | fn.#If

@@ -6,6 +6,37 @@ import (
 )
 
 #CloudTrail: {
+	#EventDataStore: {
+		Type: "AWS::CloudTrail::EventDataStore"
+		Properties: {
+			AdvancedEventSelectors?: *[...{
+				FieldSelectors: *[...{
+					EndsWith?:      [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)
+					Equals?:        [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)
+					Field:          *(strings.MinRunes(1) & strings.MaxRunes(1000) & (=~#"([\w|\d|\.|_]+)"#)) | fn.#Fn
+					NotEndsWith?:   [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)
+					NotEquals?:     [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)
+					NotStartsWith?: [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)
+					StartsWith?:    [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"(.+)"#)) | fn.#Fn)
+				}] | fn.#If
+				Name?: *(strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
+			}] | fn.#If
+			MultiRegionEnabled?:  *bool | fn.#Fn
+			Name?:                *string | fn.#Fn
+			OrganizationEnabled?: *bool | fn.#Fn
+			RetentionPeriod?:     *int | fn.#Fn
+			Tags?:                *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TerminationProtectionEnabled?: *bool | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Trail: {
 		Type: "AWS::CloudTrail::Trail"
 		Properties: {

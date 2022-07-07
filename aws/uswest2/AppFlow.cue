@@ -10,11 +10,37 @@ import (
 		Type: "AWS::AppFlow::ConnectorProfile"
 		Properties: {
 			ConnectionMode:          *("Public" | "Private") | fn.#Fn
+			ConnectorLabel?:         *(=~#"[\w!@#.-]+"#) | fn.#Fn
 			ConnectorProfileConfig?: *{
 				ConnectorProfileCredentials: *{
 					Amplitude?: *{
 						ApiKey:    *(=~#"\S+"#) | fn.#Fn
 						SecretKey: *(=~#"\S+"#) | fn.#Fn
+					} | fn.#If
+					CustomConnector?: *{
+						ApiKey?: *{
+							ApiKey:        *(=~#"\S+"#) | fn.#Fn
+							ApiSecretKey?: *(=~#"\S+"#) | fn.#Fn
+						} | fn.#If
+						AuthenticationType: *("OAUTH2" | "APIKEY" | "BASIC" | "CUSTOM") | fn.#Fn
+						Basic?:             *{
+							Password: *(=~#"\S+"#) | fn.#Fn
+							Username: *(=~#"\S+"#) | fn.#Fn
+						} | fn.#If
+						Custom?: *{
+							CredentialsMap?:          *{} | fn.#If
+							CustomAuthenticationType: *(=~#"\S+"#) | fn.#Fn
+						} | fn.#If
+						Oauth2?: *{
+							AccessToken?:  *(=~#"\S+"#) | fn.#Fn
+							ClientId?:     *(=~#"\S+"#) | fn.#Fn
+							ClientSecret?: *(=~#"\S+"#) | fn.#Fn
+							OAuthRequest?: *{
+								AuthCode?:    *string | fn.#Fn
+								RedirectUri?: *string | fn.#Fn
+							} | fn.#If
+							RefreshToken?: *(=~#"\S+"#) | fn.#Fn
+						} | fn.#If
 					} | fn.#If
 					Datadog?: *{
 						ApiKey:         *(=~#"\S+"#) | fn.#Fn
@@ -54,8 +80,9 @@ import (
 					} | fn.#If
 					SAPOData?: *{
 						BasicAuthCredentials?: *{
-							[string]: _
-						} | fn.#Fn
+							Password: *(=~#"\S+"#) | fn.#Fn
+							Username: *(=~#"\S+"#) | fn.#Fn
+						} | fn.#If
 						OAuthCredentials?: *{
 							[string]: _
 						} | fn.#Fn
@@ -107,6 +134,14 @@ import (
 					} | fn.#If
 				} | fn.#If
 				ConnectorProfileProperties?: *{
+					CustomConnector?: *{
+						OAuth2Properties?: *{
+							OAuth2GrantType?:          *("CLIENT_CREDENTIALS" | "AUTHORIZATION_CODE") | fn.#Fn
+							TokenUrl?:                 *(=~#"^(https?)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]"#) | fn.#Fn
+							TokenUrlCustomProperties?: *{} | fn.#If
+						} | fn.#If
+						ProfileProperties?: *{} | fn.#If
+					} | fn.#If
 					Datadog?: *{
 						InstanceUrl: *(=~#"\S+"#) | fn.#Fn
 					} | fn.#If
@@ -166,7 +201,7 @@ import (
 				} | fn.#If
 			} | fn.#If
 			ConnectorProfileName: *(=~#"[\w/!@#+=.-]+"#) | fn.#Fn
-			ConnectorType:        *("Salesforce" | "Singular" | "Slack" | "Redshift" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "SAPOData" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva") | fn.#Fn
+			ConnectorType:        *("Salesforce" | "Singular" | "Slack" | "Redshift" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "SAPOData" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva" | "CustomConnector") | fn.#Fn
 			KMSArn?:              *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:aws:kms:.*:[0-9]+:.*"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
@@ -180,9 +215,21 @@ import (
 		Properties: {
 			Description?:              *(=~#"[\w!@#\-.?,\s]*"#) | fn.#Fn
 			DestinationFlowConfigList: *[...{
+				ApiVersion?:                    *(=~#"\S+"#) | fn.#Fn
 				ConnectorProfileName?:          *(=~#"[\w/!@#+=.-]+"#) | fn.#Fn
-				ConnectorType:                  *("SAPOData" | "Salesforce" | "Singular" | "Slack" | "Redshift" | "S3" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva" | "EventBridge" | "Upsolver" | "LookoutMetrics") | fn.#Fn
+				ConnectorType:                  *("SAPOData" | "Salesforce" | "Singular" | "Slack" | "Redshift" | "S3" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva" | "CustomConnector" | "EventBridge" | "Upsolver" | "LookoutMetrics") | fn.#Fn
 				DestinationConnectorProperties: *{
+					CustomConnector?: *{
+						CustomProperties?:    *{} | fn.#If
+						EntityName:           *(=~#"\S+"#) | fn.#Fn
+						ErrorHandlingConfig?: *{
+							BucketName?:       *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
+							BucketPrefix?:     *string | fn.#Fn
+							FailOnFirstError?: *bool | fn.#Fn
+						} | fn.#If
+						IdFieldNames?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE") | fn.#Fn
+					} | fn.#If
 					EventBridge?: *{
 						ErrorHandlingConfig?: *{
 							BucketName?:       *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
@@ -224,6 +271,7 @@ import (
 								PrefixFormat?: *("YEAR" | "MONTH" | "DAY" | "HOUR" | "MINUTE") | fn.#Fn
 								PrefixType?:   *("FILENAME" | "PATH" | "PATH_AND_FILENAME") | fn.#Fn
 							} | fn.#If
+							PreserveSourceDataTyping?: *bool | fn.#Fn
 						} | fn.#If
 					} | fn.#If
 					SAPOData?: *{
@@ -289,14 +337,19 @@ import (
 			FlowName:         *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[a-zA-Z0-9][\w!@#.-]+"#)) | fn.#Fn
 			KMSArn?:          *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:aws:kms:.*:[0-9]+:.*"#)) | fn.#Fn
 			SourceFlowConfig: *{
+				ApiVersion?:            *(=~#"\S+"#) | fn.#Fn
 				ConnectorProfileName?:  *(=~#"[\w/!@#+=.-]+"#) | fn.#Fn
-				ConnectorType:          *("SAPOData" | "Salesforce" | "Singular" | "Slack" | "Redshift" | "S3" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva" | "EventBridge" | "Upsolver" | "LookoutMetrics") | fn.#Fn
+				ConnectorType:          *("SAPOData" | "Salesforce" | "Singular" | "Slack" | "Redshift" | "S3" | "Marketo" | "Googleanalytics" | "Zendesk" | "Servicenow" | "Datadog" | "Trendmicro" | "Snowflake" | "Dynatrace" | "Infornexus" | "Amplitude" | "Veeva" | "CustomConnector" | "EventBridge" | "Upsolver" | "LookoutMetrics") | fn.#Fn
 				IncrementalPullConfig?: *{
 					DatetimeTypeFieldName?: *string | fn.#Fn
 				} | fn.#If
 				SourceConnectorProperties: *{
 					Amplitude?: *{
 						Object: *(=~#"\S+"#) | fn.#Fn
+					} | fn.#If
+					CustomConnector?: *{
+						CustomProperties?: *{} | fn.#If
+						EntityName:        *(=~#"\S+"#) | fn.#Fn
 					} | fn.#If
 					Datadog?: *{
 						Object: *(=~#"\S+"#) | fn.#Fn
@@ -359,6 +412,7 @@ import (
 			Tasks: *[...{
 				ConnectorOperator?: *{
 					Amplitude?:       *("BETWEEN") | fn.#Fn
+					CustomConnector?: *("PROJECTION" | "LESS_THAN" | "GREATER_THAN" | "CONTAINS" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP") | fn.#Fn
 					Datadog?:         *("PROJECTION" | "BETWEEN" | "EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP") | fn.#Fn
 					Dynatrace?:       *("PROJECTION" | "BETWEEN" | "EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP") | fn.#Fn
 					GoogleAnalytics?: *("PROJECTION" | "BETWEEN") | fn.#Fn
@@ -384,12 +438,13 @@ import (
 			}] | fn.#If
 			TriggerConfig: *{
 				TriggerProperties?: *{
-					DataPullMode?:      *("Incremental" | "Complete") | fn.#Fn
-					ScheduleEndTime?:   *number | fn.#Fn
-					ScheduleExpression: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
-					ScheduleOffset?:    *number | fn.#Fn
-					ScheduleStartTime?: *number | fn.#Fn
-					TimeZone?:          *string | fn.#Fn
+					DataPullMode?:                   *("Incremental" | "Complete") | fn.#Fn
+					FlowErrorDeactivationThreshold?: *(>=1 & <=100) | fn.#Fn
+					ScheduleEndTime?:                *number | fn.#Fn
+					ScheduleExpression:              *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+					ScheduleOffset?:                 *number | fn.#Fn
+					ScheduleStartTime?:              *number | fn.#Fn
+					TimeZone?:                       *string | fn.#Fn
 				} | fn.#If
 				TriggerType: *("Scheduled" | "Event" | "OnDemand") | fn.#Fn
 			} | fn.#If

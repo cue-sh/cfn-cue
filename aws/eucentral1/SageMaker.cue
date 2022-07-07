@@ -115,6 +115,7 @@ import (
 					} | fn.#If
 				}] | fn.#If
 			} | fn.#If
+			EndpointName?:      *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
 			JobDefinitionName?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
 			JobResources:       *{
 				ClusterConfig: *{
@@ -494,6 +495,7 @@ import (
 	#ModelBiasJobDefinition: {
 		Type: "AWS::SageMaker::ModelBiasJobDefinition"
 		Properties: {
+			EndpointName?:      *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
 			JobDefinitionName?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
 			JobResources:       *{
 				ClusterConfig: *{
@@ -569,6 +571,7 @@ import (
 	#ModelExplainabilityJobDefinition: {
 		Type: "AWS::SageMaker::ModelExplainabilityJobDefinition"
 		Properties: {
+			EndpointName?:      *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
 			JobDefinitionName?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
 			JobResources:       *{
 				ClusterConfig: *{
@@ -957,6 +960,7 @@ import (
 	#ModelQualityJobDefinition: {
 		Type: "AWS::SageMaker::ModelQualityJobDefinition"
 		Properties: {
+			EndpointName?:      *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
 			JobDefinitionName?: *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"#) | fn.#Fn
 			JobResources:       *{
 				ClusterConfig: *{

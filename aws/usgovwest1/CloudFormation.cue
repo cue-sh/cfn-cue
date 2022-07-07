@@ -169,7 +169,7 @@ import (
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			TemplateBody?: *(strings.MinRunes(1) & strings.MaxRunes(51200)) | fn.#Fn
-			TemplateURL?:  *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			TemplateURL?:  *(strings.MinRunes(1) & strings.MaxRunes(5120)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

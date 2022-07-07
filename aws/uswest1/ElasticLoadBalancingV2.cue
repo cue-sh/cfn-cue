@@ -29,13 +29,14 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					} | fn.#If
 					AuthorizationEndpoint:     *string | fn.#Fn
 					ClientId:                  *string | fn.#Fn
-					ClientSecret:              *string | fn.#Fn
+					ClientSecret?:             *string | fn.#Fn
 					Issuer:                    *string | fn.#Fn
 					OnUnauthenticatedRequest?: *string | fn.#Fn
 					Scope?:                    *string | fn.#Fn
 					SessionCookieName?:        *string | fn.#Fn
 					SessionTimeout?:           *string | fn.#Fn
 					TokenEndpoint:             *string | fn.#Fn
+					UseExistingClientSecret?:  *bool | fn.#Fn
 					UserInfoEndpoint:          *string | fn.#Fn
 				} | fn.#If
 				FixedResponseConfig?: *{
@@ -112,7 +113,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					} | fn.#If
 					AuthorizationEndpoint:     *string | fn.#Fn
 					ClientId:                  *string | fn.#Fn
-					ClientSecret:              *string | fn.#Fn
+					ClientSecret?:             *string | fn.#Fn
 					Issuer:                    *string | fn.#Fn
 					OnUnauthenticatedRequest?: *string | fn.#Fn
 					Scope?:                    *string | fn.#Fn

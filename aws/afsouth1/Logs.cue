@@ -53,12 +53,12 @@ import (
 		Type: "AWS::Logs::MetricFilter"
 		Properties: {
 			FilterPattern:         *string | fn.#Fn
-			LogGroupName:          *string | fn.#Fn
+			LogGroupName:          *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[.\-_/#A-Za-z0-9]{1,512}"#)) | fn.#Fn
 			MetricTransformations: *[...{
 				DefaultValue?:   *number | fn.#Fn
-				MetricName:      *string | fn.#Fn
-				MetricNamespace: *string | fn.#Fn
-				MetricValue:     *(=~#"^(([0-9]*)|(\$.*))$"#) | fn.#Fn
+				MetricName:      *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^((?![:*$])[\x00-\x7F]){1,255}"#)) | fn.#Fn
+				MetricNamespace: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[0-9a-zA-Z\.\-_\/#]{1,256}"#)) | fn.#Fn
+				MetricValue:     *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#".{1,100}"#)) | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

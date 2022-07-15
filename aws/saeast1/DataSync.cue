@@ -65,6 +65,38 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#LocationFSxONTAP: {
+		Type: "AWS::DataSync::LocationFSxONTAP"
+		Properties: {
+			Protocol: *{
+				NFS?: *{
+					MountOptions: *{
+						Version?: *("AUTOMATIC" | "NFS3" | "NFS4_0" | "NFS4_1") | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				SMB?: *{
+					Domain?:      *(=~#"^([A-Za-z0-9]+[A-Za-z0-9-.]*)*[A-Za-z0-9-]*[A-Za-z0-9]$"#) | fn.#Fn
+					MountOptions: *{
+						Version?: *("AUTOMATIC" | "SMB2" | "SMB3") | fn.#Fn
+					} | fn.#If
+					Password: *(=~#"^.{0,104}$"#) | fn.#Fn
+					User:     *(=~#"^[^\x5B\x5D\\/:;|=,+*?]{1,104}$"#) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			SecurityGroupArns:        [...(*(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\-0-9]*:[0-9]{12}:security-group/sg-[a-f0-9]+$"#) | fn.#Fn)] | (*(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\-0-9]*:[0-9]{12}:security-group/sg-[a-f0-9]+$"#) | fn.#Fn)
+			StorageVirtualMachineArn: *(=~#"^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):fsx:[a-z\-0-9]+:[0-9]{12}:storage-virtual-machine/fs-[0-9a-f]+/svm-[0-9a-f]{17,}$"#) | fn.#Fn
+			Subdirectory?:            *string | fn.#Fn
+			Tags?:                    *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#LocationFSxWindows: {
 		Type: "AWS::DataSync::LocationFSxWindows"
 		Properties: {

@@ -30,4 +30,29 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Workgroup: {
+		Type: "AWS::RedshiftServerless::Workgroup"
+		Properties: {
+			BaseCapacity?:     *int | fn.#Fn
+			ConfigParameters?: *[...{
+				ParameterKey?:   *string | fn.#Fn
+				ParameterValue?: *string | fn.#Fn
+			}] | fn.#If
+			EnhancedVpcRouting?: *bool | fn.#Fn
+			NamespaceName?:      *(strings.MinRunes(3) & strings.MaxRunes(64) & (=~#"^(?=^[a-z0-9-]+$).{3,64}$"#)) | fn.#Fn
+			PubliclyAccessible?: *bool | fn.#Fn
+			SecurityGroupIds?:   [...(*(=~#"^sg-[0-9a-fA-F]{8,}$"#) | fn.#Fn)] | (*(=~#"^sg-[0-9a-fA-F]{8,}$"#) | fn.#Fn)
+			SubnetIds?:          [...(*(=~#"^subnet-[0-9a-fA-F]{8,}$"#) | fn.#Fn)] | (*(=~#"^subnet-[0-9a-fA-F]{8,}$"#) | fn.#Fn)
+			Tags?:               *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			WorkgroupName: *(strings.MinRunes(3) & strings.MaxRunes(64) & (=~#"^(?=^[a-z0-9-]+$).{3,64}$"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

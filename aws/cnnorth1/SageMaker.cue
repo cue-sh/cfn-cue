@@ -774,20 +774,23 @@ import (
 	#NotebookInstance: {
 		Type: "AWS::SageMaker::NotebookInstance"
 		Properties: {
-			AcceleratorTypes?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			AdditionalCodeRepositories?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			DefaultCodeRepository?:      *string | fn.#Fn
-			DirectInternetAccess?:       *string | fn.#Fn
-			InstanceType:                *string | fn.#Fn
-			KmsKeyId?:                   *string | fn.#Fn
-			LifecycleConfigName?:        *string | fn.#Fn
-			NotebookInstanceName?:       *string | fn.#Fn
-			PlatformIdentifier?:         *string | fn.#Fn
-			RoleArn:                     *string | fn.#Fn
-			RootAccess?:                 *string | fn.#Fn
-			SecurityGroupIds?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SubnetId?:                   *string | fn.#Fn
-			Tags?:                       *[...{
+			AcceleratorTypes?:                     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			AdditionalCodeRepositories?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			DefaultCodeRepository?:                *string | fn.#Fn
+			DirectInternetAccess?:                 *string | fn.#Fn
+			InstanceMetadataServiceConfiguration?: *{
+				MinimumInstanceMetadataServiceVersion: *string | fn.#Fn
+			} | fn.#If
+			InstanceType:          *string | fn.#Fn
+			KmsKeyId?:             *string | fn.#Fn
+			LifecycleConfigName?:  *string | fn.#Fn
+			NotebookInstanceName?: *string | fn.#Fn
+			PlatformIdentifier?:   *string | fn.#Fn
+			RoleArn:               *string | fn.#Fn
+			RootAccess?:           *string | fn.#Fn
+			SecurityGroupIds?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SubnetId?:             *string | fn.#Fn
+			Tags?:                 *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -871,10 +874,13 @@ import (
 		Properties: {
 			Description?:       *string | fn.#Fn
 			MemberDefinitions?: *[...{
-				CognitoMemberDefinition: *{
+				CognitoMemberDefinition?: *{
 					CognitoClientId:  *string | fn.#Fn
 					CognitoUserGroup: *string | fn.#Fn
 					CognitoUserPool:  *string | fn.#Fn
+				} | fn.#If
+				OidcMemberDefinition?: *{
+					OidcGroups: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				} | fn.#If
 			}] | fn.#If
 			NotificationConfiguration?: *{
@@ -884,7 +890,8 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			WorkteamName?: *string | fn.#Fn
+			WorkforceName?: *string | fn.#Fn
+			WorkteamName?:  *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

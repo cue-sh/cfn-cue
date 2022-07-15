@@ -135,7 +135,11 @@ import (
 				ColumnNames?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Principals?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			}] | fn.#If
-			DataSetId?:    *string | fn.#Fn
+			DataSetId?:                 *string | fn.#Fn
+			DataSetUsageConfiguration?: *{
+				DisableUseAsDirectQuerySource?: *bool | fn.#Fn
+				DisableUseAsImportedSource?:    *bool | fn.#Fn
+			} | fn.#If
 			FieldFolders?: *{
 				[string]: {
 					Columns?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -184,6 +188,7 @@ import (
 						} | fn.#If
 					}] | fn.#If
 					Source: *{
+						DataSetArn?:      *string | fn.#Fn
 						JoinInstruction?: *{
 							LeftJoinKeyProperties?: *{
 								UniqueKey?: *bool | fn.#Fn

@@ -50,8 +50,12 @@ import (
 			DisplayName?:     *(strings.MinRunes(1) & strings.MaxRunes(200)) | fn.#Fn
 			Engagements?:     [...(*(=~#"^arn:aws(-(cn|us-gov))?:ssm-contacts:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$"#) | fn.#Fn)] | (*(=~#"^arn:aws(-(cn|us-gov))?:ssm-contacts:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$"#) | fn.#Fn)
 			IncidentTemplate: *{
-				DedupeString?:        *(strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
-				Impact:               *(>=1 & <=5) | fn.#Fn
+				DedupeString?: *(strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
+				Impact:        *(>=1 & <=5) | fn.#Fn
+				IncidentTags?: *[...{
+					Key:   *string | fn.#Fn
+					Value: *string | fn.#Fn
+				}] | fn.#If
 				NotificationTargets?: *[...{
 					SnsTopicArn?: *(=~#"^arn:aws(-(cn|us-gov))?:sns:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$"#) | fn.#Fn
 				}] | fn.#If

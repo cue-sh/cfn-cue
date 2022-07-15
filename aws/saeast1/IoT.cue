@@ -33,7 +33,8 @@ import (
 		Type: "AWS::IoT::CACertificate"
 		Properties: {
 			AutoRegistrationStatus?: *("ENABLE" | "DISABLE") | fn.#Fn
-			CACertificatePem?:       *(strings.MinRunes(1) & strings.MaxRunes(65536) & (=~#"[\s\S]*"#)) | fn.#Fn
+			CACertificatePem:        *(strings.MinRunes(1) & strings.MaxRunes(65536) & (=~#"[\s\S]*"#)) | fn.#Fn
+			CertificateMode?:        *("DEFAULT" | "SNI_ONLY") | fn.#Fn
 			RegistrationConfig?:     *{
 				[string]: _
 			} | fn.#Fn

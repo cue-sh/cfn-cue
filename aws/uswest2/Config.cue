@@ -38,6 +38,11 @@ import (
 				TagValue?:                *string | fn.#Fn
 			} | fn.#If
 			Source: *{
+				CustomPolicyDetails?: *{
+					EnableDebugLogDelivery?: *bool | fn.#Fn
+					PolicyRuntime?:          *string | fn.#Fn
+					PolicyText?:             *string | fn.#Fn
+				} | fn.#If
 				Owner:          *("AWS" | "CUSTOM_LAMBDA" | "CUSTOM_POLICY") | fn.#Fn
 				SourceDetails?: *[...{
 					EventSource:                *("aws.config") | fn.#Fn

@@ -38,6 +38,11 @@ import (
 				TagValue?:                *string | fn.#Fn
 			} | fn.#If
 			Source: *{
+				CustomPolicyDetails?: *{
+					EnableDebugLogDelivery?: *bool | fn.#Fn
+					PolicyRuntime?:          *string | fn.#Fn
+					PolicyText?:             *string | fn.#Fn
+				} | fn.#If
 				Owner:          *("AWS" | "CUSTOM_LAMBDA" | "CUSTOM_POLICY") | fn.#Fn
 				SourceDetails?: *[...{
 					EventSource:                *("aws.config") | fn.#Fn
@@ -135,15 +140,15 @@ import (
 	#OrganizationConfigRule: {
 		Type: "AWS::Config::OrganizationConfigRule"
 		Properties: {
-			ExcludedAccounts?:                   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			OrganizationConfigRuleName:          *string | fn.#Fn
-			OrganizationCustomCodeRuleMetadata?: *{
-				CodeText:                            *string | fn.#Fn
+			ExcludedAccounts?:                     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			OrganizationConfigRuleName:            *string | fn.#Fn
+			OrganizationCustomPolicyRuleMetadata?: *{
 				DebugLogDeliveryAccounts?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Description?:                        *string | fn.#Fn
 				InputParameters?:                    *string | fn.#Fn
 				MaximumExecutionFrequency?:          *string | fn.#Fn
 				OrganizationConfigRuleTriggerTypes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				PolicyText:                          *string | fn.#Fn
 				ResourceIdScope?:                    *string | fn.#Fn
 				ResourceTypesScope?:                 [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				Runtime:                             *string | fn.#Fn

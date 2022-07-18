@@ -28,6 +28,7 @@ import (
 			} | fn.#If
 			Project:            *(=~#"([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*)"#) | fn.#Fn
 			RandomizationSalt?: *(=~#".*"#) | fn.#Fn
+			RemoveSegment?:     *bool | fn.#Fn
 			RunningStatus?:     *{
 				AnalysisCompleteTime?: *string | fn.#Fn
 				DesiredState?:         *(=~#"^(CANCELLED|COMPLETED)"#) | fn.#Fn
@@ -35,6 +36,7 @@ import (
 				Status?:               *string | fn.#Fn
 			} | fn.#If
 			SamplingRate?: *int | fn.#Fn
+			Segment?:      *(=~#"([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:segment/[-a-zA-Z0-9._]*)"#) | fn.#Fn
 			Tags?:         *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
@@ -111,6 +113,14 @@ import (
 				GroupWeights: *[...{
 					GroupName:   *(strings.MinRunes(1) & strings.MaxRunes(127) & (=~#"[-a-zA-Z0-9._]*"#)) | fn.#Fn
 					SplitWeight: *int | fn.#Fn
+				}] | fn.#If
+				SegmentOverrides?: *[...{
+					EvaluationOrder: *int | fn.#Fn
+					Segment:         *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:segment/[-a-zA-Z0-9._]*)"#)) | fn.#Fn
+					Weights:         *[...{
+						GroupName:   *(strings.MinRunes(1) & strings.MaxRunes(127) & (=~#"[-a-zA-Z0-9._]*"#)) | fn.#Fn
+						SplitWeight: *int | fn.#Fn
+					}] | fn.#If
 				}] | fn.#If
 				StartTime: *string | fn.#Fn
 			}] | fn.#If

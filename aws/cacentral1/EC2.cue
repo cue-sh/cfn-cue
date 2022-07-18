@@ -1171,7 +1171,10 @@ import (
 	}
 	#PlacementGroup: {
 		Type: "AWS::EC2::PlacementGroup"
-		Properties: Strategy?: *("cluster" | "partition" | "spread") | fn.#Fn
+		Properties: {
+			SpreadLevel?: *string | fn.#Fn
+			Strategy?:    *("cluster" | "partition" | "spread") | fn.#Fn
+		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"

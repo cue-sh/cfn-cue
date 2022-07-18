@@ -140,6 +140,7 @@ import (
 			PermissionModel:      *("SERVICE_MANAGED" | "SELF_MANAGED") | fn.#Fn
 			StackInstancesGroup?: *[...{
 				DeploymentTargets: *{
+					AccountFilterType?:     *("NONE" | "UNION" | "INTERSECTION" | "DIFFERENCE") | fn.#Fn
 					Accounts?:              [...(*(=~#"^[0-9]{12}$"#) | fn.#Fn)] | (*(=~#"^[0-9]{12}$"#) | fn.#Fn)
 					OrganizationalUnitIds?: [...(*(=~#"^(ou-[a-z0-9]{4,32}-[a-z0-9]{8,32}|r-[a-z0-9]{4,32})$"#) | fn.#Fn)] | (*(=~#"^(ou-[a-z0-9]{4,32}-[a-z0-9]{8,32}|r-[a-z0-9]{4,32})$"#) | fn.#Fn)
 				} | fn.#If

@@ -440,7 +440,9 @@ import (
 			AutoPlacement?:   *("off" | "on") | fn.#Fn
 			AvailabilityZone: *(=~#"[a-z0-9-]+"#) | fn.#Fn
 			HostRecovery?:    *string | fn.#Fn
-			InstanceType:     *string | fn.#Fn
+			InstanceFamily?:  *string | fn.#Fn
+			InstanceType?:    *string | fn.#Fn
+			OutpostArn?:      *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -1171,7 +1173,10 @@ import (
 	}
 	#PlacementGroup: {
 		Type: "AWS::EC2::PlacementGroup"
-		Properties: Strategy?: *("cluster" | "partition" | "spread") | fn.#Fn
+		Properties: {
+			SpreadLevel?: *string | fn.#Fn
+			Strategy?:    *("cluster" | "partition" | "spread") | fn.#Fn
+		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
@@ -1984,10 +1989,11 @@ import (
 	#VPCEndpointService: {
 		Type: "AWS::EC2::VPCEndpointService"
 		Properties: {
-			AcceptanceRequired?:      *bool | fn.#Fn
-			GatewayLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			NetworkLoadBalancerArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			PayerResponsibility?:     *string | fn.#Fn
+			AcceptanceRequired?:         *bool | fn.#Fn
+			ContributorInsightsEnabled?: *bool | fn.#Fn
+			GatewayLoadBalancerArns?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			NetworkLoadBalancerArns?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			PayerResponsibility?:        *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

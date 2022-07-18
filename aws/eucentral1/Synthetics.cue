@@ -62,4 +62,20 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Group: {
+		Type: "AWS::Synthetics::Group"
+		Properties: {
+			Name:          *string | fn.#Fn
+			ResourceArns?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:         *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

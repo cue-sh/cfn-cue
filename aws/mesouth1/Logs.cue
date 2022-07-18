@@ -52,13 +52,19 @@ import (
 	#MetricFilter: {
 		Type: "AWS::Logs::MetricFilter"
 		Properties: {
+			FilterName?:           *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[^:*]{1,512}"#)) | fn.#Fn
 			FilterPattern:         *string | fn.#Fn
 			LogGroupName:          *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[.\-_/#A-Za-z0-9]{1,512}"#)) | fn.#Fn
 			MetricTransformations: *[...{
-				DefaultValue?:   *number | fn.#Fn
+				DefaultValue?: *number | fn.#Fn
+				Dimensions?:   *[...{
+					Key:   *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+					Value: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+				}] | fn.#If
 				MetricName:      *(strings.MinRunes(1) & strings.MaxRunes(255) & (=~#"^((?![:*$])[\x00-\x7F]){1,255}"#)) | fn.#Fn
 				MetricNamespace: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[0-9a-zA-Z\.\-_\/#]{1,256}"#)) | fn.#Fn
 				MetricValue:     *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#".{1,100}"#)) | fn.#Fn
+				Unit?:           *("Seconds" | "Microseconds" | "Milliseconds" | "Bytes" | "Kilobytes" | "Megabytes" | "Gigabytes" | "Terabytes" | "Bits" | "Kilobits" | "Megabits" | "Gigabits" | "Terabits" | "Percent" | "Count" | "Bytes/Second" | "Kilobytes/Second" | "Megabytes/Second" | "Gigabytes/Second" | "Terabytes/Second" | "Bits/Second" | "Kilobits/Second" | "Megabits/Second" | "Gigabits/Second" | "Terabits/Second" | "Count/Second" | "None") | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

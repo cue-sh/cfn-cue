@@ -6,6 +6,24 @@ import (
 )
 
 #RolesAnywhere: {
+	#CRL: {
+		Type: "AWS::RolesAnywhere::CRL"
+		Properties: {
+			CrlData?: *string | fn.#Fn
+			Enabled?: *bool | fn.#Fn
+			Name?:    *string | fn.#Fn
+			Tags?:    *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TrustAnchorArn?: *(=~#"^arn:aws(-[^:]+)?:rolesanywhere(:.*){2}(:trust-anchor.*)$"#) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Profile: {
 		Type: "AWS::RolesAnywhere::Profile"
 		Properties: {

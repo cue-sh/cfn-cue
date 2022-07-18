@@ -343,6 +343,7 @@ import (
 			}] | fn.#If
 			TemplateBody:  *string | fn.#Fn
 			TemplateName?: *(strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[0-9A-Za-z_-]+$"#)) | fn.#Fn
+			TemplateType?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

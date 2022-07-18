@@ -224,9 +224,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Domains?:            [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				ResourceIdentifier?: *string | fn.#Fn
 			}] | fn.#If
-			StreamingExperienceSettings?: *{
-				PreferredProtocol?: *string | fn.#Fn
-			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

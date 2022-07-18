@@ -32,7 +32,9 @@ import (
 			} | fn.#If
 			DefinitionString?:        *(strings.MinRunes(1) & strings.MaxRunes(1048576)) | fn.#Fn
 			DefinitionSubstitutions?: *{
-				[string]: *string | fn.#Fn
+				[string]: *{
+					[string]: _
+				} | fn.#Fn
 			} | fn.#If
 			LoggingConfiguration?: *{
 				Destinations?: *[...{

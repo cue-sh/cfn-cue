@@ -285,7 +285,9 @@ import (
 			AutoPlacement?:   *("off" | "on") | fn.#Fn
 			AvailabilityZone: *(=~#"[a-z0-9-]+"#) | fn.#Fn
 			HostRecovery?:    *string | fn.#Fn
-			InstanceType:     *string | fn.#Fn
+			InstanceFamily?:  *string | fn.#Fn
+			InstanceType?:    *string | fn.#Fn
+			OutpostArn?:      *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

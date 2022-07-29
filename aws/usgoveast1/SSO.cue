@@ -42,7 +42,7 @@ import (
 	#PermissionSet: {
 		Type: "AWS::SSO::PermissionSet"
 		Properties: {
-			Description?:  *string | fn.#Fn
+			Description?:  *(strings.MinRunes(1) & strings.MaxRunes(700) & (=~#"[\u0009\u000A\u000D\u0020-\u007E\u00A0-\u00FF]*"#)) | fn.#Fn
 			InlinePolicy?: *{
 				[string]: _
 			} | fn.#Fn

@@ -158,4 +158,21 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Segment: {
+		Type: "AWS::Evidently::Segment"
+		Properties: {
+			Description?: *string | fn.#Fn
+			Name:         *(strings.MinRunes(1) & strings.MaxRunes(127) & (=~#"[-a-zA-Z0-9._]*"#)) | fn.#Fn
+			Pattern?:     *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

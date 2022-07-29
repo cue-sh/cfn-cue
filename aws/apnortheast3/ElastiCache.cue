@@ -50,6 +50,36 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#GlobalReplicationGroup: {
+		Type: "AWS::ElastiCache::GlobalReplicationGroup"
+		Properties: {
+			AutomaticFailoverEnabled?:          *bool | fn.#Fn
+			CacheNodeType?:                     *string | fn.#Fn
+			CacheParameterGroupName?:           *string | fn.#Fn
+			EngineVersion?:                     *string | fn.#Fn
+			GlobalNodeGroupCount?:              *int | fn.#Fn
+			GlobalReplicationGroupDescription?: *string | fn.#Fn
+			GlobalReplicationGroupIdSuffix?:    *string | fn.#Fn
+			Members:                            *[...{
+				ReplicationGroupId?:     *string | fn.#Fn
+				ReplicationGroupRegion?: *string | fn.#Fn
+				Role?:                   *("PRIMARY" | "SECONDARY") | fn.#Fn
+			}] | fn.#If
+			RegionalConfigurations?: *[...{
+				ReplicationGroupId?:       *string | fn.#Fn
+				ReplicationGroupRegion?:   *string | fn.#Fn
+				ReshardingConfigurations?: *[...{
+					NodeGroupId?:                *string | fn.#Fn
+					PreferredAvailabilityZones?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				}] | fn.#If
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ParameterGroup: {
 		Type: "AWS::ElastiCache::ParameterGroup"
 		Properties: {

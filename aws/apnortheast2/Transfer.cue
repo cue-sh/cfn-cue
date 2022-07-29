@@ -27,6 +27,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			PostAuthenticationLoginBanner?: *string | fn.#Fn
 			PreAuthenticationLoginBanner?:  *string | fn.#Fn
 			ProtocolDetails?:               *{
+				As2Transports?:            *[...{}] | fn.#If
 				PassiveIp?:                *string | fn.#Fn
 				SetStatOption?:            *string | fn.#Fn
 				TlsSessionResumptionMode?: *string | fn.#Fn

@@ -159,7 +159,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Name?:       *string | fn.#Fn
 				Path?:       *string | fn.#Fn
 				StatusCode?: *string | fn.#Fn
-				Type?:       *string | fn.#Fn
+				Type?:       *("API" | "AUTHORIZER" | "MODEL" | "RESOURCE" | "METHOD" | "PATH_PARAMETER" | "QUERY_PARAMETER" | "REQUEST_HEADER" | "REQUEST_BODY" | "RESPONSE" | "RESPONSE_HEADER" | "RESPONSE_BODY") | fn.#Fn
 			} | fn.#If
 			Properties: *string | fn.#Fn
 			RestApiId:  *string | fn.#Fn

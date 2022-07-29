@@ -2,7 +2,7 @@ package apeast1
 
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
-#ResourceSpecificationVersion: "81.0.0"
+#ResourceSpecificationVersion: "81.1.0"
 #Template: {
 	AWSTemplateFormatVersion?: "2010-09-09"
 	Description?:              string

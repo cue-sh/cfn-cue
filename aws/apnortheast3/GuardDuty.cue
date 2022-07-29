@@ -18,6 +18,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			Enable:                      *bool | fn.#Fn
 			FindingPublishingFrequency?: *("FIFTEEN_MINUTES" | "ONE_HOUR" | "SIX_HOURS") | fn.#Fn
+			Tags?:                       *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -50,8 +54,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					NotEquals?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				} | fn.#If
 			} | fn.#If
-			Name: *string | fn.#Fn
-			Rank: *int | fn.#Fn
+			Name:  *string | fn.#Fn
+			Rank:  *int | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -67,6 +75,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Format:     *("ALIEN_VAULT" | "FIRE_EYE" | "OTX_CSV" | "PROOF_POINT" | "STIX" | "TXT") | fn.#Fn
 			Location:   *string | fn.#Fn
 			Name?:      *string | fn.#Fn
+			Tags?:      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -111,6 +123,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Format:     *("ALIEN_VAULT" | "FIRE_EYE" | "OTX_CSV" | "PROOF_POINT" | "STIX" | "TXT") | fn.#Fn
 			Location:   *string | fn.#Fn
 			Name?:      *string | fn.#Fn
+			Tags?:      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -20,7 +20,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			EngineType:          *("ACTIVEMQ" | "RABBITMQ") | fn.#Fn
 			EngineVersion:       *string | fn.#Fn
-			HostInstanceType:    *string | fn.#Fn
+			HostInstanceType:    *("mq.m4.large" | "mq.m5.2xlarge" | "mq.m5.4xlarge" | "mq.m5.large" | "mq.m5.xlarge" | "mq.t2.micro" | "mq.t3.micro") | fn.#Fn
 			LdapServerMetadata?: *{
 				Hosts:                  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				RoleBase:               *string | fn.#Fn

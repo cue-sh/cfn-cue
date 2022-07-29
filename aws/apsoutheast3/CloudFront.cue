@@ -102,7 +102,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					OriginProtocolPolicy: *string | fn.#Fn
 					OriginSSLProtocols:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				} | fn.#If
-				DefaultCacheBehavior?: *{
+				DefaultCacheBehavior: *{
 					AllowedMethods?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					CachePolicyId?:          *string | fn.#Fn
 					CachedMethods?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)

@@ -1,6 +1,9 @@
 package afsouth1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #RDS: {
 	#DBCluster: {
@@ -14,7 +17,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			BacktrackWindow?:                 *int | fn.#Fn
 			BackupRetentionPeriod?:           *(>=1 & <=35) | fn.#Fn
 			CopyTagsToSnapshot?:              *bool | fn.#Fn
-			DBClusterIdentifier?:             *string | fn.#Fn
+			DBClusterIdentifier?:             *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
 			DBClusterParameterGroupName?:     *string | fn.#Fn
 			DBSubnetGroupName?:               *string | fn.#Fn
 			DatabaseName?:                    *string | fn.#Fn
@@ -25,10 +28,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Engine:                           *string | fn.#Fn
 			EngineMode?:                      *string | fn.#Fn
 			EngineVersion?:                   *string | fn.#Fn
-			GlobalClusterIdentifier?:         *string | fn.#Fn
+			GlobalClusterIdentifier?:         *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
 			KmsKeyId?:                        *string | fn.#Fn
 			MasterUserPassword?:              *string | fn.#Fn
-			MasterUsername?:                  *string | fn.#Fn
+			MasterUsername?:                  *(=~#"^[a-zA-Z]{1}[a-zA-Z0-9_]*$"#) | fn.#Fn
 			Port?:                            *int | fn.#Fn
 			PreferredBackupWindow?:           *string | fn.#Fn
 			PreferredMaintenanceWindow?:      *string | fn.#Fn
@@ -296,7 +299,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			EventCategories?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			SnsTopicArn:       *string | fn.#Fn
 			SourceIds?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SourceType?:       *("custom-engine-version" | "db-cluster" | "db-cluster-snapshot" | "db-instance" | "db-proxy" | "db-parameter-group" | "db-security-group" | "db-snapshot") | fn.#Fn
+			SourceType?:       *string | fn.#Fn
 			SubscriptionName?: *string | fn.#Fn
 			Tags?:             *[...{
 				Key:   *string | fn.#Fn

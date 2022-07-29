@@ -83,11 +83,11 @@ import (
 			Configuration?: *{
 				ActiveDirectoryConfiguration?: *{
 					ComputerAttributes?: *[...{
-						Name?:  *(strings.MinRunes(1) & strings.MaxRunes(40)) | fn.#Fn
-						Value?: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+						Name?:  *string | fn.#Fn
+						Value?: *string | fn.#Fn
 					}] | fn.#If
 					DirectoryId?:                         *string | fn.#Fn
-					OrganizationalUnitDistinguishedName?: *(strings.MinRunes(1) & strings.MaxRunes(2000)) | fn.#Fn
+					OrganizationalUnitDistinguishedName?: *string | fn.#Fn
 				} | fn.#If
 				ComputeFarmConfiguration?: *{
 					ActiveDirectoryUser?: *string | fn.#Fn
@@ -99,9 +99,9 @@ import (
 				SharedFileSystemConfiguration?: *{
 					Endpoint?:          *string | fn.#Fn
 					FileSystemId?:      *string | fn.#Fn
-					LinuxMountPoint?:   *(=~#"^(/?|(\$HOME)?(/[^/\n\s\\]+)*)$"#) | fn.#Fn
+					LinuxMountPoint?:   *string | fn.#Fn
 					ShareName?:         *string | fn.#Fn
-					WindowsMountDrive?: *(=~#"^[A-Z]$"#) | fn.#Fn
+					WindowsMountDrive?: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
 			Description?:           *string | fn.#Fn

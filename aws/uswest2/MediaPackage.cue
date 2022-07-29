@@ -62,8 +62,8 @@ import (
 					SpekeKeyProvider:              *{
 						CertificateArn?:                  *string | fn.#Fn
 						EncryptionContractConfiguration?: *{
-							PresetSpeke20Audio: *("PRESET-AUDIO-1") | fn.#Fn
-							PresetSpeke20Video: *("PRESET-VIDEO-1") | fn.#Fn
+							PresetSpeke20Audio: *("PRESET-AUDIO-1" | "PRESET-AUDIO-2" | "PRESET-AUDIO-3" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1" | "PRESET-VIDEO-2" | "PRESET-VIDEO-3" | "PRESET-VIDEO-4" | "PRESET-VIDEO-5" | "PRESET-VIDEO-6" | "PRESET-VIDEO-7" | "PRESET-VIDEO-8" | "SHARED" | "UNENCRYPTED") | fn.#Fn
 						} | fn.#If
 						ResourceId: *string | fn.#Fn
 						RoleArn:    *string | fn.#Fn
@@ -99,8 +99,8 @@ import (
 					SpekeKeyProvider:            *{
 						CertificateArn?:                  *string | fn.#Fn
 						EncryptionContractConfiguration?: *{
-							PresetSpeke20Audio: *("PRESET-AUDIO-1") | fn.#Fn
-							PresetSpeke20Video: *("PRESET-VIDEO-1") | fn.#Fn
+							PresetSpeke20Audio: *("PRESET-AUDIO-1" | "PRESET-AUDIO-2" | "PRESET-AUDIO-3" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1" | "PRESET-VIDEO-2" | "PRESET-VIDEO-3" | "PRESET-VIDEO-4" | "PRESET-VIDEO-5" | "PRESET-VIDEO-6" | "PRESET-VIDEO-7" | "PRESET-VIDEO-8" | "SHARED" | "UNENCRYPTED") | fn.#Fn
 						} | fn.#If
 						ResourceId: *string | fn.#Fn
 						RoleArn:    *string | fn.#Fn
@@ -108,15 +108,16 @@ import (
 						Url:        *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
-				ManifestLayout?:         *("FULL" | "COMPACT") | fn.#Fn
-				ManifestWindowSeconds?:  *int | fn.#Fn
-				MinBufferTimeSeconds?:   *int | fn.#Fn
-				MinUpdatePeriodSeconds?: *int | fn.#Fn
-				PeriodTriggers?:         [...(*("ADS") | fn.#Fn)] | (*("ADS") | fn.#Fn)
-				Profile?:                *("NONE" | "HBBTV_1_5" | "HYBRIDCAST") | fn.#Fn
-				SegmentDurationSeconds?: *int | fn.#Fn
-				SegmentTemplateFormat?:  *("NUMBER_WITH_TIMELINE" | "TIME_WITH_TIMELINE" | "NUMBER_WITH_DURATION") | fn.#Fn
-				StreamSelection?:        *{
+				IncludeIframeOnlyStream?: *bool | fn.#Fn
+				ManifestLayout?:          *("FULL" | "COMPACT") | fn.#Fn
+				ManifestWindowSeconds?:   *int | fn.#Fn
+				MinBufferTimeSeconds?:    *int | fn.#Fn
+				MinUpdatePeriodSeconds?:  *int | fn.#Fn
+				PeriodTriggers?:          [...(*("ADS") | fn.#Fn)] | (*("ADS") | fn.#Fn)
+				Profile?:                 *("NONE" | "HBBTV_1_5" | "HYBRIDCAST") | fn.#Fn
+				SegmentDurationSeconds?:  *int | fn.#Fn
+				SegmentTemplateFormat?:   *("NUMBER_WITH_TIMELINE" | "TIME_WITH_TIMELINE" | "NUMBER_WITH_DURATION") | fn.#Fn
+				StreamSelection?:         *{
 					MaxVideoBitsPerSecond?: *int | fn.#Fn
 					MinVideoBitsPerSecond?: *int | fn.#Fn
 					StreamOrder?:           *("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
@@ -138,8 +139,8 @@ import (
 					SpekeKeyProvider:              *{
 						CertificateArn?:                  *string | fn.#Fn
 						EncryptionContractConfiguration?: *{
-							PresetSpeke20Audio: *("PRESET-AUDIO-1") | fn.#Fn
-							PresetSpeke20Video: *("PRESET-VIDEO-1") | fn.#Fn
+							PresetSpeke20Audio: *("PRESET-AUDIO-1" | "PRESET-AUDIO-2" | "PRESET-AUDIO-3" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1" | "PRESET-VIDEO-2" | "PRESET-VIDEO-3" | "PRESET-VIDEO-4" | "PRESET-VIDEO-5" | "PRESET-VIDEO-6" | "PRESET-VIDEO-7" | "PRESET-VIDEO-8" | "SHARED" | "UNENCRYPTED") | fn.#Fn
 						} | fn.#If
 						ResourceId: *string | fn.#Fn
 						RoleArn:    *string | fn.#Fn
@@ -166,8 +167,8 @@ import (
 					SpekeKeyProvider: *{
 						CertificateArn?:                  *string | fn.#Fn
 						EncryptionContractConfiguration?: *{
-							PresetSpeke20Audio: *("PRESET-AUDIO-1") | fn.#Fn
-							PresetSpeke20Video: *("PRESET-VIDEO-1") | fn.#Fn
+							PresetSpeke20Audio: *("PRESET-AUDIO-1" | "PRESET-AUDIO-2" | "PRESET-AUDIO-3" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1" | "PRESET-VIDEO-2" | "PRESET-VIDEO-3" | "PRESET-VIDEO-4" | "PRESET-VIDEO-5" | "PRESET-VIDEO-6" | "PRESET-VIDEO-7" | "PRESET-VIDEO-8" | "SHARED" | "UNENCRYPTED") | fn.#Fn
 						} | fn.#If
 						ResourceId: *string | fn.#Fn
 						RoleArn:    *string | fn.#Fn

@@ -165,7 +165,10 @@ import (
 					WriteCapacityUnits: *int | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
-			KeySchema:                   *{} | fn.#If
+			KeySchema: *[...{
+				AttributeName: *string | fn.#Fn
+				KeyType:       *("HASH" | "RANGE") | fn.#Fn
+			}] | fn.#If
 			KinesisStreamSpecification?: *{
 				StreamArn: *string | fn.#Fn
 			} | fn.#If

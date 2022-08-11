@@ -407,6 +407,7 @@ import (
 									} | fn.#If
 								}] | fn.#If
 							}] | fn.#If
+							MessageSelectionStrategy?: *("Random" | "Ordered") | fn.#Fn
 						} | fn.#If
 					} | fn.#If
 					KendraConfiguration?: *{
@@ -489,6 +490,7 @@ import (
 										} | fn.#If
 									}] | fn.#If
 								}] | fn.#If
+								MessageSelectionStrategy?: *("Random" | "Ordered") | fn.#Fn
 							} | fn.#If
 							SampleUtterances?: *[...{
 								Utterance: *string | fn.#Fn

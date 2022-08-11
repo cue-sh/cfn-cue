@@ -32,8 +32,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					Type: *string | fn.#Fn
 				} | fn.#If
 				Parameters?: *{
-					ExcludeBootVolume?: *bool | fn.#Fn
-					NoReboot?:          *bool | fn.#Fn
+					ExcludeBootVolume?:     *bool | fn.#Fn
+					ExcludeDataVolumeTags?: *[...{
+						Key:   *string | fn.#Fn
+						Value: *string | fn.#Fn
+					}] | fn.#If
+					NoReboot?: *bool | fn.#Fn
 				} | fn.#If
 				PolicyType?:        *string | fn.#Fn
 				ResourceLocations?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)

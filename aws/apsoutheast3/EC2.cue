@@ -225,7 +225,7 @@ import (
 			LogGroupName?:           *string | fn.#Fn
 			MaxAggregationInterval?: *int | fn.#Fn
 			ResourceId:              *string | fn.#Fn
-			ResourceType:            *("NetworkInterface" | "Subnet" | "VPC") | fn.#Fn
+			ResourceType:            *("NetworkInterface" | "Subnet" | "VPC" | "TransitGateway" | "TransitGatewayAttachment") | fn.#Fn
 			Tags?:                   *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

@@ -114,7 +114,7 @@ import (
 				MinBufferTimeSeconds?:    *int | fn.#Fn
 				MinUpdatePeriodSeconds?:  *int | fn.#Fn
 				PeriodTriggers?:          [...(*("ADS") | fn.#Fn)] | (*("ADS") | fn.#Fn)
-				Profile?:                 *("NONE" | "HBBTV_1_5" | "HYBRIDCAST") | fn.#Fn
+				Profile?:                 *("NONE" | "HBBTV_1_5" | "HYBRIDCAST" | "DVB_DASH_2014") | fn.#Fn
 				SegmentDurationSeconds?:  *int | fn.#Fn
 				SegmentTemplateFormat?:   *("NUMBER_WITH_TIMELINE" | "TIME_WITH_TIMELINE" | "NUMBER_WITH_DURATION") | fn.#Fn
 				StreamSelection?:         *{
@@ -123,7 +123,7 @@ import (
 					StreamOrder?:           *("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 				} | fn.#If
 				SuggestedPresentationDelaySeconds?: *int | fn.#Fn
-				UtcTiming?:                         *("HTTP-ISO" | "HTTP-HEAD" | "NONE") | fn.#Fn
+				UtcTiming?:                         *("HTTP-XSDATE" | "HTTP-ISO" | "HTTP-HEAD" | "NONE") | fn.#Fn
 				UtcTimingUri?:                      *string | fn.#Fn
 			} | fn.#If
 			Description?: *string | fn.#Fn

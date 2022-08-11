@@ -17,7 +17,7 @@ import (
 			BacktrackWindow?:                 *int | fn.#Fn
 			BackupRetentionPeriod?:           *(>=1 & <=35) | fn.#Fn
 			CopyTagsToSnapshot?:              *bool | fn.#Fn
-			DBClusterIdentifier?:             *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
+			DBClusterIdentifier?:             *string | fn.#Fn
 			DBClusterParameterGroupName?:     *string | fn.#Fn
 			DBSubnetGroupName?:               *string | fn.#Fn
 			DatabaseName?:                    *string | fn.#Fn
@@ -28,10 +28,10 @@ import (
 			Engine:                           *string | fn.#Fn
 			EngineMode?:                      *string | fn.#Fn
 			EngineVersion?:                   *string | fn.#Fn
-			GlobalClusterIdentifier?:         *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
+			GlobalClusterIdentifier?:         *string | fn.#Fn
 			KmsKeyId?:                        *string | fn.#Fn
 			MasterUserPassword?:              *string | fn.#Fn
-			MasterUsername?:                  *(=~#"^[a-zA-Z]{1}[a-zA-Z0-9_]*$"#) | fn.#Fn
+			MasterUsername?:                  *string | fn.#Fn
 			Port?:                            *int | fn.#Fn
 			PreferredBackupWindow?:           *string | fn.#Fn
 			PreferredMaintenanceWindow?:      *string | fn.#Fn
@@ -94,14 +94,14 @@ import (
 			CACertificateIdentifier?:            *string | fn.#Fn
 			CharacterSetName?:                   *string | fn.#Fn
 			CopyTagsToSnapshot?:                 *bool | fn.#Fn
-			DBClusterIdentifier?:                *string | fn.#Fn
+			DBClusterIdentifier?:                *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
 			DBInstanceClass:                     *("db.m4.10xlarge" | "db.m5.12xlarge" | "db.m5.16xlarge" | "db.m5.24xlarge" | "db.m5.2xlarge" | "db.m5.4xlarge" | "db.m5.8xlarge" | "db.m5.large" | "db.m5.xlarge" | "db.m5d.12xlarge" | "db.m5d.16xlarge" | "db.m5d.24xlarge" | "db.m5d.2xlarge" | "db.m5d.4xlarge" | "db.m5d.8xlarge" | "db.m5d.large" | "db.m5d.xlarge" | "db.m6g.12xlarge" | "db.m6g.16xlarge" | "db.m6g.2xlarge" | "db.m6g.4xlarge" | "db.m6g.8xlarge" | "db.m6g.large" | "db.m6g.xlarge" | "db.m6i.12xlarge" | "db.m6i.16xlarge" | "db.m6i.24xlarge" | "db.m6i.2xlarge" | "db.m6i.32xlarge" | "db.m6i.4xlarge" | "db.m6i.8xlarge" | "db.m6i.large" | "db.m6i.xlarge" | "db.r4.16xlarge" | "db.r4.2xlarge" | "db.r4.4xlarge" | "db.r4.8xlarge" | "db.r4.large" | "db.r4.xlarge" | "db.r5.12xlarge" | "db.r5.12xlarge.tpc2.mem2x" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.2xlarge.tpc1.mem2x" | "db.r5.2xlarge.tpc2.mem4x" | "db.r5.2xlarge.tpc2.mem8x" | "db.r5.4xlarge" | "db.r5.4xlarge.tpc2.mem2x" | "db.r5.4xlarge.tpc2.mem3x" | "db.r5.4xlarge.tpc2.mem4x" | "db.r5.6xlarge.tpc2.mem4x" | "db.r5.8xlarge" | "db.r5.8xlarge.tpc2.mem3x" | "db.r5.large" | "db.r5.large.tpc1.mem2x" | "db.r5.xlarge" | "db.r5.xlarge.tpc2.mem2x" | "db.r5.xlarge.tpc2.mem4x" | "db.r5d.12xlarge" | "db.r5d.16xlarge" | "db.r5d.24xlarge" | "db.r5d.2xlarge" | "db.r5d.4xlarge" | "db.r5d.8xlarge" | "db.r5d.large" | "db.r5d.xlarge" | "db.r6g.12xlarge" | "db.r6g.16xlarge" | "db.r6g.2xlarge" | "db.r6g.4xlarge" | "db.r6g.8xlarge" | "db.r6g.large" | "db.r6g.xlarge" | "db.r6i.12xlarge" | "db.r6i.16xlarge" | "db.r6i.24xlarge" | "db.r6i.2xlarge" | "db.r6i.32xlarge" | "db.r6i.4xlarge" | "db.r6i.8xlarge" | "db.r6i.large" | "db.r6i.xlarge" | "db.t2.2xlarge" | "db.t2.large" | "db.t2.medium" | "db.t2.micro" | "db.t2.small" | "db.t2.xlarge" | "db.t3.2xlarge" | "db.t3.large" | "db.t3.medium" | "db.t3.micro" | "db.t3.small" | "db.t3.xlarge" | "db.t4g.2xlarge" | "db.t4g.large" | "db.t4g.medium" | "db.t4g.micro" | "db.t4g.small" | "db.t4g.xlarge" | "db.x1.16xlarge" | "db.x1.32xlarge") | fn.#Fn
-			DBInstanceIdentifier?:               *string | fn.#Fn
-			DBName?:                             *string | fn.#Fn
-			DBParameterGroupName?:               *string | fn.#Fn
+			DBInstanceIdentifier?:               *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
+			DBName?:                             *(=~#"^$|^[_a-zA-Z][a-zA-Z0-9_]{0,63}$"#) | fn.#Fn
+			DBParameterGroupName?:               *(=~#"^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9\.]){0,254}$"#) | fn.#Fn
 			DBSecurityGroups?:                   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			DBSnapshotIdentifier?:               *string | fn.#Fn
-			DBSubnetGroupName?:                  *string | fn.#Fn
+			DBSnapshotIdentifier?:               *(=~#"^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9]){0,254}$"#) | fn.#Fn
+			DBSubnetGroupName?:                  *(=~#"^$|^[a-zA-Z]{1}(?:[-:]?[a-zA-Z0-9_\.\s]){0,254}$"#) | fn.#Fn
 			DeleteAutomatedBackups?:             *bool | fn.#Fn
 			DeletionProtection?:                 *bool | fn.#Fn
 			Domain?:                             *string | fn.#Fn
@@ -115,7 +115,7 @@ import (
 			KmsKeyId?:                           *string | fn.#Fn
 			LicenseModel?:                       *string | fn.#Fn
 			MasterUserPassword?:                 *string | fn.#Fn
-			MasterUsername?:                     *string | fn.#Fn
+			MasterUsername?:                     *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[a-zA-Z][a-zA-Z0-9_]{0,127}$"#)) | fn.#Fn
 			MaxAllocatedStorage?:                *int | fn.#Fn
 			MonitoringInterval?:                 *(0 | 1 | 5 | 10 | 15 | 30 | 60) | fn.#Fn
 			MonitoringRoleArn?:                  *string | fn.#Fn
@@ -123,11 +123,11 @@ import (
 			OptionGroupName?:                    *string | fn.#Fn
 			PerformanceInsightsKMSKeyId?:        *string | fn.#Fn
 			PerformanceInsightsRetentionPeriod?: *(7 | 731) | fn.#Fn
-			Port?:                               *string | fn.#Fn
+			Port?:                               *(=~#"^\d*$"#) | fn.#Fn
 			PreferredBackupWindow?:              *string | fn.#Fn
 			PreferredMaintenanceWindow?:         *string | fn.#Fn
 			ProcessorFeatures?:                  *[...{
-				Name?:  *string | fn.#Fn
+				Name?:  *("coreCount" | "threadsPerCore") | fn.#Fn
 				Value?: *string | fn.#Fn
 			}] | fn.#If
 			PromotionTier?:              *(>=0 & <=15) | fn.#Fn
@@ -156,8 +156,8 @@ import (
 			Description: *string | fn.#Fn
 			Family:      *string | fn.#Fn
 			Parameters?: *{
-				[string]: *string | fn.#Fn
-			} | fn.#If
+				[string]: _
+			} | fn.#Fn
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

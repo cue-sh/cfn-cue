@@ -99,8 +99,10 @@ import (
 			CACertificatePem:        *(strings.MinRunes(1) & strings.MaxRunes(65536) & (=~#"[\s\S]*"#)) | fn.#Fn
 			CertificateMode?:        *("DEFAULT" | "SNI_ONLY") | fn.#Fn
 			RegistrationConfig?:     *{
-				[string]: _
-			} | fn.#Fn
+				RoleArn?:      *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+"#)) | fn.#Fn
+				TemplateBody?: *(=~#"[\s\S]*"#) | fn.#Fn
+				TemplateName?: *(strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[0-9A-Za-z_-]+$"#)) | fn.#Fn
+			} | fn.#If
 			Status: *("ACTIVE" | "INACTIVE") | fn.#Fn
 			Tags?:  *[...{
 				Key:   *string | fn.#Fn
@@ -343,6 +345,7 @@ import (
 			}] | fn.#If
 			TemplateBody:  *string | fn.#Fn
 			TemplateName?: *(strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[0-9A-Za-z_-]+$"#)) | fn.#Fn
+			TemplateType?: *("FLEET_PROVISIONING" | "JITP") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -15,13 +15,13 @@ import (
 			Name:                          *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 			StreamConfiguration:           *{
 				ClipboardMode:                     *("ENABLED" | "DISABLED") | fn.#Fn
-				Ec2InstanceTypes:                  [...(*("g4dn.xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge") | fn.#Fn)] | (*("g4dn.xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge") | fn.#Fn)
+				Ec2InstanceTypes:                  [...(*("g4dn.xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge" | "g3.4xlarge" | "g3.8xlarge" | "g3.16xlarge" | "g3s.xlarge" | "g5.xlarge" | "g5.2xlarge" | "g5.4xlarge" | "g5.8xlarge" | "g5.12xlarge" | "g5.16xlarge" | "g5.24xlarge" | "g5.48xlarge") | fn.#Fn)] | (*("g4dn.xlarge" | "g4dn.2xlarge" | "g4dn.4xlarge" | "g4dn.8xlarge" | "g4dn.12xlarge" | "g4dn.16xlarge" | "g3.4xlarge" | "g3.8xlarge" | "g3.16xlarge" | "g3s.xlarge" | "g5.xlarge" | "g5.2xlarge" | "g5.4xlarge" | "g5.8xlarge" | "g5.12xlarge" | "g5.16xlarge" | "g5.24xlarge" | "g5.48xlarge") | fn.#Fn)
 				MaxSessionLengthInMinutes?:        *(>=1 & <=43200) | fn.#Fn
 				MaxStoppedSessionLengthInMinutes?: *number | fn.#Fn
 				SessionStorage?:                   *{
-					Mode?: [...(*("UPLOAD") | fn.#Fn)] | (*("UPLOAD") | fn.#Fn)
+					Mode:  [...(*("UPLOAD") | fn.#Fn)] | (*("UPLOAD") | fn.#Fn)
 					Root?: *{
-						Linux?:   *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^(/?|(\$HOME)?(/[^\$/\n\s\\]+)*)$"#)) | fn.#Fn
+						Linux?:   *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^(\$HOME|/)[/]?([A-Za-z0-9-_]+/)*([A-Za-z0-9_-]+)$"#)) | fn.#Fn
 						Windows?: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^((\%HOMEPATH\%)|[a-zA-Z]:)[\\/](?:[a-zA-Z0-9_-]+[\\/])*[a-zA-Z0-9_-]+$"#)) | fn.#Fn
 					} | fn.#If
 				} | fn.#If

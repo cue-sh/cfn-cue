@@ -439,6 +439,7 @@ import (
 			TriggerConfig: *{
 				TriggerProperties?: *{
 					DataPullMode?:                   *("Incremental" | "Complete") | fn.#Fn
+					FirstExecutionFrom?:             *number | fn.#Fn
 					FlowErrorDeactivationThreshold?: *(>=1 & <=100) | fn.#Fn
 					ScheduleEndTime?:                *number | fn.#Fn
 					ScheduleExpression:              *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn

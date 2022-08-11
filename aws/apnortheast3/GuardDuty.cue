@@ -12,6 +12,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						Enable?: *bool | fn.#Fn
 					} | fn.#If
 				} | fn.#If
+				MalwareProtection?: *{
+					ScanEc2InstanceWithFindings?: *{
+						EbsVolumes?: *bool | fn.#Fn
+					} | fn.#If
+				} | fn.#If
 				S3Logs?: *{
 					Enable?: *bool | fn.#Fn
 				} | fn.#If

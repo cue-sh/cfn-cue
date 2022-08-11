@@ -41,8 +41,17 @@ import (
 			ResourceTypeList?:         [...(*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^([^\s]*)$"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^([^\s]*)$"#)) | fn.#Fn)
 			ResourcesCleanUp?:         *bool | fn.#Fn
 			SecurityServicePolicyData: *{
-				[string]: _
-			} | fn.#Fn
+				ManagedServiceData?: *(strings.MinRunes(1) & strings.MaxRunes(8192)) | fn.#Fn
+				PolicyOption?:       *{
+					NetworkFirewallPolicy?: *{
+						FirewallDeploymentModel: *("DISTRIBUTED" | "CENTRALIZED") | fn.#Fn
+					} | fn.#If
+					ThirdPartyFirewallPolicy?: *{
+						FirewallDeploymentModel: *("DISTRIBUTED" | "CENTRALIZED") | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				Type: *("WAF" | "WAFV2" | "SHIELD_ADVANCED" | "SECURITY_GROUPS_COMMON" | "SECURITY_GROUPS_CONTENT_AUDIT" | "SECURITY_GROUPS_USAGE_AUDIT" | "NETWORK_FIREWALL" | "THIRD_PARTY_FIREWALL" | "DNS_FIREWALL") | fn.#Fn
+			} | fn.#If
 			Tags?: *[...{
 				Key:   *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^([^\s]*)$"#)) | fn.#Fn
 				Value: *(=~#"^([^\s]*)$"#) | fn.#Fn

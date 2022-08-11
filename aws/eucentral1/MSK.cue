@@ -127,4 +127,29 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ServerlessCluster: {
+		Type: "AWS::MSK::ServerlessCluster"
+		Properties: {
+			ClientAuthentication: *{
+				Sasl: *{
+					Iam: *{
+						Enabled: *bool | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+			ClusterName: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			Tags?:       *{
+				[string]: *string | fn.#Fn
+			} | fn.#If
+			VpcConfigs: *[...{
+				SecurityGroups?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SubnetIds:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

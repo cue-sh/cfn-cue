@@ -82,7 +82,7 @@ import (
 	#DBInstance: {
 		Type: "AWS::RDS::DBInstance"
 		Properties: {
-			AllocatedStorage?:         *string | fn.#Fn
+			AllocatedStorage?:         *(=~#"^[0-9]*$"#) | fn.#Fn
 			AllowMajorVersionUpgrade?: *bool | fn.#Fn
 			AssociatedRoles?:          *[...{
 				FeatureName: *string | fn.#Fn
@@ -94,14 +94,14 @@ import (
 			CACertificateIdentifier?:            *string | fn.#Fn
 			CharacterSetName?:                   *string | fn.#Fn
 			CopyTagsToSnapshot?:                 *bool | fn.#Fn
-			DBClusterIdentifier?:                *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
-			DBInstanceClass:                     *("db.m4.10xlarge" | "db.m5.12xlarge" | "db.m5.16xlarge" | "db.m5.24xlarge" | "db.m5.2xlarge" | "db.m5.4xlarge" | "db.m5.8xlarge" | "db.m5.large" | "db.m5.xlarge" | "db.m5d.12xlarge" | "db.m5d.16xlarge" | "db.m5d.24xlarge" | "db.m5d.2xlarge" | "db.m5d.4xlarge" | "db.m5d.8xlarge" | "db.m5d.large" | "db.m5d.xlarge" | "db.m6g.12xlarge" | "db.m6g.16xlarge" | "db.m6g.2xlarge" | "db.m6g.4xlarge" | "db.m6g.8xlarge" | "db.m6g.large" | "db.m6g.xlarge" | "db.m6i.12xlarge" | "db.m6i.16xlarge" | "db.m6i.24xlarge" | "db.m6i.2xlarge" | "db.m6i.32xlarge" | "db.m6i.4xlarge" | "db.m6i.8xlarge" | "db.m6i.large" | "db.m6i.xlarge" | "db.r4.16xlarge" | "db.r4.2xlarge" | "db.r4.4xlarge" | "db.r4.8xlarge" | "db.r4.large" | "db.r4.xlarge" | "db.r5.12xlarge" | "db.r5.12xlarge.tpc2.mem2x" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.2xlarge.tpc1.mem2x" | "db.r5.2xlarge.tpc2.mem4x" | "db.r5.2xlarge.tpc2.mem8x" | "db.r5.4xlarge" | "db.r5.4xlarge.tpc2.mem2x" | "db.r5.4xlarge.tpc2.mem3x" | "db.r5.4xlarge.tpc2.mem4x" | "db.r5.6xlarge.tpc2.mem4x" | "db.r5.8xlarge" | "db.r5.8xlarge.tpc2.mem3x" | "db.r5.large" | "db.r5.large.tpc1.mem2x" | "db.r5.xlarge" | "db.r5.xlarge.tpc2.mem2x" | "db.r5.xlarge.tpc2.mem4x" | "db.r5d.12xlarge" | "db.r5d.16xlarge" | "db.r5d.24xlarge" | "db.r5d.2xlarge" | "db.r5d.4xlarge" | "db.r5d.8xlarge" | "db.r5d.large" | "db.r5d.xlarge" | "db.r6g.12xlarge" | "db.r6g.16xlarge" | "db.r6g.2xlarge" | "db.r6g.4xlarge" | "db.r6g.8xlarge" | "db.r6g.large" | "db.r6g.xlarge" | "db.r6i.12xlarge" | "db.r6i.16xlarge" | "db.r6i.24xlarge" | "db.r6i.2xlarge" | "db.r6i.32xlarge" | "db.r6i.4xlarge" | "db.r6i.8xlarge" | "db.r6i.large" | "db.r6i.xlarge" | "db.t2.2xlarge" | "db.t2.large" | "db.t2.medium" | "db.t2.micro" | "db.t2.small" | "db.t2.xlarge" | "db.t3.2xlarge" | "db.t3.large" | "db.t3.medium" | "db.t3.micro" | "db.t3.small" | "db.t3.xlarge" | "db.t4g.2xlarge" | "db.t4g.large" | "db.t4g.medium" | "db.t4g.micro" | "db.t4g.small" | "db.t4g.xlarge" | "db.x1.16xlarge" | "db.x1.32xlarge") | fn.#Fn
+			DBClusterIdentifier?:                *string | fn.#Fn
+			DBInstanceClass?:                    *("db.m4.10xlarge" | "db.m5.12xlarge" | "db.m5.16xlarge" | "db.m5.24xlarge" | "db.m5.2xlarge" | "db.m5.4xlarge" | "db.m5.8xlarge" | "db.m5.large" | "db.m5.xlarge" | "db.m5d.12xlarge" | "db.m5d.16xlarge" | "db.m5d.24xlarge" | "db.m5d.2xlarge" | "db.m5d.4xlarge" | "db.m5d.8xlarge" | "db.m5d.large" | "db.m5d.xlarge" | "db.m6g.12xlarge" | "db.m6g.16xlarge" | "db.m6g.2xlarge" | "db.m6g.4xlarge" | "db.m6g.8xlarge" | "db.m6g.large" | "db.m6g.xlarge" | "db.m6i.12xlarge" | "db.m6i.16xlarge" | "db.m6i.24xlarge" | "db.m6i.2xlarge" | "db.m6i.32xlarge" | "db.m6i.4xlarge" | "db.m6i.8xlarge" | "db.m6i.large" | "db.m6i.xlarge" | "db.r4.16xlarge" | "db.r4.2xlarge" | "db.r4.4xlarge" | "db.r4.8xlarge" | "db.r4.large" | "db.r4.xlarge" | "db.r5.12xlarge" | "db.r5.12xlarge.tpc2.mem2x" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.2xlarge.tpc1.mem2x" | "db.r5.2xlarge.tpc2.mem4x" | "db.r5.2xlarge.tpc2.mem8x" | "db.r5.4xlarge" | "db.r5.4xlarge.tpc2.mem2x" | "db.r5.4xlarge.tpc2.mem3x" | "db.r5.4xlarge.tpc2.mem4x" | "db.r5.6xlarge.tpc2.mem4x" | "db.r5.8xlarge" | "db.r5.8xlarge.tpc2.mem3x" | "db.r5.large" | "db.r5.large.tpc1.mem2x" | "db.r5.xlarge" | "db.r5.xlarge.tpc2.mem2x" | "db.r5.xlarge.tpc2.mem4x" | "db.r5d.12xlarge" | "db.r5d.16xlarge" | "db.r5d.24xlarge" | "db.r5d.2xlarge" | "db.r5d.4xlarge" | "db.r5d.8xlarge" | "db.r5d.large" | "db.r5d.xlarge" | "db.r6g.12xlarge" | "db.r6g.16xlarge" | "db.r6g.2xlarge" | "db.r6g.4xlarge" | "db.r6g.8xlarge" | "db.r6g.large" | "db.r6g.xlarge" | "db.r6i.12xlarge" | "db.r6i.16xlarge" | "db.r6i.24xlarge" | "db.r6i.2xlarge" | "db.r6i.32xlarge" | "db.r6i.4xlarge" | "db.r6i.8xlarge" | "db.r6i.large" | "db.r6i.xlarge" | "db.t2.2xlarge" | "db.t2.large" | "db.t2.medium" | "db.t2.micro" | "db.t2.small" | "db.t2.xlarge" | "db.t3.2xlarge" | "db.t3.large" | "db.t3.medium" | "db.t3.micro" | "db.t3.small" | "db.t3.xlarge" | "db.t4g.2xlarge" | "db.t4g.large" | "db.t4g.medium" | "db.t4g.micro" | "db.t4g.small" | "db.t4g.xlarge" | "db.x1.16xlarge" | "db.x1.32xlarge") | fn.#Fn
 			DBInstanceIdentifier?:               *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
 			DBName?:                             *(=~#"^$|^[_a-zA-Z][a-zA-Z0-9_]{0,63}$"#) | fn.#Fn
-			DBParameterGroupName?:               *(=~#"^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9\.]){0,254}$"#) | fn.#Fn
+			DBParameterGroupName?:               *string | fn.#Fn
 			DBSecurityGroups?:                   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			DBSnapshotIdentifier?:               *(=~#"^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9]){0,254}$"#) | fn.#Fn
-			DBSubnetGroupName?:                  *(=~#"^$|^[a-zA-Z]{1}(?:[-:]?[a-zA-Z0-9_\.\s]){0,254}$"#) | fn.#Fn
+			DBSnapshotIdentifier?:               *string | fn.#Fn
+			DBSubnetGroupName?:                  *string | fn.#Fn
 			DeleteAutomatedBackups?:             *bool | fn.#Fn
 			DeletionProtection?:                 *bool | fn.#Fn
 			Domain?:                             *string | fn.#Fn
@@ -156,8 +156,8 @@ import (
 			Description: *string | fn.#Fn
 			Family:      *string | fn.#Fn
 			Parameters?: *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
@@ -331,9 +331,9 @@ import (
 	#OptionGroup: {
 		Type: "AWS::RDS::OptionGroup"
 		Properties: {
-			EngineName:           *string | fn.#Fn
-			MajorEngineVersion:   *string | fn.#Fn
-			OptionConfigurations: *[...{
+			EngineName:            *string | fn.#Fn
+			MajorEngineVersion:    *string | fn.#Fn
+			OptionConfigurations?: *[...{
 				DBSecurityGroupMemberships?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				OptionName:                  *string | fn.#Fn
 				OptionSettings?:             *[...{

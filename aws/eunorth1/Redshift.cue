@@ -134,10 +134,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#EndpointAccess: {
 		Type: "AWS::Redshift::EndpointAccess"
 		Properties: {
-			ClusterIdentifier?:  *string | fn.#Fn
+			ClusterIdentifier:   *string | fn.#Fn
 			EndpointName:        *(=~#"^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,30}$"#) | fn.#Fn
 			ResourceOwner?:      *(=~#"^\d{12}$"#) | fn.#Fn
-			SubnetGroupName?:    *(=~#"^(?=^[a-zA-Z0-9-]+$).{1,255}$"#) | fn.#Fn
+			SubnetGroupName:     *(=~#"^(?=^[a-zA-Z0-9-]+$).{1,255}$"#) | fn.#Fn
 			VpcSecurityGroupIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 		}
 		DependsOn?:           string | [...string]
@@ -191,21 +191,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ScheduledActionDescription?: *(=~#"^(?=^[\x09\x0a\x0d\x20-\xff]*$).{1,255}$"#) | fn.#Fn
 			ScheduledActionName:         *(=~#"^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,60}$"#) | fn.#Fn
 			StartTime?:                  *string | fn.#Fn
-			TargetAction?:               *{
-				PauseCluster?: *{
-					ClusterIdentifier: *string | fn.#Fn
-				} | fn.#If
-				ResizeCluster?: *{
-					Classic?:          *bool | fn.#Fn
-					ClusterIdentifier: *string | fn.#Fn
-					ClusterType?:      *string | fn.#Fn
-					NodeType?:         *string | fn.#Fn
-					NumberOfNodes?:    *int | fn.#Fn
-				} | fn.#If
-				ResumeCluster?: *{
-					ClusterIdentifier: *string | fn.#Fn
-				} | fn.#If
-			} | fn.#If
+			TargetAction?:               *{} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -82,7 +82,7 @@ import (
 	#DBInstance: {
 		Type: "AWS::RDS::DBInstance"
 		Properties: {
-			AllocatedStorage?:         *string | fn.#Fn
+			AllocatedStorage?:         *(=~#"^[0-9]*$"#) | fn.#Fn
 			AllowMajorVersionUpgrade?: *bool | fn.#Fn
 			AssociatedRoles?:          *[...{
 				FeatureName: *string | fn.#Fn
@@ -94,14 +94,14 @@ import (
 			CACertificateIdentifier?:            *string | fn.#Fn
 			CharacterSetName?:                   *string | fn.#Fn
 			CopyTagsToSnapshot?:                 *bool | fn.#Fn
-			DBClusterIdentifier?:                *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
+			DBClusterIdentifier?:                *string | fn.#Fn
 			DBInstanceClass:                     *("db.m5.12xlarge" | "db.m5.16xlarge" | "db.m5.24xlarge" | "db.m5.2xlarge" | "db.m5.4xlarge" | "db.m5.8xlarge" | "db.m5.large" | "db.m5.xlarge" | "db.r5.12xlarge" | "db.r5.12xlarge.tpc2.mem2x" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.2xlarge.tpc1.mem2x" | "db.r5.2xlarge.tpc2.mem4x" | "db.r5.2xlarge.tpc2.mem8x" | "db.r5.4xlarge" | "db.r5.4xlarge.tpc2.mem2x" | "db.r5.4xlarge.tpc2.mem3x" | "db.r5.4xlarge.tpc2.mem4x" | "db.r5.6xlarge.tpc2.mem4x" | "db.r5.8xlarge" | "db.r5.8xlarge.tpc2.mem3x" | "db.r5.large" | "db.r5.large.tpc1.mem2x" | "db.r5.xlarge" | "db.r5.xlarge.tpc2.mem2x" | "db.r5.xlarge.tpc2.mem4x" | "db.r5b.8xlarge" | "db.t3.2xlarge" | "db.t3.large" | "db.t3.medium" | "db.t3.micro" | "db.t3.small" | "db.t3.xlarge") | fn.#Fn
 			DBInstanceIdentifier?:               *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
 			DBName?:                             *(=~#"^$|^[_a-zA-Z][a-zA-Z0-9_]{0,63}$"#) | fn.#Fn
-			DBParameterGroupName?:               *(=~#"^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9\.]){0,254}$"#) | fn.#Fn
+			DBParameterGroupName?:               *string | fn.#Fn
 			DBSecurityGroups?:                   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			DBSnapshotIdentifier?:               *(=~#"^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9]){0,254}$"#) | fn.#Fn
-			DBSubnetGroupName?:                  *(=~#"^$|^[a-zA-Z]{1}(?:[-:]?[a-zA-Z0-9_\.\s]){0,254}$"#) | fn.#Fn
+			DBSnapshotIdentifier?:               *string | fn.#Fn
+			DBSubnetGroupName?:                  *string | fn.#Fn
 			DeleteAutomatedBackups?:             *bool | fn.#Fn
 			DeletionProtection?:                 *bool | fn.#Fn
 			Domain?:                             *string | fn.#Fn

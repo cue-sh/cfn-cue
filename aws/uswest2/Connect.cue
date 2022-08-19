@@ -18,7 +18,7 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			Type?: *("CONTACT_FLOW" | "CUSTOMER_QUEUE" | "CUSTOMER_HOLD" | "CUSTOMER_WHISPER" | "AGENT_HOLD" | "AGENT_WHISPER" | "OUTBOUND_WHISPER" | "AGENT_TRANSFER" | "QUEUE_TRANSFER") | fn.#Fn
+			Type: *("CONTACT_FLOW" | "CUSTOMER_QUEUE" | "CUSTOMER_HOLD" | "CUSTOMER_WHISPER" | "AGENT_HOLD" | "AGENT_WHISPER" | "OUTBOUND_WHISPER" | "AGENT_TRANSFER" | "QUEUE_TRANSFER") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -67,6 +67,28 @@ import (
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			TimeZone: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Instance: {
+		Type: "AWS::Connect::Instance"
+		Properties: {
+			Attributes: *{
+				AutoResolveBestVoices?: *bool | fn.#Fn
+				ContactLens?:           *bool | fn.#Fn
+				ContactflowLogs?:       *bool | fn.#Fn
+				EarlyMedia?:            *bool | fn.#Fn
+				InboundCalls:           *bool | fn.#Fn
+				OutboundCalls:          *bool | fn.#Fn
+				UseCustomTTSVoices?:    *bool | fn.#Fn
+			} | fn.#If
+			DirectoryId?:           *string | fn.#Fn
+			IdentityManagementType: *string | fn.#Fn
+			InstanceAlias?:         *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -140,7 +140,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				} | fn.#If
 				DefaultRootObject?: *string | fn.#Fn
 				Enabled:            *bool | fn.#Fn
-				HttpVersion?:       *("http1.1" | "http2") | fn.#Fn
+				HttpVersion?:       *("http1.1" | "http2" | "http2and3" | "http3") | fn.#Fn
 				IPV6Enabled?:       *bool | fn.#Fn
 				Logging?:           *{
 					Bucket:          *string | fn.#Fn

@@ -228,7 +228,7 @@ import (
 							FailOnFirstError?: *bool | fn.#Fn
 						} | fn.#If
 						IdFieldNames?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE") | fn.#Fn
+						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE" | "DELETE") | fn.#Fn
 					} | fn.#If
 					EventBridge?: *{
 						ErrorHandlingConfig?: *{
@@ -286,7 +286,7 @@ import (
 							BucketName?:   *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
 							BucketPrefix?: *string | fn.#Fn
 						} | fn.#If
-						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE") | fn.#Fn
+						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE" | "DELETE") | fn.#Fn
 					} | fn.#If
 					Salesforce?: *{
 						ErrorHandlingConfig?: *{
@@ -296,7 +296,7 @@ import (
 						} | fn.#If
 						IdFieldNames?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 						Object:              *(=~#"\S+"#) | fn.#Fn
-						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE") | fn.#Fn
+						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE" | "DELETE") | fn.#Fn
 					} | fn.#If
 					Snowflake?: *{
 						BucketPrefix?:        *string | fn.#Fn
@@ -330,7 +330,7 @@ import (
 						} | fn.#If
 						IdFieldNames?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 						Object:              *(=~#"\S+"#) | fn.#Fn
-						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE") | fn.#Fn
+						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE" | "DELETE") | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 			}] | fn.#If

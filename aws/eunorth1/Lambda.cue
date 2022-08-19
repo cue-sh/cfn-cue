@@ -72,6 +72,9 @@ import (
 	#EventSourceMapping: {
 		Type: "AWS::Lambda::EventSourceMapping"
 		Properties: {
+			AmazonManagedKafkaEventSourceConfig?: *{
+				ConsumerGroupId?: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
+			} | fn.#If
 			BatchSize?:                  *(>=1 & <=10000) | fn.#Fn
 			BisectBatchOnFunctionError?: *bool | fn.#Fn
 			DestinationConfig?:          *{
@@ -97,6 +100,9 @@ import (
 				Endpoints?: *{
 					KafkaBootstrapServers?: [...(*(strings.MinRunes(1) & strings.MaxRunes(300) & (=~#"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]):[0-9]{1,5}"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(300) & (=~#"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]):[0-9]{1,5}"#)) | fn.#Fn)
 				} | fn.#If
+			} | fn.#If
+			SelfManagedKafkaEventSourceConfig?: *{
+				ConsumerGroupId?: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
 			} | fn.#If
 			SourceAccessConfigurations?: *[...{
 				Type?: *("BASIC_AUTH" | "VPC_SUBNET" | "VPC_SECURITY_GROUP" | "SASL_SCRAM_512_AUTH" | "SASL_SCRAM_256_AUTH" | "VIRTUAL_HOST" | "CLIENT_CERTIFICATE_TLS_AUTH" | "SERVER_ROOT_CA_CERTIFICATE") | fn.#Fn

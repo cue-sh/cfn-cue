@@ -479,6 +479,7 @@ import (
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			AutoImport?:       *bool | fn.#Fn
+			AwsService?:       *("ec2") | fn.#Fn
 			Description?:      *string | fn.#Fn
 			IpamScopeId:       *string | fn.#Fn
 			Locale?:           *string | fn.#Fn

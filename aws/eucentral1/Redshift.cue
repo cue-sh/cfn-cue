@@ -134,10 +134,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#EndpointAccess: {
 		Type: "AWS::Redshift::EndpointAccess"
 		Properties: {
-			ClusterIdentifier?:  *string | fn.#Fn
+			ClusterIdentifier:   *string | fn.#Fn
 			EndpointName:        *(=~#"^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,30}$"#) | fn.#Fn
 			ResourceOwner?:      *(=~#"^\d{12}$"#) | fn.#Fn
-			SubnetGroupName?:    *(=~#"^(?=^[a-zA-Z0-9-]+$).{1,255}$"#) | fn.#Fn
+			SubnetGroupName:     *(=~#"^(?=^[a-zA-Z0-9-]+$).{1,255}$"#) | fn.#Fn
 			VpcSecurityGroupIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 		}
 		DependsOn?:           string | [...string]

@@ -52,6 +52,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			EBSOptions?: *{
 				EBSEnabled?: *bool | fn.#Fn
 				Iops?:       *int | fn.#Fn
+				Throughput?: *int | fn.#Fn
 				VolumeSize?: *int | fn.#Fn
 				VolumeType?: *string | fn.#Fn
 			} | fn.#If

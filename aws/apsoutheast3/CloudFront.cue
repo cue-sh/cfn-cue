@@ -176,9 +176,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						OriginReadTimeout?:      *int | fn.#Fn
 						OriginSSLProtocols?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					} | fn.#If
-					DomainName:           *string | fn.#Fn
-					Id:                   *string | fn.#Fn
-					OriginCustomHeaders?: *[...{
+					DomainName:             *string | fn.#Fn
+					Id:                     *string | fn.#Fn
+					OriginAccessControlId?: *string | fn.#Fn
+					OriginCustomHeaders?:   *[...{
 						HeaderName:  *string | fn.#Fn
 						HeaderValue: *string | fn.#Fn
 					}] | fn.#If
@@ -367,6 +368,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					Protection: *bool | fn.#Fn
 					ReportUri?: *string | fn.#Fn
 				} | fn.#If
+			} | fn.#If
+			ServerTimingHeadersConfig?: *{
+				Enabled:       *bool | fn.#Fn
+				SamplingRate?: *number | fn.#Fn
 			} | fn.#If
 		} | fn.#If
 		DependsOn?:           string | [...string]

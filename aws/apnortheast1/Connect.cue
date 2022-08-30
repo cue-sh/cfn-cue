@@ -86,9 +86,9 @@ import (
 				OutboundCalls:          *bool | fn.#Fn
 				UseCustomTTSVoices?:    *bool | fn.#Fn
 			} | fn.#If
-			DirectoryId?:           *string | fn.#Fn
-			IdentityManagementType: *string | fn.#Fn
-			InstanceAlias?:         *string | fn.#Fn
+			DirectoryId?:           *(strings.MinRunes(12) & strings.MaxRunes(12) & (=~#"^d-[0-9a-f]{10}$"#)) | fn.#Fn
+			IdentityManagementType: *("SAML" | "CONNECT_MANAGED" | "EXISTING_DIRECTORY") | fn.#Fn
+			InstanceAlias?:         *(strings.MinRunes(1) & strings.MaxRunes(62) & (=~#"^(?!d-)([\da-zA-Z]+)([-]*[\da-zA-Z])*$"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

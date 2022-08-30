@@ -32,6 +32,21 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					WriteCapacityUnits: *int | fn.#Fn
 				} | fn.#If
 			}] | fn.#If
+			ImportSourceSpecification?: *{
+				InputCompressionType?: *string | fn.#Fn
+				InputFormat:           *string | fn.#Fn
+				InputFormatOptions?:   *{
+					Csv?: *{
+						Delimiter?:  *string | fn.#Fn
+						HeaderList?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					} | fn.#If
+				} | fn.#If
+				S3BucketSource: *{
+					S3Bucket:       *string | fn.#Fn
+					S3BucketOwner?: *string | fn.#Fn
+					S3KeyPrefix?:   *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 			KeySchema: *[...{
 				AttributeName: *string | fn.#Fn
 				KeyType:       *("HASH" | "RANGE") | fn.#Fn

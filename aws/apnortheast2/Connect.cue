@@ -45,6 +45,28 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Instance: {
+		Type: "AWS::Connect::Instance"
+		Properties: {
+			Attributes: *{
+				AutoResolveBestVoices?: *bool | fn.#Fn
+				ContactLens?:           *bool | fn.#Fn
+				ContactflowLogs?:       *bool | fn.#Fn
+				EarlyMedia?:            *bool | fn.#Fn
+				InboundCalls:           *bool | fn.#Fn
+				OutboundCalls:          *bool | fn.#Fn
+				UseCustomTTSVoices?:    *bool | fn.#Fn
+			} | fn.#If
+			DirectoryId?:           *(strings.MinRunes(12) & strings.MaxRunes(12) & (=~#"^d-[0-9a-f]{10}$"#)) | fn.#Fn
+			IdentityManagementType: *("SAML" | "CONNECT_MANAGED" | "EXISTING_DIRECTORY") | fn.#Fn
+			InstanceAlias?:         *(strings.MinRunes(1) & strings.MaxRunes(62) & (=~#"^(?!d-)([\da-zA-Z]+)([-]*[\da-zA-Z])*$"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#PhoneNumber: {
 		Type: "AWS::Connect::PhoneNumber"
 		Properties: {

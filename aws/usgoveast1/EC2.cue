@@ -752,6 +752,7 @@ import (
 					Value: *string | fn.#Fn
 				}] | fn.#If
 			}] | fn.#If
+			VersionDescription?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -1453,6 +1454,81 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#TransitGatewayConnect: {
+		Type: "AWS::EC2::TransitGatewayConnect"
+		Properties: {
+			Options: *{
+				Protocol?: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransportTransitGatewayAttachmentId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastDomain: {
+		Type: "AWS::EC2::TransitGatewayMulticastDomain"
+		Properties: {
+			Options?: *{
+				[string]: _
+			} | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastDomainAssociation: {
+		Type: "AWS::EC2::TransitGatewayMulticastDomainAssociation"
+		Properties: {
+			SubnetId:                        *string | fn.#Fn
+			TransitGatewayAttachmentId:      *string | fn.#Fn
+			TransitGatewayMulticastDomainId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastGroupMember: {
+		Type: "AWS::EC2::TransitGatewayMulticastGroupMember"
+		Properties: {
+			GroupIpAddress:                  *string | fn.#Fn
+			NetworkInterfaceId:              *string | fn.#Fn
+			TransitGatewayMulticastDomainId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastGroupSource: {
+		Type: "AWS::EC2::TransitGatewayMulticastGroupSource"
+		Properties: {
+			GroupIpAddress:                  *string | fn.#Fn
+			NetworkInterfaceId:              *string | fn.#Fn
+			TransitGatewayMulticastDomainId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#TransitGatewayRoute: {
 		Type: "AWS::EC2::TransitGatewayRoute"
 		Properties: {
@@ -1499,6 +1575,28 @@ import (
 		Properties: {
 			TransitGatewayAttachmentId: *string | fn.#Fn
 			TransitGatewayRouteTableId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayVpcAttachment: {
+		Type: "AWS::EC2::TransitGatewayVpcAttachment"
+		Properties: {
+			AddSubnetIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Options?:      *{
+				[string]: _
+			} | fn.#Fn
+			RemoveSubnetIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SubnetIds:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:            *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+			VpcId:            *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

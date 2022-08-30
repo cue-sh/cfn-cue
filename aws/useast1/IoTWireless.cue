@@ -288,7 +288,7 @@ import (
 		Type: "AWS::IoTWireless::WirelessGateway"
 		Properties: {
 			Description?:          *string | fn.#Fn
-			LastUplinkReceivedAt?: *(=~#"^^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$"#) | fn.#Fn
+			LastUplinkReceivedAt?: *string | fn.#Fn
 			LoRaWAN:               *{
 				GatewayEui: *(=~#"^(([0-9A-Fa-f]{2}-){7}|([0-9A-Fa-f]{2}:){7}|([0-9A-Fa-f]{2}\s){7}|([0-9A-Fa-f]{2}){7})([0-9A-Fa-f]{2})$"#) | fn.#Fn
 				RfRegion:   *string | fn.#Fn
@@ -298,7 +298,8 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			ThingArn?: *string | fn.#Fn
+			ThingArn?:  *string | fn.#Fn
+			ThingName?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

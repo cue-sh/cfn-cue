@@ -760,6 +760,7 @@ import (
 					Value: *string | fn.#Fn
 				}] | fn.#If
 			}] | fn.#If
+			VersionDescription?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

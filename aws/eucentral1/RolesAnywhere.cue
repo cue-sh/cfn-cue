@@ -49,8 +49,8 @@ import (
 		Type: "AWS::RolesAnywhere::TrustAnchor"
 		Properties: {
 			Enabled?: *bool | fn.#Fn
-			Name?:    *string | fn.#Fn
-			Source?:  *{
+			Name:     *string | fn.#Fn
+			Source:   *{
 				SourceData?: *{
 					AcmPcaArn?:           *string | fn.#Fn
 					X509CertificateData?: *string | fn.#Fn

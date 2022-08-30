@@ -351,6 +351,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					ReportUri?: *string | fn.#Fn
 				} | fn.#If
 			} | fn.#If
+			ServerTimingHeadersConfig?: *{
+				Enabled:       *bool | fn.#Fn
+				SamplingRate?: *number | fn.#Fn
+			} | fn.#If
 		} | fn.#If
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

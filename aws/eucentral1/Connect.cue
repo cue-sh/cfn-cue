@@ -86,9 +86,44 @@ import (
 				OutboundCalls:          *bool | fn.#Fn
 				UseCustomTTSVoices?:    *bool | fn.#Fn
 			} | fn.#If
-			DirectoryId?:           *string | fn.#Fn
-			IdentityManagementType: *string | fn.#Fn
-			InstanceAlias?:         *string | fn.#Fn
+			DirectoryId?:           *(strings.MinRunes(12) & strings.MaxRunes(12) & (=~#"^d-[0-9a-f]{10}$"#)) | fn.#Fn
+			IdentityManagementType: *("SAML" | "CONNECT_MANAGED" | "EXISTING_DIRECTORY") | fn.#Fn
+			InstanceAlias?:         *(strings.MinRunes(1) & strings.MaxRunes(62) & (=~#"^(?!d-)([\da-zA-Z]+)([-]*[\da-zA-Z])*$"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#InstanceStorageConfig: {
+		Type: "AWS::Connect::InstanceStorageConfig"
+		Properties: {
+			InstanceArn:            *string | fn.#Fn
+			KinesisFirehoseConfig?: *{
+				FirehoseArn: *string | fn.#Fn
+			} | fn.#If
+			KinesisStreamConfig?: *{
+				StreamArn: *string | fn.#Fn
+			} | fn.#If
+			KinesisVideoStreamConfig?: *{
+				EncryptionConfig?: *{
+					EncryptionType: *string | fn.#Fn
+					KeyId:          *string | fn.#Fn
+				} | fn.#If
+				Prefix:               *string | fn.#Fn
+				RetentionPeriodHours: *number | fn.#Fn
+			} | fn.#If
+			ResourceType: *string | fn.#Fn
+			S3Config?:    *{
+				BucketName:        *string | fn.#Fn
+				BucketPrefix:      *string | fn.#Fn
+				EncryptionConfig?: *{
+					EncryptionType: *string | fn.#Fn
+					KeyId:          *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			StorageType: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

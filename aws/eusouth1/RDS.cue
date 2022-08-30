@@ -17,7 +17,7 @@ import (
 			BacktrackWindow?:                 *int | fn.#Fn
 			BackupRetentionPeriod?:           *(>=1 & <=35) | fn.#Fn
 			CopyTagsToSnapshot?:              *bool | fn.#Fn
-			DBClusterIdentifier?:             *string | fn.#Fn
+			DBClusterIdentifier?:             *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
 			DBClusterParameterGroupName?:     *string | fn.#Fn
 			DBSubnetGroupName?:               *string | fn.#Fn
 			DatabaseName?:                    *string | fn.#Fn
@@ -28,10 +28,10 @@ import (
 			Engine:                           *string | fn.#Fn
 			EngineMode?:                      *string | fn.#Fn
 			EngineVersion?:                   *string | fn.#Fn
-			GlobalClusterIdentifier?:         *string | fn.#Fn
+			GlobalClusterIdentifier?:         *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
 			KmsKeyId?:                        *string | fn.#Fn
 			MasterUserPassword?:              *string | fn.#Fn
-			MasterUsername?:                  *string | fn.#Fn
+			MasterUsername?:                  *(=~#"^[a-zA-Z]{1}[a-zA-Z0-9_]*$"#) | fn.#Fn
 			Port?:                            *int | fn.#Fn
 			PreferredBackupWindow?:           *string | fn.#Fn
 			PreferredMaintenanceWindow?:      *string | fn.#Fn
@@ -96,7 +96,7 @@ import (
 			CopyTagsToSnapshot?:                 *bool | fn.#Fn
 			DBClusterIdentifier?:                *string | fn.#Fn
 			DBInstanceClass?:                    *("db.m5.12xlarge" | "db.m5.16xlarge" | "db.m5.24xlarge" | "db.m5.2xlarge" | "db.m5.4xlarge" | "db.m5.8xlarge" | "db.m5.large" | "db.m5.xlarge" | "db.m5d.12xlarge" | "db.m5d.16xlarge" | "db.m5d.24xlarge" | "db.m5d.2xlarge" | "db.m5d.4xlarge" | "db.m5d.8xlarge" | "db.m5d.large" | "db.m5d.xlarge" | "db.m6g.12xlarge" | "db.m6g.16xlarge" | "db.m6g.2xlarge" | "db.m6g.4xlarge" | "db.m6g.8xlarge" | "db.m6g.large" | "db.m6g.xlarge" | "db.r5.12xlarge" | "db.r5.12xlarge.tpc2.mem2x" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.2xlarge.tpc1.mem2x" | "db.r5.2xlarge.tpc2.mem4x" | "db.r5.2xlarge.tpc2.mem8x" | "db.r5.4xlarge" | "db.r5.4xlarge.tpc2.mem2x" | "db.r5.4xlarge.tpc2.mem3x" | "db.r5.4xlarge.tpc2.mem4x" | "db.r5.6xlarge.tpc2.mem4x" | "db.r5.8xlarge" | "db.r5.8xlarge.tpc2.mem3x" | "db.r5.large" | "db.r5.large.tpc1.mem2x" | "db.r5.xlarge" | "db.r5.xlarge.tpc2.mem2x" | "db.r5.xlarge.tpc2.mem4x" | "db.r5d.12xlarge" | "db.r5d.16xlarge" | "db.r5d.24xlarge" | "db.r5d.2xlarge" | "db.r5d.4xlarge" | "db.r5d.8xlarge" | "db.r5d.large" | "db.r5d.xlarge" | "db.r6g.12xlarge" | "db.r6g.16xlarge" | "db.r6g.2xlarge" | "db.r6g.4xlarge" | "db.r6g.8xlarge" | "db.r6g.large" | "db.r6g.xlarge" | "db.r6i.12xlarge" | "db.r6i.16xlarge" | "db.r6i.24xlarge" | "db.r6i.2xlarge" | "db.r6i.32xlarge" | "db.r6i.4xlarge" | "db.r6i.8xlarge" | "db.r6i.large" | "db.r6i.xlarge" | "db.t3.2xlarge" | "db.t3.large" | "db.t3.medium" | "db.t3.micro" | "db.t3.small" | "db.t3.xlarge" | "db.t4g.2xlarge" | "db.t4g.large" | "db.t4g.medium" | "db.t4g.micro" | "db.t4g.small" | "db.t4g.xlarge" | "db.x1.16xlarge" | "db.x1.32xlarge" | "db.x1e.16xlarge" | "db.x1e.2xlarge" | "db.x1e.32xlarge" | "db.x1e.4xlarge" | "db.x1e.8xlarge" | "db.x1e.xlarge" | "db.z1d.12xlarge" | "db.z1d.2xlarge" | "db.z1d.3xlarge" | "db.z1d.6xlarge" | "db.z1d.large" | "db.z1d.xlarge") | fn.#Fn
-			DBInstanceIdentifier?:               *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
+			DBInstanceIdentifier?:               *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
 			DBName?:                             *(=~#"^$|^[_a-zA-Z][a-zA-Z0-9_]{0,63}$"#) | fn.#Fn
 			DBParameterGroupName?:               *string | fn.#Fn
 			DBSecurityGroups?:                   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
@@ -315,9 +315,9 @@ import (
 	#OptionGroup: {
 		Type: "AWS::RDS::OptionGroup"
 		Properties: {
-			EngineName:           *string | fn.#Fn
-			MajorEngineVersion:   *string | fn.#Fn
-			OptionConfigurations: *[...{
+			EngineName:            *string | fn.#Fn
+			MajorEngineVersion:    *string | fn.#Fn
+			OptionConfigurations?: *[...{
 				DBSecurityGroupMemberships?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				OptionName:                  *string | fn.#Fn
 				OptionSettings?:             *[...{

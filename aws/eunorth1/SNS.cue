@@ -35,10 +35,13 @@ import (
 		Type: "AWS::SNS::Topic"
 		Properties: {
 			ContentBasedDeduplication?: *bool | fn.#Fn
-			DisplayName?:               *string | fn.#Fn
-			FifoTopic?:                 *bool | fn.#Fn
-			KmsMasterKeyId?:            *string | fn.#Fn
-			Subscription?:              *[...{
+			DataProtectionPolicy?:      *{
+				[string]: _
+			} | fn.#Fn
+			DisplayName?:    *string | fn.#Fn
+			FifoTopic?:      *bool | fn.#Fn
+			KmsMasterKeyId?: *string | fn.#Fn
+			Subscription?:   *[...{
 				Endpoint: *string | fn.#Fn
 				Protocol: *string | fn.#Fn
 			}] | fn.#If

@@ -10,7 +10,7 @@ import (
 		Type: "AWS::GlobalAccelerator::Accelerator"
 		Properties: {
 			Enabled?:       *bool | fn.#Fn
-			IpAddressType?: *("IPV4" | "IPV6") | fn.#Fn
+			IpAddressType?: *("IPV4" | "DUAL_STACK") | fn.#Fn
 			IpAddresses?:   [...(*(=~#"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"#) | fn.#Fn)] | (*(=~#"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"#) | fn.#Fn)
 			Name:           *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z0-9_-]{0,64}$"#)) | fn.#Fn
 			Tags?:          *[...{

@@ -28,7 +28,10 @@ import (
 		Properties: {
 			AlertManagerDefinition?: *string | fn.#Fn
 			Alias?:                  *string | fn.#Fn
-			Tags?:                   *[...{
+			LoggingConfiguration?:   *{
+				LogGroupArn?: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

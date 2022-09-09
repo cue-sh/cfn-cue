@@ -73,6 +73,13 @@ import (
 				Overrides?:     *{} | fn.#If
 				VariantValues?: *{} | fn.#If
 			}] | fn.#If
+			_#Predicate: {
+				And?:      *[..._#Predicate] | fn.#If
+				Field?:    *string | fn.#Fn
+				Operand?:  *string | fn.#Fn
+				Operator?: *string | fn.#Fn
+				Or?:       *[..._#Predicate] | fn.#If
+			}
 			_#ComponentProperty: {
 				BindingProperties?: *{
 					Field?:   *string | fn.#Fn
@@ -110,13 +117,6 @@ import (
 				Events?:       *{} | fn.#If
 				Name:          *string | fn.#Fn
 				Properties:    *{} | fn.#If
-			}
-			_#Predicate: {
-				And?:      *[..._#Predicate] | fn.#If
-				Field?:    *string | fn.#Fn
-				Operand?:  *string | fn.#Fn
-				Operator?: *string | fn.#Fn
-				Or?:       *[..._#Predicate] | fn.#If
 			}
 		}
 		DependsOn?:           string | [...string]

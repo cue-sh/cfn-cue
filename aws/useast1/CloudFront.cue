@@ -253,6 +253,21 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#OriginAccessControl: {
+		Type: "AWS::CloudFront::OriginAccessControl"
+		Properties: OriginAccessControlConfig: *{
+			Description?:                  *string | fn.#Fn
+			Name:                          *string | fn.#Fn
+			OriginAccessControlOriginType: *(=~#"^(s3)$"#) | fn.#Fn
+			SigningBehavior:               *(=~#"^(never|no-override|always)$"#) | fn.#Fn
+			SigningProtocol:               *(=~#"^(sigv4)$"#) | fn.#Fn
+		} | fn.#If
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#OriginRequestPolicy: {
 		Type: "AWS::CloudFront::OriginRequestPolicy"
 		Properties: OriginRequestPolicyConfig: *{

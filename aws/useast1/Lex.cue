@@ -673,6 +673,7 @@ import (
 					} | fn.#If
 				}] | fn.#If
 				VoiceSettings?: *{
+					Engine?: *("standard" | "neural") | fn.#Fn
 					VoiceId: *string | fn.#Fn
 				} | fn.#If
 			}] | fn.#If

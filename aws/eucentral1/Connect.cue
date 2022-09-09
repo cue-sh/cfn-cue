@@ -99,31 +99,31 @@ import (
 	#InstanceStorageConfig: {
 		Type: "AWS::Connect::InstanceStorageConfig"
 		Properties: {
-			InstanceArn:            *string | fn.#Fn
+			InstanceArn:            *(=~#"^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$"#) | fn.#Fn
 			KinesisFirehoseConfig?: *{
-				FirehoseArn: *string | fn.#Fn
+				FirehoseArn: *(=~#"^arn:aws[-a-z0-9]*:firehose:[-a-z0-9]*:[0-9]{12}:deliverystream/[-a-zA-Z0-9_.]*$"#) | fn.#Fn
 			} | fn.#If
 			KinesisStreamConfig?: *{
-				StreamArn: *string | fn.#Fn
+				StreamArn: *(=~#"^arn:aws[-a-z0-9]*:kinesis:[-a-z0-9]*:[0-9]{12}:stream/[-a-zA-Z0-9_.]*$"#) | fn.#Fn
 			} | fn.#If
 			KinesisVideoStreamConfig?: *{
 				EncryptionConfig?: *{
-					EncryptionType: *string | fn.#Fn
-					KeyId:          *string | fn.#Fn
+					EncryptionType: *("KMS") | fn.#Fn
+					KeyId:          *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 				} | fn.#If
-				Prefix:               *string | fn.#Fn
+				Prefix:               *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 				RetentionPeriodHours: *number | fn.#Fn
 			} | fn.#If
-			ResourceType: *string | fn.#Fn
+			ResourceType: *("CHAT_TRANSCRIPTS" | "CALL_RECORDINGS" | "SCHEDULED_REPORTS" | "MEDIA_STREAMS" | "CONTACT_TRACE_RECORDS" | "AGENT_EVENTS") | fn.#Fn
 			S3Config?:    *{
-				BucketName:        *string | fn.#Fn
-				BucketPrefix:      *string | fn.#Fn
+				BucketName:        *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				BucketPrefix:      *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 				EncryptionConfig?: *{
-					EncryptionType: *string | fn.#Fn
-					KeyId:          *string | fn.#Fn
+					EncryptionType: *("KMS") | fn.#Fn
+					KeyId:          *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			StorageType: *string | fn.#Fn
+			StorageType: *("S3" | "KINESIS_VIDEO_STREAM" | "KINESIS_STREAM" | "KINESIS_FIREHOSE") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

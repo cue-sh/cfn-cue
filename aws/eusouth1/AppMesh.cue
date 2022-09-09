@@ -18,6 +18,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							} | fn.#If
 						} | fn.#If
 						Target: *{
+							Port?:          *int | fn.#Fn
 							VirtualService: *{
 								VirtualServiceName: *string | fn.#Fn
 							} | fn.#If
@@ -42,6 +43,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							} | fn.#If
 							Name: *string | fn.#Fn
 						}] | fn.#If
+						Port?:        *int | fn.#Fn
 						ServiceName?: *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
@@ -60,6 +62,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							} | fn.#If
 						} | fn.#If
 						Target: *{
+							Port?:          *int | fn.#Fn
 							VirtualService: *{
 								VirtualServiceName: *string | fn.#Fn
 							} | fn.#If
@@ -89,6 +92,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Exact?: *string | fn.#Fn
 							Regex?: *string | fn.#Fn
 						} | fn.#If
+						Port?:            *int | fn.#Fn
 						Prefix?:          *string | fn.#Fn
 						QueryParameters?: *[...{
 							Match?: *{
@@ -113,6 +117,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							} | fn.#If
 						} | fn.#If
 						Target: *{
+							Port?:          *int | fn.#Fn
 							VirtualService: *{
 								VirtualServiceName: *string | fn.#Fn
 							} | fn.#If
@@ -142,6 +147,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Exact?: *string | fn.#Fn
 							Regex?: *string | fn.#Fn
 						} | fn.#If
+						Port?:            *int | fn.#Fn
 						Prefix?:          *string | fn.#Fn
 						QueryParameters?: *[...{
 							Match?: *{
@@ -198,6 +204,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				GrpcRoute?: *{
 					Action: *{
 						WeightedTargets: *[...{
+							Port?:       *int | fn.#Fn
 							VirtualNode: *string | fn.#Fn
 							Weight:      *int | fn.#Fn
 						}] | fn.#If
@@ -218,6 +225,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Name: *string | fn.#Fn
 						}] | fn.#If
 						MethodName?:  *string | fn.#Fn
+						Port?:        *int | fn.#Fn
 						ServiceName?: *string | fn.#Fn
 					} | fn.#If
 					RetryPolicy?: *{
@@ -244,6 +252,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Http2Route?: *{
 					Action: *{
 						WeightedTargets: *[...{
+							Port?:       *int | fn.#Fn
 							VirtualNode: *string | fn.#Fn
 							Weight:      *int | fn.#Fn
 						}] | fn.#If
@@ -268,6 +277,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Exact?: *string | fn.#Fn
 							Regex?: *string | fn.#Fn
 						} | fn.#If
+						Port?:            *int | fn.#Fn
 						Prefix?:          *string | fn.#Fn
 						QueryParameters?: *[...{
 							Match?: *{
@@ -300,6 +310,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				HttpRoute?: *{
 					Action: *{
 						WeightedTargets: *[...{
+							Port?:       *int | fn.#Fn
 							VirtualNode: *string | fn.#Fn
 							Weight:      *int | fn.#Fn
 						}] | fn.#If
@@ -324,6 +335,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 							Exact?: *string | fn.#Fn
 							Regex?: *string | fn.#Fn
 						} | fn.#If
+						Port?:            *int | fn.#Fn
 						Prefix?:          *string | fn.#Fn
 						QueryParameters?: *[...{
 							Match?: *{
@@ -357,9 +369,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				TcpRoute?: *{
 					Action: *{
 						WeightedTargets: *[...{
+							Port?:       *int | fn.#Fn
 							VirtualNode: *string | fn.#Fn
 							Weight:      *int | fn.#Fn
 						}] | fn.#If
+					} | fn.#If
+					Match?: *{
+						Port?: *int | fn.#Fn
 					} | fn.#If
 					Timeout?: *{
 						Idle?: *{
@@ -482,6 +498,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Logging?: *{
 					AccessLog?: *{
 						File?: *{
+							Format?: *{
+								Json?: *[...{
+									Key:   *string | fn.#Fn
+									Value: *string | fn.#Fn
+								}] | fn.#If
+								Text?: *string | fn.#Fn
+							} | fn.#If
 							Path: *string | fn.#Fn
 						} | fn.#If
 					} | fn.#If
@@ -691,6 +714,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Logging?: *{
 					AccessLog?: *{
 						File?: *{
+							Format?: *{
+								Json?: *[...{
+									Key:   *string | fn.#Fn
+									Value: *string | fn.#Fn
+								}] | fn.#If
+								Text?: *string | fn.#Fn
+							} | fn.#If
 							Path: *string | fn.#Fn
 						} | fn.#If
 					} | fn.#If

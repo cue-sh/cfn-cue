@@ -96,6 +96,41 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#InstanceStorageConfig: {
+		Type: "AWS::Connect::InstanceStorageConfig"
+		Properties: {
+			InstanceArn:            *(=~#"^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$"#) | fn.#Fn
+			KinesisFirehoseConfig?: *{
+				FirehoseArn: *(=~#"^arn:aws[-a-z0-9]*:firehose:[-a-z0-9]*:[0-9]{12}:deliverystream/[-a-zA-Z0-9_.]*$"#) | fn.#Fn
+			} | fn.#If
+			KinesisStreamConfig?: *{
+				StreamArn: *(=~#"^arn:aws[-a-z0-9]*:kinesis:[-a-z0-9]*:[0-9]{12}:stream/[-a-zA-Z0-9_.]*$"#) | fn.#Fn
+			} | fn.#If
+			KinesisVideoStreamConfig?: *{
+				EncryptionConfig?: *{
+					EncryptionType: *("KMS") | fn.#Fn
+					KeyId:          *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				} | fn.#If
+				Prefix:               *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				RetentionPeriodHours: *number | fn.#Fn
+			} | fn.#If
+			ResourceType: *("CHAT_TRANSCRIPTS" | "CALL_RECORDINGS" | "SCHEDULED_REPORTS" | "MEDIA_STREAMS" | "CONTACT_TRACE_RECORDS" | "AGENT_EVENTS") | fn.#Fn
+			S3Config?:    *{
+				BucketName:        *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				BucketPrefix:      *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				EncryptionConfig?: *{
+					EncryptionType: *("KMS") | fn.#Fn
+					KeyId:          *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			StorageType: *("S3" | "KINESIS_VIDEO_STREAM" | "KINESIS_STREAM" | "KINESIS_FIREHOSE") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#QuickConnect: {
 		Type: "AWS::Connect::QuickConnect"
 		Properties: {

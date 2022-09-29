@@ -94,6 +94,7 @@ import (
 			CACertificateIdentifier?:            *string | fn.#Fn
 			CharacterSetName?:                   *string | fn.#Fn
 			CopyTagsToSnapshot?:                 *bool | fn.#Fn
+			CustomIAMInstanceProfile?:           *string | fn.#Fn
 			DBClusterIdentifier?:                *string | fn.#Fn
 			DBInstanceClass?:                    *("db.m4.10xlarge" | "db.m4.16xlarge" | "db.m4.2xlarge" | "db.m4.4xlarge" | "db.m4.large" | "db.m4.xlarge" | "db.m5.12xlarge" | "db.m5.16xlarge" | "db.m5.24xlarge" | "db.m5.2xlarge" | "db.m5.4xlarge" | "db.m5.8xlarge" | "db.m5.large" | "db.m5.xlarge" | "db.m6g.12xlarge" | "db.m6g.16xlarge" | "db.m6g.2xlarge" | "db.m6g.4xlarge" | "db.m6g.8xlarge" | "db.m6g.large" | "db.m6g.xlarge" | "db.r4.16xlarge" | "db.r4.2xlarge" | "db.r4.4xlarge" | "db.r4.8xlarge" | "db.r4.large" | "db.r4.xlarge" | "db.r5.12xlarge" | "db.r5.12xlarge.tpc2.mem2x" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.2xlarge.tpc1.mem2x" | "db.r5.2xlarge.tpc2.mem4x" | "db.r5.2xlarge.tpc2.mem8x" | "db.r5.4xlarge" | "db.r5.4xlarge.tpc2.mem2x" | "db.r5.4xlarge.tpc2.mem3x" | "db.r5.4xlarge.tpc2.mem4x" | "db.r5.6xlarge.tpc2.mem4x" | "db.r5.8xlarge" | "db.r5.8xlarge.tpc2.mem3x" | "db.r5.large" | "db.r5.large.tpc1.mem2x" | "db.r5.xlarge" | "db.r5.xlarge.tpc2.mem2x" | "db.r5.xlarge.tpc2.mem4x" | "db.r6g.12xlarge" | "db.r6g.16xlarge" | "db.r6g.2xlarge" | "db.r6g.4xlarge" | "db.r6g.8xlarge" | "db.r6g.large" | "db.r6g.xlarge" | "db.t2.2xlarge" | "db.t2.large" | "db.t2.medium" | "db.t2.micro" | "db.t2.small" | "db.t2.xlarge" | "db.t3.2xlarge" | "db.t3.large" | "db.t3.medium" | "db.t3.micro" | "db.t3.small" | "db.t3.xlarge" | "db.t4g.2xlarge" | "db.t4g.large" | "db.t4g.medium" | "db.t4g.micro" | "db.t4g.small" | "db.t4g.xlarge" | "db.x1.16xlarge" | "db.x1.32xlarge") | fn.#Fn
 			DBInstanceIdentifier?:               *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
@@ -109,7 +110,7 @@ import (
 			EnableCloudwatchLogsExports?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			EnableIAMDatabaseAuthentication?:    *bool | fn.#Fn
 			EnablePerformanceInsights?:          *bool | fn.#Fn
-			Engine?:                             *(=~#"(?i)(aurora|aurora-mysql|aurora-postgresql|mariadb|mysql|oracle-ee|oracle-se2|oracle-se1|oracle-se|postgres|sqlserver-ee|sqlserver-se|sqlserver-ex|sqlserver-web)$"#) | fn.#Fn
+			Engine?:                             *(=~#"(?i)(custom-)?(aurora|aurora-mysql|aurora-postgresql|mariadb|mysql|oracle-ee|oracle-ee-cdb|oracle-se2|oracle-se2-cdb|oracle-se1|oracle-se|postgres|sqlserver-ee|sqlserver-se|sqlserver-ex|sqlserver-web)$"#) | fn.#Fn
 			EngineVersion?:                      *string | fn.#Fn
 			Iops?:                               *int | fn.#Fn
 			KmsKeyId?:                           *string | fn.#Fn
@@ -120,6 +121,7 @@ import (
 			MonitoringInterval?:                 *(0 | 1 | 5 | 10 | 15 | 30 | 60) | fn.#Fn
 			MonitoringRoleArn?:                  *string | fn.#Fn
 			MultiAZ?:                            *bool | fn.#Fn
+			NcharCharacterSetName?:              *string | fn.#Fn
 			OptionGroupName?:                    *string | fn.#Fn
 			PerformanceInsightsKMSKeyId?:        *string | fn.#Fn
 			PerformanceInsightsRetentionPeriod?: *(7 | 731) | fn.#Fn
@@ -156,8 +158,8 @@ import (
 			Description: *string | fn.#Fn
 			Family:      *string | fn.#Fn
 			Parameters?: *{
-				[string]: *string | fn.#Fn
-			} | fn.#If
+				[string]: _
+			} | fn.#Fn
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

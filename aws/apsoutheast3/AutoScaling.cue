@@ -219,7 +219,7 @@ import (
 			EstimatedInstanceWarmup?:        *int | fn.#Fn
 			MetricAggregationType?:          *("Average" | "Maximum" | "Minimum") | fn.#Fn
 			MinAdjustmentMagnitude?:         *int | fn.#Fn
-			PolicyType?:                     *("SimpleScaling" | "StepScaling" | "TargetTrackingScaling") | fn.#Fn
+			PolicyType?:                     *("PredictiveScaling" | "SimpleScaling" | "StepScaling" | "TargetTrackingScaling") | fn.#Fn
 			PredictiveScalingConfiguration?: *{
 				MaxCapacityBreachBehavior?: *string | fn.#Fn
 				MaxCapacityBuffer?:         *int | fn.#Fn

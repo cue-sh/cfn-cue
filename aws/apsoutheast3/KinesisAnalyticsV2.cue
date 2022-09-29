@@ -140,90 +140,12 @@ import (
 					AllowNonRestoredState?: *bool | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			RuntimeEnvironment:   *string | fn.#Fn
+			RuntimeEnvironment:   *("FLINK-1_11" | "FLINK-1_13" | "FLINK-1_6" | "FLINK-1_8" | "SQL-1_0" | "ZEPPELIN-FLINK-1_0" | "ZEPPELIN-FLINK-2_0") | fn.#Fn
 			ServiceExecutionRole: *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:.*$"#)) | fn.#Fn
 			Tags?:                *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-		}
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#ApplicationCloudWatchLoggingOption: {
-		Type: "AWS::KinesisAnalyticsV2::ApplicationCloudWatchLoggingOption"
-		Properties: {
-			ApplicationName:         *string | fn.#Fn
-			CloudWatchLoggingOption: *{
-				LogStreamARN: *string | fn.#Fn
-			} | fn.#If
-		}
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#ApplicationOutput: {
-		Type: "AWS::KinesisAnalyticsV2::ApplicationOutput"
-		Properties: {
-			ApplicationName: *string | fn.#Fn
-			Output:          *{
-				DestinationSchema: *{
-					RecordFormatType?: *string | fn.#Fn
-				} | fn.#If
-				KinesisFirehoseOutput?: *{
-					ResourceARN: *string | fn.#Fn
-				} | fn.#If
-				KinesisStreamsOutput?: *{
-					ResourceARN: *string | fn.#Fn
-				} | fn.#If
-				LambdaOutput?: *{
-					ResourceARN: *string | fn.#Fn
-				} | fn.#If
-				Name?: *string | fn.#Fn
-			} | fn.#If
-		}
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#ApplicationReferenceDataSource: {
-		Type: "AWS::KinesisAnalyticsV2::ApplicationReferenceDataSource"
-		Properties: {
-			ApplicationName:     *string | fn.#Fn
-			ReferenceDataSource: *{
-				ReferenceSchema: *{
-					RecordColumns: *[...{
-						Mapping?: *string | fn.#Fn
-						Name:     *string | fn.#Fn
-						SqlType:  *string | fn.#Fn
-					}] | fn.#If
-					RecordEncoding?: *string | fn.#Fn
-					RecordFormat:    *{
-						MappingParameters?: *{
-							CSVMappingParameters?: *{
-								RecordColumnDelimiter: *string | fn.#Fn
-								RecordRowDelimiter:    *string | fn.#Fn
-							} | fn.#If
-							JSONMappingParameters?: *{
-								RecordRowPath: *string | fn.#Fn
-							} | fn.#If
-						} | fn.#If
-						RecordFormatType: *string | fn.#Fn
-					} | fn.#If
-				} | fn.#If
-				S3ReferenceDataSource?: *{
-					BucketARN: *string | fn.#Fn
-					FileKey:   *string | fn.#Fn
-				} | fn.#If
-				TableName?: *string | fn.#Fn
-			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

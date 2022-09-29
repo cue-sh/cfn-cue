@@ -139,8 +139,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -149,7 +171,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -215,8 +238,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -225,7 +270,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -256,8 +302,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -266,7 +334,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -296,8 +365,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -306,7 +397,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -336,8 +428,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -346,7 +460,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -364,6 +479,7 @@ import (
 							[string]: _
 						} | fn.#Fn
 					} | fn.#If
+					SensitivityLevel?:   *("LOW" | "HIGH") | fn.#Fn
 					TextTransformations: *[...{
 						Priority: *int | fn.#Fn
 						Type:     *("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE" | "BASE64_DECODE" | "HEX_DECODE" | "MD5" | "REPLACE_COMMENTS" | "ESCAPE_SEQ_DECODE" | "SQL_HEX_DECODE" | "CSS_DECODE" | "JS_DECODE" | "NORMALIZE_PATH" | "NORMALIZE_PATH_WIN" | "REMOVE_NULLS" | "REPLACE_NULLS" | "BASE64_DECODE_EXT" | "URL_DECODE_UNI" | "UTF8_TO_UNICODE") | fn.#Fn
@@ -375,8 +491,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -385,7 +523,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -534,8 +673,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -544,7 +705,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -629,8 +791,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -639,7 +823,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -670,8 +855,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -680,7 +887,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -716,8 +924,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -726,7 +956,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -756,8 +987,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -766,7 +1019,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _
@@ -784,6 +1038,7 @@ import (
 							[string]: _
 						} | fn.#Fn
 					} | fn.#If
+					SensitivityLevel?:   *("LOW" | "HIGH") | fn.#Fn
 					TextTransformations: *[...{
 						Priority: *int | fn.#Fn
 						Type:     *("NONE" | "COMPRESS_WHITE_SPACE" | "HTML_ENTITY_DECODE" | "LOWERCASE" | "CMD_LINE" | "URL_DECODE" | "BASE64_DECODE" | "HEX_DECODE" | "MD5" | "REPLACE_COMMENTS" | "ESCAPE_SEQ_DECODE" | "SQL_HEX_DECODE" | "CSS_DECODE" | "JS_DECODE" | "NORMALIZE_PATH" | "NORMALIZE_PATH_WIN" | "REMOVE_NULLS" | "REPLACE_NULLS" | "BASE64_DECODE_EXT" | "URL_DECODE_UNI" | "UTF8_TO_UNICODE") | fn.#Fn
@@ -795,8 +1050,30 @@ import (
 							[string]: _
 						} | fn.#Fn
 						Body?: *{
-							[string]: _
-						} | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Cookies?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedCookies?: [...(*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(60) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
+						Headers?: *{
+							MatchPattern: *{
+								All?: *{
+									[string]: _
+								} | fn.#Fn
+								ExcludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+								IncludedHeaders?: [...(*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#".*\S.*"#)) | fn.#Fn)
+							} | fn.#If
+							MatchScope:       *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
+						} | fn.#If
 						JsonBody?: *{
 							InvalidFallbackBehavior?: *("MATCH" | "NO_MATCH" | "EVALUATE_AS_STRING") | fn.#Fn
 							MatchPattern:             *{
@@ -805,7 +1082,8 @@ import (
 								} | fn.#Fn
 								IncludedPaths?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 							} | fn.#If
-							MatchScope: *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							MatchScope:        *("ALL" | "KEY" | "VALUE") | fn.#Fn
+							OversizeHandling?: *("CONTINUE" | "MATCH" | "NO_MATCH") | fn.#Fn
 						} | fn.#If
 						Method?: *{
 							[string]: _

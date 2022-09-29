@@ -6,6 +6,21 @@ import (
 )
 
 #Route53: {
+	#CidrCollection: {
+		Type: "AWS::Route53::CidrCollection"
+		Properties: {
+			Locations?: *[...{
+				CidrList:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				LocationName: *(strings.MinRunes(1) & strings.MaxRunes(16)) | fn.#Fn
+			}] | fn.#If
+			Name: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[0-9A-Za-z_\-]+$"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#DNSSEC: {
 		Type: "AWS::Route53::DNSSEC"
 		Properties: HostedZoneId: *(=~#"^[A-Z0-9]{1,32}$"#) | fn.#Fn

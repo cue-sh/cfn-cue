@@ -29,20 +29,25 @@ import (
 		Type: "AWS::IoTWireless::DeviceProfile"
 		Properties: {
 			LoRaWAN?: *{
-				ClassBTimeout?:     *int | fn.#Fn
-				ClassCTimeout?:     *int | fn.#Fn
-				MacVersion?:        *string | fn.#Fn
-				MaxDutyCycle?:      *int | fn.#Fn
-				MaxEirp?:           *int | fn.#Fn
-				PingSlotDr?:        *int | fn.#Fn
-				PingSlotFreq?:      *(>=1000000 & <=16700000) | fn.#Fn
-				PingSlotPeriod?:    *(>=128 & <=4096) | fn.#Fn
-				RegParamsRevision?: *string | fn.#Fn
-				RfRegion?:          *string | fn.#Fn
-				Supports32BitFCnt?: *bool | fn.#Fn
-				SupportsClassB?:    *bool | fn.#Fn
-				SupportsClassC?:    *bool | fn.#Fn
-				SupportsJoin?:      *bool | fn.#Fn
+				ClassBTimeout?:          *int | fn.#Fn
+				ClassCTimeout?:          *int | fn.#Fn
+				FactoryPresetFreqsList?: [...(*(>=1000000 & <=16700000) | fn.#Fn)] | (*(>=1000000 & <=16700000) | fn.#Fn)
+				MacVersion?:             *string | fn.#Fn
+				MaxDutyCycle?:           *int | fn.#Fn
+				MaxEirp?:                *int | fn.#Fn
+				PingSlotDr?:             *int | fn.#Fn
+				PingSlotFreq?:           *(>=1000000 & <=16700000) | fn.#Fn
+				PingSlotPeriod?:         *(>=128 & <=4096) | fn.#Fn
+				RegParamsRevision?:      *string | fn.#Fn
+				RfRegion?:               *string | fn.#Fn
+				RxDataRate2?:            *int | fn.#Fn
+				RxDelay1?:               *int | fn.#Fn
+				RxDrOffset1?:            *int | fn.#Fn
+				RxFreq2?:                *(>=1000000 & <=16700000) | fn.#Fn
+				Supports32BitFCnt?:      *bool | fn.#Fn
+				SupportsClassB?:         *bool | fn.#Fn
+				SupportsClassC?:         *bool | fn.#Fn
+				SupportsJoin?:           *bool | fn.#Fn
 			} | fn.#If
 			Name?: *string | fn.#Fn
 			Tags?: *[...{

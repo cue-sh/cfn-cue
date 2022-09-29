@@ -80,8 +80,9 @@ import (
 				TemplateBody?: *(=~#"[\s\S]*"#) | fn.#Fn
 				TemplateName?: *(strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[0-9A-Za-z_-]+$"#)) | fn.#Fn
 			} | fn.#If
-			Status: *("ACTIVE" | "INACTIVE") | fn.#Fn
-			Tags?:  *[...{
+			RemoveAutoRegistration?: *bool | fn.#Fn
+			Status:                  *("ACTIVE" | "INACTIVE") | fn.#Fn
+			Tags?:                   *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If

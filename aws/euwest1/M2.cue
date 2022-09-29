@@ -8,8 +8,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			Definition:   *{} | fn.#If
 			Description?: *string | fn.#Fn
-			EngineType:   *string | fn.#Fn
-			Name:         *string | fn.#Fn
+			EngineType:   *("microfocus" | "bluage") | fn.#Fn
+			Name:         *(=~#"^[A-Za-z0-9][A-Za-z0-9_\-]{1,59}$"#) | fn.#Fn
 			Tags?:        *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
@@ -34,9 +34,18 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			PreferredMaintenanceWindow?: *(=~#"^\S{1,50}$"#) | fn.#Fn
 			PubliclyAccessible?:         *bool | fn.#Fn
 			SecurityGroupIds?:           [...(*(=~#"^\S{1,50}$"#) | fn.#Fn)] | (*(=~#"^\S{1,50}$"#) | fn.#Fn)
-			StorageConfigurations?:      *[...{}] | fn.#If
-			SubnetIds?:                  [...(*(=~#"^\S{1,50}$"#) | fn.#Fn)] | (*(=~#"^\S{1,50}$"#) | fn.#Fn)
-			Tags?:                       *{
+			StorageConfigurations?:      *[...{
+				Efs?: *{
+					FileSystemId: *string | fn.#Fn
+					MountPoint:   *string | fn.#Fn
+				} | fn.#If
+				Fsx?: *{
+					FileSystemId: *string | fn.#Fn
+					MountPoint:   *string | fn.#Fn
+				} | fn.#If
+			}] | fn.#If
+			SubnetIds?: [...(*(=~#"^\S{1,50}$"#) | fn.#Fn)] | (*(=~#"^\S{1,50}$"#) | fn.#Fn)
+			Tags?:      *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
 		}

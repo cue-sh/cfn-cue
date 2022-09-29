@@ -138,6 +138,10 @@ import (
 	#Project: {
 		Type: "AWS::Evidently::Project"
 		Properties: {
+			AppConfigResource?: *{
+				ApplicationId: *(=~#"[a-z0-9]{4,7}"#) | fn.#Fn
+				EnvironmentId: *(=~#"[a-z0-9]{4,7}"#) | fn.#Fn
+			} | fn.#If
 			DataDelivery?: *{
 				LogGroup?: *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[-a-zA-Z0-9._/]+$"#)) | fn.#Fn
 				S3?:       *{

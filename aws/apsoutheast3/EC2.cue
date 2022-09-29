@@ -6,6 +6,35 @@ import (
 )
 
 #EC2: {
+	#CapacityReservation: {
+		Type: "AWS::EC2::CapacityReservation"
+		Properties: {
+			AvailabilityZone:       *string | fn.#Fn
+			EbsOptimized?:          *bool | fn.#Fn
+			EndDate?:               *string | fn.#Fn
+			EndDateType?:           *("limited" | "unlimited") | fn.#Fn
+			EphemeralStorage?:      *bool | fn.#Fn
+			InstanceCount:          *int | fn.#Fn
+			InstanceMatchCriteria?: *("open" | "targeted") | fn.#Fn
+			InstancePlatform:       *("Linux with SQL Server Enterprise" | "Linux with SQL Server Standard" | "Linux with SQL Server Web" | "Linux/UNIX" | "RHEL with HA" | "RHEL with HA and SQL Server Enterprise" | "RHEL with HA and SQL Server Standard" | "RHEL with SQL Server Enterprise" | "RHEL with SQL Server Standard" | "RHEL with SQL Server Web" | "Red Hat Enterprise Linux" | "SUSE Linux" | "Windows" | "Windows with SQL Server" | "Windows with SQL Server Enterprise" | "Windows with SQL Server Standard" | "Windows with SQL Server Web") | fn.#Fn
+			InstanceType:           *("c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "c6g.12xlarge" | "c6g.16xlarge" | "c6g.2xlarge" | "c6g.4xlarge" | "c6g.8xlarge" | "c6g.large" | "c6g.medium" | "c6g.metal" | "c6g.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.xlarge" | "i3en.12xlarge" | "i3en.24xlarge" | "i3en.2xlarge" | "i3en.3xlarge" | "i3en.6xlarge" | "i3en.large" | "i3en.metal" | "i3en.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "m6g.12xlarge" | "m6g.16xlarge" | "m6g.2xlarge" | "m6g.4xlarge" | "m6g.8xlarge" | "m6g.large" | "m6g.medium" | "m6g.metal" | "m6g.xlarge" | "m6gd.12xlarge" | "m6gd.16xlarge" | "m6gd.2xlarge" | "m6gd.4xlarge" | "m6gd.8xlarge" | "m6gd.large" | "m6gd.medium" | "m6gd.metal" | "m6gd.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "r6g.12xlarge" | "r6g.16xlarge" | "r6g.2xlarge" | "r6g.4xlarge" | "r6g.8xlarge" | "r6g.large" | "r6g.medium" | "r6g.metal" | "r6g.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "x2idn.16xlarge" | "x2idn.24xlarge" | "x2idn.32xlarge" | "x2idn.metal" | "x2iedn.16xlarge" | "x2iedn.24xlarge" | "x2iedn.2xlarge" | "x2iedn.32xlarge" | "x2iedn.4xlarge" | "x2iedn.8xlarge" | "x2iedn.metal" | "x2iedn.xlarge") | fn.#Fn
+			OutPostArn?:            *string | fn.#Fn
+			PlacementGroupArn?:     *string | fn.#Fn
+			TagSpecifications?:     *[...{
+				ResourceType?: *string | fn.#Fn
+				Tags?:         *[...{
+					Key:   *string | fn.#Fn
+					Value: *string | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
+			Tenancy?: *("dedicated" | "default") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#CustomerGateway: {
 		Type: "AWS::EC2::CustomerGateway"
 		Properties: {
@@ -564,7 +593,31 @@ import (
 	}
 	#PlacementGroup: {
 		Type: "AWS::EC2::PlacementGroup"
-		Properties: Strategy?: *("cluster" | "partition" | "spread") | fn.#Fn
+		Properties: {
+			SpreadLevel?: *string | fn.#Fn
+			Strategy?:    *("cluster" | "partition" | "spread") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#PrefixList: {
+		Type: "AWS::EC2::PrefixList"
+		Properties: {
+			AddressFamily: *("IPv4" | "IPv6") | fn.#Fn
+			Entries?:      *[...{
+				Cidr:         *(strings.MinRunes(1) & strings.MaxRunes(46)) | fn.#Fn
+				Description?: *string | fn.#Fn
+			}] | fn.#If
+			MaxEntries:     *int | fn.#Fn
+			PrefixListName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+			Tags?:          *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
@@ -998,6 +1051,9 @@ import (
 	#TransitGatewayAttachment: {
 		Type: "AWS::EC2::TransitGatewayAttachment"
 		Properties: {
+			Options?: *{
+				[string]: _
+			} | fn.#Fn
 			SubnetIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			Tags?:     *[...{
 				Key:   *string | fn.#Fn
@@ -1005,6 +1061,81 @@ import (
 			}] | fn.#If
 			TransitGatewayId: *string | fn.#Fn
 			VpcId:            *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayConnect: {
+		Type: "AWS::EC2::TransitGatewayConnect"
+		Properties: {
+			Options: *{
+				Protocol?: *string | fn.#Fn
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransportTransitGatewayAttachmentId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastDomain: {
+		Type: "AWS::EC2::TransitGatewayMulticastDomain"
+		Properties: {
+			Options?: *{
+				[string]: _
+			} | fn.#Fn
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastDomainAssociation: {
+		Type: "AWS::EC2::TransitGatewayMulticastDomainAssociation"
+		Properties: {
+			SubnetId:                        *string | fn.#Fn
+			TransitGatewayAttachmentId:      *string | fn.#Fn
+			TransitGatewayMulticastDomainId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastGroupMember: {
+		Type: "AWS::EC2::TransitGatewayMulticastGroupMember"
+		Properties: {
+			GroupIpAddress:                  *string | fn.#Fn
+			NetworkInterfaceId:              *string | fn.#Fn
+			TransitGatewayMulticastDomainId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayMulticastGroupSource: {
+		Type: "AWS::EC2::TransitGatewayMulticastGroupSource"
+		Properties: {
+			GroupIpAddress:                  *string | fn.#Fn
+			NetworkInterfaceId:              *string | fn.#Fn
+			TransitGatewayMulticastDomainId: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -1058,6 +1189,28 @@ import (
 		Properties: {
 			TransitGatewayAttachmentId: *string | fn.#Fn
 			TransitGatewayRouteTableId: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TransitGatewayVpcAttachment: {
+		Type: "AWS::EC2::TransitGatewayVpcAttachment"
+		Properties: {
+			AddSubnetIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Options?:      *{
+				[string]: _
+			} | fn.#Fn
+			RemoveSubnetIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SubnetIds:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:            *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TransitGatewayId: *string | fn.#Fn
+			VpcId:            *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

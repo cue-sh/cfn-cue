@@ -187,6 +187,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				RoleArn?:        *string | fn.#Fn
 				UserDataShared?: *bool | fn.#Fn
 			} | fn.#If
+			AuthSessionValidity?:                      *int | fn.#Fn
 			CallbackURLs?:                             [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			ClientName?:                               *string | fn.#Fn
 			DefaultRedirectURI?:                       *string | fn.#Fn

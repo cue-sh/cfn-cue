@@ -6,7 +6,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#AllowList: {
 		Type: "AWS::Macie::AllowList"
 		Properties: {
-			Criteria:     *{} | fn.#If
+			Criteria: *{
+				Regex?:       *string | fn.#Fn
+				S3WordsList?: *{
+					BucketName: *string | fn.#Fn
+					ObjectKey:  *string | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 			Description?: *string | fn.#Fn
 			Name:         *string | fn.#Fn
 			Tags?:        *[...{

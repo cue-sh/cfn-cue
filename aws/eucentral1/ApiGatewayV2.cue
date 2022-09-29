@@ -158,8 +158,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				TruststoreVersion?: *string | fn.#Fn
 			} | fn.#If
 			Tags?: *{
-				[string]: *string | fn.#Fn
-			} | fn.#If
+				[string]: _
+			} | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

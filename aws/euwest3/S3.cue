@@ -403,9 +403,16 @@ import (
 						IsEnabled: *bool | fn.#Fn
 					} | fn.#If
 					S3BucketDestination?: *{
-						AccountId:           *string | fn.#Fn
-						Arn:                 *string | fn.#Fn
-						Encryption?:         *{} | fn.#If
+						AccountId:   *string | fn.#Fn
+						Arn:         *string | fn.#Fn
+						Encryption?: *{
+							SSEKMS?: *{
+								KeyId: *string | fn.#Fn
+							} | fn.#If
+							SSES3?: *{
+								[string]: _
+							} | fn.#Fn
+						} | fn.#If
 						Format:              *("CSV" | "Parquet") | fn.#Fn
 						OutputSchemaVersion: *("V_1") | fn.#Fn
 						Prefix?:             *string | fn.#Fn

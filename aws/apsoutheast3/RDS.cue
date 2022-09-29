@@ -94,8 +94,9 @@ import (
 			CACertificateIdentifier?:            *string | fn.#Fn
 			CharacterSetName?:                   *string | fn.#Fn
 			CopyTagsToSnapshot?:                 *bool | fn.#Fn
+			CustomIAMInstanceProfile?:           *string | fn.#Fn
 			DBClusterIdentifier?:                *string | fn.#Fn
-			DBInstanceClass:                     *("db.m5.12xlarge" | "db.m5.16xlarge" | "db.m5.24xlarge" | "db.m5.2xlarge" | "db.m5.4xlarge" | "db.m5.8xlarge" | "db.m5.large" | "db.m5.xlarge" | "db.r5.12xlarge" | "db.r5.12xlarge.tpc2.mem2x" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.2xlarge.tpc1.mem2x" | "db.r5.2xlarge.tpc2.mem4x" | "db.r5.2xlarge.tpc2.mem8x" | "db.r5.4xlarge" | "db.r5.4xlarge.tpc2.mem2x" | "db.r5.4xlarge.tpc2.mem3x" | "db.r5.4xlarge.tpc2.mem4x" | "db.r5.6xlarge.tpc2.mem4x" | "db.r5.8xlarge" | "db.r5.8xlarge.tpc2.mem3x" | "db.r5.large" | "db.r5.large.tpc1.mem2x" | "db.r5.xlarge" | "db.r5.xlarge.tpc2.mem2x" | "db.r5.xlarge.tpc2.mem4x" | "db.r5b.8xlarge" | "db.t3.2xlarge" | "db.t3.large" | "db.t3.medium" | "db.t3.micro" | "db.t3.small" | "db.t3.xlarge") | fn.#Fn
+			DBInstanceClass?:                    *("db.m5.12xlarge" | "db.m5.16xlarge" | "db.m5.24xlarge" | "db.m5.2xlarge" | "db.m5.4xlarge" | "db.m5.8xlarge" | "db.m5.large" | "db.m5.xlarge" | "db.r5.12xlarge" | "db.r5.12xlarge.tpc2.mem2x" | "db.r5.16xlarge" | "db.r5.24xlarge" | "db.r5.2xlarge" | "db.r5.2xlarge.tpc1.mem2x" | "db.r5.2xlarge.tpc2.mem4x" | "db.r5.2xlarge.tpc2.mem8x" | "db.r5.4xlarge" | "db.r5.4xlarge.tpc2.mem2x" | "db.r5.4xlarge.tpc2.mem3x" | "db.r5.4xlarge.tpc2.mem4x" | "db.r5.6xlarge.tpc2.mem4x" | "db.r5.8xlarge" | "db.r5.8xlarge.tpc2.mem3x" | "db.r5.large" | "db.r5.large.tpc1.mem2x" | "db.r5.xlarge" | "db.r5.xlarge.tpc2.mem2x" | "db.r5.xlarge.tpc2.mem4x" | "db.r5b.8xlarge" | "db.t3.2xlarge" | "db.t3.large" | "db.t3.medium" | "db.t3.micro" | "db.t3.small" | "db.t3.xlarge") | fn.#Fn
 			DBInstanceIdentifier?:               *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
 			DBName?:                             *(=~#"^$|^[_a-zA-Z][a-zA-Z0-9_]{0,63}$"#) | fn.#Fn
 			DBParameterGroupName?:               *string | fn.#Fn
@@ -109,7 +110,7 @@ import (
 			EnableCloudwatchLogsExports?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			EnableIAMDatabaseAuthentication?:    *bool | fn.#Fn
 			EnablePerformanceInsights?:          *bool | fn.#Fn
-			Engine?:                             *(=~#"(?i)(aurora|aurora-mysql|aurora-postgresql|mariadb|mysql|oracle-ee|oracle-se2|oracle-se1|oracle-se|postgres|sqlserver-ee|sqlserver-se|sqlserver-ex|sqlserver-web)$"#) | fn.#Fn
+			Engine?:                             *(=~#"(?i)(custom-)?(aurora|aurora-mysql|aurora-postgresql|mariadb|mysql|oracle-ee|oracle-ee-cdb|oracle-se2|oracle-se2-cdb|oracle-se1|oracle-se|postgres|sqlserver-ee|sqlserver-se|sqlserver-ex|sqlserver-web)$"#) | fn.#Fn
 			EngineVersion?:                      *string | fn.#Fn
 			Iops?:                               *int | fn.#Fn
 			KmsKeyId?:                           *string | fn.#Fn
@@ -120,6 +121,7 @@ import (
 			MonitoringInterval?:                 *(0 | 1 | 5 | 10 | 15 | 30 | 60) | fn.#Fn
 			MonitoringRoleArn?:                  *string | fn.#Fn
 			MultiAZ?:                            *bool | fn.#Fn
+			NcharCharacterSetName?:              *string | fn.#Fn
 			OptionGroupName?:                    *string | fn.#Fn
 			PerformanceInsightsKMSKeyId?:        *string | fn.#Fn
 			PerformanceInsightsRetentionPeriod?: *(7 | 731) | fn.#Fn
@@ -156,8 +158,8 @@ import (
 			Description: *string | fn.#Fn
 			Family:      *string | fn.#Fn
 			Parameters?: *{
-				[string]: *string | fn.#Fn
-			} | fn.#If
+				[string]: _
+			} | fn.#Fn
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
@@ -226,11 +228,16 @@ import (
 	#EventSubscription: {
 		Type: "AWS::RDS::EventSubscription"
 		Properties: {
-			Enabled?:         *bool | fn.#Fn
-			EventCategories?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SnsTopicArn:      *string | fn.#Fn
-			SourceIds?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			SourceType?:      *string | fn.#Fn
+			Enabled?:          *bool | fn.#Fn
+			EventCategories?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SnsTopicArn:       *string | fn.#Fn
+			SourceIds?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			SourceType?:       *string | fn.#Fn
+			SubscriptionName?: *string | fn.#Fn
+			Tags?:             *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -241,9 +248,9 @@ import (
 	#OptionGroup: {
 		Type: "AWS::RDS::OptionGroup"
 		Properties: {
-			EngineName:           *string | fn.#Fn
-			MajorEngineVersion:   *string | fn.#Fn
-			OptionConfigurations: *[...{
+			EngineName:            *string | fn.#Fn
+			MajorEngineVersion:    *string | fn.#Fn
+			OptionConfigurations?: *[...{
 				DBSecurityGroupMemberships?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				OptionName:                  *string | fn.#Fn
 				OptionSettings?:             *[...{

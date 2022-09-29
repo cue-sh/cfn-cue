@@ -142,4 +142,35 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#MetricStream: {
+		Type: "AWS::CloudWatch::MetricStream"
+		Properties: {
+			ExcludeFilters?: *[...{
+				Namespace: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+			}] | fn.#If
+			FirehoseArn:     *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+			IncludeFilters?: *[...{
+				Namespace: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+			}] | fn.#If
+			Name?:                     *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+			OutputFormat:              *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+			RoleArn:                   *(strings.MinRunes(20) & strings.MaxRunes(2048)) | fn.#Fn
+			StatisticsConfigurations?: *[...{
+				AdditionalStatistics: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				IncludeMetrics:       *[...{
+					MetricName: *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+					Namespace:  *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

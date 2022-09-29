@@ -3,48 +3,6 @@ package apsoutheast3
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #CloudFront: {
-	#CachePolicy: {
-		Type: "AWS::CloudFront::CachePolicy"
-		Properties: CachePolicyConfig: *{
-			Comment?:                                 *string | fn.#Fn
-			DefaultTTL:                               *number | fn.#Fn
-			MaxTTL:                                   *number | fn.#Fn
-			MinTTL:                                   *number | fn.#Fn
-			Name:                                     *string | fn.#Fn
-			ParametersInCacheKeyAndForwardedToOrigin: *{
-				CookiesConfig: *{
-					CookieBehavior: *(=~#"^(none|whitelist|allExcept|all)$"#) | fn.#Fn
-					Cookies?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				} | fn.#If
-				EnableAcceptEncodingBrotli?: *bool | fn.#Fn
-				EnableAcceptEncodingGzip:    *bool | fn.#Fn
-				HeadersConfig:               *{
-					HeaderBehavior: *(=~#"^(none|whitelist)$"#) | fn.#Fn
-					Headers?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				} | fn.#If
-				QueryStringsConfig: *{
-					QueryStringBehavior: *(=~#"^(none|whitelist|allExcept|all)$"#) | fn.#Fn
-					QueryStrings?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				} | fn.#If
-			} | fn.#If
-		} | fn.#If
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#CloudFrontOriginAccessIdentity: {
-		Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
-		Properties: CloudFrontOriginAccessIdentityConfig: *{
-			Comment: *string | fn.#Fn
-		} | fn.#If
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
 	#Distribution: {
 		Type: "AWS::CloudFront::Distribution"
 		Properties: {
@@ -72,9 +30,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						FunctionARN?: *string | fn.#Fn
 					}] | fn.#If
 					LambdaFunctionAssociations?: *[...{
-						EventType?:         *string | fn.#Fn
-						IncludeBody?:       *bool | fn.#Fn
-						LambdaFunctionARN?: *string | fn.#Fn
+						EventType?:        *("origin-request" | "origin-response" | "viewer-request" | "viewer-response") | fn.#Fn
+						IncludeBody?:      *bool | fn.#Fn
+						LambdaFunctionARN: *string | fn.#Fn
 					}] | fn.#If
 					MaxTTL?:                  *number | fn.#Fn
 					MinTTL?:                  *number | fn.#Fn
@@ -86,13 +44,13 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					TargetOriginId:           *string | fn.#Fn
 					TrustedKeyGroups?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					TrustedSigners?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					ViewerProtocolPolicy:     *string | fn.#Fn
+					ViewerProtocolPolicy:     *("allow-all" | "https-only" | "redirect-to-https") | fn.#Fn
 				}] | fn.#If
 				Comment?:              *string | fn.#Fn
 				CustomErrorResponses?: *[...{
 					ErrorCachingMinTTL?: *number | fn.#Fn
-					ErrorCode:           *int | fn.#Fn
-					ResponseCode?:       *int | fn.#Fn
+					ErrorCode:           *(400 | 403 | 404 | 405 | 414 | 416 | 500 | 501 | 502 | 503 | 504) | fn.#Fn
+					ResponseCode?:       *(200 | 400 | 403 | 404 | 405 | 414 | 416 | 500 | 501 | 502 | 503 | 504) | fn.#Fn
 					ResponsePagePath?:   *string | fn.#Fn
 				}] | fn.#If
 				CustomOrigin?: *{
@@ -123,9 +81,9 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						FunctionARN?: *string | fn.#Fn
 					}] | fn.#If
 					LambdaFunctionAssociations?: *[...{
-						EventType?:         *string | fn.#Fn
-						IncludeBody?:       *bool | fn.#Fn
-						LambdaFunctionARN?: *string | fn.#Fn
+						EventType?:        *("origin-request" | "origin-response" | "viewer-request" | "viewer-response") | fn.#Fn
+						IncludeBody?:      *bool | fn.#Fn
+						LambdaFunctionARN: *string | fn.#Fn
 					}] | fn.#If
 					MaxTTL?:                  *number | fn.#Fn
 					MinTTL?:                  *number | fn.#Fn
@@ -136,11 +94,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					TargetOriginId:           *string | fn.#Fn
 					TrustedKeyGroups?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					TrustedSigners?:          [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					ViewerProtocolPolicy:     *string | fn.#Fn
+					ViewerProtocolPolicy:     *("allow-all" | "https-only" | "redirect-to-https") | fn.#Fn
 				} | fn.#If
 				DefaultRootObject?: *string | fn.#Fn
 				Enabled:            *bool | fn.#Fn
-				HttpVersion?:       *string | fn.#Fn
+				HttpVersion?:       *("http1.1" | "http2" | "http2and3" | "http3") | fn.#Fn
 				IPV6Enabled?:       *bool | fn.#Fn
 				Logging?:           *{
 					Bucket:          *string | fn.#Fn
@@ -165,16 +123,16 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					}] | fn.#If
 					Quantity: *int | fn.#Fn
 				} | fn.#If
-				Origins?: *[...{
+				Origins: *[...{
 					ConnectionAttempts?: *int | fn.#Fn
 					ConnectionTimeout?:  *int | fn.#Fn
 					CustomOriginConfig?: *{
 						HTTPPort?:               *int | fn.#Fn
 						HTTPSPort?:              *int | fn.#Fn
 						OriginKeepaliveTimeout?: *int | fn.#Fn
-						OriginProtocolPolicy:    *string | fn.#Fn
+						OriginProtocolPolicy:    *("http-only" | "https-only" | "match-viewer") | fn.#Fn
 						OriginReadTimeout?:      *int | fn.#Fn
-						OriginSSLProtocols?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						OriginSSLProtocols?:     [...(*("SSLv3" | "TLSv1" | "TLSv1.1" | "TLSv1.2") | fn.#Fn)] | (*("SSLv3" | "TLSv1" | "TLSv1.1" | "TLSv1.2") | fn.#Fn)
 					} | fn.#If
 					DomainName:             *string | fn.#Fn
 					Id:                     *string | fn.#Fn
@@ -192,11 +150,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 						OriginAccessIdentity?: *string | fn.#Fn
 					} | fn.#If
 				}] | fn.#If
-				PriceClass?:   *string | fn.#Fn
+				PriceClass?:   *("PriceClass_100" | "PriceClass_200" | "PriceClass_All") | fn.#Fn
 				Restrictions?: *{
 					GeoRestriction: *{
-						Locations?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-						RestrictionType: *string | fn.#Fn
+						Locations?:      [...(*("AD" | "AE" | "AF" | "AG" | "AI" | "AL" | "AM" | "AO" | "AQ" | "AR" | "AS" | "AT" | "AU" | "AW" | "AX" | "AZ" | "BA" | "BB" | "BD" | "BE" | "BF" | "BG" | "BH" | "BI" | "BJ" | "BL" | "BM" | "BN" | "BO" | "BQ" | "BR" | "BS" | "BT" | "BV" | "BW" | "BY" | "BZ" | "CA" | "CC" | "CD" | "CF" | "CG" | "CH" | "CI" | "CK" | "CL" | "CM" | "CN" | "CO" | "CR" | "CU" | "CV" | "CW" | "CX" | "CY" | "CZ" | "DE" | "DJ" | "DK" | "DM" | "DO" | "DZ" | "EC" | "EE" | "EG" | "EH" | "ER" | "ES" | "ET" | "FI" | "FJ" | "FK" | "FM" | "FO" | "FR" | "GA" | "GB" | "GD" | "GE" | "GF" | "GG" | "GH" | "GI" | "GL" | "GM" | "GN" | "GP" | "GQ" | "GR" | "GS" | "GT" | "GU" | "GW" | "GY" | "HK" | "HM" | "HN" | "HR" | "HT" | "HU" | "ID" | "IE" | "IL" | "IM" | "IN" | "IO" | "IQ" | "IR" | "IS" | "IT" | "JE" | "JM" | "JO" | "JP" | "KE" | "KG" | "KH" | "KI" | "KM" | "KN" | "KP" | "KR" | "KW" | "KY" | "KZ" | "LA" | "LB" | "LC" | "LI" | "LK" | "LR" | "LS" | "LT" | "LU" | "LV" | "LY" | "MA" | "MC" | "MD" | "ME" | "MF" | "MG" | "MH" | "MK" | "ML" | "MM" | "MN" | "MO" | "MP" | "MQ" | "MR" | "MS" | "MT" | "MU" | "MV" | "MW" | "MX" | "MY" | "MZ" | "NA" | "NC" | "NE" | "NF" | "NG" | "NI" | "NL" | "NO" | "NP" | "NR" | "NU" | "NZ" | "OM" | "PA" | "PE" | "PF" | "PG" | "PH" | "PK" | "PL" | "PM" | "PN" | "PR" | "PS" | "PT" | "PW" | "PY" | "QA" | "RE" | "RO" | "RS" | "RU" | "RW" | "SA" | "SB" | "SC" | "SD" | "SE" | "SG" | "SH" | "SI" | "SJ" | "SK" | "SL" | "SM" | "SN" | "SO" | "SR" | "SS" | "ST" | "SV" | "SX" | "SY" | "SZ" | "TC" | "TD" | "TF" | "TG" | "TH" | "TJ" | "TK" | "TL" | "TM" | "TN" | "TO" | "TR" | "TT" | "TV" | "TW" | "TZ" | "UA" | "UG" | "UM" | "US" | "UY" | "UZ" | "VA" | "VC" | "VE" | "VG" | "VI" | "VN" | "VU" | "WF" | "WS" | "YE" | "YT" | "ZA" | "ZM" | "ZW") | fn.#Fn)] | (*("AD" | "AE" | "AF" | "AG" | "AI" | "AL" | "AM" | "AO" | "AQ" | "AR" | "AS" | "AT" | "AU" | "AW" | "AX" | "AZ" | "BA" | "BB" | "BD" | "BE" | "BF" | "BG" | "BH" | "BI" | "BJ" | "BL" | "BM" | "BN" | "BO" | "BQ" | "BR" | "BS" | "BT" | "BV" | "BW" | "BY" | "BZ" | "CA" | "CC" | "CD" | "CF" | "CG" | "CH" | "CI" | "CK" | "CL" | "CM" | "CN" | "CO" | "CR" | "CU" | "CV" | "CW" | "CX" | "CY" | "CZ" | "DE" | "DJ" | "DK" | "DM" | "DO" | "DZ" | "EC" | "EE" | "EG" | "EH" | "ER" | "ES" | "ET" | "FI" | "FJ" | "FK" | "FM" | "FO" | "FR" | "GA" | "GB" | "GD" | "GE" | "GF" | "GG" | "GH" | "GI" | "GL" | "GM" | "GN" | "GP" | "GQ" | "GR" | "GS" | "GT" | "GU" | "GW" | "GY" | "HK" | "HM" | "HN" | "HR" | "HT" | "HU" | "ID" | "IE" | "IL" | "IM" | "IN" | "IO" | "IQ" | "IR" | "IS" | "IT" | "JE" | "JM" | "JO" | "JP" | "KE" | "KG" | "KH" | "KI" | "KM" | "KN" | "KP" | "KR" | "KW" | "KY" | "KZ" | "LA" | "LB" | "LC" | "LI" | "LK" | "LR" | "LS" | "LT" | "LU" | "LV" | "LY" | "MA" | "MC" | "MD" | "ME" | "MF" | "MG" | "MH" | "MK" | "ML" | "MM" | "MN" | "MO" | "MP" | "MQ" | "MR" | "MS" | "MT" | "MU" | "MV" | "MW" | "MX" | "MY" | "MZ" | "NA" | "NC" | "NE" | "NF" | "NG" | "NI" | "NL" | "NO" | "NP" | "NR" | "NU" | "NZ" | "OM" | "PA" | "PE" | "PF" | "PG" | "PH" | "PK" | "PL" | "PM" | "PN" | "PR" | "PS" | "PT" | "PW" | "PY" | "QA" | "RE" | "RO" | "RS" | "RU" | "RW" | "SA" | "SB" | "SC" | "SD" | "SE" | "SG" | "SH" | "SI" | "SJ" | "SK" | "SL" | "SM" | "SN" | "SO" | "SR" | "SS" | "ST" | "SV" | "SX" | "SY" | "SZ" | "TC" | "TD" | "TF" | "TG" | "TH" | "TJ" | "TK" | "TL" | "TM" | "TN" | "TO" | "TR" | "TT" | "TV" | "TW" | "TZ" | "UA" | "UG" | "UM" | "US" | "UY" | "UZ" | "VA" | "VC" | "VE" | "VG" | "VI" | "VN" | "VU" | "WF" | "WS" | "YE" | "YT" | "ZA" | "ZM" | "ZW") | fn.#Fn)
+						RestrictionType: *("blacklist" | "none" | "whitelist") | fn.#Fn
 					} | fn.#If
 				} | fn.#If
 				S3Origin?: *{
@@ -207,8 +165,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 					AcmCertificateArn?:            *string | fn.#Fn
 					CloudFrontDefaultCertificate?: *bool | fn.#Fn
 					IamCertificateId?:             *string | fn.#Fn
-					MinimumProtocolVersion?:       *string | fn.#Fn
-					SslSupportMethod?:             *string | fn.#Fn
+					MinimumProtocolVersion?:       *("SSLv3" | "TLSv1" | "TLSv1.1_2016" | "TLSv1.2_2018" | "TLSv1.2_2019" | "TLSv1.2_2021" | "TLSv1_2016") | fn.#Fn
+					SslSupportMethod?:             *("sni-only" | "static-ip" | "vip") | fn.#Fn
 				} | fn.#If
 				WebACLId?: *string | fn.#Fn
 			} | fn.#If
@@ -217,36 +175,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Value: *string | fn.#Fn
 			}] | fn.#If
 		}
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#Function: {
-		Type: "AWS::CloudFront::Function"
-		Properties: {
-			AutoPublish?:    *bool | fn.#Fn
-			FunctionCode?:   *string | fn.#Fn
-			FunctionConfig?: *{
-				Comment: *string | fn.#Fn
-				Runtime: *string | fn.#Fn
-			} | fn.#If
-			Name: *string | fn.#Fn
-		}
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#KeyGroup: {
-		Type: "AWS::CloudFront::KeyGroup"
-		Properties: KeyGroupConfig: *{
-			Comment?: *string | fn.#Fn
-			Items:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Name:     *string | fn.#Fn
-		} | fn.#If
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
@@ -262,64 +190,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			SigningBehavior:               *(=~#"^(never|no-override|always)$"#) | fn.#Fn
 			SigningProtocol:               *(=~#"^(sigv4)$"#) | fn.#Fn
 		} | fn.#If
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#OriginRequestPolicy: {
-		Type: "AWS::CloudFront::OriginRequestPolicy"
-		Properties: OriginRequestPolicyConfig: *{
-			Comment?:      *string | fn.#Fn
-			CookiesConfig: *{
-				CookieBehavior: *(=~#"^(none|whitelist|all)$"#) | fn.#Fn
-				Cookies?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			} | fn.#If
-			HeadersConfig: *{
-				HeaderBehavior: *(=~#"^(none|whitelist|allViewer|allViewerAndWhitelistCloudFront)$"#) | fn.#Fn
-				Headers?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			} | fn.#If
-			Name:               *string | fn.#Fn
-			QueryStringsConfig: *{
-				QueryStringBehavior: *(=~#"^(none|whitelist|all)$"#) | fn.#Fn
-				QueryStrings?:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			} | fn.#If
-		} | fn.#If
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#PublicKey: {
-		Type: "AWS::CloudFront::PublicKey"
-		Properties: PublicKeyConfig: *{
-			CallerReference: *string | fn.#Fn
-			Comment?:        *string | fn.#Fn
-			EncodedKey:      *string | fn.#Fn
-			Name:            *string | fn.#Fn
-		} | fn.#If
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#RealtimeLogConfig: {
-		Type: "AWS::CloudFront::RealtimeLogConfig"
-		Properties: {
-			EndPoints: *[...{
-				KinesisStreamConfig: *{
-					RoleArn:   *string | fn.#Fn
-					StreamArn: *string | fn.#Fn
-				} | fn.#If
-				StreamType: *string | fn.#Fn
-			}] | fn.#If
-			Fields:       [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Name:         *string | fn.#Fn
-			SamplingRate: *(>=1 & <=100) | fn.#Fn
-		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"
@@ -389,39 +259,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				SamplingRate?: *number | fn.#Fn
 			} | fn.#If
 		} | fn.#If
-		DependsOn?:           string | [...string]
-		DeletionPolicy?:      "Delete" | "Retain"
-		UpdateReplacePolicy?: "Delete" | "Retain"
-		Metadata?: [string]: _
-		Condition?: string
-	}
-	#StreamingDistribution: {
-		Type: "AWS::CloudFront::StreamingDistribution"
-		Properties: {
-			StreamingDistributionConfig: *{
-				Aliases?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				Comment:  *string | fn.#Fn
-				Enabled:  *bool | fn.#Fn
-				Logging?: *{
-					Bucket:  *string | fn.#Fn
-					Enabled: *bool | fn.#Fn
-					Prefix:  *string | fn.#Fn
-				} | fn.#If
-				PriceClass?: *string | fn.#Fn
-				S3Origin:    *{
-					DomainName:           *string | fn.#Fn
-					OriginAccessIdentity: *string | fn.#Fn
-				} | fn.#If
-				TrustedSigners: *{
-					AwsAccountNumbers?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-					Enabled:            *bool | fn.#Fn
-				} | fn.#If
-			} | fn.#If
-			Tags: *[...{
-				Key:   *string | fn.#Fn
-				Value: *string | fn.#Fn
-			}] | fn.#If
-		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"

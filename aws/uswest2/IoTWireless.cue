@@ -274,7 +274,8 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			ThingArn?: *string | fn.#Fn
+			ThingArn?:  *string | fn.#Fn
+			ThingName?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

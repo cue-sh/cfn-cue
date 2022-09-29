@@ -12,7 +12,7 @@ import (
 			AddonName:              *string | fn.#Fn
 			AddonVersion?:          *string | fn.#Fn
 			ClusterName:            *string | fn.#Fn
-			ResolveConflicts?:      *("NONE" | "OVERWRITE") | fn.#Fn
+			ResolveConflicts?:      *("NONE" | "OVERWRITE" | "PRESERVE") | fn.#Fn
 			ServiceAccountRoleArn?: *string | fn.#Fn
 			Tags?:                  *[...{
 				Key:   *string | fn.#Fn
@@ -46,7 +46,11 @@ import (
 					}] | fn.#If
 				} | fn.#If
 			} | fn.#If
-			Name?:              *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[0-9A-Za-z][A-Za-z0-9\-_]*"#)) | fn.#Fn
+			Name?:          *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[0-9A-Za-z][A-Za-z0-9\-_]*"#)) | fn.#Fn
+			OutpostConfig?: *{
+				ControlPlaneInstanceType: *string | fn.#Fn
+				OutpostArns:              [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			} | fn.#If
 			ResourcesVpcConfig: *{
 				EndpointPrivateAccess?: *bool | fn.#Fn
 				EndpointPublicAccess?:  *bool | fn.#Fn

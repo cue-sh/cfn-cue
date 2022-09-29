@@ -109,7 +109,7 @@ import (
 			EnableCloudwatchLogsExports?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			EnableIAMDatabaseAuthentication?:    *bool | fn.#Fn
 			EnablePerformanceInsights?:          *bool | fn.#Fn
-			Engine?:                             *(=~#"(?i)(aurora|aurora-mysql|aurora-postgresql|mariadb|mysql|oracle-ee|oracle-se2|oracle-se1|oracle-se|postgres|sqlserver-ee|sqlserver-se|sqlserver-ex|sqlserver-web)$"#) | fn.#Fn
+			Engine?:                             *(=~#"(?i)(custom-)?(aurora|aurora-mysql|aurora-postgresql|mariadb|mysql|oracle-ee|oracle-ee-cdb|oracle-se2|oracle-se2-cdb|oracle-se1|oracle-se|postgres|sqlserver-ee|sqlserver-se|sqlserver-ex|sqlserver-web)$"#) | fn.#Fn
 			EngineVersion?:                      *string | fn.#Fn
 			Iops?:                               *int | fn.#Fn
 			KmsKeyId?:                           *string | fn.#Fn

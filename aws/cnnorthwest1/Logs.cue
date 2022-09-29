@@ -9,7 +9,7 @@ import (
 	#Destination: {
 		Type: "AWS::Logs::Destination"
 		Properties: {
-			DestinationName:   *string | fn.#Fn
+			DestinationName:   *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[^:*]{1,512}$"#)) | fn.#Fn
 			DestinationPolicy: *string | fn.#Fn
 			RoleArn:           *string | fn.#Fn
 			TargetArn:         *string | fn.#Fn
@@ -25,7 +25,7 @@ import (
 		Properties: {
 			KmsKeyId?:        *(=~#"^arn:[a-z0-9-]+:kms:[a-z0-9-]+:\d{12}:(key|alias)/.+\Z"#) | fn.#Fn
 			LogGroupName?:    *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[.\-_/#A-Za-z0-9]{1,512}\Z"#)) | fn.#Fn
-			RetentionInDays?: *(1 | 3 | 5 | 7 | 14 | 30 | 60 | 90 | 120 | 150 | 180 | 365 | 400 | 545 | 731 | 1827 | 3653) | fn.#Fn
+			RetentionInDays?: *(1 | 3 | 5 | 7 | 14 | 30 | 60 | 90 | 120 | 150 | 180 | 365 | 400 | 545 | 731 | 1827 | 2192 | 2557 | 2922 | 3288 | 3653) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -12,7 +12,7 @@ import (
 			AddonName:              *string | fn.#Fn
 			AddonVersion?:          *string | fn.#Fn
 			ClusterName:            *string | fn.#Fn
-			ResolveConflicts?:      *("NONE" | "OVERWRITE") | fn.#Fn
+			ResolveConflicts?:      *("NONE" | "OVERWRITE" | "PRESERVE") | fn.#Fn
 			ServiceAccountRoleArn?: *string | fn.#Fn
 			Tags?:                  *[...{
 				Key:   *string | fn.#Fn

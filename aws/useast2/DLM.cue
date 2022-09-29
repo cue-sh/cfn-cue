@@ -43,6 +43,15 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				ResourceLocations?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				ResourceTypes?:     [...(*("INSTANCE" | "VOLUME") | fn.#Fn)] | (*("INSTANCE" | "VOLUME") | fn.#Fn)
 				Schedules?:         *[...{
+					ArchiveRule?: *{
+						RetainRule: *{
+							RetentionArchiveTier: *{
+								Count?:        *int | fn.#Fn
+								Interval?:     *int | fn.#Fn
+								IntervalUnit?: *string | fn.#Fn
+							} | fn.#If
+						} | fn.#If
+					} | fn.#If
 					CopyTags?:   *bool | fn.#Fn
 					CreateRule?: *{
 						CronExpression?: *string | fn.#Fn

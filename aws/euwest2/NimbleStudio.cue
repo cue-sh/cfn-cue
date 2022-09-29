@@ -81,29 +81,8 @@ import (
 		Type: "AWS::NimbleStudio::StudioComponent"
 		Properties: {
 			Configuration?: *{
-				ActiveDirectoryConfiguration?: *{
-					ComputerAttributes?: *[...{
-						Name?:  *string | fn.#Fn
-						Value?: *string | fn.#Fn
-					}] | fn.#If
-					DirectoryId?:                         *string | fn.#Fn
-					OrganizationalUnitDistinguishedName?: *string | fn.#Fn
-				} | fn.#If
-				ComputeFarmConfiguration?: *{
-					ActiveDirectoryUser?: *string | fn.#Fn
-					Endpoint?:            *string | fn.#Fn
-				} | fn.#If
-				LicenseServiceConfiguration?: *{
-					Endpoint?: *string | fn.#Fn
-				} | fn.#If
-				SharedFileSystemConfiguration?: *{
-					Endpoint?:          *string | fn.#Fn
-					FileSystemId?:      *string | fn.#Fn
-					LinuxMountPoint?:   *string | fn.#Fn
-					ShareName?:         *string | fn.#Fn
-					WindowsMountDrive?: *string | fn.#Fn
-				} | fn.#If
-			} | fn.#If
+				[string]: _
+			} | fn.#Fn
 			Description?:           *string | fn.#Fn
 			Ec2SecurityGroupIds?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			InitializationScripts?: *[...{
@@ -113,13 +92,15 @@ import (
 				Script?:                       *(strings.MinRunes(1) & strings.MaxRunes(5120)) | fn.#Fn
 			}] | fn.#If
 			Name:              *string | fn.#Fn
+			RuntimeRoleArn?:   *string | fn.#Fn
 			ScriptParameters?: *[...{
 				Key?:   *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z_][a-zA-Z0-9_]+$"#)) | fn.#Fn
 				Value?: *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
 			}] | fn.#If
-			StudioId: *string | fn.#Fn
-			Subtype?: *("AWS_MANAGED_MICROSOFT_AD" | "AMAZON_FSX_FOR_WINDOWS" | "AMAZON_FSX_FOR_LUSTRE" | "CUSTOM") | fn.#Fn
-			Tags?:    *{
+			SecureInitializationRoleArn?: *string | fn.#Fn
+			StudioId:                     *string | fn.#Fn
+			Subtype?:                     *("AWS_MANAGED_MICROSOFT_AD" | "AMAZON_FSX_FOR_WINDOWS" | "AMAZON_FSX_FOR_LUSTRE" | "CUSTOM") | fn.#Fn
+			Tags?:                        *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
 			Type: *("ACTIVE_DIRECTORY" | "SHARED_FILE_SYSTEM" | "COMPUTE_FARM" | "LICENSE_SERVICE" | "CUSTOM") | fn.#Fn

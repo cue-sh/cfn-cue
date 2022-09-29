@@ -99,16 +99,19 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			EndpointConfigName?: *string | fn.#Fn
 			KmsKeyId?:           *string | fn.#Fn
 			ProductionVariants:  *[...{
-				AcceleratorType?:      *string | fn.#Fn
-				InitialInstanceCount?: *int | fn.#Fn
-				InitialVariantWeight:  *number | fn.#Fn
-				InstanceType?:         *string | fn.#Fn
-				ModelName:             *string | fn.#Fn
-				ServerlessConfig?:     *{
+				AcceleratorType?:                             *string | fn.#Fn
+				ContainerStartupHealthCheckTimeoutInSeconds?: *int | fn.#Fn
+				InitialInstanceCount?:                        *int | fn.#Fn
+				InitialVariantWeight:                         *number | fn.#Fn
+				InstanceType?:                                *string | fn.#Fn
+				ModelDataDownloadTimeoutInSeconds?:           *int | fn.#Fn
+				ModelName:                                    *string | fn.#Fn
+				ServerlessConfig?:                            *{
 					MaxConcurrency: *int | fn.#Fn
 					MemorySizeInMB: *int | fn.#Fn
 				} | fn.#If
-				VariantName: *string | fn.#Fn
+				VariantName:     *string | fn.#Fn
+				VolumeSizeInGB?: *int | fn.#Fn
 			}] | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn

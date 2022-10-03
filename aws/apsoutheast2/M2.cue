@@ -1,4 +1,4 @@
-package euwest1
+package apsoutheast2
 
 import (
 	"github.com/cue-sh/cfn-cue/aws/fn"

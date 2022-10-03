@@ -9,44 +9,60 @@ import (
 	#DBCluster: {
 		Type: "AWS::RDS::DBCluster"
 		Properties: {
-			AssociatedRoles?: *[...{
+			AllocatedStorage?: *int | fn.#Fn
+			AssociatedRoles?:  *[...{
 				FeatureName?: *string | fn.#Fn
 				RoleArn:      *string | fn.#Fn
 			}] | fn.#If
-			AvailabilityZones?:               [...(*(=~#"[a-z0-9-]+"#) | fn.#Fn)] | (*(=~#"[a-z0-9-]+"#) | fn.#Fn)
-			BacktrackWindow?:                 *int | fn.#Fn
-			BackupRetentionPeriod?:           *(>=1 & <=35) | fn.#Fn
-			CopyTagsToSnapshot?:              *bool | fn.#Fn
-			DBClusterIdentifier?:             *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
-			DBClusterParameterGroupName?:     *string | fn.#Fn
-			DBSubnetGroupName?:               *string | fn.#Fn
-			DatabaseName?:                    *string | fn.#Fn
-			DeletionProtection?:              *bool | fn.#Fn
-			EnableCloudwatchLogsExports?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			EnableHttpEndpoint?:              *bool | fn.#Fn
-			EnableIAMDatabaseAuthentication?: *bool | fn.#Fn
-			Engine:                           *string | fn.#Fn
-			EngineMode?:                      *string | fn.#Fn
-			EngineVersion?:                   *string | fn.#Fn
-			GlobalClusterIdentifier?:         *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
-			KmsKeyId?:                        *string | fn.#Fn
-			MasterUserPassword?:              *string | fn.#Fn
-			MasterUsername?:                  *(=~#"^[a-zA-Z]{1}[a-zA-Z0-9_]*$"#) | fn.#Fn
-			Port?:                            *int | fn.#Fn
-			PreferredBackupWindow?:           *string | fn.#Fn
-			PreferredMaintenanceWindow?:      *string | fn.#Fn
-			ReplicationSourceIdentifier?:     *string | fn.#Fn
-			RestoreType?:                     *string | fn.#Fn
-			ScalingConfiguration?:            *{
+			AutoMinorVersionUpgrade?:            *bool | fn.#Fn
+			AvailabilityZones?:                  [...(*(=~#"[a-z0-9-]+"#) | fn.#Fn)] | (*(=~#"[a-z0-9-]+"#) | fn.#Fn)
+			BacktrackWindow?:                    *int | fn.#Fn
+			BackupRetentionPeriod?:              *(>=1 & <=35) | fn.#Fn
+			CopyTagsToSnapshot?:                 *bool | fn.#Fn
+			DBClusterIdentifier?:                *(strings.MinRunes(1) & strings.MaxRunes(63) & (=~#"^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#)) | fn.#Fn
+			DBClusterInstanceClass?:             *string | fn.#Fn
+			DBClusterParameterGroupName?:        *string | fn.#Fn
+			DBInstanceParameterGroupName?:       *string | fn.#Fn
+			DBSubnetGroupName?:                  *string | fn.#Fn
+			DatabaseName?:                       *string | fn.#Fn
+			DeletionProtection?:                 *bool | fn.#Fn
+			EnableCloudwatchLogsExports?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			EnableHttpEndpoint?:                 *bool | fn.#Fn
+			EnableIAMDatabaseAuthentication?:    *bool | fn.#Fn
+			Engine:                              *string | fn.#Fn
+			EngineMode?:                         *string | fn.#Fn
+			EngineVersion?:                      *string | fn.#Fn
+			GlobalClusterIdentifier?:            *(=~#"^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"#) | fn.#Fn
+			Iops?:                               *int | fn.#Fn
+			KmsKeyId?:                           *string | fn.#Fn
+			MasterUserPassword?:                 *string | fn.#Fn
+			MasterUsername?:                     *(=~#"^[a-zA-Z]{1}[a-zA-Z0-9_]*$"#) | fn.#Fn
+			MonitoringInterval?:                 *int | fn.#Fn
+			MonitoringRoleArn?:                  *string | fn.#Fn
+			PerformanceInsightsEnabled?:         *bool | fn.#Fn
+			PerformanceInsightsKmsKeyId?:        *string | fn.#Fn
+			PerformanceInsightsRetentionPeriod?: *int | fn.#Fn
+			Port?:                               *int | fn.#Fn
+			PreferredBackupWindow?:              *string | fn.#Fn
+			PreferredMaintenanceWindow?:         *string | fn.#Fn
+			PubliclyAccessible?:                 *bool | fn.#Fn
+			ReplicationSourceIdentifier?:        *string | fn.#Fn
+			RestoreType?:                        *string | fn.#Fn
+			ScalingConfiguration?:               *{
 				AutoPause?:             *bool | fn.#Fn
 				MaxCapacity?:           *int | fn.#Fn
 				MinCapacity?:           *int | fn.#Fn
 				SecondsUntilAutoPause?: *int | fn.#Fn
 			} | fn.#If
+			ServerlessV2ScalingConfiguration?: *{
+				MaxCapacity?: *(>=0.5 & <=128) | fn.#Fn
+				MinCapacity?: *(>=0.5 & <=128) | fn.#Fn
+			} | fn.#If
 			SnapshotIdentifier?:        *string | fn.#Fn
 			SourceDBClusterIdentifier?: *string | fn.#Fn
 			SourceRegion?:              *string | fn.#Fn
 			StorageEncrypted?:          *bool | fn.#Fn
+			StorageType?:               *string | fn.#Fn
 			Tags?:                      *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

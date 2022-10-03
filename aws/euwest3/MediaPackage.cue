@@ -58,6 +58,7 @@ import (
 			CmafPackage?: *{
 				Encryption?: *{
 					ConstantInitializationVector?: *(strings.MinRunes(32) & strings.MaxRunes(32) & (=~#"\A[0-9a-fA-F]+\Z"#)) | fn.#Fn
+					EncryptionMethod?:             *("SAMPLE_AES" | "AES_CTR") | fn.#Fn
 					KeyRotationIntervalSeconds?:   *int | fn.#Fn
 					SpekeKeyProvider:              *{
 						CertificateArn?:                  *string | fn.#Fn

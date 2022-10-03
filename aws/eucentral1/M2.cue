@@ -1,12 +1,18 @@
 package eucentral1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #M2: {
 	#Application: {
 		Type: "AWS::M2::Application"
 		Properties: {
-			Definition:   *{} | fn.#If
+			Definition: *{
+				Content?:    *(strings.MinRunes(1) & strings.MaxRunes(6500)) | fn.#Fn
+				S3Location?: *(=~#"^\S{1,2000}$"#) | fn.#Fn
+			} | fn.#If
 			Description?: *string | fn.#Fn
 			EngineType:   *("microfocus" | "bluage") | fn.#Fn
 			Name:         *(=~#"^[A-Za-z0-9][A-Za-z0-9_\-]{1,59}$"#) | fn.#Fn

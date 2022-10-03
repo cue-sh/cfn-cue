@@ -1440,6 +1440,9 @@ import (
 	#TransitGatewayAttachment: {
 		Type: "AWS::EC2::TransitGatewayAttachment"
 		Properties: {
+			Options?: *{
+				[string]: _
+			} | fn.#Fn
 			SubnetIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			Tags?:     *[...{
 				Key:   *string | fn.#Fn

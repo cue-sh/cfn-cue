@@ -50,6 +50,7 @@ import (
 				Alias?:             *string | fn.#Fn
 				LogicalId:          *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"[^\u0000-\u001F\u007F]+"#)) | fn.#Fn
 				NotificationState?: *("ENABLED" | "DISABLED") | fn.#Fn
+				Unit?:              *string | fn.#Fn
 			}] | fn.#If
 			Tags?: *[...{
 				Key:   *string | fn.#Fn

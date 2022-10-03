@@ -217,14 +217,18 @@ import (
 				[string]: _
 			} | fn.#Fn
 			Description?:       *string | fn.#Fn
+			ExecutionClass?:    *string | fn.#Fn
 			ExecutionProperty?: *{
 				MaxConcurrentRuns?: *number | fn.#Fn
 			} | fn.#If
-			GlueVersion?:          *string | fn.#Fn
-			LogUri?:               *string | fn.#Fn
-			MaxCapacity?:          *number | fn.#Fn
-			MaxRetries?:           *number | fn.#Fn
-			Name?:                 *string | fn.#Fn
+			GlueVersion?:             *string | fn.#Fn
+			LogUri?:                  *string | fn.#Fn
+			MaxCapacity?:             *number | fn.#Fn
+			MaxRetries?:              *number | fn.#Fn
+			Name?:                    *string | fn.#Fn
+			NonOverridableArguments?: *{
+				[string]: _
+			} | fn.#Fn
 			NotificationProperty?: *{
 				NotifyDelayAfter?: *int | fn.#Fn
 			} | fn.#If
@@ -496,9 +500,13 @@ import (
 				SecurityConfiguration?: *string | fn.#Fn
 				Timeout?:               *int | fn.#Fn
 			}] | fn.#If
-			Description?: *string | fn.#Fn
-			Name?:        *string | fn.#Fn
-			Predicate?:   *{
+			Description?:            *string | fn.#Fn
+			EventBatchingCondition?: *{
+				BatchSize:    *int | fn.#Fn
+				BatchWindow?: *int | fn.#Fn
+			} | fn.#If
+			Name?:      *string | fn.#Fn
+			Predicate?: *{
 				Conditions?: *[...{
 					CrawlState?:      *string | fn.#Fn
 					CrawlerName?:     *string | fn.#Fn
@@ -528,9 +536,10 @@ import (
 			DefaultRunProperties?: *{
 				[string]: _
 			} | fn.#Fn
-			Description?: *string | fn.#Fn
-			Name?:        *string | fn.#Fn
-			Tags?:        *{
+			Description?:       *string | fn.#Fn
+			MaxConcurrentRuns?: *int | fn.#Fn
+			Name?:              *string | fn.#Fn
+			Tags?:              *{
 				[string]: _
 			} | fn.#Fn
 		}

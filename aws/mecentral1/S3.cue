@@ -7,6 +7,33 @@ import (
 )
 
 #S3: {
+	#AccessPoint: {
+		Type: "AWS::S3::AccessPoint"
+		Properties: {
+			Bucket:  *(strings.MinRunes(3) & strings.MaxRunes(255)) | fn.#Fn
+			Name?:   *(strings.MinRunes(3) & strings.MaxRunes(50) & (=~#"^[a-z0-9]([a-z0-9\-]*[a-z0-9])?$"#)) | fn.#Fn
+			Policy?: *{
+				[string]: _
+			} | fn.#Fn
+			PolicyStatus?: *{
+				[string]: _
+			} | fn.#Fn
+			PublicAccessBlockConfiguration?: *{
+				BlockPublicAcls?:       *bool | fn.#Fn
+				BlockPublicPolicy?:     *bool | fn.#Fn
+				IgnorePublicAcls?:      *bool | fn.#Fn
+				RestrictPublicBuckets?: *bool | fn.#Fn
+			} | fn.#If
+			VpcConfiguration?: *{
+				VpcId?: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Bucket: {
 		Type: "AWS::S3::Bucket"
 		Properties: {

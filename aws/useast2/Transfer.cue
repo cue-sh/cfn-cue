@@ -39,7 +39,11 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			WorkflowDetails?: *{
-				OnUpload: *[...{
+				OnPartialUpload?: *[...{
+					ExecutionRole: *string | fn.#Fn
+					WorkflowId:    *string | fn.#Fn
+				}] | fn.#If
+				OnUpload?: *[...{
 					ExecutionRole: *string | fn.#Fn
 					WorkflowId:    *string | fn.#Fn
 				}] | fn.#If

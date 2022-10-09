@@ -39,6 +39,18 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ResolverQueryLoggingConfig: {
+		Type: "AWS::Route53Resolver::ResolverQueryLoggingConfig"
+		Properties: {
+			DestinationArn?: *(strings.MinRunes(1) & strings.MaxRunes(600)) | fn.#Fn
+			Name?:           *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"(?!^[0-9]+$)([a-zA-Z0-9\-_' ']+)"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ResolverRule: {
 		Type: "AWS::Route53Resolver::ResolverRule"
 		Properties: {

@@ -193,13 +193,13 @@ import (
 			Auth: *[...{
 				AuthScheme?:  *("SECRETS") | fn.#Fn
 				Description?: *string | fn.#Fn
-				IAMAuth?:     *("DISABLED" | "REQUIRED") | fn.#Fn
+				IAMAuth?:     *("DISABLED" | "REQUIRED" | "ENABLED") | fn.#Fn
 				SecretArn?:   *string | fn.#Fn
 				UserName?:    *string | fn.#Fn
 			}] | fn.#If
 			DBProxyName:        *(=~#"[0-z]*"#) | fn.#Fn
 			DebugLogging?:      *bool | fn.#Fn
-			EngineFamily:       *("MYSQL" | "POSTGRESQL") | fn.#Fn
+			EngineFamily:       *("MYSQL" | "POSTGRESQL" | "SQLSERVER") | fn.#Fn
 			IdleClientTimeout?: *int | fn.#Fn
 			RequireTLS?:        *bool | fn.#Fn
 			RoleArn:            *string | fn.#Fn

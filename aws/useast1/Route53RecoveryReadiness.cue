@@ -9,9 +9,9 @@ import (
 	#Cell: {
 		Type: "AWS::Route53RecoveryReadiness::Cell"
 		Properties: {
-			CellName: *(=~#"[a-zA-Z0-9_]+"#) | fn.#Fn
-			Cells?:   [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			Tags?:    *[...{
+			CellName?: *(=~#"[a-zA-Z0-9_]+"#) | fn.#Fn
+			Cells?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			Tags?:     *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -25,9 +25,9 @@ import (
 	#ReadinessCheck: {
 		Type: "AWS::Route53RecoveryReadiness::ReadinessCheck"
 		Properties: {
-			ReadinessCheckName: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"[a-zA-Z0-9_]+"#)) | fn.#Fn
-			ResourceSetName?:   *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"[a-zA-Z0-9_]+"#)) | fn.#Fn
-			Tags?:              *[...{
+			ReadinessCheckName?: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"[a-zA-Z0-9_]+"#)) | fn.#Fn
+			ResourceSetName?:    *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"[a-zA-Z0-9_]+"#)) | fn.#Fn
+			Tags?:               *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -41,9 +41,9 @@ import (
 	#RecoveryGroup: {
 		Type: "AWS::Route53RecoveryReadiness::RecoveryGroup"
 		Properties: {
-			Cells?:            [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
-			RecoveryGroupName: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"[a-zA-Z0-9_]+"#)) | fn.#Fn
-			Tags?:             *[...{
+			Cells?:             [...(*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn)
+			RecoveryGroupName?: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"[a-zA-Z0-9_]+"#)) | fn.#Fn
+			Tags?:              *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
@@ -57,9 +57,9 @@ import (
 	#ResourceSet: {
 		Type: "AWS::Route53RecoveryReadiness::ResourceSet"
 		Properties: {
-			ResourceSetName: *string | fn.#Fn
-			ResourceSetType: *string | fn.#Fn
-			Resources:       *[...{
+			ResourceSetName?: *string | fn.#Fn
+			ResourceSetType:  *string | fn.#Fn
+			Resources:        *[...{
 				ComponentId?:       *string | fn.#Fn
 				DnsTargetResource?: *{
 					DomainName?:     *string | fn.#Fn

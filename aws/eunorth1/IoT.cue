@@ -69,6 +69,29 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#Authorizer: {
+		Type: "AWS::IoT::Authorizer"
+		Properties: {
+			AuthorizerFunctionArn: *string | fn.#Fn
+			AuthorizerName?:       *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[\w=,@-]+"#)) | fn.#Fn
+			EnableCachingForHttp?: *bool | fn.#Fn
+			SigningDisabled?:      *bool | fn.#Fn
+			Status?:               *("ACTIVE" | "INACTIVE") | fn.#Fn
+			Tags?:                 *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TokenKeyName?:           *string | fn.#Fn
+			TokenSigningPublicKeys?: *{
+				[string]: *string | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#CACertificate: {
 		Type: "AWS::IoT::CACertificate"
 		Properties: {

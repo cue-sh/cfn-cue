@@ -242,6 +242,22 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#MonitoringSubscription: {
+		Type: "AWS::CloudFront::MonitoringSubscription"
+		Properties: {
+			DistributionId:         *string | fn.#Fn
+			MonitoringSubscription: *{
+				RealtimeMetricsSubscriptionConfig?: *{
+					RealtimeMetricsSubscriptionStatus: *("Enabled" | "Disabled") | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#OriginAccessControl: {
 		Type: "AWS::CloudFront::OriginAccessControl"
 		Properties: OriginAccessControlConfig: *{

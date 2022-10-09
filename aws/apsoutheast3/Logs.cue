@@ -9,10 +9,10 @@ import (
 	#Destination: {
 		Type: "AWS::Logs::Destination"
 		Properties: {
-			DestinationName:   *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[^:*]{1,512}$"#)) | fn.#Fn
-			DestinationPolicy: *string | fn.#Fn
-			RoleArn:           *string | fn.#Fn
-			TargetArn:         *string | fn.#Fn
+			DestinationName:    *(strings.MinRunes(1) & strings.MaxRunes(512) & (=~#"^[^:*]{1,512}$"#)) | fn.#Fn
+			DestinationPolicy?: *string | fn.#Fn
+			RoleArn:            *string | fn.#Fn
+			TargetArn:          *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

@@ -347,8 +347,7 @@ import (
 				RestrictPublicBuckets?: *bool | fn.#Fn
 			} | fn.#If
 			Regions: *[...{
-				AccountId?: *(strings.MinRunes(12) & strings.MaxRunes(12) & (=~#"^[0-9]{12}$"#)) | fn.#Fn
-				Bucket:     *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[a-z0-9][a-z0-9//.//-]*[a-z0-9]$"#)) | fn.#Fn
+				Bucket: *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[a-z0-9][a-z0-9//.//-]*[a-z0-9]$"#)) | fn.#Fn
 			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]

@@ -33,21 +33,46 @@ import (
 	#EventSourceMapping: {
 		Type: "AWS::Lambda::EventSourceMapping"
 		Properties: {
+			AmazonManagedKafkaEventSourceConfig?: *{
+				ConsumerGroupId?: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
+			} | fn.#If
 			BatchSize?:                  *(>=1 & <=10000) | fn.#Fn
 			BisectBatchOnFunctionError?: *bool | fn.#Fn
 			DestinationConfig?:          *{
-				OnFailure: *{
-					Destination: *(strings.MinRunes(12) & strings.MaxRunes(1024) & (=~#"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)"#)) | fn.#Fn
+				OnFailure?: *{
+					Destination?: *(strings.MinRunes(12) & strings.MaxRunes(1024) & (=~#"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)"#)) | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			Enabled?:                        *bool | fn.#Fn
-			EventSourceArn:                  *(strings.MinRunes(12) & strings.MaxRunes(1024) & (=~#"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)"#)) | fn.#Fn
+			Enabled?:        *bool | fn.#Fn
+			EventSourceArn?: *(strings.MinRunes(12) & strings.MaxRunes(1024) & (=~#"arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\-])+:([a-z]{2}(-gov)?-[a-z]+-\d{1})?:(\d{12})?:(.*)"#)) | fn.#Fn
+			FilterCriteria?: *{
+				Filters?: *[...{
+					Pattern?: *(=~#".*"#) | fn.#Fn
+				}] | fn.#If
+			} | fn.#If
 			FunctionName:                    *(strings.MinRunes(1) & strings.MaxRunes(140) & (=~#"(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\d{1}:)?(\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\$LATEST|[a-zA-Z0-9-_]+))?"#)) | fn.#Fn
+			FunctionResponseTypes?:          [...(*("ReportBatchItemFailures") | fn.#Fn)] | (*("ReportBatchItemFailures") | fn.#Fn)
 			MaximumBatchingWindowInSeconds?: *(>=0 & <=300) | fn.#Fn
 			MaximumRecordAgeInSeconds?:      *(>=-1 & <=604800) | fn.#Fn
 			MaximumRetryAttempts?:           *(>=-1 & <=10000) | fn.#Fn
 			ParallelizationFactor?:          *(>=1 & <=10) | fn.#Fn
-			StartingPosition?:               *(("AT_TIMESTAMP" | "LATEST" | "TRIM_HORIZON") & (strings.MinRunes(6) & strings.MaxRunes(12)) & (=~#"(LATEST|TRIM_HORIZON|AT_TIMESTAMP)+"#)) | fn.#Fn
+			Queues?:                         [...(*(strings.MinRunes(1) & strings.MaxRunes(1000) & (=~#"[\s\S]*"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1000) & (=~#"[\s\S]*"#)) | fn.#Fn)
+			SelfManagedEventSource?:         *{
+				Endpoints?: *{
+					KafkaBootstrapServers?: [...(*(strings.MinRunes(1) & strings.MaxRunes(300) & (=~#"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]):[0-9]{1,5}"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(300) & (=~#"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]):[0-9]{1,5}"#)) | fn.#Fn)
+				} | fn.#If
+			} | fn.#If
+			SelfManagedKafkaEventSourceConfig?: *{
+				ConsumerGroupId?: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
+			} | fn.#If
+			SourceAccessConfigurations?: *[...{
+				Type?: *("BASIC_AUTH" | "VPC_SUBNET" | "VPC_SECURITY_GROUP" | "SASL_SCRAM_512_AUTH" | "SASL_SCRAM_256_AUTH" | "VIRTUAL_HOST" | "CLIENT_CERTIFICATE_TLS_AUTH" | "SERVER_ROOT_CA_CERTIFICATE") | fn.#Fn
+				URI?:  *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
+			}] | fn.#If
+			StartingPosition?:          *(("AT_TIMESTAMP" | "LATEST" | "TRIM_HORIZON") & (strings.MinRunes(6) & strings.MaxRunes(12)) & (=~#"(LATEST|TRIM_HORIZON|AT_TIMESTAMP)+"#)) | fn.#Fn
+			StartingPositionTimestamp?: *number | fn.#Fn
+			Topics?:                    [...(*(strings.MinRunes(1) & strings.MaxRunes(249) & (=~#"^[^.]([a-zA-Z0-9\-_.]+)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(249) & (=~#"^[^.]([a-zA-Z0-9\-_.]+)"#)) | fn.#Fn)
+			TumblingWindowInSeconds?:   *int | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

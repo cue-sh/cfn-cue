@@ -33,6 +33,10 @@ import (
 		Properties: {
 			Components: *[...{
 				ComponentArn?: *string | fn.#Fn
+				Parameters?:   *[...{
+					Name:  *string | fn.#Fn
+					Value: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				}] | fn.#If
 			}] | fn.#If
 			ContainerType:           *("DOCKER") | fn.#Fn
 			Description?:            *string | fn.#Fn

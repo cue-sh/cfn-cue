@@ -42,6 +42,134 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#EC2Fleet: {
+		Type: "AWS::EC2::EC2Fleet"
+		Properties: {
+			Context?:                         *string | fn.#Fn
+			ExcessCapacityTerminationPolicy?: *("termination" | "no-termination") | fn.#Fn
+			LaunchTemplateConfigs:            *[...{
+				LaunchTemplateSpecification?: *{
+					LaunchTemplateId?:   *string | fn.#Fn
+					LaunchTemplateName?: *(strings.MinRunes(3) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9\(\)\.\-/_]+"#)) | fn.#Fn
+					Version?:            *string | fn.#Fn
+				} | fn.#If
+				Overrides?: *[...{
+					AvailabilityZone?:     *string | fn.#Fn
+					InstanceRequirements?: *{
+						AcceleratorCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						AcceleratorManufacturers?:  [...(*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)] | (*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)
+						AcceleratorNames?:          [...(*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)] | (*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)
+						AcceleratorTotalMemoryMiB?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+						BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
+						BaselineEbsBandwidthMbps?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						BurstablePerformance?:  *("included" | "required" | "excluded") | fn.#Fn
+						CpuManufacturers?:      [...(*("intel" | "amd" | "amazon-web-services") | fn.#Fn)] | (*("intel" | "amd" | "amazon-web-services") | fn.#Fn)
+						ExcludedInstanceTypes?: [...(*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)
+						InstanceGenerations?:   [...(*("current" | "previous") | fn.#Fn)] | (*("current" | "previous") | fn.#Fn)
+						LocalStorage?:          *("included" | "required" | "excluded") | fn.#Fn
+						LocalStorageTypes?:     [...(*("hdd" | "ssd") | fn.#Fn)] | (*("hdd" | "ssd") | fn.#Fn)
+						MemoryGiBPerVCpu?:      *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
+						} | fn.#If
+						MemoryMiB?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						NetworkInterfaceCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						OnDemandMaxPricePercentageOverLowestPrice?: *int | fn.#Fn
+						RequireHibernateSupport?:                   *bool | fn.#Fn
+						SpotMaxPricePercentageOverLowestPrice?:     *int | fn.#Fn
+						TotalLocalStorageGB?:                       *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
+						} | fn.#If
+						VCpuCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+					} | fn.#If
+					InstanceType?: *("c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "c6g.12xlarge" | "c6g.16xlarge" | "c6g.2xlarge" | "c6g.4xlarge" | "c6g.8xlarge" | "c6g.large" | "c6g.medium" | "c6g.metal" | "c6g.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.xlarge" | "i3en.12xlarge" | "i3en.24xlarge" | "i3en.2xlarge" | "i3en.3xlarge" | "i3en.6xlarge" | "i3en.large" | "i3en.metal" | "i3en.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "m6g.12xlarge" | "m6g.16xlarge" | "m6g.2xlarge" | "m6g.4xlarge" | "m6g.8xlarge" | "m6g.large" | "m6g.medium" | "m6g.metal" | "m6g.xlarge" | "m6gd.12xlarge" | "m6gd.16xlarge" | "m6gd.2xlarge" | "m6gd.4xlarge" | "m6gd.8xlarge" | "m6gd.large" | "m6gd.medium" | "m6gd.metal" | "m6gd.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "r6g.12xlarge" | "r6g.16xlarge" | "r6g.2xlarge" | "r6g.4xlarge" | "r6g.8xlarge" | "r6g.large" | "r6g.medium" | "r6g.metal" | "r6g.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "t4g.2xlarge" | "t4g.large" | "t4g.medium" | "t4g.micro" | "t4g.nano" | "t4g.small" | "t4g.xlarge") | fn.#Fn
+					MaxPrice?:     *string | fn.#Fn
+					Placement?:    *{
+						Affinity?:             *string | fn.#Fn
+						AvailabilityZone?:     *string | fn.#Fn
+						GroupName?:            *string | fn.#Fn
+						HostId?:               *string | fn.#Fn
+						HostResourceGroupArn?: *string | fn.#Fn
+						PartitionNumber?:      *int | fn.#Fn
+						SpreadDomain?:         *string | fn.#Fn
+						Tenancy?:              *string | fn.#Fn
+					} | fn.#If
+					Priority?:         *number | fn.#Fn
+					SubnetId?:         *string | fn.#Fn
+					WeightedCapacity?: *number | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
+			OnDemandOptions?: *{
+				AllocationStrategy?:         *("lowest-price" | "prioritized") | fn.#Fn
+				CapacityReservationOptions?: *{
+					UsageStrategy?: *("use-capacity-reservations-first") | fn.#Fn
+				} | fn.#If
+				MaxTotalPrice?:          *string | fn.#Fn
+				MinTargetCapacity?:      *int | fn.#Fn
+				SingleAvailabilityZone?: *bool | fn.#Fn
+				SingleInstanceType?:     *bool | fn.#Fn
+			} | fn.#If
+			ReplaceUnhealthyInstances?: *bool | fn.#Fn
+			SpotOptions?:               *{
+				AllocationStrategy?:           *("lowestPrice" | "diversified" | "capacityOptimized" | "capacityOptimizedPrioritized") | fn.#Fn
+				InstanceInterruptionBehavior?: *("hibernate" | "stop" | "terminate") | fn.#Fn
+				InstancePoolsToUseCount?:      *int | fn.#Fn
+				MaintenanceStrategies?:        *{
+					CapacityRebalance?: *{
+						ReplacementStrategy?: *("launch" | "launch-before-terminate") | fn.#Fn
+						TerminationDelay?:    *int | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				MaxTotalPrice?:          *string | fn.#Fn
+				MinTargetCapacity?:      *int | fn.#Fn
+				SingleAvailabilityZone?: *bool | fn.#Fn
+				SingleInstanceType?:     *bool | fn.#Fn
+			} | fn.#If
+			TagSpecifications?: *[...{
+				ResourceType?: *("client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "internet-gateway" | "key-pair" | "launch-template" | "local-gateway-route-table-vpc-association" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "reserved-instances" | "route-table" | "security-group" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
+				Tags?:         *[...{
+					Key:   *string | fn.#Fn
+					Value: *string | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
+			TargetCapacitySpecification: *{
+				DefaultTargetCapacityType?: *("on-demand" | "spot") | fn.#Fn
+				OnDemandTargetCapacity?:    *int | fn.#Fn
+				SpotTargetCapacity?:        *int | fn.#Fn
+				TargetCapacityUnitType?:    *("vcpu" | "memory-mib" | "units") | fn.#Fn
+				TotalTargetCapacity:        *int | fn.#Fn
+			} | fn.#If
+			TerminateInstancesWithExpiration?: *bool | fn.#Fn
+			Type?:                             *("maintain" | "request" | "instant") | fn.#Fn
+			ValidFrom?:                        *string | fn.#Fn
+			ValidUntil?:                       *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#EIP: {
 		Type: "AWS::EC2::EIP"
 		Properties: {
@@ -88,12 +216,33 @@ import (
 		Type: "AWS::EC2::FlowLog"
 		Properties: {
 			DeliverLogsPermissionArn?: *string | fn.#Fn
-			LogDestination?:           *string | fn.#Fn
-			LogDestinationType?:       *("cloud-watch-logs" | "s3" | "kinesis-data-firehose") | fn.#Fn
-			LogGroupName?:             *string | fn.#Fn
-			ResourceId:                *string | fn.#Fn
-			ResourceType:              *("NetworkInterface" | "Subnet" | "VPC" | "TransitGateway" | "TransitGatewayAttachment") | fn.#Fn
-			TrafficType:               *("ACCEPT" | "ALL" | "REJECT") | fn.#Fn
+			DestinationOptions?:       *{
+				[string]: _
+			} | fn.#Fn
+			LogDestination?:         *string | fn.#Fn
+			LogDestinationType?:     *("cloud-watch-logs" | "s3" | "kinesis-data-firehose") | fn.#Fn
+			LogFormat?:              *string | fn.#Fn
+			LogGroupName?:           *string | fn.#Fn
+			MaxAggregationInterval?: *int | fn.#Fn
+			ResourceId:              *string | fn.#Fn
+			ResourceType:            *("NetworkInterface" | "Subnet" | "VPC" | "TransitGateway" | "TransitGatewayAttachment") | fn.#Fn
+			Tags?:                   *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TrafficType: *("ACCEPT" | "ALL" | "REJECT") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#GatewayRouteTableAssociation: {
+		Type: "AWS::EC2::GatewayRouteTableAssociation"
+		Properties: {
+			GatewayId:    *string | fn.#Fn
+			RouteTableId: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -498,6 +647,7 @@ import (
 		Type: "AWS::EC2::SpotFleet"
 		Properties: SpotFleetRequestConfigData: *{
 			AllocationStrategy?:              *("capacityOptimized" | "capacityOptimizedPrioritized" | "diversified" | "lowestPrice") | fn.#Fn
+			Context?:                         *string | fn.#Fn
 			ExcessCapacityTerminationPolicy?: *("Default" | "NoTermination" | "default" | "noTermination") | fn.#Fn
 			IamFleetRole:                     *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
 			InstanceInterruptionBehavior?:    *("hibernate" | "stop" | "terminate") | fn.#Fn
@@ -520,11 +670,58 @@ import (
 				IamInstanceProfile?: *{
 					Arn?: *string | fn.#Fn
 				} | fn.#If
-				ImageId:      *string | fn.#Fn
-				InstanceType: *("c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "c6g.12xlarge" | "c6g.16xlarge" | "c6g.2xlarge" | "c6g.4xlarge" | "c6g.8xlarge" | "c6g.large" | "c6g.medium" | "c6g.metal" | "c6g.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.xlarge" | "i3en.12xlarge" | "i3en.24xlarge" | "i3en.2xlarge" | "i3en.3xlarge" | "i3en.6xlarge" | "i3en.large" | "i3en.metal" | "i3en.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "m6g.12xlarge" | "m6g.16xlarge" | "m6g.2xlarge" | "m6g.4xlarge" | "m6g.8xlarge" | "m6g.large" | "m6g.medium" | "m6g.metal" | "m6g.xlarge" | "m6gd.12xlarge" | "m6gd.16xlarge" | "m6gd.2xlarge" | "m6gd.4xlarge" | "m6gd.8xlarge" | "m6gd.large" | "m6gd.medium" | "m6gd.metal" | "m6gd.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "r6g.12xlarge" | "r6g.16xlarge" | "r6g.2xlarge" | "r6g.4xlarge" | "r6g.8xlarge" | "r6g.large" | "r6g.medium" | "r6g.metal" | "r6g.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "t4g.2xlarge" | "t4g.large" | "t4g.medium" | "t4g.micro" | "t4g.nano" | "t4g.small" | "t4g.xlarge") | fn.#Fn
-				KernelId?:    *string | fn.#Fn
-				KeyName?:     *string | fn.#Fn
-				Monitoring?:  *{
+				ImageId:               *string | fn.#Fn
+				InstanceRequirements?: *{
+					AcceleratorCount?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					AcceleratorManufacturers?:  [...(*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)] | (*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)
+					AcceleratorNames?:          [...(*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)] | (*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)
+					AcceleratorTotalMemoryMiB?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+					BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
+					BaselineEbsBandwidthMbps?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					BurstablePerformance?:  *("included" | "required" | "excluded") | fn.#Fn
+					CpuManufacturers?:      [...(*("intel" | "amd" | "amazon-web-services") | fn.#Fn)] | (*("intel" | "amd" | "amazon-web-services") | fn.#Fn)
+					ExcludedInstanceTypes?: [...(*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)
+					InstanceGenerations?:   [...(*("current" | "previous") | fn.#Fn)] | (*("current" | "previous") | fn.#Fn)
+					LocalStorage?:          *("included" | "required" | "excluded") | fn.#Fn
+					LocalStorageTypes?:     [...(*("hdd" | "ssd") | fn.#Fn)] | (*("hdd" | "ssd") | fn.#Fn)
+					MemoryGiBPerVCpu?:      *{
+						Max?: *number | fn.#Fn
+						Min?: *number | fn.#Fn
+					} | fn.#If
+					MemoryMiB?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					NetworkInterfaceCount?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+					OnDemandMaxPricePercentageOverLowestPrice?: *int | fn.#Fn
+					RequireHibernateSupport?:                   *bool | fn.#Fn
+					SpotMaxPricePercentageOverLowestPrice?:     *int | fn.#Fn
+					TotalLocalStorageGB?:                       *{
+						Max?: *number | fn.#Fn
+						Min?: *number | fn.#Fn
+					} | fn.#If
+					VCpuCount?: *{
+						Max?: *int | fn.#Fn
+						Min?: *int | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+				InstanceType?: *("c5.12xlarge" | "c5.18xlarge" | "c5.24xlarge" | "c5.2xlarge" | "c5.4xlarge" | "c5.9xlarge" | "c5.large" | "c5.metal" | "c5.xlarge" | "c5d.12xlarge" | "c5d.18xlarge" | "c5d.24xlarge" | "c5d.2xlarge" | "c5d.4xlarge" | "c5d.9xlarge" | "c5d.large" | "c5d.metal" | "c5d.xlarge" | "c6g.12xlarge" | "c6g.16xlarge" | "c6g.2xlarge" | "c6g.4xlarge" | "c6g.8xlarge" | "c6g.large" | "c6g.medium" | "c6g.metal" | "c6g.xlarge" | "i3.16xlarge" | "i3.2xlarge" | "i3.4xlarge" | "i3.8xlarge" | "i3.large" | "i3.xlarge" | "i3en.12xlarge" | "i3en.24xlarge" | "i3en.2xlarge" | "i3en.3xlarge" | "i3en.6xlarge" | "i3en.large" | "i3en.metal" | "i3en.xlarge" | "m5.12xlarge" | "m5.16xlarge" | "m5.24xlarge" | "m5.2xlarge" | "m5.4xlarge" | "m5.8xlarge" | "m5.large" | "m5.metal" | "m5.xlarge" | "m5d.12xlarge" | "m5d.16xlarge" | "m5d.24xlarge" | "m5d.2xlarge" | "m5d.4xlarge" | "m5d.8xlarge" | "m5d.large" | "m5d.metal" | "m5d.xlarge" | "m6g.12xlarge" | "m6g.16xlarge" | "m6g.2xlarge" | "m6g.4xlarge" | "m6g.8xlarge" | "m6g.large" | "m6g.medium" | "m6g.metal" | "m6g.xlarge" | "m6gd.12xlarge" | "m6gd.16xlarge" | "m6gd.2xlarge" | "m6gd.4xlarge" | "m6gd.8xlarge" | "m6gd.large" | "m6gd.medium" | "m6gd.metal" | "m6gd.xlarge" | "r5.12xlarge" | "r5.16xlarge" | "r5.24xlarge" | "r5.2xlarge" | "r5.4xlarge" | "r5.8xlarge" | "r5.large" | "r5.metal" | "r5.xlarge" | "r5d.12xlarge" | "r5d.16xlarge" | "r5d.24xlarge" | "r5d.2xlarge" | "r5d.4xlarge" | "r5d.8xlarge" | "r5d.large" | "r5d.metal" | "r5d.xlarge" | "r6g.12xlarge" | "r6g.16xlarge" | "r6g.2xlarge" | "r6g.4xlarge" | "r6g.8xlarge" | "r6g.large" | "r6g.medium" | "r6g.metal" | "r6g.xlarge" | "t3.2xlarge" | "t3.large" | "t3.medium" | "t3.micro" | "t3.nano" | "t3.small" | "t3.xlarge" | "t4g.2xlarge" | "t4g.large" | "t4g.medium" | "t4g.micro" | "t4g.nano" | "t4g.small" | "t4g.xlarge") | fn.#Fn
+				KernelId?:     *string | fn.#Fn
+				KeyName?:      *string | fn.#Fn
+				Monitoring?:   *{
 					Enabled?: *bool | fn.#Fn
 				} | fn.#If
 				NetworkInterfaces?: *[...{
@@ -573,7 +770,54 @@ import (
 					Version:             *string | fn.#Fn
 				} | fn.#If
 				Overrides?: *[...{
-					AvailabilityZone?: *(=~#"[a-z0-9-]+"#) | fn.#Fn
+					AvailabilityZone?:     *(=~#"[a-z0-9-]+"#) | fn.#Fn
+					InstanceRequirements?: *{
+						AcceleratorCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						AcceleratorManufacturers?:  [...(*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)] | (*("nvidia" | "amd" | "amazon-web-services" | "xilinx") | fn.#Fn)
+						AcceleratorNames?:          [...(*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)] | (*("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p" | "inferentia" | "k520") | fn.#Fn)
+						AcceleratorTotalMemoryMiB?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+						BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
+						BaselineEbsBandwidthMbps?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						BurstablePerformance?:  *("included" | "required" | "excluded") | fn.#Fn
+						CpuManufacturers?:      [...(*("intel" | "amd" | "amazon-web-services") | fn.#Fn)] | (*("intel" | "amd" | "amazon-web-services") | fn.#Fn)
+						ExcludedInstanceTypes?: [...(*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)
+						InstanceGenerations?:   [...(*("current" | "previous") | fn.#Fn)] | (*("current" | "previous") | fn.#Fn)
+						LocalStorage?:          *("included" | "required" | "excluded") | fn.#Fn
+						LocalStorageTypes?:     [...(*("hdd" | "ssd") | fn.#Fn)] | (*("hdd" | "ssd") | fn.#Fn)
+						MemoryGiBPerVCpu?:      *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
+						} | fn.#If
+						MemoryMiB?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						NetworkInterfaceCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+						OnDemandMaxPricePercentageOverLowestPrice?: *int | fn.#Fn
+						RequireHibernateSupport?:                   *bool | fn.#Fn
+						SpotMaxPricePercentageOverLowestPrice?:     *int | fn.#Fn
+						TotalLocalStorageGB?:                       *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
+						} | fn.#If
+						VCpuCount?: *{
+							Max?: *int | fn.#Fn
+							Min?: *int | fn.#Fn
+						} | fn.#If
+					} | fn.#If
 					InstanceType?:     *string | fn.#Fn
 					Priority?:         *number | fn.#Fn
 					SpotPrice?:        *string | fn.#Fn
@@ -600,11 +844,20 @@ import (
 			SpotMaintenanceStrategies?:  *{
 				CapacityRebalance?: *{
 					ReplacementStrategy?: *("launch" | "launch-before-terminate") | fn.#Fn
+					TerminationDelay?:    *int | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			SpotMaxTotalPrice?:                *string | fn.#Fn
-			SpotPrice?:                        *string | fn.#Fn
+			SpotMaxTotalPrice?: *string | fn.#Fn
+			SpotPrice?:         *string | fn.#Fn
+			TagSpecifications?: *[...{
+				ResourceType?: *("client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "internet-gateway" | "key-pair" | "launch-template" | "local-gateway-route-table-vpc-association" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "reserved-instances" | "route-table" | "security-group" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
+				Tags?:         *[...{
+					Key:   *string | fn.#Fn
+					Value: *string | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
 			TargetCapacity:                    *int | fn.#Fn
+			TargetCapacityUnitType?:           *("vcpu" | "memory-mib" | "units") | fn.#Fn
 			TerminateInstancesWithExpiration?: *bool | fn.#Fn
 			Type?:                             *("maintain" | "request") | fn.#Fn
 			ValidFrom?:                        *string | fn.#Fn
@@ -622,17 +875,15 @@ import (
 			AssignIpv6AddressOnCreation?:   *bool | fn.#Fn
 			AvailabilityZone?:              *(=~#"[a-z0-9-]+"#) | fn.#Fn
 			AvailabilityZoneId?:            *string | fn.#Fn
-			CidrBlock:                      *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
+			CidrBlock?:                     *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$"#) | fn.#Fn
 			EnableDns64?:                   *bool | fn.#Fn
 			Ipv6CidrBlock?:                 *string | fn.#Fn
 			Ipv6Native?:                    *bool | fn.#Fn
 			MapPublicIpOnLaunch?:           *bool | fn.#Fn
 			OutpostArn?:                    *string | fn.#Fn
 			PrivateDnsNameOptionsOnLaunch?: *{
-				EnableResourceNameDnsAAAARecord?: *bool | fn.#Fn
-				EnableResourceNameDnsARecord?:    *bool | fn.#Fn
-				HostnameType?:                    *string | fn.#Fn
-			} | fn.#If
+				[string]: _
+			} | fn.#Fn
 			Tags?: *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
@@ -746,7 +997,7 @@ import (
 			SecurityGroupIds?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			ServiceName:        *string | fn.#Fn
 			SubnetIds?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			VpcEndpointType?:   *string | fn.#Fn
+			VpcEndpointType?:   *("Interface" | "Gateway" | "GatewayLoadBalancer") | fn.#Fn
 			VpcId:              *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

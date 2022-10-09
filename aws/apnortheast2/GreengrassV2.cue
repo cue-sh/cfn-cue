@@ -1,6 +1,9 @@
 package apnortheast2
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #GreengrassV2: {
 	#ComponentVersion: {
@@ -62,6 +65,69 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			Tags?: *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Deployment: {
+		Type: "AWS::GreengrassV2::Deployment"
+		Properties: {
+			Components?: *{
+				[string]: {
+					ComponentVersion?:    *string | fn.#Fn
+					ConfigurationUpdate?: *{
+						Merge?: *string | fn.#Fn
+						Reset?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					} | fn.#If
+					RunWith?: *{
+						PosixUser?:            *string | fn.#Fn
+						SystemResourceLimits?: *{
+							Cpus?:   *number | fn.#Fn
+							Memory?: *int | fn.#Fn
+						} | fn.#If
+						WindowsUser?: *string | fn.#Fn
+					} | fn.#If
+				}
+			} | fn.#If
+			DeploymentName?:     *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+			DeploymentPolicies?: *{
+				ComponentUpdatePolicy?: *{
+					Action?:           *("NOTIFY_COMPONENTS" | "SKIP_NOTIFY_COMPONENTS") | fn.#Fn
+					TimeoutInSeconds?: *(>=1 & <=2147483647) | fn.#Fn
+				} | fn.#If
+				ConfigurationValidationPolicy?: *{
+					TimeoutInSeconds?: *(>=1 & <=2147483647) | fn.#Fn
+				} | fn.#If
+				FailureHandlingPolicy?: *("ROLLBACK" | "DO_NOTHING") | fn.#Fn
+			} | fn.#If
+			IotJobConfiguration?: *{
+				AbortConfig?: *{
+					CriteriaList: *[...{
+						Action:                    *("CANCEL") | fn.#Fn
+						FailureType:               *("FAILED" | "REJECTED" | "TIMED_OUT" | "ALL") | fn.#Fn
+						MinNumberOfExecutedThings: *(>=1 & <=2147483647) | fn.#Fn
+						ThresholdPercentage:       *number | fn.#Fn
+					}] | fn.#If
+				} | fn.#If
+				JobExecutionsRolloutConfig?: *{
+					ExponentialRate?: *{
+						BaseRatePerMinute:    *(>=1 & <=1000) | fn.#Fn
+						IncrementFactor:      *(>=1 & <=5) | fn.#Fn
+						RateIncreaseCriteria: *{} | fn.#If
+					} | fn.#If
+					MaximumPerMinute?: *(>=1 & <=1000) | fn.#Fn
+				} | fn.#If
+				TimeoutConfig?: *{
+					InProgressTimeoutInMinutes?: *int | fn.#Fn
+				} | fn.#If
+			} | fn.#If
+			Tags?: *{
+				[string]: *string | fn.#Fn
+			} | fn.#If
+			TargetArn: *(=~#"arn:[^:]*:iot:[^:]*:[0-9]+:(thing|thinggroup)/.+"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

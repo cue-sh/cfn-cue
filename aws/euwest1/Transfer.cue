@@ -1,8 +1,32 @@
 package euwest1
 
-import "github.com/cue-sh/cfn-cue/aws/fn"
+import (
+	"github.com/cue-sh/cfn-cue/aws/fn"
+	"strings"
+)
 
 #Transfer: {
+	#Certificate: {
+		Type: "AWS::Transfer::Certificate"
+		Properties: {
+			ActiveDate?:       *string | fn.#Fn
+			Certificate:       *string | fn.#Fn
+			CertificateChain?: *string | fn.#Fn
+			Description?:      *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"^[\w\- ]*$"#)) | fn.#Fn
+			InactiveDate?:     *string | fn.#Fn
+			PrivateKey?:       *string | fn.#Fn
+			Tags?:             *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			Usage: *("SIGNING" | "ENCRYPTION") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Server: {
 		Type: "AWS::Transfer::Server"
 		Properties: {

@@ -83,7 +83,8 @@ import (
 	#Function: {
 		Type: "AWS::Lambda::Function"
 		Properties: {
-			Code: *{
+			Architectures?: [...(*("x86_64" | "arm64") | fn.#Fn)] | (*("x86_64" | "arm64") | fn.#Fn)
+			Code:           *{
 				ImageUri?:        *string | fn.#Fn
 				S3Bucket?:        *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[0-9A-Za-z\.\-_]*(?<!\.)$"#)) | fn.#Fn
 				S3Key?:           *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
@@ -99,6 +100,9 @@ import (
 				Variables?: *{
 					[string]: *string | fn.#Fn
 				} | fn.#If
+			} | fn.#If
+			EphemeralStorage?: *{
+				Size: *(>=512 & <=10240) | fn.#Fn
 			} | fn.#If
 			FileSystemConfigs?: *[...{
 				Arn:            *(=~#"^arn:aws[a-zA-Z-]*:elasticfilesystem:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\d{1}:\d{12}:access-point/fsap-[a-f0-9]{17}$"#) | fn.#Fn
@@ -127,8 +131,8 @@ import (
 				Mode?: *("Active" | "PassThrough") | fn.#Fn
 			} | fn.#If
 			VpcConfig?: *{
-				SecurityGroupIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				SubnetIds:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SecurityGroupIds?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SubnetIds?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]

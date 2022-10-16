@@ -1929,7 +1929,7 @@ import (
 			SecurityGroupIds?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			ServiceName:        *string | fn.#Fn
 			SubnetIds?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			VpcEndpointType?:   *("Interface" | "Gateway" | "GatewayLoadBalancer") | fn.#Fn
+			VpcEndpointType?:   *string | fn.#Fn
 			VpcId:              *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

@@ -403,6 +403,23 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#KeyPair: {
+		Type: "AWS::EC2::KeyPair"
+		Properties: {
+			KeyName:            *string | fn.#Fn
+			KeyType?:           *("rsa" | "ed25519") | fn.#Fn
+			PublicKeyMaterial?: *string | fn.#Fn
+			Tags?:              *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#NatGateway: {
 		Type: "AWS::EC2::NatGateway"
 		Properties: {
@@ -997,7 +1014,7 @@ import (
 			SecurityGroupIds?:  [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			ServiceName:        *string | fn.#Fn
 			SubnetIds?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-			VpcEndpointType?:   *("Interface" | "Gateway" | "GatewayLoadBalancer") | fn.#Fn
+			VpcEndpointType?:   *string | fn.#Fn
 			VpcId:              *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]

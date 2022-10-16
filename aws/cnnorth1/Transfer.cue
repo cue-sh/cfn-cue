@@ -6,6 +6,27 @@ import (
 )
 
 #Transfer: {
+	#Agreement: {
+		Type: "AWS::Transfer::Agreement"
+		Properties: {
+			AccessRole:       *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:.*role/.*"#)) | fn.#Fn
+			BaseDirectory:    *(=~#"^$|/.*"#) | fn.#Fn
+			Description?:     *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"^[\w\- ]*$"#)) | fn.#Fn
+			LocalProfileId:   *(strings.MinRunes(19) & strings.MaxRunes(19) & (=~#"^p-([0-9a-f]{17})$"#)) | fn.#Fn
+			PartnerProfileId: *(strings.MinRunes(19) & strings.MaxRunes(19) & (=~#"^p-([0-9a-f]{17})$"#)) | fn.#Fn
+			ServerId:         *(strings.MinRunes(19) & strings.MaxRunes(19) & (=~#"^s-([0-9a-f]{17})$"#)) | fn.#Fn
+			Status?:          *("ACTIVE" | "INACTIVE") | fn.#Fn
+			Tags?:            *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Certificate: {
 		Type: "AWS::Transfer::Certificate"
 		Properties: {
@@ -20,6 +41,43 @@ import (
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			Usage: *("SIGNING" | "ENCRYPTION") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Connector: {
+		Type: "AWS::Transfer::Connector"
+		Properties: {
+			AccessRole: *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:.*role/.*"#)) | fn.#Fn
+			As2Config:  *{
+				[string]: _
+			} | fn.#Fn
+			LoggingRole?: *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:.*role/.*"#)) | fn.#Fn
+			Tags?:        *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			Url: *string | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#Profile: {
+		Type: "AWS::Transfer::Profile"
+		Properties: {
+			As2Id:           *(strings.MinRunes(1) & strings.MaxRunes(128)) | fn.#Fn
+			CertificateIds?: [...(*(strings.MinRunes(22) & strings.MaxRunes(22) & (=~#"^cert-([0-9a-f]{17})$"#)) | fn.#Fn)] | (*(strings.MinRunes(22) & strings.MaxRunes(22) & (=~#"^cert-([0-9a-f]{17})$"#)) | fn.#Fn)
+			ProfileType:     *("LOCAL" | "PARTNER") | fn.#Fn
+			Tags?:           *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

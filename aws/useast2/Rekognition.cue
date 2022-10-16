@@ -61,12 +61,11 @@ import (
 			NotificationChannel?: *{
 				Arn: *string | fn.#Fn
 			} | fn.#If
-			PolygonRegionsOfInterest?: *[...{
-				Polygon: *[...{
-					X: *number | fn.#Fn
-					Y: *number | fn.#Fn
-				}] | fn.#If
-			}] | fn.#If
+			PolygonRegionsOfInterest?: [...(*{
+				[string]: _
+			} | fn.#Fn)] | (*{
+				[string]: _
+			} | fn.#Fn)
 			RoleArn:        *(=~#"arn:aws(-[\w]+)*:iam::[0-9]{12}:role/.*"#) | fn.#Fn
 			S3Destination?: *{
 				BucketName:       *string | fn.#Fn

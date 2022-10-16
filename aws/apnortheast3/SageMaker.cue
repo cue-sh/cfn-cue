@@ -222,8 +222,40 @@ import (
 				KmsKeyId?:                 *string | fn.#Fn
 			} | fn.#If
 			EndpointConfigName?: *string | fn.#Fn
-			KmsKeyId?:           *string | fn.#Fn
-			ProductionVariants:  *[...{
+			ExplainerConfig?:    *{
+				ClarifyExplainerConfig?: *{
+					EnableExplanations?: *string | fn.#Fn
+					InferenceConfig?:    *{
+						ContentTemplate?:      *string | fn.#Fn
+						FeatureHeaders?:       *[...{}] | fn.#If
+						FeatureTypes?:         *[...{}] | fn.#If
+						FeaturesAttribute?:    *string | fn.#Fn
+						LabelAttribute?:       *string | fn.#Fn
+						LabelHeaders?:         *[...{}] | fn.#If
+						LabelIndex?:           *int | fn.#Fn
+						MaxPayloadInMB?:       *int | fn.#Fn
+						MaxRecordCount?:       *int | fn.#Fn
+						ProbabilityAttribute?: *string | fn.#Fn
+						ProbabilityIndex?:     *int | fn.#Fn
+					} | fn.#If
+					ShapConfig: *{
+						NumberOfSamples?:   *int | fn.#Fn
+						Seed?:              *int | fn.#Fn
+						ShapBaselineConfig: *{
+							MimeType?:        *string | fn.#Fn
+							ShapBaseline?:    *string | fn.#Fn
+							ShapBaselineUri?: *string | fn.#Fn
+						} | fn.#If
+						TextConfig?: *{
+							Granularity: *string | fn.#Fn
+							Language:    *string | fn.#Fn
+						} | fn.#If
+						UseLogit?: *bool | fn.#Fn
+					} | fn.#If
+				} | fn.#If
+			} | fn.#If
+			KmsKeyId?:          *string | fn.#Fn
+			ProductionVariants: *[...{
 				AcceleratorType?:                             *string | fn.#Fn
 				ContainerStartupHealthCheckTimeoutInSeconds?: *int | fn.#Fn
 				InitialInstanceCount?:                        *int | fn.#Fn

@@ -111,6 +111,18 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ResolverQueryLoggingConfigAssociation: {
+		Type: "AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation"
+		Properties: {
+			ResolverQueryLogConfigId?: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+			ResourceId?:               *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ResolverRule: {
 		Type: "AWS::Route53Resolver::ResolverRule"
 		Properties: {

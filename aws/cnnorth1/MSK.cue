@@ -103,7 +103,8 @@ import (
 					} | fn.#If
 				} | fn.#If
 			} | fn.#If
-			Tags?: *{
+			StorageMode?: *string | fn.#Fn
+			Tags?:        *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
 		}

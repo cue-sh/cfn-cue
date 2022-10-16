@@ -26,6 +26,8 @@ import (
 			DBSubnetGroupName?:                  *string | fn.#Fn
 			DatabaseName?:                       *string | fn.#Fn
 			DeletionProtection?:                 *bool | fn.#Fn
+			Domain?:                             *string | fn.#Fn
+			DomainIAMRoleName?:                  *string | fn.#Fn
 			EnableCloudwatchLogsExports?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			EnableHttpEndpoint?:                 *bool | fn.#Fn
 			EnableIAMDatabaseAuthentication?:    *bool | fn.#Fn
@@ -39,6 +41,7 @@ import (
 			MasterUsername?:                     *(=~#"^[a-zA-Z]{1}[a-zA-Z0-9_]*$"#) | fn.#Fn
 			MonitoringInterval?:                 *int | fn.#Fn
 			MonitoringRoleArn?:                  *string | fn.#Fn
+			NetworkType?:                        *string | fn.#Fn
 			PerformanceInsightsEnabled?:         *bool | fn.#Fn
 			PerformanceInsightsKmsKeyId?:        *string | fn.#Fn
 			PerformanceInsightsRetentionPeriod?: *int | fn.#Fn
@@ -138,6 +141,7 @@ import (
 			MonitoringRoleArn?:                  *string | fn.#Fn
 			MultiAZ?:                            *bool | fn.#Fn
 			NcharCharacterSetName?:              *string | fn.#Fn
+			NetworkType?:                        *string | fn.#Fn
 			OptionGroupName?:                    *string | fn.#Fn
 			PerformanceInsightsKMSKeyId?:        *string | fn.#Fn
 			PerformanceInsightsRetentionPeriod?: *(7 | 731) | fn.#Fn

@@ -7,6 +7,12 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Type: "AWS::Budgets::Budget"
 		Properties: {
 			Budget: *{
+				AutoAdjustData?: *{
+					AutoAdjustType:     *string | fn.#Fn
+					HistoricalOptions?: *{
+						BudgetAdjustmentPeriod: *int | fn.#Fn
+					} | fn.#If
+				} | fn.#If
 				BudgetLimit?: *{
 					Amount: *number | fn.#Fn
 					Unit:   *string | fn.#Fn

@@ -227,8 +227,8 @@ import (
 				Email?:          *string | fn.#Fn
 				FirstName?:      *string | fn.#Fn
 				LastName?:       *string | fn.#Fn
-				Mobile?:         *string | fn.#Fn
-				SecondaryEmail?: *string | fn.#Fn
+				Mobile?:         *(=~#"^\+[1-9]\d{1,14}$"#) | fn.#Fn
+				SecondaryEmail?: *(=~#"(?=^.{0,265}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}"#) | fn.#Fn
 			} | fn.#If
 			InstanceArn: *(=~#"^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$"#) | fn.#Fn
 			Password?:   *(=~#"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\S]{8,64}$"#) | fn.#Fn

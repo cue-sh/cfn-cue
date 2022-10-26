@@ -113,7 +113,7 @@ import (
 				LaunchTemplateSpecification?: *{
 					LaunchTemplateId?:   *string | fn.#Fn
 					LaunchTemplateName?: *(strings.MinRunes(3) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9\(\)\.\-/_]+"#)) | fn.#Fn
-					Version?:            *string | fn.#Fn
+					Version:             *string | fn.#Fn
 				} | fn.#If
 				Overrides?: *[...{
 					AvailabilityZone?:     *string | fn.#Fn
@@ -129,6 +129,7 @@ import (
 							Min?: *int | fn.#Fn
 						} | fn.#If
 						AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+						AllowedInstanceTypes?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 						BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
 						BaselineEbsBandwidthMbps?: *{
 							Max?: *int | fn.#Fn
@@ -147,6 +148,10 @@ import (
 						MemoryMiB?: *{
 							Max?: *int | fn.#Fn
 							Min?: *int | fn.#Fn
+						} | fn.#If
+						NetworkBandwidthGbps?: *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
 						} | fn.#If
 						NetworkInterfaceCount?: *{
 							Max?: *int | fn.#Fn
@@ -1101,6 +1106,7 @@ import (
 						Min?: *int | fn.#Fn
 					} | fn.#If
 					AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+					AllowedInstanceTypes?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
 					BaselineEbsBandwidthMbps?: *{
 						Max?: *int | fn.#Fn
@@ -1119,6 +1125,10 @@ import (
 					MemoryMiB?: *{
 						Max?: *int | fn.#Fn
 						Min?: *int | fn.#Fn
+					} | fn.#If
+					NetworkBandwidthGbps?: *{
+						Max?: *number | fn.#Fn
+						Min?: *number | fn.#Fn
 					} | fn.#If
 					NetworkInterfaceCount?: *{
 						Max?: *int | fn.#Fn
@@ -1201,6 +1211,7 @@ import (
 							Min?: *int | fn.#Fn
 						} | fn.#If
 						AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+						AllowedInstanceTypes?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 						BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
 						BaselineEbsBandwidthMbps?: *{
 							Max?: *int | fn.#Fn
@@ -1219,6 +1230,10 @@ import (
 						MemoryMiB?: *{
 							Max?: *int | fn.#Fn
 							Min?: *int | fn.#Fn
+						} | fn.#If
+						NetworkBandwidthGbps?: *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
 						} | fn.#If
 						NetworkInterfaceCount?: *{
 							Max?: *int | fn.#Fn

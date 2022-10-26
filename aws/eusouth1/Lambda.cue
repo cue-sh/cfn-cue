@@ -72,6 +72,9 @@ import (
 	#EventSourceMapping: {
 		Type: "AWS::Lambda::EventSourceMapping"
 		Properties: {
+			AmazonManagedKafkaEventSourceConfig?: *{
+				ConsumerGroupId?: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
+			} | fn.#If
 			BatchSize?:                  *(>=1 & <=10000) | fn.#Fn
 			BisectBatchOnFunctionError?: *bool | fn.#Fn
 			DestinationConfig?:          *{
@@ -98,6 +101,9 @@ import (
 					KafkaBootstrapServers?: [...(*(strings.MinRunes(1) & strings.MaxRunes(300) & (=~#"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]):[0-9]{1,5}"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(300) & (=~#"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]):[0-9]{1,5}"#)) | fn.#Fn)
 				} | fn.#If
 			} | fn.#If
+			SelfManagedKafkaEventSourceConfig?: *{
+				ConsumerGroupId?: *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
+			} | fn.#If
 			SourceAccessConfigurations?: *[...{
 				Type?: *("BASIC_AUTH" | "VPC_SUBNET" | "VPC_SECURITY_GROUP" | "SASL_SCRAM_512_AUTH" | "SASL_SCRAM_256_AUTH" | "VIRTUAL_HOST" | "CLIENT_CERTIFICATE_TLS_AUTH" | "SERVER_ROOT_CA_CERTIFICATE") | fn.#Fn
 				URI?:  *(strings.MinRunes(1) & strings.MaxRunes(200) & (=~#"[a-zA-Z0-9-\/*:_+=.@-]*"#)) | fn.#Fn
@@ -122,7 +128,7 @@ import (
 				S3Bucket?:        *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[0-9A-Za-z\.\-_]*(?<!\.)$"#)) | fn.#Fn
 				S3Key?:           *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 				S3ObjectVersion?: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
-				ZipFile?:         *string | fn.#Fn
+				ZipFile?:         *(strings.MinRunes(1) & strings.MaxRunes(4194304)) | fn.#Fn
 			} | fn.#If
 			CodeSigningConfigArn?: *(=~#"arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\d{1}:\d{12}:code-signing-config:csc-[a-z0-9]{17}"#) | fn.#Fn
 			DeadLetterConfig?:     *{

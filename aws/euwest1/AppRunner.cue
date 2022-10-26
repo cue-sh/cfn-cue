@@ -45,7 +45,7 @@ import (
 				Memory?:          *(strings.MinRunes(4) & strings.MaxRunes(4) & (=~#"2048|3072|4096|(2|3|4) GB"#)) | fn.#Fn
 			} | fn.#If
 			NetworkConfiguration?: *{
-				EgressConfiguration: *{
+				EgressConfiguration?: *{
 					EgressType:       *("DEFAULT" | "VPC") | fn.#Fn
 					VpcConnectorArn?: *(strings.MinRunes(44) & strings.MaxRunes(1011) & (=~#"arn:aws(-[\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\w|\/|-){1,1011}"#)) | fn.#Fn
 				} | fn.#If

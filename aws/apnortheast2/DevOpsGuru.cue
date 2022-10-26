@@ -9,6 +9,10 @@ import (
 	#NotificationChannel: {
 		Type: "AWS::DevOpsGuru::NotificationChannel"
 		Properties: Config: *{
+			Filters?: *{
+				MessageTypes?: [...(*("NEW_INSIGHT" | "CLOSED_INSIGHT" | "NEW_ASSOCIATION" | "SEVERITY_UPGRADED" | "NEW_RECOMMENDATION") | fn.#Fn)] | (*("NEW_INSIGHT" | "CLOSED_INSIGHT" | "NEW_ASSOCIATION" | "SEVERITY_UPGRADED" | "NEW_RECOMMENDATION") | fn.#Fn)
+				Severities?:   [...(*("LOW" | "MEDIUM" | "HIGH") | fn.#Fn)] | (*("LOW" | "MEDIUM" | "HIGH") | fn.#Fn)
+			} | fn.#If
 			Sns?: *{
 				TopicArn?: *(strings.MinRunes(36) & strings.MaxRunes(1024) & (=~#"^arn:aws[a-z0-9-]*:sns:[a-z0-9-]+:\d{12}:[^:]+$"#)) | fn.#Fn
 			} | fn.#If

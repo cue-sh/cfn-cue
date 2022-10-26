@@ -289,6 +289,7 @@ import (
 						WriteOperationType?: *("INSERT" | "UPSERT" | "UPDATE" | "DELETE") | fn.#Fn
 					} | fn.#If
 					Salesforce?: *{
+						DataTransferApi?:     *("AUTOMATIC" | "BULKV2" | "REST_SYNC") | fn.#Fn
 						ErrorHandlingConfig?: *{
 							BucketName?:       *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"\S+"#)) | fn.#Fn
 							BucketPrefix?:     *string | fn.#Fn
@@ -377,6 +378,7 @@ import (
 						ObjectPath: *(=~#"\S+"#) | fn.#Fn
 					} | fn.#If
 					Salesforce?: *{
+						DataTransferApi?:          *("AUTOMATIC" | "BULKV2" | "REST_SYNC") | fn.#Fn
 						EnableDynamicFieldUpdate?: *bool | fn.#Fn
 						IncludeDeletedRecords?:    *bool | fn.#Fn
 						Object:                    *(=~#"\S+"#) | fn.#Fn
@@ -431,7 +433,7 @@ import (
 				DestinationField?: *string | fn.#Fn
 				SourceFields:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				TaskProperties?:   *[...{
-					Key:   *("VALUE" | "VALUES" | "DATA_TYPE" | "UPPER_BOUND" | "LOWER_BOUND" | "SOURCE_DATA_TYPE" | "DESTINATION_DATA_TYPE" | "VALIDATION_ACTION" | "MASK_VALUE" | "MASK_LENGTH" | "TRUNCATE_LENGTH" | "MATH_OPERATION_FIELDS_ORDER" | "CONCAT_FORMAT" | "SUBFIELD_CATEGORY_MAP" | "EXCLUDE_SOURCE_FIELDS_LIST") | fn.#Fn
+					Key:   *("VALUE" | "VALUES" | "DATA_TYPE" | "UPPER_BOUND" | "LOWER_BOUND" | "SOURCE_DATA_TYPE" | "DESTINATION_DATA_TYPE" | "VALIDATION_ACTION" | "MASK_VALUE" | "MASK_LENGTH" | "TRUNCATE_LENGTH" | "MATH_OPERATION_FIELDS_ORDER" | "CONCAT_FORMAT" | "SUBFIELD_CATEGORY_MAP" | "EXCLUDE_SOURCE_FIELDS_LIST" | "INCLUDE_NEW_FIELDS") | fn.#Fn
 					Value: *(=~#".+"#) | fn.#Fn
 				}] | fn.#If
 				TaskType: *("Arithmetic" | "Filter" | "Map" | "Map_all" | "Mask" | "Merge" | "Passthrough" | "Truncate" | "Validate") | fn.#Fn

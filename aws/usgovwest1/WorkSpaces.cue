@@ -19,7 +19,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			WorkspaceProperties?:         *{
 				ComputeTypeName?:                     *("GRAPHICS" | "GRAPHICSPRO" | "GRAPHICSPRO_G4DN" | "GRAPHICS_G4DN" | "PERFORMANCE" | "POWER" | "POWERPRO" | "STANDARD" | "VALUE") | fn.#Fn
 				RootVolumeSizeGib?:                   *int | fn.#Fn
-				RunningMode?:                         *("ALWAYS_ON" | "AUTO_STOP") | fn.#Fn
+				RunningMode?:                         *("ALWAYS_ON" | "AUTO_STOP" | "MANUAL") | fn.#Fn
 				RunningModeAutoStopTimeoutInMinutes?: *int | fn.#Fn
 				UserVolumeSizeGib?:                   *int | fn.#Fn
 			} | fn.#If

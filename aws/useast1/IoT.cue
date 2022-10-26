@@ -613,6 +613,17 @@ import (
 					Lambda?: *{
 						FunctionArn?: *string | fn.#Fn
 					} | fn.#If
+					Location?: *{
+						DeviceId:   *string | fn.#Fn
+						Latitude:   *string | fn.#Fn
+						Longitude:  *string | fn.#Fn
+						RoleArn:    *string | fn.#Fn
+						Timestamp?: *{
+							Unit?: *string | fn.#Fn
+							Value: *string | fn.#Fn
+						} | fn.#If
+						TrackerName: *string | fn.#Fn
+					} | fn.#If
 					OpenSearch?: *{
 						Endpoint: *string | fn.#Fn
 						Id:       *string | fn.#Fn
@@ -647,7 +658,6 @@ import (
 						StateMachineName:     *string | fn.#Fn
 					} | fn.#If
 					Timestream?: *{
-						BatchMode?:   *bool | fn.#Fn
 						DatabaseName: *string | fn.#Fn
 						Dimensions:   *[...{
 							Name:  *string | fn.#Fn
@@ -777,6 +787,17 @@ import (
 					Lambda?: *{
 						FunctionArn?: *string | fn.#Fn
 					} | fn.#If
+					Location?: *{
+						DeviceId:   *string | fn.#Fn
+						Latitude:   *string | fn.#Fn
+						Longitude:  *string | fn.#Fn
+						RoleArn:    *string | fn.#Fn
+						Timestamp?: *{
+							Unit?: *string | fn.#Fn
+							Value: *string | fn.#Fn
+						} | fn.#If
+						TrackerName: *string | fn.#Fn
+					} | fn.#If
 					OpenSearch?: *{
 						Endpoint: *string | fn.#Fn
 						Id:       *string | fn.#Fn
@@ -811,7 +832,6 @@ import (
 						StateMachineName:     *string | fn.#Fn
 					} | fn.#If
 					Timestream?: *{
-						BatchMode?:   *bool | fn.#Fn
 						DatabaseName: *string | fn.#Fn
 						Dimensions:   *[...{
 							Name:  *string | fn.#Fn

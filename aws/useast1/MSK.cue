@@ -103,7 +103,8 @@ import (
 					} | fn.#If
 				} | fn.#If
 			} | fn.#If
-			Tags?: *{
+			StorageMode?: *(("LOCAL" | "TIERED") & (strings.MinRunes(5) & strings.MaxRunes(6))) | fn.#Fn
+			Tags?:        *{
 				[string]: *string | fn.#Fn
 			} | fn.#If
 		}

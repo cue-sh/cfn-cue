@@ -414,7 +414,7 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			TrafficType: *("ACCEPT" | "ALL" | "REJECT") | fn.#Fn
+			TrafficType?: *("ACCEPT" | "ALL" | "REJECT") | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

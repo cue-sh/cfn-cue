@@ -210,7 +210,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			Type: *string | fn.#Fn
+			Type:       *string | fn.#Fn
+			UsageMode?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

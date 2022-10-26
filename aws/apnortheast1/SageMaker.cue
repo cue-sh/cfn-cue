@@ -98,7 +98,22 @@ import (
 				} | fn.#If
 			} | fn.#If
 			DataQualityJobInput: *{
-				EndpointInput: *{
+				BatchTransformInput?: *{
+					DataCapturedDestinationS3Uri: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					DatasetFormat:                *{
+						Csv?: *{
+							Header?: *bool | fn.#Fn
+						} | fn.#If
+						Json?: *{
+							Line?: *bool | fn.#Fn
+						} | fn.#If
+						Parquet?: *bool | fn.#Fn
+					} | fn.#If
+					LocalPath:               *(=~#".*"#) | fn.#Fn
+					S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+					S3InputMode?:            *("Pipe" | "File") | fn.#Fn
+				} | fn.#If
+				EndpointInput?: *{
 					EndpointName:            *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
 					LocalPath:               *(=~#".*"#) | fn.#Fn
 					S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
@@ -554,7 +569,28 @@ import (
 				} | fn.#If
 			} | fn.#If
 			ModelBiasJobInput: *{
-				EndpointInput: *{
+				BatchTransformInput?: *{
+					DataCapturedDestinationS3Uri: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					DatasetFormat:                *{
+						Csv?: *{
+							Header?: *bool | fn.#Fn
+						} | fn.#If
+						Json?: *{
+							Line?: *bool | fn.#Fn
+						} | fn.#If
+						Parquet?: *bool | fn.#Fn
+					} | fn.#If
+					EndTimeOffset?:                 *(strings.MinRunes(1) & strings.MaxRunes(15) & (=~#"^.?P.*"#)) | fn.#Fn
+					FeaturesAttribute?:             *string | fn.#Fn
+					InferenceAttribute?:            *string | fn.#Fn
+					LocalPath:                      *(=~#".*"#) | fn.#Fn
+					ProbabilityAttribute?:          *string | fn.#Fn
+					ProbabilityThresholdAttribute?: *number | fn.#Fn
+					S3DataDistributionType?:        *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+					S3InputMode?:                   *("Pipe" | "File") | fn.#Fn
+					StartTimeOffset?:               *(strings.MinRunes(1) & strings.MaxRunes(15) & (=~#"^.?P.*"#)) | fn.#Fn
+				} | fn.#If
+				EndpointInput?: *{
 					EndTimeOffset?:                 *(strings.MinRunes(1) & strings.MaxRunes(15) & (=~#"^.?P.*"#)) | fn.#Fn
 					EndpointName:                   *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
 					FeaturesAttribute?:             *string | fn.#Fn
@@ -630,7 +666,25 @@ import (
 				} | fn.#If
 			} | fn.#If
 			ModelExplainabilityJobInput: *{
-				EndpointInput: *{
+				BatchTransformInput?: *{
+					DataCapturedDestinationS3Uri: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					DatasetFormat:                *{
+						Csv?: *{
+							Header?: *bool | fn.#Fn
+						} | fn.#If
+						Json?: *{
+							Line?: *bool | fn.#Fn
+						} | fn.#If
+						Parquet?: *bool | fn.#Fn
+					} | fn.#If
+					FeaturesAttribute?:      *string | fn.#Fn
+					InferenceAttribute?:     *string | fn.#Fn
+					LocalPath:               *(=~#".*"#) | fn.#Fn
+					ProbabilityAttribute?:   *string | fn.#Fn
+					S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+					S3InputMode?:            *("Pipe" | "File") | fn.#Fn
+				} | fn.#If
+				EndpointInput?: *{
 					EndpointName:            *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
 					FeaturesAttribute?:      *string | fn.#Fn
 					InferenceAttribute?:     *string | fn.#Fn
@@ -1023,7 +1077,27 @@ import (
 				} | fn.#If
 			} | fn.#If
 			ModelQualityJobInput: *{
-				EndpointInput: *{
+				BatchTransformInput?: *{
+					DataCapturedDestinationS3Uri: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+					DatasetFormat:                *{
+						Csv?: *{
+							Header?: *bool | fn.#Fn
+						} | fn.#If
+						Json?: *{
+							Line?: *bool | fn.#Fn
+						} | fn.#If
+						Parquet?: *bool | fn.#Fn
+					} | fn.#If
+					EndTimeOffset?:                 *(strings.MinRunes(1) & strings.MaxRunes(15) & (=~#"^.?P.*"#)) | fn.#Fn
+					InferenceAttribute?:            *string | fn.#Fn
+					LocalPath:                      *(=~#".*"#) | fn.#Fn
+					ProbabilityAttribute?:          *string | fn.#Fn
+					ProbabilityThresholdAttribute?: *number | fn.#Fn
+					S3DataDistributionType?:        *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+					S3InputMode?:                   *("Pipe" | "File") | fn.#Fn
+					StartTimeOffset?:               *(strings.MinRunes(1) & strings.MaxRunes(15) & (=~#"^.?P.*"#)) | fn.#Fn
+				} | fn.#If
+				EndpointInput?: *{
 					EndTimeOffset?:                 *(strings.MinRunes(1) & strings.MaxRunes(15) & (=~#"^.?P.*"#)) | fn.#Fn
 					EndpointName:                   *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
 					InferenceAttribute?:            *string | fn.#Fn
@@ -1107,7 +1181,22 @@ import (
 						RecordPreprocessorSourceUri?:     *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 					} | fn.#If
 					MonitoringInputs: *[...{
-						EndpointInput: *{
+						BatchTransformInput?: *{
+							DataCapturedDestinationS3Uri: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+							DatasetFormat:                *{
+								Csv?: *{
+									Header?: *bool | fn.#Fn
+								} | fn.#If
+								Json?: *{
+									Line?: *bool | fn.#Fn
+								} | fn.#If
+								Parquet?: *bool | fn.#Fn
+							} | fn.#If
+							LocalPath:               *(=~#".*"#) | fn.#Fn
+							S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+							S3InputMode?:            *("Pipe" | "File") | fn.#Fn
+						} | fn.#If
+						EndpointInput?: *{
 							EndpointName:            *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
 							LocalPath:               *(=~#".*"#) | fn.#Fn
 							S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn

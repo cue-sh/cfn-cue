@@ -749,7 +749,22 @@ import (
 						RecordPreprocessorSourceUri?:     *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
 					} | fn.#If
 					MonitoringInputs: *[...{
-						EndpointInput: *{
+						BatchTransformInput?: *{
+							DataCapturedDestinationS3Uri: *(=~#"^(https|s3)://([^/]+)/?(.*)$"#) | fn.#Fn
+							DatasetFormat:                *{
+								Csv?: *{
+									Header?: *bool | fn.#Fn
+								} | fn.#If
+								Json?: *{
+									Line?: *bool | fn.#Fn
+								} | fn.#If
+								Parquet?: *bool | fn.#Fn
+							} | fn.#If
+							LocalPath:               *(=~#".*"#) | fn.#Fn
+							S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn
+							S3InputMode?:            *("Pipe" | "File") | fn.#Fn
+						} | fn.#If
+						EndpointInput?: *{
 							EndpointName:            *(=~#"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"#) | fn.#Fn
 							LocalPath:               *(=~#".*"#) | fn.#Fn
 							S3DataDistributionType?: *("FullyReplicated" | "ShardedByS3Key") | fn.#Fn

@@ -61,7 +61,6 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 		Properties: {
 			BasePath?:  *string | fn.#Fn
 			DomainName: *string | fn.#Fn
-			Id?:        *string | fn.#Fn
 			RestApiId?: *string | fn.#Fn
 			Stage?:     *string | fn.#Fn
 		}

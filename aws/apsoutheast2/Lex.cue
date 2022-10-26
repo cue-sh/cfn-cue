@@ -407,7 +407,32 @@ import (
 									} | fn.#If
 								}] | fn.#If
 							}] | fn.#If
-							MessageSelectionStrategy?: *("Random" | "Ordered") | fn.#Fn
+							MessageSelectionStrategy?:    *("Random" | "Ordered") | fn.#Fn
+							PromptAttemptsSpecification?: *{
+								[string]: {
+									AllowInterrupt?:   *bool | fn.#Fn
+									AllowedInputTypes: *{
+										AllowAudioInput: *bool | fn.#Fn
+										AllowDTMFInput:  *bool | fn.#Fn
+									} | fn.#If
+									AudioAndDTMFInputSpecification?: *{
+										AudioSpecification?: *{
+											EndTimeoutMs: *int | fn.#Fn
+											MaxLengthMs:  *int | fn.#Fn
+										} | fn.#If
+										DTMFSpecification?: *{
+											DeletionCharacter: *string | fn.#Fn
+											EndCharacter:      *string | fn.#Fn
+											EndTimeoutMs:      *int | fn.#Fn
+											MaxLength:         *int | fn.#Fn
+										} | fn.#If
+										StartTimeoutMs: *int | fn.#Fn
+									} | fn.#If
+									TextInputSpecification?: *{
+										StartTimeoutMs: *int | fn.#Fn
+									} | fn.#If
+								}
+							} | fn.#If
 						} | fn.#If
 					} | fn.#If
 					KendraConfiguration?: *{
@@ -490,7 +515,32 @@ import (
 										} | fn.#If
 									}] | fn.#If
 								}] | fn.#If
-								MessageSelectionStrategy?: *("Random" | "Ordered") | fn.#Fn
+								MessageSelectionStrategy?:    *("Random" | "Ordered") | fn.#Fn
+								PromptAttemptsSpecification?: *{
+									[string]: {
+										AllowInterrupt?:   *bool | fn.#Fn
+										AllowedInputTypes: *{
+											AllowAudioInput: *bool | fn.#Fn
+											AllowDTMFInput:  *bool | fn.#Fn
+										} | fn.#If
+										AudioAndDTMFInputSpecification?: *{
+											AudioSpecification?: *{
+												EndTimeoutMs: *int | fn.#Fn
+												MaxLengthMs:  *int | fn.#Fn
+											} | fn.#If
+											DTMFSpecification?: *{
+												DeletionCharacter: *string | fn.#Fn
+												EndCharacter:      *string | fn.#Fn
+												EndTimeoutMs:      *int | fn.#Fn
+												MaxLength:         *int | fn.#Fn
+											} | fn.#If
+											StartTimeoutMs: *int | fn.#Fn
+										} | fn.#If
+										TextInputSpecification?: *{
+											StartTimeoutMs: *int | fn.#Fn
+										} | fn.#If
+									}
+								} | fn.#If
 							} | fn.#If
 							SampleUtterances?: *[...{
 								Utterance: *string | fn.#Fn

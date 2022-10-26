@@ -126,7 +126,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
-			TrackingConfigArn: *string | fn.#Fn
+			TrackingConfigArn?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

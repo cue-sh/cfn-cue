@@ -87,7 +87,10 @@ import (
 	}
 	#DedicatedIpPool: {
 		Type: "AWS::SES::DedicatedIpPool"
-		Properties: PoolName?: *(=~#"^[a-z0-9_-]{0,64}$"#) | fn.#Fn
+		Properties: {
+			PoolName?:    *(=~#"^[a-z0-9_-]{0,64}$"#) | fn.#Fn
+			ScalingMode?: *(=~#"^(STANDARD|MANAGED)$"#) | fn.#Fn
+		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"

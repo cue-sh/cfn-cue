@@ -632,6 +632,9 @@ import (
 						Type:     *string | fn.#Fn
 					} | fn.#If
 					Republish?: *{
+						Headers?: *{
+							[string]: _
+						} | fn.#Fn
 						Qos?:    *int | fn.#Fn
 						RoleArn: *string | fn.#Fn
 						Topic:   *string | fn.#Fn
@@ -806,6 +809,9 @@ import (
 						Type:     *string | fn.#Fn
 					} | fn.#If
 					Republish?: *{
+						Headers?: *{
+							[string]: _
+						} | fn.#Fn
 						Qos?:    *int | fn.#Fn
 						RoleArn: *string | fn.#Fn
 						Topic:   *string | fn.#Fn

@@ -191,7 +191,7 @@ import (
 					Timeout?:     *int | fn.#Fn
 				} | fn.#If
 				Hostname?:        *string | fn.#Fn
-				Image?:           *string | fn.#Fn
+				Image:            *string | fn.#Fn
 				Interactive?:     *bool | fn.#Fn
 				Links?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				LinuxParameters?: *{
@@ -231,7 +231,7 @@ import (
 					ReadOnly?:      *bool | fn.#Fn
 					SourceVolume?:  *string | fn.#Fn
 				}] | fn.#If
-				Name?:         *string | fn.#Fn
+				Name:          *string | fn.#Fn
 				PortMappings?: *[...{
 					ContainerPort?: *int | fn.#Fn
 					HostPort?:      *int | fn.#Fn

@@ -6,10 +6,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#Pipeline: {
 		Type: "AWS::DataPipeline::Pipeline"
 		Properties: {
-			Activate?:         *bool | fn.#Fn
-			Description?:      *string | fn.#Fn
-			Name:              *string | fn.#Fn
-			ParameterObjects?: *[...{
+			Activate?:        *bool | fn.#Fn
+			Description?:     *string | fn.#Fn
+			Name:             *string | fn.#Fn
+			ParameterObjects: *[...{
 				Attributes: *[...{
 					Key:         *string | fn.#Fn
 					StringValue: *string | fn.#Fn

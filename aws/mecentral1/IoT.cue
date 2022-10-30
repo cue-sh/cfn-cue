@@ -6,11 +6,86 @@ import (
 )
 
 #IoT: {
+	#Authorizer: {
+		Type: "AWS::IoT::Authorizer"
+		Properties: {
+			AuthorizerFunctionArn: *string | fn.#Fn
+			AuthorizerName?:       *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[\w=,@-]+"#)) | fn.#Fn
+			EnableCachingForHttp?: *bool | fn.#Fn
+			SigningDisabled?:      *bool | fn.#Fn
+			Status?:               *("ACTIVE" | "INACTIVE") | fn.#Fn
+			Tags?:                 *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TokenKeyName?:           *string | fn.#Fn
+			TokenSigningPublicKeys?: *{
+				[string]: *string | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#CACertificate: {
+		Type: "AWS::IoT::CACertificate"
+		Properties: {
+			AutoRegistrationStatus?: *("ENABLE" | "DISABLE") | fn.#Fn
+			CACertificatePem:        *(strings.MinRunes(1) & strings.MaxRunes(65536) & (=~#"[\s\S]*"#)) | fn.#Fn
+			CertificateMode?:        *("DEFAULT" | "SNI_ONLY") | fn.#Fn
+			RegistrationConfig?:     *{
+				RoleArn?:      *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+"#)) | fn.#Fn
+				TemplateBody?: *(=~#"[\s\S]*"#) | fn.#Fn
+				TemplateName?: *(strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[0-9A-Za-z_-]+$"#)) | fn.#Fn
+			} | fn.#If
+			RemoveAutoRegistration?: *bool | fn.#Fn
+			Status:                  *("ACTIVE" | "INACTIVE") | fn.#Fn
+			Tags?:                   *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VerificationCertificatePem?: *(strings.MinRunes(1) & strings.MaxRunes(65536) & (=~#"[\s\S]*"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#Certificate: {
 		Type: "AWS::IoT::Certificate"
 		Properties: {
-			CertificateSigningRequest: *string | fn.#Fn
-			Status:                    *("ACTIVE" | "INACTIVE" | "REVOKED" | "PENDING_TRANSFER" | "PENDING_ACTIVATION") | fn.#Fn
+			CACertificatePem?:          *(strings.MinRunes(1) & strings.MaxRunes(65536)) | fn.#Fn
+			CertificateMode?:           *("DEFAULT" | "SNI_ONLY") | fn.#Fn
+			CertificatePem?:            *(strings.MinRunes(1) & strings.MaxRunes(65536)) | fn.#Fn
+			CertificateSigningRequest?: *string | fn.#Fn
+			Status:                     *("ACTIVE" | "INACTIVE" | "REVOKED" | "PENDING_TRANSFER" | "PENDING_ACTIVATION") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#DomainConfiguration: {
+		Type: "AWS::IoT::DomainConfiguration"
+		Properties: {
+			AuthorizerConfig?: *{
+				AllowAuthorizerOverride?: *bool | fn.#Fn
+				DefaultAuthorizerName?:   *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[\w=,@-]+$"#)) | fn.#Fn
+			} | fn.#If
+			DomainConfigurationName?:   *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"^[\w.-]+$"#)) | fn.#Fn
+			DomainConfigurationStatus?: *("ENABLED" | "DISABLED") | fn.#Fn
+			DomainName?:                *(strings.MinRunes(1) & strings.MaxRunes(253)) | fn.#Fn
+			ServerCertificateArns?:     [...(*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\d{1}:\d{12}:certificate/[a-zA-Z0-9/-]+$"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\d{1}:\d{12}:certificate/[a-zA-Z0-9/-]+$"#)) | fn.#Fn)
+			ServiceType?:               *("DATA" | "CREDENTIAL_PROVIDER" | "JOBS") | fn.#Fn
+			Tags?:                      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			ValidationCertificateArn?: *(=~#"^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\d{1}:\d{12}:certificate/[a-zA-Z0-9/-]+$"#) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -60,12 +135,53 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ProvisioningTemplate: {
+		Type: "AWS::IoT::ProvisioningTemplate"
+		Properties: {
+			Description?:         *string | fn.#Fn
+			Enabled?:             *bool | fn.#Fn
+			PreProvisioningHook?: *{
+				PayloadVersion?: *string | fn.#Fn
+				TargetArn?:      *string | fn.#Fn
+			} | fn.#If
+			ProvisioningRoleArn: *string | fn.#Fn
+			Tags?:               *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			TemplateBody:  *string | fn.#Fn
+			TemplateName?: *(strings.MinRunes(1) & strings.MaxRunes(36) & (=~#"^[0-9A-Za-z_-]+$"#)) | fn.#Fn
+			TemplateType?: *("FLEET_PROVISIONING" | "JITP") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#ResourceSpecificLogging: {
 		Type: "AWS::IoT::ResourceSpecificLogging"
 		Properties: {
 			LogLevel:   *("ERROR" | "WARN" | "INFO" | "DEBUG" | "DISABLED") | fn.#Fn
 			TargetName: *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9.:_-]+"#)) | fn.#Fn
 			TargetType: *("THING_GROUP" | "CLIENT_ID" | "SOURCE_IP" | "PRINCIPAL_ID") | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#RoleAlias: {
+		Type: "AWS::IoT::RoleAlias"
+		Properties: {
+			CredentialDurationSeconds?: *(>=900 & <=43200) | fn.#Fn
+			RoleAlias?:                 *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[\w=,@-]+"#)) | fn.#Fn
+			RoleArn:                    *(strings.MinRunes(20) & strings.MaxRunes(2048) & (=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+"#)) | fn.#Fn
+			Tags?:                      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -358,6 +474,26 @@ import (
 				} | fn.#If
 				RuleDisabled: *bool | fn.#Fn
 				Sql:          *string | fn.#Fn
+			} | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#TopicRuleDestination: {
+		Type: "AWS::IoT::TopicRuleDestination"
+		Properties: {
+			HttpUrlProperties?: *{
+				ConfirmationUrl?: *string | fn.#Fn
+			} | fn.#If
+			Status?:        *("ENABLED" | "IN_PROGRESS" | "DISABLED") | fn.#Fn
+			VpcProperties?: *{
+				RoleArn?:        *string | fn.#Fn
+				SecurityGroups?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				SubnetIds?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				VpcId?:          *string | fn.#Fn
 			} | fn.#If
 		}
 		DependsOn?:           string | [...string]

@@ -111,7 +111,7 @@ import (
 				S3Bucket?:        *(strings.MinRunes(3) & strings.MaxRunes(63) & (=~#"^[0-9A-Za-z\.\-_]*(?<!\.)$"#)) | fn.#Fn
 				S3Key?:           *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 				S3ObjectVersion?: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
-				ZipFile?:         *(strings.MinRunes(1) & strings.MaxRunes(4194304)) | fn.#Fn
+				ZipFile?:         *string | fn.#Fn
 			} | fn.#If
 			CodeSigningConfigArn?: *(=~#"arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\d{1}:\d{12}:code-signing-config:csc-[a-z0-9]{17}"#) | fn.#Fn
 			DeadLetterConfig?:     *{

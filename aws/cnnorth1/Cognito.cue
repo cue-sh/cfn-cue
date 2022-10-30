@@ -76,6 +76,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			} | fn.#If
 			AliasAttributes?:        [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			AutoVerifiedAttributes?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+			DeletionProtection?:     *string | fn.#Fn
 			DeviceConfiguration?:    *{
 				ChallengeRequiredOnNewDevice?:     *bool | fn.#Fn
 				DeviceOnlyRememberedOnUserPrompt?: *bool | fn.#Fn

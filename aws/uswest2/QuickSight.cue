@@ -436,6 +436,7 @@ import (
 					Password: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 					Username: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 				} | fn.#If
+				SecretArn?: *string | fn.#Fn
 			} | fn.#If
 			DataSourceId?:         *string | fn.#Fn
 			DataSourceParameters?: *{

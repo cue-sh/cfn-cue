@@ -10,13 +10,27 @@ import (
 		Type: "AWS::RUM::AppMonitor"
 		Properties: {
 			AppMonitorConfiguration?: *{
-				AllowCookies?:      *bool | fn.#Fn
-				EnableXRay?:        *bool | fn.#Fn
-				ExcludedPages?:     [...(*(strings.MinRunes(1) & strings.MaxRunes(1260) & (=~#"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1260) & (=~#"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"#)) | fn.#Fn)
-				FavoritePages?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
-				GuestRoleArn?:      *(=~#"arn:[^:]*:[^:]*:[^:]*:[^:]*:.*"#) | fn.#Fn
-				IdentityPoolId?:    *(strings.MinRunes(1) & strings.MaxRunes(55) & (=~#"[\w-]+:[0-9a-f-]+"#)) | fn.#Fn
-				IncludedPages?:     [...(*(strings.MinRunes(1) & strings.MaxRunes(1260) & (=~#"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1260) & (=~#"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"#)) | fn.#Fn)
+				AllowCookies?:       *bool | fn.#Fn
+				EnableXRay?:         *bool | fn.#Fn
+				ExcludedPages?:      [...(*(strings.MinRunes(1) & strings.MaxRunes(1260) & (=~#"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1260) & (=~#"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"#)) | fn.#Fn)
+				FavoritePages?:      [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				GuestRoleArn?:       *(=~#"arn:[^:]*:[^:]*:[^:]*:[^:]*:.*"#) | fn.#Fn
+				IdentityPoolId?:     *(strings.MinRunes(1) & strings.MaxRunes(55) & (=~#"[\w-]+:[0-9a-f-]+"#)) | fn.#Fn
+				IncludedPages?:      [...(*(strings.MinRunes(1) & strings.MaxRunes(1260) & (=~#"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1260) & (=~#"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"#)) | fn.#Fn)
+				MetricDestinations?: *[...{
+					Destination:        *("CloudWatch" | "Evidently") | fn.#Fn
+					DestinationArn?:    *(=~#"arn:[^:]*:[^:]*:[^:]*:[^:]*:.*"#) | fn.#Fn
+					IamRoleArn?:        *(=~#"arn:[^:]*:[^:]*:[^:]*:[^:]*:.*"#) | fn.#Fn
+					MetricDefinitions?: *[...{
+						DimensionKeys?: *{
+							[string]: *string | fn.#Fn
+						} | fn.#If
+						EventPattern?: *(strings.MinRunes(1) & strings.MaxRunes(4000)) | fn.#Fn
+						Name:          *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+						UnitLabel?:    *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+						ValueKey?:     *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#".*"#)) | fn.#Fn
+					}] | fn.#If
+				}] | fn.#If
 				SessionSampleRate?: *number | fn.#Fn
 				Telemetries?:       [...(*("errors" | "performance" | "http") | fn.#Fn)] | (*("errors" | "performance" | "http") | fn.#Fn)
 			} | fn.#If

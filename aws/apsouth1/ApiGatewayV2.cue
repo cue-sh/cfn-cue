@@ -35,8 +35,8 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			RouteKey?:                  *string | fn.#Fn
 			RouteSelectionExpression?:  *string | fn.#Fn
 			Tags?:                      *{
-				[string]: _
-			} | fn.#Fn
+				[string]: *string | fn.#Fn
+			} | fn.#If
 			Target?:  *string | fn.#Fn
 			Version?: *string | fn.#Fn
 		}

@@ -13,10 +13,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ImportedFileChunkSize?:       *int | fn.#Fn
 			S3?:                          *{
 				AutoExportPolicy?: *{
-					Events: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Events: [...(*("NEW" | "CHANGED" | "DELETED") | fn.#Fn)] | (*("NEW" | "CHANGED" | "DELETED") | fn.#Fn)
 				} | fn.#If
 				AutoImportPolicy?: *{
-					Events: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					Events: [...(*("NEW" | "CHANGED" | "DELETED") | fn.#Fn)] | (*("NEW" | "CHANGED" | "DELETED") | fn.#Fn)
 				} | fn.#If
 			} | fn.#If
 			Tags?: *[...{

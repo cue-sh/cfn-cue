@@ -18,17 +18,17 @@ import (
 				IdentityPoolId?:     *(strings.MinRunes(1) & strings.MaxRunes(55) & (=~#"[\w-]+:[0-9a-f-]+"#)) | fn.#Fn
 				IncludedPages?:      [...(*(strings.MinRunes(1) & strings.MaxRunes(1260) & (=~#"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(1260) & (=~#"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"#)) | fn.#Fn)
 				MetricDestinations?: *[...{
-					Destination:        *string | fn.#Fn
-					DestinationArn?:    *string | fn.#Fn
-					IamRoleArn?:        *string | fn.#Fn
+					Destination:        *("CloudWatch" | "Evidently") | fn.#Fn
+					DestinationArn?:    *(=~#"arn:[^:]*:[^:]*:[^:]*:[^:]*:.*"#) | fn.#Fn
+					IamRoleArn?:        *(=~#"arn:[^:]*:[^:]*:[^:]*:[^:]*:.*"#) | fn.#Fn
 					MetricDefinitions?: *[...{
 						DimensionKeys?: *{
 							[string]: *string | fn.#Fn
 						} | fn.#If
-						EventPattern?: *string | fn.#Fn
-						Name:          *string | fn.#Fn
-						UnitLabel?:    *string | fn.#Fn
-						ValueKey?:     *string | fn.#Fn
+						EventPattern?: *(strings.MinRunes(1) & strings.MaxRunes(4000)) | fn.#Fn
+						Name:          *(strings.MinRunes(1) & strings.MaxRunes(255)) | fn.#Fn
+						UnitLabel?:    *(strings.MinRunes(1) & strings.MaxRunes(256)) | fn.#Fn
+						ValueKey?:     *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#".*"#)) | fn.#Fn
 					}] | fn.#If
 				}] | fn.#If
 				SessionSampleRate?: *number | fn.#Fn

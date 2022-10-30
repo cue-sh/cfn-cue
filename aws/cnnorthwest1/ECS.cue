@@ -214,7 +214,7 @@ import (
 					Timeout?:     *int | fn.#Fn
 				} | fn.#If
 				Hostname?:        *string | fn.#Fn
-				Image?:           *string | fn.#Fn
+				Image:            *string | fn.#Fn
 				Interactive?:     *bool | fn.#Fn
 				Links?:           [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 				LinuxParameters?: *{
@@ -254,7 +254,7 @@ import (
 					ReadOnly?:      *bool | fn.#Fn
 					SourceVolume?:  *string | fn.#Fn
 				}] | fn.#If
-				Name?:         *string | fn.#Fn
+				Name:          *string | fn.#Fn
 				PortMappings?: *[...{
 					ContainerPort?: *int | fn.#Fn
 					HostPort?:      *int | fn.#Fn
@@ -342,8 +342,9 @@ import (
 				} | fn.#If
 				EFSVolumeConfiguration?: *{
 					AuthorizationConfig?: *{
-						[string]: _
-					} | fn.#Fn
+						AccessPointId?: *string | fn.#Fn
+						IAM?:           *("ENABLED" | "DISABLED") | fn.#Fn
+					} | fn.#If
 					FilesystemId:           *string | fn.#Fn
 					RootDirectory?:         *string | fn.#Fn
 					TransitEncryption?:     *("ENABLED" | "DISABLED") | fn.#Fn

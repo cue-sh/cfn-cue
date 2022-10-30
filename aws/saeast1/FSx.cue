@@ -3,6 +3,33 @@ package saeast1
 import "github.com/cue-sh/cfn-cue/aws/fn"
 
 #FSx: {
+	#DataRepositoryAssociation: {
+		Type: "AWS::FSx::DataRepositoryAssociation"
+		Properties: {
+			BatchImportMetaDataOnCreate?: *bool | fn.#Fn
+			DataRepositoryPath:           *string | fn.#Fn
+			FileSystemId:                 *string | fn.#Fn
+			FileSystemPath:               *string | fn.#Fn
+			ImportedFileChunkSize?:       *int | fn.#Fn
+			S3?:                          *{
+				AutoExportPolicy?: *{
+					Events: [...(*("NEW" | "CHANGED" | "DELETED") | fn.#Fn)] | (*("NEW" | "CHANGED" | "DELETED") | fn.#Fn)
+				} | fn.#If
+				AutoImportPolicy?: *{
+					Events: [...(*("NEW" | "CHANGED" | "DELETED") | fn.#Fn)] | (*("NEW" | "CHANGED" | "DELETED") | fn.#Fn)
+				} | fn.#If
+			} | fn.#If
+			Tags?: *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#FileSystem: {
 		Type: "AWS::FSx::FileSystem"
 		Properties: {

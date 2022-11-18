@@ -21,6 +21,7 @@ import (
 				}] | fn.#If
 				Name?: *(strings.MinRunes(1) & strings.MaxRunes(1000)) | fn.#Fn
 			}] | fn.#If
+			KmsKeyId?:            *string | fn.#Fn
 			MultiRegionEnabled?:  *bool | fn.#Fn
 			Name?:                *string | fn.#Fn
 			OrganizationEnabled?: *bool | fn.#Fn

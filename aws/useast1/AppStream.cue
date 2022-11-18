@@ -89,6 +89,10 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 	#DirectoryConfig: {
 		Type: "AWS::AppStream::DirectoryConfig"
 		Properties: {
+			CertificateBasedAuthProperties?: *{
+				CertificateAuthorityArn?: *string | fn.#Fn
+				Status?:                  *string | fn.#Fn
+			} | fn.#If
 			DirectoryName:                        *string | fn.#Fn
 			OrganizationalUnitDistinguishedNames: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			ServiceAccountCredentials:            *{

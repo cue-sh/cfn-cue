@@ -27,6 +27,19 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#ResourcePolicy: {
+		Type: "AWS::XRay::ResourcePolicy"
+		Properties: {
+			BypassPolicyLockoutCheck?: *bool | fn.#Fn
+			PolicyDocument:            *(strings.MinRunes(1) & strings.MaxRunes(5120)) | fn.#Fn
+			PolicyName:                *(strings.MinRunes(1) & strings.MaxRunes(128) & (=~#"[\w+=,.@-]+"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 	#SamplingRule: {
 		Type: "AWS::XRay::SamplingRule"
 		Properties: {

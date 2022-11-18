@@ -633,8 +633,16 @@ import (
 					} | fn.#If
 					Republish?: *{
 						Headers?: *{
-							[string]: _
-						} | fn.#Fn
+							ContentType?:            *string | fn.#Fn
+							CorrelationData?:        *string | fn.#Fn
+							MessageExpiry?:          *string | fn.#Fn
+							PayloadFormatIndicator?: *string | fn.#Fn
+							ResponseTopic?:          *string | fn.#Fn
+							UserProperties?:         *[...{
+								Key:   *string | fn.#Fn
+								Value: *string | fn.#Fn
+							}] | fn.#If
+						} | fn.#If
 						Qos?:    *int | fn.#Fn
 						RoleArn: *string | fn.#Fn
 						Topic:   *string | fn.#Fn
@@ -810,8 +818,16 @@ import (
 					} | fn.#If
 					Republish?: *{
 						Headers?: *{
-							[string]: _
-						} | fn.#Fn
+							ContentType?:            *string | fn.#Fn
+							CorrelationData?:        *string | fn.#Fn
+							MessageExpiry?:          *string | fn.#Fn
+							PayloadFormatIndicator?: *string | fn.#Fn
+							ResponseTopic?:          *string | fn.#Fn
+							UserProperties?:         *[...{
+								Key:   *string | fn.#Fn
+								Value: *string | fn.#Fn
+							}] | fn.#If
+						} | fn.#If
 						Qos?:    *int | fn.#Fn
 						RoleArn: *string | fn.#Fn
 						Topic:   *string | fn.#Fn

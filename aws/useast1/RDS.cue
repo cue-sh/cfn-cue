@@ -56,6 +56,7 @@ import (
 				MaxCapacity?:           *int | fn.#Fn
 				MinCapacity?:           *int | fn.#Fn
 				SecondsUntilAutoPause?: *int | fn.#Fn
+				TimeoutAction?:         *string | fn.#Fn
 			} | fn.#If
 			ServerlessV2ScalingConfiguration?: *{
 				MaxCapacity?: *(>=0.5 & <=128) | fn.#Fn
@@ -82,9 +83,10 @@ import (
 	#DBClusterParameterGroup: {
 		Type: "AWS::RDS::DBClusterParameterGroup"
 		Properties: {
-			Description: *string | fn.#Fn
-			Family:      *string | fn.#Fn
-			Parameters:  *{
+			DBClusterParameterGroupName?: *(=~#"^[a-zA-Z]{1}(?:-?[a-zA-Z0-9])*$"#) | fn.#Fn
+			Description:                  *string | fn.#Fn
+			Family:                       *string | fn.#Fn
+			Parameters:                   *{
 				[string]: _
 			} | fn.#Fn
 			Tags?: *[...{
@@ -154,9 +156,11 @@ import (
 			}] | fn.#If
 			PromotionTier?:              *(>=0 & <=15) | fn.#Fn
 			PubliclyAccessible?:         *bool | fn.#Fn
+			ReplicaMode?:                *string | fn.#Fn
 			SourceDBInstanceIdentifier?: *string | fn.#Fn
 			SourceRegion?:               *string | fn.#Fn
 			StorageEncrypted?:           *bool | fn.#Fn
+			StorageThroughput?:          *int | fn.#Fn
 			StorageType?:                *string | fn.#Fn
 			Tags?:                       *[...{
 				Key:   *string | fn.#Fn
@@ -175,9 +179,10 @@ import (
 	#DBParameterGroup: {
 		Type: "AWS::RDS::DBParameterGroup"
 		Properties: {
-			Description: *string | fn.#Fn
-			Family:      *string | fn.#Fn
-			Parameters?: *{
+			DBParameterGroupName?: *(=~#"^[a-zA-Z]{1}(?:-?[a-zA-Z0-9])*$"#) | fn.#Fn
+			Description:           *string | fn.#Fn
+			Family:                *string | fn.#Fn
+			Parameters?:           *{
 				[string]: _
 			} | fn.#Fn
 			Tags?: *[...{
@@ -367,6 +372,7 @@ import (
 				VpcSecurityGroupMemberships?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			}] | fn.#If
 			OptionGroupDescription: *string | fn.#Fn
+			OptionGroupName?:       *string | fn.#Fn
 			Tags?:                  *[...{
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn

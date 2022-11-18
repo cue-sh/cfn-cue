@@ -26,6 +26,14 @@ import (
 			TrackingOptions?: *{
 				CustomRedirectDomain?: *string | fn.#Fn
 			} | fn.#If
+			VdmOptions?: *{
+				DashboardOptions?: *{
+					EngagementMetrics: *(=~#"ENABLED|DISABLED"#) | fn.#Fn
+				} | fn.#If
+				GuardianOptions?: *{
+					OptimizedSharedDelivery: *(=~#"ENABLED|DISABLED"#) | fn.#Fn
+				} | fn.#If
+			} | fn.#If
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -213,6 +221,22 @@ import (
 			TemplateName?: *(strings.MinRunes(1) & strings.MaxRunes(64) & (=~#"^[a-zA-Z0-9_-]{1,64}$"#)) | fn.#Fn
 			TextPart?:     *string | fn.#Fn
 		} | fn.#If
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#VdmAttributes: {
+		Type: "AWS::SES::VdmAttributes"
+		Properties: {
+			DashboardAttributes?: *{
+				EngagementMetrics?: *(=~#"ENABLED|DISABLED"#) | fn.#Fn
+			} | fn.#If
+			GuardianAttributes?: *{
+				OptimizedSharedDelivery?: *(=~#"ENABLED|DISABLED"#) | fn.#Fn
+			} | fn.#If
+		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
 		UpdateReplacePolicy?: "Delete" | "Retain"

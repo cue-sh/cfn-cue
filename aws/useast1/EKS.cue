@@ -49,7 +49,10 @@ import (
 			Name?:          *(strings.MinRunes(1) & strings.MaxRunes(100) & (=~#"^[0-9A-Za-z][A-Za-z0-9\-_]*"#)) | fn.#Fn
 			OutpostConfig?: *{
 				ControlPlaneInstanceType: *string | fn.#Fn
-				OutpostArns:              [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+				ControlPlanePlacement?:   *{
+					GroupName?: *string | fn.#Fn
+				} | fn.#If
+				OutpostArns: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 			} | fn.#If
 			ResourcesVpcConfig: *{
 				EndpointPrivateAccess?: *bool | fn.#Fn

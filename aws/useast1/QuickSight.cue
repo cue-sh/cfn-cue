@@ -436,6 +436,7 @@ import (
 					Password: *(strings.MinRunes(1) & strings.MaxRunes(1024)) | fn.#Fn
 					Username: *(strings.MinRunes(1) & strings.MaxRunes(64)) | fn.#Fn
 				} | fn.#If
+				SecretArn?: *(strings.MinRunes(1) & strings.MaxRunes(2048) & (=~#"^arn:[-a-z0-9]*:secretsmanager:[-a-z0-9]*:[0-9]{12}:secret:.+"#)) | fn.#Fn
 			} | fn.#If
 			DataSourceId?:         *string | fn.#Fn
 			DataSourceParameters?: *{

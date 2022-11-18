@@ -33,4 +33,16 @@ import (
 		Metadata?: [string]: _
 		Condition?: string
 	}
+	#SlackWorkspaceConfiguration: {
+		Type: "AWS::SupportApp::SlackWorkspaceConfiguration"
+		Properties: {
+			TeamId:     *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^\S+$"#)) | fn.#Fn
+			VersionId?: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^[0-9]+$"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
 }

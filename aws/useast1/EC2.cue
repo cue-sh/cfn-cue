@@ -223,7 +223,7 @@ import (
 				LaunchTemplateSpecification?: *{
 					LaunchTemplateId?:   *string | fn.#Fn
 					LaunchTemplateName?: *(strings.MinRunes(3) & strings.MaxRunes(128) & (=~#"[a-zA-Z0-9\(\)\.\-/_]+"#)) | fn.#Fn
-					Version?:            *string | fn.#Fn
+					Version:             *string | fn.#Fn
 				} | fn.#If
 				Overrides?: *[...{
 					AvailabilityZone?:     *string | fn.#Fn
@@ -239,6 +239,7 @@ import (
 							Min?: *int | fn.#Fn
 						} | fn.#If
 						AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+						AllowedInstanceTypes?:     [...(*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)
 						BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
 						BaselineEbsBandwidthMbps?: *{
 							Max?: *int | fn.#Fn
@@ -257,6 +258,10 @@ import (
 						MemoryMiB?: *{
 							Max?: *int | fn.#Fn
 							Min?: *int | fn.#Fn
+						} | fn.#If
+						NetworkBandwidthGbps?: *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
 						} | fn.#If
 						NetworkInterfaceCount?: *{
 							Max?: *int | fn.#Fn
@@ -303,7 +308,7 @@ import (
 			} | fn.#If
 			ReplaceUnhealthyInstances?: *bool | fn.#Fn
 			SpotOptions?:               *{
-				AllocationStrategy?:           *("lowestPrice" | "diversified" | "capacityOptimized" | "capacityOptimizedPrioritized") | fn.#Fn
+				AllocationStrategy?:           *("lowest-price" | "lowestPrice" | "diversified" | "capacityOptimized" | "capacity-optimized" | "capacityOptimizedPrioritized" | "capacity-optimized-prioritized" | "priceCapacityOptimized" | "price-capacity-optimized") | fn.#Fn
 				InstanceInterruptionBehavior?: *("hibernate" | "stop" | "terminate") | fn.#Fn
 				InstancePoolsToUseCount?:      *int | fn.#Fn
 				MaintenanceStrategies?:        *{
@@ -353,6 +358,7 @@ import (
 				Key:   *string | fn.#Fn
 				Value: *string | fn.#Fn
 			}] | fn.#If
+			TransferAddress?: *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -763,6 +769,7 @@ import (
 						Min?: *int | fn.#Fn
 					} | fn.#If
 					AcceleratorTypes?:         [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+					AllowedInstanceTypes?:     [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 					BareMetal?:                *string | fn.#Fn
 					BaselineEbsBandwidthMbps?: *{
 						Max?: *int | fn.#Fn
@@ -781,6 +788,10 @@ import (
 					MemoryMiB?: *{
 						Max?: *int | fn.#Fn
 						Min?: *int | fn.#Fn
+					} | fn.#If
+					NetworkBandwidthGbps?: *{
+						Max?: *number | fn.#Fn
+						Min?: *number | fn.#Fn
 					} | fn.#If
 					NetworkInterfaceCount?: *{
 						Max?: *int | fn.#Fn
@@ -850,6 +861,7 @@ import (
 				Placement?: *{
 					Affinity?:             *string | fn.#Fn
 					AvailabilityZone?:     *(=~#"[a-z0-9-]+"#) | fn.#Fn
+					GroupId?:              *string | fn.#Fn
 					GroupName?:            *string | fn.#Fn
 					HostId?:               *string | fn.#Fn
 					HostResourceGroupArn?: *string | fn.#Fn
@@ -893,9 +905,10 @@ import (
 	#LocalGatewayRoute: {
 		Type: "AWS::EC2::LocalGatewayRoute"
 		Properties: {
-			DestinationCidrBlock:                *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$"#) | fn.#Fn
-			LocalGatewayRouteTableId:            *string | fn.#Fn
-			LocalGatewayVirtualInterfaceGroupId: *string | fn.#Fn
+			DestinationCidrBlock:                 *(=~#"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$"#) | fn.#Fn
+			LocalGatewayRouteTableId:             *string | fn.#Fn
+			LocalGatewayVirtualInterfaceGroupId?: *string | fn.#Fn
+			NetworkInterfaceId?:                  *string | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"
@@ -1327,7 +1340,7 @@ import (
 	#SpotFleet: {
 		Type: "AWS::EC2::SpotFleet"
 		Properties: SpotFleetRequestConfigData: *{
-			AllocationStrategy?:              *("capacityOptimized" | "capacityOptimizedPrioritized" | "diversified" | "lowestPrice") | fn.#Fn
+			AllocationStrategy?:              *("capacityOptimized" | "capacityOptimizedPrioritized" | "diversified" | "lowestPrice" | "priceCapacityOptimized") | fn.#Fn
 			Context?:                         *string | fn.#Fn
 			ExcessCapacityTerminationPolicy?: *("Default" | "NoTermination" | "default" | "noTermination") | fn.#Fn
 			IamFleetRole:                     *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
@@ -1364,6 +1377,7 @@ import (
 						Min?: *int | fn.#Fn
 					} | fn.#If
 					AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+					AllowedInstanceTypes?:     [...(*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)
 					BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
 					BaselineEbsBandwidthMbps?: *{
 						Max?: *int | fn.#Fn
@@ -1382,6 +1396,10 @@ import (
 					MemoryMiB?: *{
 						Max?: *int | fn.#Fn
 						Min?: *int | fn.#Fn
+					} | fn.#If
+					NetworkBandwidthGbps?: *{
+						Max?: *number | fn.#Fn
+						Min?: *number | fn.#Fn
 					} | fn.#If
 					NetworkInterfaceCount?: *{
 						Max?: *int | fn.#Fn
@@ -1464,6 +1482,7 @@ import (
 							Min?: *int | fn.#Fn
 						} | fn.#If
 						AcceleratorTypes?:         [...(*("gpu" | "fpga" | "inference") | fn.#Fn)] | (*("gpu" | "fpga" | "inference") | fn.#Fn)
+						AllowedInstanceTypes?:     [...(*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)] | (*(strings.MinRunes(1) & strings.MaxRunes(30) & (=~#"[a-zA-Z0-9\.\*]+"#)) | fn.#Fn)
 						BareMetal?:                *("included" | "required" | "excluded") | fn.#Fn
 						BaselineEbsBandwidthMbps?: *{
 							Max?: *int | fn.#Fn
@@ -1482,6 +1501,10 @@ import (
 						MemoryMiB?: *{
 							Max?: *int | fn.#Fn
 							Min?: *int | fn.#Fn
+						} | fn.#If
+						NetworkBandwidthGbps?: *{
+							Max?: *number | fn.#Fn
+							Min?: *number | fn.#Fn
 						} | fn.#If
 						NetworkInterfaceCount?: *{
 							Max?: *int | fn.#Fn
@@ -1528,8 +1551,15 @@ import (
 					TerminationDelay?:    *int | fn.#Fn
 				} | fn.#If
 			} | fn.#If
-			SpotMaxTotalPrice?:                *string | fn.#Fn
-			SpotPrice?:                        *string | fn.#Fn
+			SpotMaxTotalPrice?: *string | fn.#Fn
+			SpotPrice?:         *string | fn.#Fn
+			TagSpecifications?: *[...{
+				ResourceType?: *("client-vpn-endpoint" | "customer-gateway" | "dedicated-host" | "dhcp-options" | "egress-only-internet-gateway" | "elastic-gpu" | "elastic-ip" | "export-image-task" | "export-instance-task" | "fleet" | "fpga-image" | "host-reservation" | "image" | "import-image-task" | "import-snapshot-task" | "instance" | "internet-gateway" | "key-pair" | "launch-template" | "local-gateway-route-table-vpc-association" | "natgateway" | "network-acl" | "network-insights-analysis" | "network-insights-path" | "network-interface" | "placement-group" | "reserved-instances" | "route-table" | "security-group" | "snapshot" | "spot-fleet-request" | "spot-instances-request" | "subnet" | "traffic-mirror-filter" | "traffic-mirror-session" | "traffic-mirror-target" | "transit-gateway" | "transit-gateway-attachment" | "transit-gateway-connect-peer" | "transit-gateway-multicast-domain" | "transit-gateway-route-table" | "volume" | "vpc" | "vpc-flow-log" | "vpc-peering-connection" | "vpn-connection" | "vpn-gateway") | fn.#Fn
+				Tags?:         *[...{
+					Key:   *string | fn.#Fn
+					Value: *string | fn.#Fn
+				}] | fn.#If
+			}] | fn.#If
 			TargetCapacity:                    *int | fn.#Fn
 			TargetCapacityUnitType?:           *("vcpu" | "memory-mib" | "units") | fn.#Fn
 			TerminateInstancesWithExpiration?: *bool | fn.#Fn

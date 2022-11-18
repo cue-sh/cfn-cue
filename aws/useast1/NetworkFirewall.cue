@@ -40,6 +40,9 @@ import (
 					RuleOrder?: *("DEFAULT_ACTION_ORDER" | "STRICT_ORDER") | fn.#Fn
 				} | fn.#If
 				StatefulRuleGroupReferences?: *[...{
+					Override?: *{
+						Action?: *("DROP_TO_ALERT") | fn.#Fn
+					} | fn.#If
 					Priority?:   *(>=1 & <=65535) | fn.#Fn
 					ResourceArn: *(strings.MinRunes(1) & strings.MaxRunes(256) & (=~#"^(arn:aws.*)$"#)) | fn.#Fn
 				}] | fn.#If

@@ -149,6 +149,7 @@ import (
 						Url:        *string | fn.#Fn
 					} | fn.#If
 				} | fn.#If
+				IncludeDvbSubtitles?:            *bool | fn.#Fn
 				IncludeIframeOnlyStream?:        *bool | fn.#Fn
 				PlaylistType?:                   *("NONE" | "EVENT" | "VOD") | fn.#Fn
 				PlaylistWindowSeconds?:          *int | fn.#Fn
@@ -206,6 +207,10 @@ import (
 			CmafPackage?: *{
 				Encryption?: *{
 					SpekeKeyProvider: *{
+						EncryptionContractConfiguration?: *{
+							PresetSpeke20Audio: *("PRESET-AUDIO-1" | "PRESET-AUDIO-2" | "PRESET-AUDIO-3" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1" | "PRESET-VIDEO-2" | "PRESET-VIDEO-3" | "PRESET-VIDEO-4" | "PRESET-VIDEO-5" | "PRESET-VIDEO-6" | "PRESET-VIDEO-7" | "PRESET-VIDEO-8" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+						} | fn.#If
 						RoleArn:   *string | fn.#Fn
 						SystemIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 						Url:       *string | fn.#Fn
@@ -241,6 +246,10 @@ import (
 				}] | fn.#If
 				Encryption?: *{
 					SpekeKeyProvider: *{
+						EncryptionContractConfiguration?: *{
+							PresetSpeke20Audio: *("PRESET-AUDIO-1" | "PRESET-AUDIO-2" | "PRESET-AUDIO-3" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1" | "PRESET-VIDEO-2" | "PRESET-VIDEO-3" | "PRESET-VIDEO-4" | "PRESET-VIDEO-5" | "PRESET-VIDEO-6" | "PRESET-VIDEO-7" | "PRESET-VIDEO-8" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+						} | fn.#If
 						RoleArn:   *string | fn.#Fn
 						SystemIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 						Url:       *string | fn.#Fn
@@ -256,6 +265,10 @@ import (
 					ConstantInitializationVector?: *string | fn.#Fn
 					EncryptionMethod?:             *("AES_128" | "SAMPLE_AES") | fn.#Fn
 					SpekeKeyProvider:              *{
+						EncryptionContractConfiguration?: *{
+							PresetSpeke20Audio: *("PRESET-AUDIO-1" | "PRESET-AUDIO-2" | "PRESET-AUDIO-3" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1" | "PRESET-VIDEO-2" | "PRESET-VIDEO-3" | "PRESET-VIDEO-4" | "PRESET-VIDEO-5" | "PRESET-VIDEO-6" | "PRESET-VIDEO-7" | "PRESET-VIDEO-8" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+						} | fn.#If
 						RoleArn:   *string | fn.#Fn
 						SystemIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 						Url:       *string | fn.#Fn
@@ -273,6 +286,7 @@ import (
 						StreamOrder?:           *("ORIGINAL" | "VIDEO_BITRATE_ASCENDING" | "VIDEO_BITRATE_DESCENDING") | fn.#Fn
 					} | fn.#If
 				}] | fn.#If
+				IncludeDvbSubtitles?:    *bool | fn.#Fn
 				SegmentDurationSeconds?: *int | fn.#Fn
 				UseAudioRenditionGroup?: *bool | fn.#Fn
 			} | fn.#If
@@ -280,6 +294,10 @@ import (
 			MssPackage?: *{
 				Encryption?: *{
 					SpekeKeyProvider: *{
+						EncryptionContractConfiguration?: *{
+							PresetSpeke20Audio: *("PRESET-AUDIO-1" | "PRESET-AUDIO-2" | "PRESET-AUDIO-3" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+							PresetSpeke20Video: *("PRESET-VIDEO-1" | "PRESET-VIDEO-2" | "PRESET-VIDEO-3" | "PRESET-VIDEO-4" | "PRESET-VIDEO-5" | "PRESET-VIDEO-6" | "PRESET-VIDEO-7" | "PRESET-VIDEO-8" | "SHARED" | "UNENCRYPTED") | fn.#Fn
+						} | fn.#If
 						RoleArn:   *string | fn.#Fn
 						SystemIds: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
 						Url:       *string | fn.#Fn

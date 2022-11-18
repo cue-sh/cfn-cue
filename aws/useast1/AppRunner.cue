@@ -49,6 +49,9 @@ import (
 					EgressType:       *("DEFAULT" | "VPC") | fn.#Fn
 					VpcConnectorArn?: *(strings.MinRunes(44) & strings.MaxRunes(1011) & (=~#"arn:aws(-[\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\w|\/|-){1,1011}"#)) | fn.#Fn
 				} | fn.#If
+				IngressConfiguration?: *{
+					IsPubliclyAccessible: *bool | fn.#Fn
+				} | fn.#If
 			} | fn.#If
 			ObservabilityConfiguration?: *{
 				ObservabilityConfigurationArn?: *(strings.MinRunes(1) & strings.MaxRunes(1011) & (=~#"arn:aws(-[\w]+)*:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[0-9]{12}:(\w|/|-){1,1011}"#)) | fn.#Fn
@@ -66,7 +69,7 @@ import (
 						CodeConfigurationValues?: *{
 							BuildCommand?:                *string | fn.#Fn
 							Port?:                        *string | fn.#Fn
-							Runtime:                      *("PYTHON_3" | "NODEJS_12" | "NODEJS_14" | "CORRETTO_8" | "CORRETTO_11" | "NODEJS_16") | fn.#Fn
+							Runtime:                      *("PYTHON_3" | "NODEJS_12" | "NODEJS_14" | "CORRETTO_8" | "CORRETTO_11" | "NODEJS_16" | "GO_1" | "DOTNET_6" | "PHP_81" | "RUBY_31") | fn.#Fn
 							RuntimeEnvironmentVariables?: *[...{
 								Name?:  *string | fn.#Fn
 								Value?: *string | fn.#Fn
@@ -115,6 +118,26 @@ import (
 				Value: *string | fn.#Fn
 			}] | fn.#If
 			VpcConnectorName?: *(strings.MinRunes(4) & strings.MaxRunes(40) & (=~#"^[A-Za-z0-9][A-Za-z0-9-\\_]{3,39}$"#)) | fn.#Fn
+		}
+		DependsOn?:           string | [...string]
+		DeletionPolicy?:      "Delete" | "Retain"
+		UpdateReplacePolicy?: "Delete" | "Retain"
+		Metadata?: [string]: _
+		Condition?: string
+	}
+	#VpcIngressConnection: {
+		Type: "AWS::AppRunner::VpcIngressConnection"
+		Properties: {
+			IngressVpcConfiguration: *{
+				VpcEndpointId: *string | fn.#Fn
+				VpcId:         *string | fn.#Fn
+			} | fn.#If
+			ServiceArn: *(strings.MinRunes(1) & strings.MaxRunes(1011) & (=~#"arn:aws(-[\w]+)*:[a-z0-9-\.]{0,63}:[a-z0-9-\.]{0,63}:[0-9]{12}:(\w|/|-){1,1011}"#)) | fn.#Fn
+			Tags?:      *[...{
+				Key:   *string | fn.#Fn
+				Value: *string | fn.#Fn
+			}] | fn.#If
+			VpcIngressConnectionName?: *(strings.MinRunes(4) & strings.MaxRunes(40) & (=~#"[A-Za-z0-9][A-Za-z0-9\-_]{3,39}"#)) | fn.#Fn
 		}
 		DependsOn?:           string | [...string]
 		DeletionPolicy?:      "Delete" | "Retain"

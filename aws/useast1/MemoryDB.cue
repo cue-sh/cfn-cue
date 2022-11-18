@@ -25,6 +25,7 @@ import "github.com/cue-sh/cfn-cue/aws/fn"
 			ACLName:                  *(=~#"[a-zA-Z][a-zA-Z0-9\-]*"#) | fn.#Fn
 			AutoMinorVersionUpgrade?: *bool | fn.#Fn
 			ClusterName:              *(=~#"[a-z][a-z0-9\-]*"#) | fn.#Fn
+			DataTiering?:             *("true" | "false") | fn.#Fn
 			Description?:             *string | fn.#Fn
 			EngineVersion?:           *string | fn.#Fn
 			FinalSnapshotName?:       *string | fn.#Fn

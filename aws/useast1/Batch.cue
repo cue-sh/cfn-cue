@@ -15,8 +15,9 @@ import (
 				BidPercentage?:      *int | fn.#Fn
 				DesiredvCpus?:       *int | fn.#Fn
 				Ec2Configuration?:   *[...{
-					ImageIdOverride?: *string | fn.#Fn
-					ImageType:        *string | fn.#Fn
+					ImageIdOverride?:        *string | fn.#Fn
+					ImageKubernetesVersion?: *string | fn.#Fn
+					ImageType:               *string | fn.#Fn
 				}] | fn.#If
 				Ec2KeyPair?:     *string | fn.#Fn
 				ImageId?:        *string | fn.#Fn
@@ -38,6 +39,10 @@ import (
 				} | fn.#If
 				Type:                        *string | fn.#Fn
 				UpdateToLatestImageVersion?: *bool | fn.#Fn
+			} | fn.#If
+			EksConfiguration?: *{
+				EksClusterArn:       *string | fn.#Fn
+				KubernetesNamespace: *string | fn.#Fn
 			} | fn.#If
 			ReplaceComputeEnvironment?: *bool | fn.#Fn
 			ServiceRole?:               *(=~#"arn:(aws[a-zA-Z-]*)?:iam::\d{12}:role/[a-zA-Z_0-9+=,.@\-_/]+"#) | fn.#Fn
@@ -142,6 +147,58 @@ import (
 					} | fn.#If
 					Name?: *string | fn.#Fn
 				}] | fn.#If
+			} | fn.#If
+			EksProperties?: *{
+				PodProperties?: *{
+					Containers?: *[...{
+						Args?:    [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						Command?: [...(*string | fn.#Fn)] | (*string | fn.#Fn)
+						Env?:     *[...{
+							Name:   *string | fn.#Fn
+							Value?: *string | fn.#Fn
+						}] | fn.#If
+						Image:            *string | fn.#Fn
+						ImagePullPolicy?: *string | fn.#Fn
+						Name?:            *string | fn.#Fn
+						Resources?:       *{
+							Limits?: *{
+								[string]: _
+							} | fn.#Fn
+							Requests?: *{
+								[string]: _
+							} | fn.#Fn
+						} | fn.#If
+						SecurityContext?: *{
+							Privileged?:             *bool | fn.#Fn
+							ReadOnlyRootFilesystem?: *bool | fn.#Fn
+							RunAsGroup?:             *int | fn.#Fn
+							RunAsNonRoot?:           *bool | fn.#Fn
+							RunAsUser?:              *int | fn.#Fn
+						} | fn.#If
+						VolumeMounts?: *[...{
+							MountPath?: *string | fn.#Fn
+							Name?:      *string | fn.#Fn
+							ReadOnly?:  *bool | fn.#Fn
+						}] | fn.#If
+					}] | fn.#If
+					DnsPolicy?:          *string | fn.#Fn
+					HostNetwork?:        *bool | fn.#Fn
+					ServiceAccountName?: *string | fn.#Fn
+					Volumes?:            *[...{
+						EmptyDir?: *{
+							Medium?:    *string | fn.#Fn
+							SizeLimit?: *string | fn.#Fn
+						} | fn.#If
+						HostPath?: *{
+							Path?: *string | fn.#Fn
+						} | fn.#If
+						Name:    *string | fn.#Fn
+						Secret?: *{
+							Name:      *string | fn.#Fn
+							ValueFrom: *string | fn.#Fn
+						} | fn.#If
+					}] | fn.#If
+				} | fn.#If
 			} | fn.#If
 			JobDefinitionName?: *string | fn.#Fn
 			NodeProperties?:    *{
